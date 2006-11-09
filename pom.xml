@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>edu.berkeley.compbio</groupId>
+	<artifactId>phyloutils</artifactId>
+
+	<name>phyloutils</name>
+	<version>1.0-SNAPSHOT</version>
+	<url>http://dev.davidsoergel.com/phyloutils</url>
+	<description>Utility classes for dealing with the NCBI taxonomy and other phylogenetic tasks.</description>
+
+	<parent>
+		<groupId>edu.berkeley.compbio</groupId>
+		<artifactId>basepom</artifactId>
+		<version>1.1</version>
+		<relativePath>../../basepom/pom.xml</relativePath>
+	</parent>
+
+	<inceptionYear>2006</inceptionYear>
+
+	<packaging>jar</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>pal</groupId>
+			<artifactId>pal</artifactId>
+			<version>1.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.davidsoergel</groupId>
+			<artifactId>hibernateutils</artifactId>
+			<version>1.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.davidsoergel</groupId>
+			<artifactId>dsutils</artifactId>
+			<version>1.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+
+	<scm>
+		<connection>scm:svn:svn+ssh://lorax.org/home/lorax/repos-compbio/phyloutils</connection>
+		<developerConnection>scm:svn:svn+ssh://lorax.org/home/lorax/repos-compbio/phyloutils</developerConnection>
+	</scm>
+	<distributionManagement>
+		<site>
+			<id>website</id>
+			<url>scpexe://dev.davidsoergel.com/home/continuum/domains/dev.davidsoergel.com/phyloutils</url>
+		</site>
+	</distributionManagement>
+
+
+	<repositories>
+		<repository>
+			<id>dev.davidsoergel.com</id>
+			<name>David Soergel Dev Repository</name>
+			<url>http://dev.davidsoergel.com/maven2</url>
+		</repository>
+	</repositories>
+
+
+</project>
