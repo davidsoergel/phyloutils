@@ -84,7 +84,7 @@ public class NcbiTaxonomyNode extends HibernateObject
 		return children;
 		}
 
-	public void setChildSets(Set childSets)
+	public void setChildSets(Set<NcbiTaxonomyNode> childSets)
 		{
 		this.children = childSets;
 		}
