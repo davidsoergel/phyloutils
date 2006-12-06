@@ -12,7 +12,7 @@ LINES TERMINATED BY '\t|\n'
 mitochondrial_genetic_code_id,inherited_MGC_flag,GenBank_hidden_flag,hidden_subtree_root_flag,comments);
 
 
-
+# work around typographical variation
 insert into names (tax_id, name_txt, name_class) select tax_id, 'Acinetobacter sp ADP1', 'synonym' from names where name_txt = 'Acinetobacter sp. ADP1';
 insert into names (tax_id, name_txt, name_class) select tax_id, 'Aeromonas hydrophila ATCC 7966', 'synonym' from names where name_txt = 'Aeromonas hydrophila subsp. hydrophila ATCC 7966';
 insert into names (tax_id, name_txt, name_class) select tax_id, 'Agrobacterium tumefaciens C58 Cereon', 'synonym' from names where name_txt = 'Agrobacterium tumefaciens str. C58';
