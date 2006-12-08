@@ -14,7 +14,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.NoResultException;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,7 +28,7 @@ import java.util.Set;
 @Table(name = "nodes")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 // or NONSTRICT_READ_WRITE?
-@NamedQueries({ @NamedQuery(
+@NamedQueries({@NamedQuery(
 		name = "NcbiTaxonomyNode.findByTaxId",
 		query = "select n from NcbiTaxonomyNode n WHERE id = :taxId")})
 //@NamedQuery(name="NcbiTaxonomyNode.findByName",query="select n from NcbiTaxonomyNode n WHERE Name = :name"),
@@ -38,31 +37,61 @@ public class NcbiTaxonomyNode extends HibernateObject
 	private static Logger logger = Logger.getLogger(NcbiTaxonomyName.class);
 
 	//private int taxId;
+	@ManyToOne
+	//(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_tax_id")
 	private NcbiTaxonomyNode parent;
+
+	@OneToMany(mappedBy = "taxon")
 	private Set<NcbiTaxonomyName> names;
 
+	@OneToMany(mappedBy = "parent")
+	//, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	//, fetch = FetchType.EAGER)
+	//, CascadeType.REFRESH})
+	//@LazyCollection(LazyCollectionOption.FALSE)
+	//@Fetch(value = FetchMode.SUBSELECT)
 	private Set<NcbiTaxonomyNode> children = new HashSet<NcbiTaxonomyNode>();
 
+	@Column(name = "rank")
 	private String rank;
+
+	@Column(name = "embl_code")
 	private String emblCode;
+
+	@Column(name = "division_id")
 	private int divisionId;
+
+	@Column(name = "inherited_div_flag")
 	private boolean inheritedDivFlag;
+
+	@Column(name = "genetic_code_id")
 	private int geneticCodeId;
+
+	@Column(name = "inherited_GC_flag")
 	private boolean inheritedGCFlag;
+
+	@Column(name = "mitochondrial_genetic_code_id")
 	private int mitachondrialGeneticCodeId;
+
+	@Column(name = "inherited_MGC_flag")
 	private boolean inheritedMGCFlag;
+
+	@Column(name = "GenBank_hidden_flag")
 	private boolean genBankHiddenFlag;
+
+	@Column(name = "hidden_subtree_root_flag")
 	private boolean hiddenSubtreeRootFlag;
+
+	@Column(name = "comments")
 	private String comments;
 
-	@Transient
+	//@Transient
 	public long getTaxId()
 		{
 		return getId();
 		}
 
-	@ManyToOne  //(fetch = FetchType.LAZY)
-	@JoinColumn(name = "parent_tax_id")
 	public NcbiTaxonomyNode getParent()
 		{
 		return parent;
@@ -74,11 +103,6 @@ public class NcbiTaxonomyNode extends HibernateObject
 		}
 
 
-	@OneToMany(mappedBy = "parent") //, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	//, fetch = FetchType.EAGER)
-	//, CascadeType.REFRESH})
-	//@LazyCollection(LazyCollectionOption.FALSE)
-	//@Fetch(value = FetchMode.SUBSELECT)
 	public Set<NcbiTaxonomyNode> getChildSets()
 		{
 		return children;
@@ -90,7 +114,6 @@ public class NcbiTaxonomyNode extends HibernateObject
 		}
 
 
-	@OneToMany(mappedBy="taxon")
 	public Set<NcbiTaxonomyName> getNames()
 		{
 		return names;
@@ -101,7 +124,6 @@ public class NcbiTaxonomyNode extends HibernateObject
 		this.names = names;
 		}
 
-	@Column(name = "rank")
 	public String getRank()
 		{
 		return rank;
@@ -112,7 +134,6 @@ public class NcbiTaxonomyNode extends HibernateObject
 		this.rank = rank;
 		}
 
-	@Column(name = "embl_code")
 	public String getEmblCode()
 		{
 		return emblCode;
@@ -123,7 +144,6 @@ public class NcbiTaxonomyNode extends HibernateObject
 		this.emblCode = emblCode;
 		}
 
-	@Column(name = "division_id")
 	public int getDivisionId()
 		{
 		return divisionId;
@@ -134,7 +154,6 @@ public class NcbiTaxonomyNode extends HibernateObject
 		this.divisionId = divisionId;
 		}
 
-	@Column(name = "inherited_div_flag")
 	public boolean isInheritedDivFlag()
 		{
 		return inheritedDivFlag;
@@ -145,7 +164,6 @@ public class NcbiTaxonomyNode extends HibernateObject
 		this.inheritedDivFlag = inheritedDivFlag;
 		}
 
-	@Column(name = "genetic_code_id")
 	public int getGeneticCodeId()
 		{
 		return geneticCodeId;
@@ -156,7 +174,6 @@ public class NcbiTaxonomyNode extends HibernateObject
 		this.geneticCodeId = geneticCodeId;
 		}
 
-	@Column(name = "inherited_GC_flag")
 	public boolean isInheritedGCFlag()
 		{
 		return inheritedGCFlag;
@@ -167,7 +184,6 @@ public class NcbiTaxonomyNode extends HibernateObject
 		this.inheritedGCFlag = inheritedGCFlag;
 		}
 
-	@Column(name = "mitochondrial_genetic_code_id")
 	public int getMitochondrialGeneticCodeId()
 		{
 		return mitachondrialGeneticCodeId;
@@ -178,7 +194,6 @@ public class NcbiTaxonomyNode extends HibernateObject
 		this.mitachondrialGeneticCodeId = mitachondrialGeneticCodeId;
 		}
 
-	@Column(name = "inherited_MGC_flag")
 	public boolean isInheritedMGCFlag()
 		{
 		return inheritedMGCFlag;
@@ -189,7 +204,6 @@ public class NcbiTaxonomyNode extends HibernateObject
 		this.inheritedMGCFlag = inheritedMGCFlag;
 		}
 
-	@Column(name = "GenBank_hidden_flag")
 	public boolean isGenBankHiddenFlag()
 		{
 		return genBankHiddenFlag;
@@ -200,7 +214,6 @@ public class NcbiTaxonomyNode extends HibernateObject
 		this.genBankHiddenFlag = genBankHiddenFlag;
 		}
 
-	@Column(name = "hidden_subtree_root_flag")
 	public boolean isHiddenSubtreeRootFlag()
 		{
 		return hiddenSubtreeRootFlag;
@@ -211,7 +224,6 @@ public class NcbiTaxonomyNode extends HibernateObject
 		this.hiddenSubtreeRootFlag = hiddenSubtreeRootFlag;
 		}
 
-	@Column(name = "comments")
 	public String getComments()
 		{
 		return comments;

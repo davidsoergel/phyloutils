@@ -15,8 +15,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.Table;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,13 +36,20 @@ public class NcbiTaxonomyName extends HibernateObject
 	{
 	private static Logger logger = Logger.getLogger(NcbiTaxonomyName.class);
 
-	private NcbiTaxonomyNode taxon;
-	private String name;
-	private String uniqueName;
-	private String nameClass;
 
 	@ManyToOne
 	@JoinColumn(name = "tax_id")
+	private NcbiTaxonomyNode taxon;
+
+	@Column(name = "name_txt")
+	private String name;
+
+	@Column(name = "unique_name")
+	private String uniqueName;
+
+	@Column(name = "name_class")
+	private String nameClass;
+
 	public NcbiTaxonomyNode getTaxon()
 		{
 		return taxon;
@@ -53,7 +60,6 @@ public class NcbiTaxonomyName extends HibernateObject
 		this.taxon = taxon;
 		}
 
-	@Column(name = "name_txt")
 	public String getName()
 		{
 		return name;
@@ -64,7 +70,6 @@ public class NcbiTaxonomyName extends HibernateObject
 		this.name = name;
 		}
 
-	@Column(name = "unique_name")
 	public String getUniqueName()
 		{
 		return uniqueName;
@@ -75,7 +80,6 @@ public class NcbiTaxonomyName extends HibernateObject
 		this.uniqueName = uniqueName;
 		}
 
-	@Column(name = "name_class")
 	public String getNameClass()
 		{
 		return nameClass;
