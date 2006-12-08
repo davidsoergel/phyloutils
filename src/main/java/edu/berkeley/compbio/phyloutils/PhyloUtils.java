@@ -30,10 +30,17 @@ public class PhyloUtils
 
 	static
 		{
-		init();
+		try
+			{
+			init();
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.error(e);
+			}
 		}
 
-	private static void init()
+	private static void init() throws PhyloUtilsException
 		{
 		try
 			{
@@ -57,6 +64,10 @@ public class PhyloUtils
 			}
 
 		ncbiDb = new HibernateDB("ncbiTaxonomy");
+		if (ncbiDb == null)
+			{
+			throw new PhyloUtilsException("Couldn't connect to NCBI Taxonomy database");
+			}
 		}
 
 
@@ -99,8 +110,10 @@ public class PhyloUtils
 		int treeIdB = ciccarelliTree.whichIdNumber("" + taxIdB);
 		logger.error("" + taxIdA + " -> " + treeIdA);
 		logger.error("" + taxIdB + " -> " + treeIdB);
-		if(treeIdA == treeIdB) { return 0; // account for TreeUtils.computeDistance bug
-		}
+		if (treeIdA == treeIdB)
+			{
+			return 0; // account for TreeUtils.computeDistance bug
+			}
 		return TreeUtils.computeDistance(ciccarelliTree, treeIdA, treeIdB);
 		}
 
@@ -126,7 +139,7 @@ public class PhyloUtils
 		while (ciccarelliTree.whichIdNumber("" + n.getId()) == -1)
 			{
 			n = n.getParent();
-			if(n.getId() == 1)
+			if (n.getId() == 1)
 				{
 				// arrived at root, too bad
 				throw new PhyloUtilsException("Taxon " + taxId + " not found in tree.");
