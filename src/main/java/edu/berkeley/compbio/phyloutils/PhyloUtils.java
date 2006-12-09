@@ -32,10 +32,12 @@ public class PhyloUtils
 		{
 		try
 			{
+			logger.info("Initializing NCBI taxonomy database connection...");
 			init();
 			}
 		catch (PhyloUtilsException e)
 			{
+			e.printStackTrace();
 			logger.error(e);
 			}
 		}
