@@ -56,6 +56,12 @@
 			<name>David Soergel Dev Repository</name>
 			<url>http://dev.davidsoergel.com/maven2</url>
 		</repository>
+		<repository>
+			<id>maven-snapshot-repository</id>
+			<name>Maven Snapshot Repository</name>
+			<url>http://people.apache.org/maven-snapshot-repository</url>
+		</repository>
+
 	</repositories>
 
 
