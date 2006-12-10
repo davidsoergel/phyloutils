@@ -56,12 +56,12 @@ public class PhyloUtils
 			}
 		catch (IOException e)
 			{
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			e.printStackTrace();//To change body of catch statement use File | Settings | File Templates.
 			logger.error(e);
 			}
 		catch (TreeParseException e)
 			{
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			e.printStackTrace();//To change body of catch statement use File | Settings | File Templates.
 			logger.error(e);
 			}
 
@@ -75,8 +75,8 @@ public class PhyloUtils
 
 	public static double exactDistanceBetween(String speciesNameA, String speciesNameB)
 		{
-		long taxIdA = NcbiTaxonomyName.findByName(speciesNameA).getTaxon().getId();
-		long taxIdB = NcbiTaxonomyName.findByName(speciesNameB).getTaxon().getId();
+		int taxIdA = NcbiTaxonomyName.findByName(speciesNameA).getTaxon().getId();
+		int taxIdB = NcbiTaxonomyName.findByName(speciesNameB).getTaxon().getId();
 
 		logger.error(speciesNameA + " -> " + taxIdA);
 		logger.error(speciesNameB + " -> " + taxIdB);
@@ -95,18 +95,18 @@ public class PhyloUtils
 		{
 		if (speciesNameA.equals(speciesNameB))
 			{
-			return 0; // account for TreeUtils.computeDistance bug
+			return 0;// account for TreeUtils.computeDistance bug
 			}
-		long taxIdA = NcbiTaxonomyName.findByNameRelaxed(speciesNameA).getTaxon().getId();
-		long taxIdB = NcbiTaxonomyName.findByNameRelaxed(speciesNameB).getTaxon().getId();
+		int taxIdA = NcbiTaxonomyName.findByNameRelaxed(speciesNameA).getTaxon().getId();
+		int taxIdB = NcbiTaxonomyName.findByNameRelaxed(speciesNameB).getTaxon().getId();
 		return minDistanceBetween(taxIdA, taxIdB);
 		}
 
-	public static double exactDistanceBetween(long taxIdA, long taxIdB)
+	public static double exactDistanceBetween(int taxIdA, int taxIdB)
 		{
 		if (taxIdA == taxIdB)
 			{
-			return 0; // account for TreeUtils.computeDistance bug
+			return 0;// account for TreeUtils.computeDistance bug
 			}
 		int treeIdA = ciccarelliTree.whichIdNumber("" + taxIdA);
 		int treeIdB = ciccarelliTree.whichIdNumber("" + taxIdB);
@@ -114,7 +114,7 @@ public class PhyloUtils
 		logger.error("" + taxIdB + " -> " + treeIdB);
 		if (treeIdA == treeIdB)
 			{
-			return 0; // account for TreeUtils.computeDistance bug
+			return 0;// account for TreeUtils.computeDistance bug
 			}
 		return TreeUtils.computeDistance(ciccarelliTree, treeIdA, treeIdB);
 		}
@@ -123,11 +123,11 @@ public class PhyloUtils
 	/**
 	 * For each species, walk up the NCBI tree until a node that is part of the Ciccarelli tree is found; then return the Ciccarelli distance.
 	 */
-	public static double minDistanceBetween(long taxIdA, long taxIdB) throws PhyloUtilsException
+	public static double minDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
 		{
 		if (taxIdA == taxIdB)
 			{
-			return 0; // account for TreeUtils.computeDistance bug
+			return 0;// account for TreeUtils.computeDistance bug
 			}
 		taxIdA = nearestKnownAncestor(taxIdA);
 		taxIdB = nearestKnownAncestor(taxIdB);
@@ -135,7 +135,7 @@ public class PhyloUtils
 
 		}
 
-	public static long nearestKnownAncestor(long taxId) throws PhyloUtilsException
+	public static int nearestKnownAncestor(int taxId) throws PhyloUtilsException
 		{
 		NcbiTaxonomyNode n = NcbiTaxonomyNode.findByTaxId(taxId);
 		while (ciccarelliTree.whichIdNumber("" + n.getId()) == -1)

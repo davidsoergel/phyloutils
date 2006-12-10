@@ -235,7 +235,7 @@ public class NcbiTaxonomyNode extends HibernateObject
 		}
 
 
-	public static NcbiTaxonomyNode findByTaxId(long taxid) throws NoResultException
+	public static NcbiTaxonomyNode findByTaxId(int taxid) throws NoResultException
 		{
 		return PhyloUtils.getNcbiDb().find(NcbiTaxonomyNode.class, taxid);
 		//HibernateDB.getDb().beginTaxn();
