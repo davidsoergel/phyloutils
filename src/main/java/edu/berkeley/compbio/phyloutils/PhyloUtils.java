@@ -78,8 +78,8 @@ public class PhyloUtils
 		int taxIdA = NcbiTaxonomyName.findByName(speciesNameA).getTaxon().getId();
 		int taxIdB = NcbiTaxonomyName.findByName(speciesNameB).getTaxon().getId();
 
-		logger.error(speciesNameA + " -> " + taxIdA);
-		logger.error(speciesNameB + " -> " + taxIdB);
+		//logger.error(speciesNameA + " -> " + taxIdA);
+		//logger.error(speciesNameB + " -> " + taxIdB);
 
 		return exactDistanceBetween(taxIdA, taxIdB);
 		}
@@ -110,8 +110,8 @@ public class PhyloUtils
 			}
 		int treeIdA = ciccarelliTree.whichIdNumber("" + taxIdA);
 		int treeIdB = ciccarelliTree.whichIdNumber("" + taxIdB);
-		logger.error("" + taxIdA + " -> " + treeIdA);
-		logger.error("" + taxIdB + " -> " + treeIdB);
+		//logger.error("" + taxIdA + " -> " + treeIdA);
+		//logger.error("" + taxIdB + " -> " + treeIdB);
 		if (treeIdA == treeIdB)
 			{
 			return 0;// account for TreeUtils.computeDistance bug
