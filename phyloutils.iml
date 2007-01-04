@@ -13,7 +13,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="hibernateutils" exported="" />
+    <orderEntry type="module" module-name="dsutils" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="Maven Dependency: ant:ant:jar:1.6.3:compile">
         <CLASSES>
@@ -45,15 +45,6 @@
       <library name="Maven Dependency: cglib:cglib:jar:2.1_3:compile">
         <CLASSES>
           <root url="jar:///h/soergel/.m2/repository/cglib/cglib/2.1_3/cglib-2.1_3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: com.davidsoergel:dsutils:jar:1.1-SNAPSHOT:compile">
-        <CLASSES>
-          <root url="jar:///h/soergel/.m2/repository/com/davidsoergel/dsutils/1.1-SNAPSHOT/dsutils-1.1-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
