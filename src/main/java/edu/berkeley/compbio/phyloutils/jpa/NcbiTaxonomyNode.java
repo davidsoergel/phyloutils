@@ -1,6 +1,6 @@
-package edu.berkeley.compbio.phyloutils;
+package edu.berkeley.compbio.phyloutils.jpa;
 
-import com.davidsoergel.hibernateutils.HibernateObject;
+import com.davidsoergel.springjpautils.SpringJpaObject;
 import org.apache.log4j.Logger;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.NoResultException;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.HashSet;
@@ -27,12 +26,13 @@ import java.util.Set;
 @Entity
 @Table(name = "nodes")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-// or NONSTRICT_READ_WRITE?
 @NamedQueries({@NamedQuery(
 		name = "NcbiTaxonomyNode.findByTaxId",
-		query = "select n from NcbiTaxonomyNode n WHERE id = :taxId")})
+		query = "select n from NcbiTaxonomyNode n WHERE id = ?1")})
+
+// or NONSTRICT_READ_WRITE?
 //@NamedQuery(name="NcbiTaxonomyNode.findByName",query="select n from NcbiTaxonomyNode n WHERE Name = :name"),
-public class NcbiTaxonomyNode extends HibernateObject
+public class NcbiTaxonomyNode extends SpringJpaObject
 	{
 	private static Logger logger = Logger.getLogger(NcbiTaxonomyName.class);
 
@@ -235,18 +235,4 @@ public class NcbiTaxonomyNode extends HibernateObject
 		}
 
 
-	public static NcbiTaxonomyNode findByTaxId(int taxid) throws NoResultException
-		{
-		return PhyloUtils.getNcbiDb().find(NcbiTaxonomyNode.class, taxid);
-		//HibernateDB.getDb().beginTaxn();
-		// Status notstarted = Status.findByName("Not Started");
-		/*Query q = PhyloUtils.getNcbiDb().createNamedQuery("NcbiTaxonomyNode.findByTaxId");
-		q.setMaxResults(1);
-		q.setParameter("taxId", taxid);
-		NcbiTaxonomyNode result;
-
-		result = (NcbiTaxonomyNode) q.getSingleResult();
-
-		return result;*/
-		}
 	}

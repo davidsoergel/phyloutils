@@ -1,6 +1,8 @@
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.hibernateutils.HibernateDB;
+import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNameDao;
+import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNodeDao;
+import edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyNode;
 import org.apache.log4j.Logger;
 import pal.tree.ReadTree;
 import pal.tree.Tree;
@@ -20,15 +22,28 @@ import java.net.URL;
  * Time: 2:21:41 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PhyloUtils
+public class PhyloUtilsService
 	{
-	protected static Logger logger = Logger.getLogger(PhyloUtils.class);
+	private NcbiTaxonomyNameDao ncbiTaxonomyNameDao;
+	private NcbiTaxonomyNodeDao ncbiTaxonomyNodeDao;
 
-	private static Tree ciccarelliTree;
-	private static String ciccarelliFilename = "tree_Feb15_unrooted.txt";
-	private static HibernateDB ncbiDb;
+	public void setNcbiTaxonomyNameDao(NcbiTaxonomyNameDao ncbiTaxonomyNameDao)
+		{
+		this.ncbiTaxonomyNameDao = ncbiTaxonomyNameDao;
+		}
 
-	static
+	public void setNcbiTaxonomyNodeDao(NcbiTaxonomyNodeDao ncbiTaxonomyNodeDao)
+		{
+		this.ncbiTaxonomyNodeDao = ncbiTaxonomyNodeDao;
+		}
+
+	protected static Logger logger = Logger.getLogger(PhyloUtilsService.class);
+
+	private Tree ciccarelliTree;
+	private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
+	//private static HibernateDB ncbiDb;
+
+	/*
 		{
 		try
 			{
@@ -41,8 +56,9 @@ public class PhyloUtils
 			logger.error(e);
 			}
 		}
+*/
 
-	private static void init() throws PhyloUtilsException
+	public PhyloUtilsService() // throws PhyloUtilsException
 		{
 		try
 			{
@@ -65,18 +81,20 @@ public class PhyloUtils
 			logger.error(e);
 			}
 
+		/*
 		ncbiDb = new HibernateDB("ncbiTaxonomy");
 		if (ncbiDb == null)
 			{
 			throw new PhyloUtilsException("Couldn't connect to NCBI Taxonomy database");
 			}
+			*/
 		}
 
 
-	public static double exactDistanceBetween(String speciesNameA, String speciesNameB)
+	public double exactDistanceBetween(String speciesNameA, String speciesNameB)
 		{
-		int taxIdA = NcbiTaxonomyName.findByName(speciesNameA).getTaxon().getId();
-		int taxIdB = NcbiTaxonomyName.findByName(speciesNameB).getTaxon().getId();
+		int taxIdA = ncbiTaxonomyNameDao.findByName(speciesNameA).getTaxon().getId();
+		int taxIdB = ncbiTaxonomyNameDao.findByName(speciesNameB).getTaxon().getId();
 
 		//logger.error(speciesNameA + " -> " + taxIdA);
 		//logger.error(speciesNameB + " -> " + taxIdB);
@@ -91,18 +109,18 @@ public class PhyloUtils
 	 * @param speciesNameB
 	 * @return
 	 */
-	public static double minDistanceBetween(String speciesNameA, String speciesNameB) throws PhyloUtilsException
+	public double minDistanceBetween(String speciesNameA, String speciesNameB) throws PhyloUtilsException
 		{
 		if (speciesNameA.equals(speciesNameB))
 			{
 			return 0;// account for TreeUtils.computeDistance bug
 			}
-		int taxIdA = NcbiTaxonomyName.findByNameRelaxed(speciesNameA).getTaxon().getId();
-		int taxIdB = NcbiTaxonomyName.findByNameRelaxed(speciesNameB).getTaxon().getId();
+		int taxIdA = ncbiTaxonomyNameDao.findByNameRelaxed(speciesNameA).getTaxon().getId();
+		int taxIdB = ncbiTaxonomyNameDao.findByNameRelaxed(speciesNameB).getTaxon().getId();
 		return minDistanceBetween(taxIdA, taxIdB);
 		}
 
-	public static double exactDistanceBetween(int taxIdA, int taxIdB)
+	public double exactDistanceBetween(int taxIdA, int taxIdB)
 		{
 		if (taxIdA == taxIdB)
 			{
@@ -123,7 +141,7 @@ public class PhyloUtils
 	/**
 	 * For each species, walk up the NCBI tree until a node that is part of the Ciccarelli tree is found; then return the Ciccarelli distance.
 	 */
-	public static double minDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
+	public double minDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
 		{
 		if (taxIdA == taxIdB)
 			{
@@ -135,9 +153,9 @@ public class PhyloUtils
 
 		}
 
-	public static int nearestKnownAncestor(int taxId) throws PhyloUtilsException
+	public int nearestKnownAncestor(int taxId) throws PhyloUtilsException
 		{
-		NcbiTaxonomyNode n = NcbiTaxonomyNode.findByTaxId(taxId);
+		NcbiTaxonomyNode n = ncbiTaxonomyNodeDao.findByTaxId(taxId);
 		while (ciccarelliTree.whichIdNumber("" + n.getId()) == -1)
 			{
 			n = n.getParent();
@@ -151,9 +169,9 @@ public class PhyloUtils
 		return n.getId();
 		}
 
-
+/*
 	public static HibernateDB getNcbiDb()
 		{
 		return ncbiDb;
-		}
+		}*/
 	}
