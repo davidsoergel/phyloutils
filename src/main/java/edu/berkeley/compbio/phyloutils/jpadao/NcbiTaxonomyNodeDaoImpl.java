@@ -3,6 +3,10 @@ package edu.berkeley.compbio.phyloutils.jpadao;
 import com.davidsoergel.springjpautils.GenericDaoImpl;
 import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNodeDao;
 import edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyNode;
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,17 +15,32 @@ import edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyNode;
  * Time: 1:47:27 PM
  * To change this template use File | Settings | File Templates.
  */
+@Repository
 public class NcbiTaxonomyNodeDaoImpl extends GenericDaoImpl<NcbiTaxonomyNode> implements NcbiTaxonomyNodeDao
 	{
 
+	private EntityManager entityManager;
+
+	@PersistenceContext
+	public void setEntityManager(EntityManager entityManager)
+		{
+		this.entityManager = entityManager;
+		}
+
+	public EntityManager getEntityManager()
+		{
+		return entityManager;
+		}
+
 	public NcbiTaxonomyNode findById(Integer id)
 		{
-		return getJpaTemplate().find(NcbiTaxonomyNode.class, id);
+		return entityManager.find(NcbiTaxonomyNode.class, id);
 		}
 
 	public NcbiTaxonomyNode findByTaxId(int taxid)
 		{
-		return (NcbiTaxonomyNode) (getJpaTemplate().findByNamedQuery("NcbiTaxonomyNode.findByTaxId", taxid).get(0));
+		return (NcbiTaxonomyNode) (entityManager.createNamedQuery("NcbiTaxonomyNode.findByTaxId")
+				.setParameter("taxid", taxid).getSingleResult());
 		}
 
 	}

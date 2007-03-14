@@ -28,7 +28,7 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @NamedQueries({@NamedQuery(
 		name = "NcbiTaxonomyNode.findByTaxId",
-		query = "select n from NcbiTaxonomyNode n WHERE id = ?1")})
+		query = "select n from NcbiTaxonomyNode n WHERE id = :taxid")})
 
 // or NONSTRICT_READ_WRITE?
 //@NamedQuery(name="NcbiTaxonomyNode.findByName",query="select n from NcbiTaxonomyNode n WHERE Name = :name"),

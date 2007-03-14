@@ -4,7 +4,10 @@ import com.davidsoergel.springjpautils.GenericDaoImpl;
 import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNameDao;
 import edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyName;
 import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,11 +18,26 @@ import java.util.Map;
  * Time: 1:47:27 PM
  * To change this template use File | Settings | File Templates.
  */
+@Repository
 public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> implements NcbiTaxonomyNameDao
 	{
+
+	private EntityManager entityManager;
+
+	@PersistenceContext
+	public void setEntityManager(EntityManager entityManager)
+		{
+		this.entityManager = entityManager;
+		}
+
+	public EntityManager getEntityManager()
+		{
+		return entityManager;
+		}
+
 	public NcbiTaxonomyName findById(Integer id)
 		{
-		return getJpaTemplate().find(NcbiTaxonomyName.class, id);
+		return entityManager.find(NcbiTaxonomyName.class, id);
 		}
 
 	private Map<String, NcbiTaxonomyName> names = new HashMap<String, NcbiTaxonomyName>();
@@ -40,7 +58,8 @@ public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> im
 
 		result = (NcbiTaxonomyName) q.getSingleResult();*/
 
-		result = (NcbiTaxonomyName) (getJpaTemplate().findByNamedQuery("NcbiTaxonomyName.findByName", name).get(0));
+		result = (NcbiTaxonomyName) (entityManager.createNamedQuery("NcbiTaxonomyName.findByName")
+				.setParameter("name", name).getSingleResult());
 
 		names.put(name, result);
 		return result;
