@@ -251,72 +251,72 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-aspects:jar:2.0.3:compile">
+      <library name="Maven Dependency: org.springframework:spring-aspects:jar:2.0.2:compile">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-aspects/2.0.3/spring-aspects-2.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-aspects/2.0.2/spring-aspects-2.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-beans:jar:2.0.3:compile">
+      <library name="Maven Dependency: org.springframework:spring-beans:jar:2.0.2:compile">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-beans/2.0.3/spring-beans-2.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-beans/2.0.2/spring-beans-2.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-context:jar:2.0.3:compile">
+      <library name="Maven Dependency: org.springframework:spring-context:jar:2.0.2:compile">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-context/2.0.3/spring-context-2.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-context/2.0.2/spring-context-2.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-core:jar:2.0.3:compile">
+      <library name="Maven Dependency: org.springframework:spring-core:jar:2.0.2:compile">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-core/2.0.3/spring-core-2.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-core/2.0.2/spring-core-2.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-dao:jar:2.0.3:compile">
+      <library name="Maven Dependency: org.springframework:spring-dao:jar:2.0.2:compile">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-dao/2.0.3/spring-dao-2.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-dao/2.0.2/spring-dao-2.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-jdbc:jar:2.0.3:compile">
+      <library name="Maven Dependency: org.springframework:spring-jdbc:jar:2.0.2:compile">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-jdbc/2.0.3/spring-jdbc-2.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-jdbc/2.0.2/spring-jdbc-2.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-jpa:jar:2.0.3:compile">
+      <library name="Maven Dependency: org.springframework:spring-jpa:jar:2.0.2:compile">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-jpa/2.0.3/spring-jpa-2.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring-jpa/2.0.2/spring-jpa-2.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring:jar:2.0.3:compile">
+      <library name="Maven Dependency: org.springframework:spring:jar:2.0.2:compile">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring/2.0.3/spring-2.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring/2.0.2/spring-2.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
