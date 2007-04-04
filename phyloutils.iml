@@ -22,7 +22,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/antlr/antlr/2.7.6/antlr-2.7.6.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/antlr/antlr/2.7.6/antlr-2.7.6-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -31,7 +33,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -57,7 +61,9 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/aspectj/aspectjrt/1.5.3/aspectjrt-1.5.3.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/aspectj/aspectjrt/1.5.3/aspectjrt-1.5.3-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES />
       </library>
     </orderEntry>
@@ -66,7 +72,9 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/aspectj/aspectjweaver/1.5.3/aspectjweaver-1.5.3.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/aspectj/aspectjweaver/1.5.3/aspectjweaver-1.5.3-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES />
       </library>
     </orderEntry>
@@ -85,7 +93,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/cglib/cglib/2.1_3/cglib-2.1_3.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/cglib/cglib/2.1_3/cglib-2.1_3-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -94,7 +104,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-collections/commons-collections/3.2/commons-collections-3.2.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-collections/commons-collections/3.2/commons-collections-3.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -102,7 +114,9 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-dbcp/commons-dbcp/1.2/commons-dbcp-1.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-dbcp/commons-dbcp/1.2/commons-dbcp-1.2-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES />
       </library>
     </orderEntry>
@@ -111,8 +125,12 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-lang/commons-lang/2.1/commons-lang-2.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-lang/commons-lang/2.1/commons-lang-2.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-lang/commons-lang/2.1/commons-lang-2.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -121,7 +139,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-logging/commons-logging/1.1/commons-logging-1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-logging/commons-logging/1.1/commons-logging-1.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -129,8 +149,12 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-pool/commons-pool/1.2/commons-pool-1.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-pool/commons-pool/1.2/commons-pool-1.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/commons-pool/commons-pool/1.2/commons-pool-1.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -139,7 +163,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -148,7 +174,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/javax/persistence/persistence-api/1.0/persistence-api-1.0-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -157,7 +185,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/javax/servlet/servlet-api/2.3/servlet-api-2.3-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -193,7 +223,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -202,7 +234,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/log4j/log4j/1.2.13/log4j-1.2.13.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -211,7 +245,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/logkit/logkit/1.0.1/logkit-1.0.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/logkit/logkit/1.0.1/logkit-1.0.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -219,8 +255,12 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/sf/ehcache/ehcache/1.2.3/ehcache-1.2.3.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/sf/ehcache/ehcache/1.2.3/ehcache-1.2.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/net/sf/ehcache/ehcache/1.2.3/ehcache-1.2.3-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -229,7 +269,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/hibernate/hibernate-annotations/3.2.1.ga/hibernate-annotations-3.2.1.ga.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/hibernate/hibernate-annotations/3.2.1.ga/hibernate-annotations-3.2.1.ga-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -246,8 +288,12 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/hibernate/hibernate/3.2.2.ga/hibernate-3.2.2.ga.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/hibernate/hibernate/3.2.2.ga/hibernate-3.2.2.ga-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/hibernate/hibernate/3.2.2.ga/hibernate-3.2.2.ga-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -319,7 +365,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring/2.0.2/spring-2.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/org/springframework/spring/2.0.2/spring-2.0.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -346,7 +394,9 @@
           <root url="jar://$MODULE_DIR$/../../../.m2/repository/xerces/xercesImpl/2.8.1/xercesImpl-2.8.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../../.m2/repository/xerces/xercesImpl/2.8.1/xercesImpl-2.8.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
