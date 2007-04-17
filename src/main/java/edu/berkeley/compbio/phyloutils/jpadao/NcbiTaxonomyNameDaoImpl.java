@@ -3,20 +3,18 @@ package edu.berkeley.compbio.phyloutils.jpadao;
 import com.davidsoergel.springjpautils.GenericDaoImpl;
 import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNameDao;
 import edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyName;
-import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
- * User: soergel
- * Date: Mar 7, 2007
- * Time: 1:47:27 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: soergel Date: Mar 7, 2007 Time: 1:47:27 PM To change this template use File |
+ * Settings | File Templates.
  */
 @Repository
 public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> implements NcbiTaxonomyNameDao
@@ -42,6 +40,7 @@ public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> im
 
 	private Map<String, NcbiTaxonomyName> names = new HashMap<String, NcbiTaxonomyName>();
 
+	@Transactional(noRollbackFor = javax.persistence.NoResultException.class)
 	public NcbiTaxonomyName findByName(String name)
 		{
 		NcbiTaxonomyName result = names.get(name);
@@ -78,7 +77,7 @@ public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> im
 					result = findByName(name);
 					break;
 					}
-				catch (DataRetrievalFailureException e)
+				catch (NoResultException e)
 					{
 					oldname = name;
 					name = name.substring(0, name.lastIndexOf(" "));
