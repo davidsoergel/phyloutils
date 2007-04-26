@@ -68,13 +68,11 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: aspectj:aspectjweaver:jar:1.5.3:compile">
+      <library name="Maven Dependency: aspectj:aspectjweaver:jar:1.5.2a:compile">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../.m2/repository/aspectj/aspectjweaver/1.5.3/aspectjweaver-1.5.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../.m2/repository/aspectj/aspectjweaver/1.5.2a/aspectjweaver-1.5.2a.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$MODULE_DIR$/../../.m2/repository/aspectj/aspectjweaver/1.5.3/aspectjweaver-1.5.3-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
