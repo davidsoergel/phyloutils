@@ -17,7 +17,7 @@
     <orderEntry type="module" module-name="dsutils" exported="" />
     <orderEntry type="module" module-name="springjpautils" exported="" />
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: antlr:antlr:jar:2.7.6:compile">
+      <library name="M2 Dep: antlr:antlr:jar:2.7.6:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/antlr/antlr/2.7.6/antlr-2.7.6.jar!/" />
         </CLASSES>
@@ -28,7 +28,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: aopalliance:aopalliance:jar:1.0:compile">
+      <library name="M2 Dep: aopalliance:aopalliance:jar:1.0:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar!/" />
         </CLASSES>
@@ -39,7 +39,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: asm:asm-attrs:jar:1.5.3:compile">
+      <library name="M2 Dep: asm:asm-attrs:jar:1.5.3:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/asm/asm-attrs/1.5.3/asm-attrs-1.5.3.jar!/" />
         </CLASSES>
@@ -48,7 +48,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: asm:asm:jar:1.5.3:compile">
+      <library name="M2 Dep: asm:asm:jar:1.5.3:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/asm/asm/1.5.3/asm-1.5.3.jar!/" />
         </CLASSES>
@@ -57,7 +57,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: aspectj:aspectjrt:jar:1.5.3:compile">
+      <library name="M2 Dep: aspectj:aspectjrt:jar:1.5.3:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/aspectj/aspectjrt/1.5.3/aspectjrt-1.5.3.jar!/" />
         </CLASSES>
@@ -68,7 +68,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: aspectj:aspectjweaver:jar:1.5.2a:compile">
+      <library name="M2 Dep: aspectj:aspectjweaver:jar:1.5.2a:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/aspectj/aspectjweaver/1.5.2a/aspectjweaver-1.5.2a.jar!/" />
         </CLASSES>
@@ -77,7 +77,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: avalon-framework:avalon-framework:jar:4.1.3:compile">
+      <library name="M2 Dep: avalon-framework:avalon-framework:jar:4.1.3:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/avalon-framework/avalon-framework/4.1.3/avalon-framework-4.1.3.jar!/" />
         </CLASSES>
@@ -86,7 +86,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: cglib:cglib:jar:2.1_3:compile">
+      <library name="M2 Dep: cglib:cglib:jar:2.1_3:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/cglib/cglib/2.1_3/cglib-2.1_3.jar!/" />
         </CLASSES>
@@ -97,7 +97,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: com.intellij:annotations:jar:6.0.3:compile">
+      <library name="M2 Dep: com.intellij:annotations:jar:6.0.3:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/com/intellij/annotations/6.0.3/annotations-6.0.3.jar!/" />
         </CLASSES>
@@ -106,7 +106,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: commons-collections:commons-collections:jar:3.2:compile">
+      <library name="M2 Dep: commons-collections:commons-collections:jar:3.2:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/commons-collections/commons-collections/3.2/commons-collections-3.2.jar!/" />
         </CLASSES>
@@ -117,7 +117,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: commons-dbcp:commons-dbcp:jar:1.2:compile">
+      <library name="M2 Dep: commons-dbcp:commons-dbcp:jar:1.2:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/commons-dbcp/commons-dbcp/1.2/commons-dbcp-1.2.jar!/" />
         </CLASSES>
@@ -128,7 +128,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: commons-lang:commons-lang:jar:2.1:compile">
+      <library name="M2 Dep: commons-lang:commons-lang:jar:2.1:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/commons-lang/commons-lang/2.1/commons-lang-2.1.jar!/" />
         </CLASSES>
@@ -141,7 +141,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: commons-logging:commons-logging:jar:1.1:compile">
+      <library name="M2 Dep: commons-logging:commons-logging:jar:1.1:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/commons-logging/commons-logging/1.1/commons-logging-1.1.jar!/" />
         </CLASSES>
@@ -152,7 +152,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: commons-pool:commons-pool:jar:1.2:compile">
+      <library name="M2 Dep: commons-pool:commons-pool:jar:1.2:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/commons-pool/commons-pool/1.2/commons-pool-1.2.jar!/" />
         </CLASSES>
@@ -165,7 +165,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: dom4j:dom4j:jar:1.6.1:compile">
+      <library name="M2 Dep: dom4j:dom4j:jar:1.6.1:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar!/" />
         </CLASSES>
@@ -176,7 +176,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: hsqldb:hsqldb:jar:1.8.0.1:test">
+      <library name="M2 Dep: hsqldb:hsqldb:jar:1.8.0.1:test">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/hsqldb/hsqldb/1.8.0.1/hsqldb-1.8.0.1.jar!/" />
         </CLASSES>
@@ -187,7 +187,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: javax.persistence:persistence-api:jar:1.0:compile">
+      <library name="M2 Dep: javax.persistence:persistence-api:jar:1.0:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar!/" />
         </CLASSES>
@@ -198,7 +198,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: javax.servlet:servlet-api:jar:2.3:compile">
+      <library name="M2 Dep: javax.servlet:servlet-api:jar:2.3:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar!/" />
         </CLASSES>
@@ -209,7 +209,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: javax.transaction:jta:jar:1.0.1B:compile">
+      <library name="M2 Dep: javax.transaction:jta:jar:1.0.1B:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/javax/transaction/jta/1.0.1B/jta-1.0.1B.jar!/" />
         </CLASSES>
@@ -218,7 +218,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: jboss:javassist:jar:3.3.ga:compile">
+      <library name="M2 Dep: jboss:javassist:jar:3.3.ga:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/jboss/javassist/3.3.ga/javassist-3.3.ga.jar!/" />
         </CLASSES>
@@ -227,7 +227,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: jboss:jboss-archive-browsing:jar:5.0.0alpha-200607201-119:compile">
+      <library name="M2 Dep: jboss:jboss-archive-browsing:jar:5.0.0alpha-200607201-119:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/jboss/jboss-archive-browsing/5.0.0alpha-200607201-119/jboss-archive-browsing-5.0.0alpha-200607201-119.jar!/" />
         </CLASSES>
@@ -236,7 +236,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: junit:junit:jar:3.8.1:test">
+      <library name="M2 Dep: junit:junit:jar:3.8.1:test">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar!/" />
         </CLASSES>
@@ -247,7 +247,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: log4j:log4j:jar:1.2.13:compile">
+      <library name="M2 Dep: log4j:log4j:jar:1.2.13:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/log4j/log4j/1.2.13/log4j-1.2.13.jar!/" />
         </CLASSES>
@@ -258,7 +258,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: logkit:logkit:jar:1.0.1:compile">
+      <library name="M2 Dep: logkit:logkit:jar:1.0.1:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/logkit/logkit/1.0.1/logkit-1.0.1.jar!/" />
         </CLASSES>
@@ -269,7 +269,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: mysql:mysql-connector-java:jar:5.0.4:test">
+      <library name="M2 Dep: mysql:mysql-connector-java:jar:5.0.4:test">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/mysql/mysql-connector-java/5.0.4/mysql-connector-java-5.0.4.jar!/" />
         </CLASSES>
@@ -278,7 +278,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: net.sf.ehcache:ehcache:jar:1.2.3:compile">
+      <library name="M2 Dep: net.sf.ehcache:ehcache:jar:1.2.3:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/net/sf/ehcache/ehcache/1.2.3/ehcache-1.2.3.jar!/" />
         </CLASSES>
@@ -291,7 +291,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.hibernate:hibernate-annotations:jar:3.2.1.ga:compile">
+      <library name="M2 Dep: org.hibernate:hibernate-annotations:jar:3.2.1.ga:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/hibernate/hibernate-annotations/3.2.1.ga/hibernate-annotations-3.2.1.ga.jar!/" />
         </CLASSES>
@@ -302,7 +302,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.hibernate:hibernate-entitymanager:jar:3.2.1.ga:compile">
+      <library name="M2 Dep: org.hibernate:hibernate-entitymanager:jar:3.2.1.ga:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/hibernate/hibernate-entitymanager/3.2.1.ga/hibernate-entitymanager-3.2.1.ga.jar!/" />
         </CLASSES>
@@ -311,7 +311,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.hibernate:hibernate:jar:3.2.2.ga:compile">
+      <library name="M2 Dep: org.hibernate:hibernate:jar:3.2.2.ga:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/hibernate/hibernate/3.2.2.ga/hibernate-3.2.2.ga.jar!/" />
         </CLASSES>
@@ -324,7 +324,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-aspects:jar:2.0.2:compile">
+      <library name="M2 Dep: org.springframework:spring-aspects:jar:2.0.2:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/springframework/spring-aspects/2.0.2/spring-aspects-2.0.2.jar!/" />
         </CLASSES>
@@ -333,7 +333,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-beans:jar:2.0.2:compile">
+      <library name="M2 Dep: org.springframework:spring-beans:jar:2.0.2:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/springframework/spring-beans/2.0.2/spring-beans-2.0.2.jar!/" />
         </CLASSES>
@@ -342,7 +342,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-context:jar:2.0.2:compile">
+      <library name="M2 Dep: org.springframework:spring-context:jar:2.0.2:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/springframework/spring-context/2.0.2/spring-context-2.0.2.jar!/" />
         </CLASSES>
@@ -351,7 +351,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-core:jar:2.0.2:compile">
+      <library name="M2 Dep: org.springframework:spring-core:jar:2.0.2:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/springframework/spring-core/2.0.2/spring-core-2.0.2.jar!/" />
         </CLASSES>
@@ -360,7 +360,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-dao:jar:2.0.2:compile">
+      <library name="M2 Dep: org.springframework:spring-dao:jar:2.0.2:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/springframework/spring-dao/2.0.2/spring-dao-2.0.2.jar!/" />
         </CLASSES>
@@ -369,7 +369,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-jdbc:jar:2.0.2:compile">
+      <library name="M2 Dep: org.springframework:spring-jdbc:jar:2.0.2:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/springframework/spring-jdbc/2.0.2/spring-jdbc-2.0.2.jar!/" />
         </CLASSES>
@@ -378,7 +378,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-jpa:jar:2.0.2:compile">
+      <library name="M2 Dep: org.springframework:spring-jpa:jar:2.0.2:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/springframework/spring-jpa/2.0.2/spring-jpa-2.0.2.jar!/" />
         </CLASSES>
@@ -387,7 +387,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring-mock:jar:2.0.2:test">
+      <library name="M2 Dep: org.springframework:spring-mock:jar:2.0.2:test">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/springframework/spring-mock/2.0.2/spring-mock-2.0.2.jar!/" />
         </CLASSES>
@@ -396,7 +396,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.springframework:spring:jar:2.0.2:compile">
+      <library name="M2 Dep: org.springframework:spring:jar:2.0.2:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/springframework/spring/2.0.2/spring-2.0.2.jar!/" />
         </CLASSES>
@@ -407,7 +407,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: org.testng:testng:jar:jdk15:5.4:test">
+      <library name="M2 Dep: org.testng:testng:jar:jdk15:5.4:test">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/testng/testng/5.4/testng-5.4-jdk15.jar!/" />
         </CLASSES>
@@ -416,7 +416,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: pal:pal:jar:1.5.1:compile">
+      <library name="M2 Dep: pal:pal:jar:1.5.1:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/pal/pal/1.5.1/pal-1.5.1.jar!/" />
         </CLASSES>
@@ -425,7 +425,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: xerces:xercesImpl:jar:2.8.1:compile">
+      <library name="M2 Dep: xerces:xercesImpl:jar:2.8.1:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/xerces/xercesImpl/2.8.1/xercesImpl-2.8.1.jar!/" />
         </CLASSES>
@@ -436,7 +436,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="Maven Dependency: xml-apis:xml-apis:jar:1.3.03:compile">
+      <library name="M2 Dep: xml-apis:xml-apis:jar:1.3.03:compile">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/xml-apis/xml-apis/1.3.03/xml-apis-1.3.03.jar!/" />
         </CLASSES>
