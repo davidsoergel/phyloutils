@@ -49,7 +49,7 @@ public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> im
 			return result;
 			}
 		//HibernateDB.getDb().beginTaxn();
-		// Status notstarted = Status.findByName("Not Started");
+		// Status notstarted = Status.findByName("Waiting");
 
 		/*Query q = PhyloUtils.getNcbiDb().createNamedQuery("NcbiTaxonomyName.findByName");
 		q.setMaxResults(1);
