@@ -32,6 +32,6 @@
 	<bean id="ncbiTaxonomyNameDao" class="edu.berkeley.compbio.phyloutils.jpadao.NcbiTaxonomyNameDaoImpl"/>
 	<bean id="ncbiTaxonomyNodeDao" class="edu.berkeley.compbio.phyloutils.jpadao.NcbiTaxonomyNodeDaoImpl"/>
 
-	<bean id="phyloUtilsService" class="edu.berkeley.compbio.phyloutils.PhyloUtilsService"/>
+	<bean id="phyloUtilsServiceImpl" class="edu.berkeley.compbio.phyloutils.PhyloUtilsServiceImpl"/>
 
 </beans>
