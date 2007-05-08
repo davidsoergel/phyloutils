@@ -24,7 +24,7 @@ public class PhyloUtilsService
 		phyloUtilsServiceImpl = ((PhyloUtilsServiceImpl) ctx.getBean("phyloUtilsServiceImpl"));
 		}
 
-	public double exactDistanceBetween(String speciesNameA, String speciesNameB)
+	public double exactDistanceBetween(String speciesNameA, String speciesNameB) throws PhyloUtilsException
 		{
 		return phyloUtilsServiceImpl.exactDistanceBetween(speciesNameA, speciesNameB);
 		}

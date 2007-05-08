@@ -88,7 +88,7 @@ public class PhyloUtilsServiceImpl
 		}
 
 
-	public double exactDistanceBetween(String speciesNameA, String speciesNameB)
+	public double exactDistanceBetween(String speciesNameA, String speciesNameB) throws PhyloUtilsException
 		{
 		int taxIdA = ncbiTaxonomyNameDao.findByName(speciesNameA).getTaxon().getId();
 		int taxIdB = ncbiTaxonomyNameDao.findByName(speciesNameB).getTaxon().getId();

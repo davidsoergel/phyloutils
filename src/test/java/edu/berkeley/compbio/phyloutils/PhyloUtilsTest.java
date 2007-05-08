@@ -7,11 +7,8 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 /**
- * Created by IntelliJ IDEA.
- * User: soergel
- * Date: Nov 6, 2006
- * Time: 4:29:37 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: soergel Date: Nov 6, 2006 Time: 4:29:37 PM To change this template use File |
+ * Settings | File Templates.
  */
 public class PhyloUtilsTest extends AbstractJpaTests
 	{
@@ -66,7 +63,7 @@ public class PhyloUtilsTest extends AbstractJpaTests
 		}
 
 	@Test
-	public void findTaxonByNameWorks()
+	public void findTaxonByNameWorks() throws PhyloUtilsException
 		{
 		assert ncbiTaxonomyNameDao.findByName("Myxococcus xanthus").getTaxon().getTaxId() == 34;
 		}

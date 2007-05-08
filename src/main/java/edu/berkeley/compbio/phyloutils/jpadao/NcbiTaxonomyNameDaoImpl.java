@@ -1,6 +1,7 @@
 package edu.berkeley.compbio.phyloutils.jpadao;
 
 import com.davidsoergel.springjpautils.GenericDaoImpl;
+import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNameDao;
 import edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyName;
 import org.springframework.stereotype.Repository;
@@ -41,7 +42,7 @@ public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> im
 	private Map<String, NcbiTaxonomyName> names = new HashMap<String, NcbiTaxonomyName>();
 
 	@Transactional(noRollbackFor = javax.persistence.NoResultException.class)
-	public NcbiTaxonomyName findByName(String name)
+	public NcbiTaxonomyName findByName(String name) throws PhyloUtilsException
 		{
 		NcbiTaxonomyName result = names.get(name);
 		if (result != null)
@@ -60,11 +61,15 @@ public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> im
 		result = (NcbiTaxonomyName) (entityManager.createNamedQuery("NcbiTaxonomyName.findByName")
 				.setParameter("name", name).getSingleResult());
 
+		if (result == null)
+			{
+			throw new PhyloUtilsException("Could not find taxon: " + name);
+			}
 		names.put(name, result);
 		return result;
 		}
 
-	public NcbiTaxonomyName findByNameRelaxed(String name)
+	public NcbiTaxonomyName findByNameRelaxed(String name) throws PhyloUtilsException
 		{
 		NcbiTaxonomyName result = null;
 		String oldname = null;
@@ -86,7 +91,7 @@ public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> im
 			}
 		catch (IndexOutOfBoundsException e)
 			{
-			return null;
+			throw new PhyloUtilsException("Could not find taxon: " + name);
 			}
 		return result;
 		}
