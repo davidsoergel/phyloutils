@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PushbackReader;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA. User: soergel Date: Nov 6, 2006 Time: 2:21:41 PM To change this template use File |
@@ -23,6 +25,9 @@ public class PhyloUtilsServiceImpl
 	{
 	private NcbiTaxonomyNameDao ncbiTaxonomyNameDao;
 	private NcbiTaxonomyNodeDao ncbiTaxonomyNodeDao;
+
+	private Map<String, Integer> taxIdByNameRelaxed = new HashMap<String, Integer>();
+	private Map<String, Integer> taxIdByName = new HashMap<String, Integer>();
 
 	public void setNcbiTaxonomyNameDao(NcbiTaxonomyNameDao ncbiTaxonomyNameDao)
 		{
@@ -90,9 +95,18 @@ public class PhyloUtilsServiceImpl
 
 	public double exactDistanceBetween(String speciesNameA, String speciesNameB) throws PhyloUtilsException
 		{
-		int taxIdA = ncbiTaxonomyNameDao.findByName(speciesNameA).getTaxon().getId();
-		int taxIdB = ncbiTaxonomyNameDao.findByName(speciesNameB).getTaxon().getId();
-
+		Integer taxIdA = taxIdByName.get(speciesNameA);
+		if (taxIdA == null)
+			{
+			taxIdA = ncbiTaxonomyNameDao.findByName(speciesNameA).getTaxon().getId();
+			taxIdByName.put(speciesNameA, taxIdA);
+			}
+		Integer taxIdB = taxIdByName.get(speciesNameB);
+		if (taxIdB == null)
+			{
+			taxIdB = ncbiTaxonomyNameDao.findByName(speciesNameB).getTaxon().getId();
+			taxIdByName.put(speciesNameB, taxIdB);
+			}
 		//logger.error(speciesNameA + " -> " + taxIdA);
 		//logger.error(speciesNameB + " -> " + taxIdB);
 
@@ -113,8 +127,19 @@ public class PhyloUtilsServiceImpl
 			{
 			return 0;// account for TreeUtils.computeDistance bug
 			}
-		int taxIdA = ncbiTaxonomyNameDao.findByNameRelaxed(speciesNameA).getTaxon().getId();
-		int taxIdB = ncbiTaxonomyNameDao.findByNameRelaxed(speciesNameB).getTaxon().getId();
+		Integer taxIdA = taxIdByNameRelaxed.get(speciesNameA);
+		if (taxIdA == null)
+			{
+			taxIdA = ncbiTaxonomyNameDao.findByNameRelaxed(speciesNameA).getTaxon().getId();
+			taxIdByNameRelaxed.put(speciesNameA, taxIdA);
+			}
+		Integer taxIdB = taxIdByNameRelaxed.get(speciesNameB);
+		if (taxIdB == null)
+			{
+			taxIdB = ncbiTaxonomyNameDao.findByNameRelaxed(speciesNameB).getTaxon().getId();
+			taxIdByNameRelaxed.put(speciesNameB, taxIdB);
+			}
+
 		return minDistanceBetween(taxIdA, taxIdB);
 		}
 

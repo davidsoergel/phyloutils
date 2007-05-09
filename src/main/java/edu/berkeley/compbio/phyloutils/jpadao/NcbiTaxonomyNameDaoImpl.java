@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.HashMap;
@@ -41,7 +42,8 @@ public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> im
 
 	private Map<String, NcbiTaxonomyName> names = new HashMap<String, NcbiTaxonomyName>();
 
-	@Transactional(noRollbackFor = javax.persistence.NoResultException.class)
+	@Transactional(
+			noRollbackFor = {javax.persistence.NoResultException.class, javax.persistence.EntityNotFoundException.class})
 	public NcbiTaxonomyName findByName(String name) throws PhyloUtilsException
 		{
 		NcbiTaxonomyName result = names.get(name);
@@ -83,6 +85,11 @@ public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> im
 					break;
 					}
 				catch (NoResultException e)
+					{
+					oldname = name;
+					name = name.substring(0, name.lastIndexOf(" "));
+					}
+				catch (EntityNotFoundException e)
 					{
 					oldname = name;
 					name = name.substring(0, name.lastIndexOf(" "));
