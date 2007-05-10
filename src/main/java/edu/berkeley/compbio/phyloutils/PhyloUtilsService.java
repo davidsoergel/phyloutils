@@ -35,7 +35,7 @@ public class PhyloUtilsService
 		}
 
 
-	public double exactDistanceBetween(int taxIdA, int taxIdB)
+	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
 		{
 		return phyloUtilsServiceImpl.exactDistanceBetween(taxIdA, taxIdB);
 		}

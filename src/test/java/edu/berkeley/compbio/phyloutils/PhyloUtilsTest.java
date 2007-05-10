@@ -48,7 +48,7 @@ public class PhyloUtilsTest extends AbstractJpaTests
 
 
 	@Test
-	public void ciccarelliExactDistancesAreComputedCorrectly()
+	public void ciccarelliExactDistancesAreComputedCorrectly() throws PhyloUtilsException
 		{
 		double d = phyloUtilsService.exactDistanceBetween(217992, 562);
 		assert d == 0.000221;

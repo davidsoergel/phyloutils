@@ -143,7 +143,7 @@ public class PhyloUtilsServiceImpl
 		return minDistanceBetween(taxIdA, taxIdB);
 		}
 
-	public double exactDistanceBetween(int taxIdA, int taxIdB)
+	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
 		{
 		if (taxIdA == taxIdB)
 			{
@@ -157,7 +157,15 @@ public class PhyloUtilsServiceImpl
 			{
 			return 0;// account for TreeUtils.computeDistance bug
 			}
-		return TreeUtils.computeDistance(ciccarelliTree, treeIdA, treeIdB);
+		try
+			{
+			return TreeUtils.computeDistance(ciccarelliTree, treeIdA, treeIdB);
+			}
+		catch (Exception e)
+			{
+			logger.debug(e);
+			throw new PhyloUtilsException(e);
+			}
 		}
 
 
