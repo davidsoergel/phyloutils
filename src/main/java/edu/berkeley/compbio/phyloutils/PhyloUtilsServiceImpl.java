@@ -1,3 +1,35 @@
+/* $Id$ */
+
+/*
+ * Copyright (c) 2007 Regents of the University of California
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright notice,
+ *       this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the University of California, Berkeley nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 package edu.berkeley.compbio.phyloutils;
 
 import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNameDao;
@@ -23,28 +55,22 @@ import java.util.Map;
  */
 public class PhyloUtilsServiceImpl
 	{
+	// ------------------------------ FIELDS ------------------------------
+
+	protected static Logger logger = Logger.getLogger(PhyloUtilsServiceImpl.class);
 	private NcbiTaxonomyNameDao ncbiTaxonomyNameDao;
 	private NcbiTaxonomyNodeDao ncbiTaxonomyNodeDao;
 
 	private Map<String, Integer> taxIdByNameRelaxed = new HashMap<String, Integer>();
 	private Map<String, Integer> taxIdByName = new HashMap<String, Integer>();
 
-	public void setNcbiTaxonomyNameDao(NcbiTaxonomyNameDao ncbiTaxonomyNameDao)
-		{
-		this.ncbiTaxonomyNameDao = ncbiTaxonomyNameDao;
-		}
-
-	public void setNcbiTaxonomyNodeDao(NcbiTaxonomyNodeDao ncbiTaxonomyNodeDao)
-		{
-		this.ncbiTaxonomyNodeDao = ncbiTaxonomyNodeDao;
-		}
-
-	protected static Logger logger = Logger.getLogger(PhyloUtilsServiceImpl.class);
-
 	private Tree ciccarelliTree;
 	private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
-	//private static HibernateDB ncbiDb;
 
+
+	// --------------------------- CONSTRUCTORS ---------------------------
+
+	//private static HibernateDB ncbiDb;
 	/*
 		{
 		try
@@ -92,6 +118,19 @@ public class PhyloUtilsServiceImpl
 			*/
 		}
 
+	// --------------------- GETTER / SETTER METHODS ---------------------
+
+	public void setNcbiTaxonomyNameDao(NcbiTaxonomyNameDao ncbiTaxonomyNameDao)
+		{
+		this.ncbiTaxonomyNameDao = ncbiTaxonomyNameDao;
+		}
+
+	public void setNcbiTaxonomyNodeDao(NcbiTaxonomyNodeDao ncbiTaxonomyNodeDao)
+		{
+		this.ncbiTaxonomyNodeDao = ncbiTaxonomyNodeDao;
+		}
+
+	// -------------------------- OTHER METHODS --------------------------
 
 	public double exactDistanceBetween(String speciesNameA, String speciesNameB) throws PhyloUtilsException
 		{
@@ -143,6 +182,37 @@ public class PhyloUtilsServiceImpl
 		return minDistanceBetween(taxIdA, taxIdB);
 		}
 
+	/**
+	 * For each species, walk up the NCBI tree until a node that is part of the Ciccarelli tree is found; then return the
+	 * Ciccarelli distance.
+	 */
+	public double minDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
+		{
+		if (taxIdA == taxIdB)
+			{
+			return 0;// account for TreeUtils.computeDistance bug
+			}
+		taxIdA = nearestKnownAncestor(taxIdA);
+		taxIdB = nearestKnownAncestor(taxIdB);
+		return exactDistanceBetween(taxIdA, taxIdB);
+		}
+
+	public int nearestKnownAncestor(int taxId) throws PhyloUtilsException
+		{
+		NcbiTaxonomyNode n = ncbiTaxonomyNodeDao.findByTaxId(taxId);
+		while (ciccarelliTree.whichIdNumber("" + n.getId()) == -1)
+			{
+			n = n.getParent();
+			if (n.getId() == 1)
+				{
+				// arrived at root, too bad
+				throw new PhyloUtilsException("Taxon " + taxId + " not found in tree.");
+				}
+			//ncbiDb.getEntityManager().refresh(n);
+			}
+		return n.getId();
+		}
+
 	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
 		{
 		if (taxIdA == taxIdB)
@@ -166,39 +236,6 @@ public class PhyloUtilsServiceImpl
 			logger.debug(e);
 			throw new PhyloUtilsException(e);
 			}
-		}
-
-
-	/**
-	 * For each species, walk up the NCBI tree until a node that is part of the Ciccarelli tree is found; then return the
-	 * Ciccarelli distance.
-	 */
-	public double minDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
-		{
-		if (taxIdA == taxIdB)
-			{
-			return 0;// account for TreeUtils.computeDistance bug
-			}
-		taxIdA = nearestKnownAncestor(taxIdA);
-		taxIdB = nearestKnownAncestor(taxIdB);
-		return exactDistanceBetween(taxIdA, taxIdB);
-
-		}
-
-	public int nearestKnownAncestor(int taxId) throws PhyloUtilsException
-		{
-		NcbiTaxonomyNode n = ncbiTaxonomyNodeDao.findByTaxId(taxId);
-		while (ciccarelliTree.whichIdNumber("" + n.getId()) == -1)
-			{
-			n = n.getParent();
-			if (n.getId() == 1)
-				{
-				// arrived at root, too bad
-				throw new PhyloUtilsException("Taxon " + taxId + " not found in tree.");
-				}
-			//ncbiDb.getEntityManager().refresh(n);
-			}
-		return n.getId();
 		}
 
 	/*

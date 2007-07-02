@@ -1,3 +1,35 @@
+/* $Id$ */
+
+/*
+ * Copyright (c) 2007 Regents of the University of California
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright notice,
+ *       this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the University of California, Berkeley nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 package edu.berkeley.compbio.phyloutils.jpa;
 
 import com.davidsoergel.springjpautils.SpringJpaObject;
@@ -17,11 +49,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: soergel
- * Date: Nov 6, 2006
- * Time: 2:30:36 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: soergel Date: Nov 6, 2006 Time: 2:30:36 PM To change this template use File |
+ * Settings | File Templates.
  */
 @Entity
 @Table(name = "nodes")
@@ -34,6 +63,8 @@ import java.util.Set;
 //@NamedQuery(name="NcbiTaxonomyNode.findByName",query="select n from NcbiTaxonomyNode n WHERE Name = :name"),
 public class NcbiTaxonomyNode extends SpringJpaObject
 	{
+	// ------------------------------ FIELDS ------------------------------
+
 	private static Logger logger = Logger.getLogger(NcbiTaxonomyName.class);
 
 	//private int taxId;
@@ -86,62 +117,17 @@ public class NcbiTaxonomyNode extends SpringJpaObject
 	@Column(name = "comments")
 	private String comments;
 
-	//@Transient
-	public long getTaxId()
+
+	// --------------------- GETTER / SETTER METHODS ---------------------
+
+	public String getComments()
 		{
-		return getId();
+		return comments;
 		}
 
-	public NcbiTaxonomyNode getParent()
+	public void setComments(String comments)
 		{
-		return parent;
-		}
-
-	public void setParent(NcbiTaxonomyNode parent)
-		{
-		this.parent = parent;
-		}
-
-
-	public Set<NcbiTaxonomyNode> getChildSets()
-		{
-		return children;
-		}
-
-	public void setChildSets(Set<NcbiTaxonomyNode> childSets)
-		{
-		this.children = childSets;
-		}
-
-
-	public Set<NcbiTaxonomyName> getNames()
-		{
-		return names;
-		}
-
-	public void setNames(Set<NcbiTaxonomyName> names)
-		{
-		this.names = names;
-		}
-
-	public String getRank()
-		{
-		return rank;
-		}
-
-	public void setRank(String rank)
-		{
-		this.rank = rank;
-		}
-
-	public String getEmblCode()
-		{
-		return emblCode;
-		}
-
-	public void setEmblCode(String emblCode)
-		{
-		this.emblCode = emblCode;
+		this.comments = comments;
 		}
 
 	public int getDivisionId()
@@ -154,14 +140,14 @@ public class NcbiTaxonomyNode extends SpringJpaObject
 		this.divisionId = divisionId;
 		}
 
-	public boolean isInheritedDivFlag()
+	public String getEmblCode()
 		{
-		return inheritedDivFlag;
+		return emblCode;
 		}
 
-	public void setInheritedDivFlag(boolean inheritedDivFlag)
+	public void setEmblCode(String emblCode)
 		{
-		this.inheritedDivFlag = inheritedDivFlag;
+		this.emblCode = emblCode;
 		}
 
 	public int getGeneticCodeId()
@@ -174,34 +160,34 @@ public class NcbiTaxonomyNode extends SpringJpaObject
 		this.geneticCodeId = geneticCodeId;
 		}
 
-	public boolean isInheritedGCFlag()
+	public Set<NcbiTaxonomyName> getNames()
 		{
-		return inheritedGCFlag;
+		return names;
 		}
 
-	public void setInheritedGCFlag(boolean inheritedGCFlag)
+	public void setNames(Set<NcbiTaxonomyName> names)
 		{
-		this.inheritedGCFlag = inheritedGCFlag;
+		this.names = names;
 		}
 
-	public int getMitochondrialGeneticCodeId()
+	public NcbiTaxonomyNode getParent()
 		{
-		return mitachondrialGeneticCodeId;
+		return parent;
 		}
 
-	public void setMitochondrialGeneticCodeId(int mitachondrialGeneticCodeId)
+	public void setParent(NcbiTaxonomyNode parent)
 		{
-		this.mitachondrialGeneticCodeId = mitachondrialGeneticCodeId;
+		this.parent = parent;
 		}
 
-	public boolean isInheritedMGCFlag()
+	public String getRank()
 		{
-		return inheritedMGCFlag;
+		return rank;
 		}
 
-	public void setInheritedMGCFlag(boolean inheritedMGCFlag)
+	public void setRank(String rank)
 		{
-		this.inheritedMGCFlag = inheritedMGCFlag;
+		this.rank = rank;
 		}
 
 	public boolean isGenBankHiddenFlag()
@@ -224,15 +210,61 @@ public class NcbiTaxonomyNode extends SpringJpaObject
 		this.hiddenSubtreeRootFlag = hiddenSubtreeRootFlag;
 		}
 
-	public String getComments()
+	public boolean isInheritedDivFlag()
 		{
-		return comments;
+		return inheritedDivFlag;
 		}
 
-	public void setComments(String comments)
+	public void setInheritedDivFlag(boolean inheritedDivFlag)
 		{
-		this.comments = comments;
+		this.inheritedDivFlag = inheritedDivFlag;
 		}
 
+	public boolean isInheritedGCFlag()
+		{
+		return inheritedGCFlag;
+		}
 
+	public void setInheritedGCFlag(boolean inheritedGCFlag)
+		{
+		this.inheritedGCFlag = inheritedGCFlag;
+		}
+
+	public boolean isInheritedMGCFlag()
+		{
+		return inheritedMGCFlag;
+		}
+
+	public void setInheritedMGCFlag(boolean inheritedMGCFlag)
+		{
+		this.inheritedMGCFlag = inheritedMGCFlag;
+		}
+
+	// -------------------------- OTHER METHODS --------------------------
+
+	public Set<NcbiTaxonomyNode> getChildSets()
+		{
+		return children;
+		}
+
+	public int getMitochondrialGeneticCodeId()
+		{
+		return mitachondrialGeneticCodeId;
+		}
+
+	//@Transient
+	public long getTaxId()
+		{
+		return getId();
+		}
+
+	public void setChildSets(Set<NcbiTaxonomyNode> childSets)
+		{
+		this.children = childSets;
+		}
+
+	public void setMitochondrialGeneticCodeId(int mitachondrialGeneticCodeId)
+		{
+		this.mitachondrialGeneticCodeId = mitachondrialGeneticCodeId;
+		}
 	}
