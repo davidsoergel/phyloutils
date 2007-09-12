@@ -32,6 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.MathUtils;
 import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNameDao;
 import org.springframework.test.jpa.AbstractJpaTests;
 import org.testng.annotations.AfterTest;
@@ -71,7 +72,8 @@ public class PhyloUtilsTest extends AbstractJpaTests
 		assert d == 0.000221;
 
 		d = phyloUtilsService.exactDistanceBetween(217992, 59919);
-		assert d == 1.47739;
+		//System.err.println(d);
+		assert MathUtils.equalWithinFPError(d, 1.47739);
 		}
 
 	@Test
@@ -82,11 +84,8 @@ public class PhyloUtilsTest extends AbstractJpaTests
 
 	protected String[] getConfigLocations()
 		{
-		return new String[]{
-				"classpath:phyloutils-test.xml",
-				"classpath:phyloutils.xml",
-				"classpath:phyloutils-testdb.xml"
-		};
+		return new String[]{"classpath:phyloutils-test.xml", "classpath:phyloutils.xml",
+		                    "classpath:phyloutils-testdb.xml"};
 		}
 
 	@BeforeTest
