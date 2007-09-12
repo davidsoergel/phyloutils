@@ -106,14 +106,12 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="M2 Dep: commons-collections:commons-collections:jar:3.2:compile">
+      <library name="M2 Dep: commons-collections:commons-collections:jar:2.1:compile">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../.m2/repository/commons-collections/commons-collections/3.2/commons-collections-3.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../.m2/repository/commons-collections/commons-collections/2.1/commons-collections-2.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/../../.m2/repository/commons-collections/commons-collections/3.2/commons-collections-3.2-sources.jar!/" />
-        </SOURCES>
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -410,15 +408,6 @@
       <library name="M2 Dep: org.testng:testng:jar:jdk15:5.4:test">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../.m2/repository/org/testng/testng/5.4/testng-5.4-jdk15.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library name="M2 Dep: pal:pal:jar:1.5.1:compile">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../.m2/repository/pal/pal/1.5.1/pal-1.5.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

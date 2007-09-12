@@ -36,15 +36,9 @@ import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNameDao;
 import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNodeDao;
 import edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyNode;
 import org.apache.log4j.Logger;
-import pal.tree.ReadTree;
-import pal.tree.Tree;
-import pal.tree.TreeParseException;
-import pal.tree.TreeUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PushbackReader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,8 +57,9 @@ public class PhyloUtilsServiceImpl
 
 	private Map<String, Integer> taxIdByNameRelaxed = new HashMap<String, Integer>();
 	private Map<String, Integer> taxIdByName = new HashMap<String, Integer>();
+	private Map<Integer, Integer> nearestKnownAncestorCache = new HashMap<Integer, Integer>();
 
-	private Tree ciccarelliTree;
+	private RootedPhylogeny ciccarelliTree;
 	private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
 
 
@@ -96,14 +91,14 @@ public class PhyloUtilsServiceImpl
 				{
 				is = new FileInputStream(filename);
 				}*/
-			ciccarelliTree = new ReadTree(new PushbackReader(new InputStreamReader(is)));
+			ciccarelliTree = NewickParser.read(is);
 			}
 		catch (IOException e)
 			{
 			e.printStackTrace();//To change body of catch statement use File | Settings | File Templates.
 			logger.error(e);
 			}
-		catch (TreeParseException e)
+		catch (PhyloUtilsException e)
 			{
 			e.printStackTrace();//To change body of catch statement use File | Settings | File Templates.
 			logger.error(e);
@@ -199,43 +194,32 @@ public class PhyloUtilsServiceImpl
 
 	public int nearestKnownAncestor(int taxId) throws PhyloUtilsException
 		{
-		NcbiTaxonomyNode n = ncbiTaxonomyNodeDao.findByTaxId(taxId);
-		while (ciccarelliTree.whichIdNumber("" + n.getId()) == -1)
+		Integer result = nearestKnownAncestorCache.get(taxId);
+		if (result == null)
 			{
-			n = n.getParent();
-			if (n.getId() == 1)
+			NcbiTaxonomyNode n = ncbiTaxonomyNodeDao.findByTaxId(taxId);
+			while (ciccarelliTree.getNode("" + n.getId()) == null)
 				{
-				// arrived at root, too bad
-				throw new PhyloUtilsException("Taxon " + taxId + " not found in tree.");
+				n = n.getParent();
+				if (n.getId() == 1)
+					{
+					// arrived at root, too bad
+					throw new PhyloUtilsException("Taxon " + taxId + " not found in tree.");
+					}
+				//ncbiDb.getEntityManager().refresh(n);
 				}
-			//ncbiDb.getEntityManager().refresh(n);
+			result = n.getId();
+			nearestKnownAncestorCache.put(taxId, result);
 			}
-		return n.getId();
+		//return n.getId();
+		return result;
 		}
 
 	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
 		{
-		if (taxIdA == taxIdB)
-			{
-			return 0;// account for TreeUtils.computeDistance bug
-			}
-		int treeIdA = ciccarelliTree.whichIdNumber("" + taxIdA);
-		int treeIdB = ciccarelliTree.whichIdNumber("" + taxIdB);
-		//logger.error("" + taxIdA + " -> " + treeIdA);
-		//logger.error("" + taxIdB + " -> " + treeIdB);
-		if (treeIdA == treeIdB)
-			{
-			return 0;// account for TreeUtils.computeDistance bug
-			}
-		try
-			{
-			return TreeUtils.computeDistance(ciccarelliTree, treeIdA, treeIdB);
-			}
-		catch (Exception e)
-			{
-			logger.debug(e);
-			throw new PhyloUtilsException(e);
-			}
+
+		return ciccarelliTree.distanceBetween("" + taxIdA, "" + taxIdB);
+
 		}
 
 	/*

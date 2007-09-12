@@ -51,11 +51,11 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
-		<dependency>
+		<!--<dependency>
 			<groupId>pal</groupId>
 			<artifactId>pal</artifactId>
 			<version>1.5.1</version>
-		</dependency>
+		</dependency>-->
 
 		<dependency>
 			<groupId>com.davidsoergel</groupId>
