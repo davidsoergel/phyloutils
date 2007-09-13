@@ -33,8 +33,8 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.MathUtils;
 import org.testng.annotations.Test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
 
 /* $Id$ */
 
@@ -46,17 +46,19 @@ public class NewickParserTest
 	{
 
 	@Test
-	public void newickParserReadsAllNodes() throws PhyloUtilsException, FileNotFoundException
+	public void newickParserReadsAllNodes() throws PhyloUtilsException, IOException
 		{
-		RootedPhylogeny p = NewickParser.read(new FileInputStream("src/test/data/goodNewickTree.nh"));
+		URL url = ClassLoader.getSystemResource("goodNewickTree.nh");
+		RootedPhylogeny p = NewickParser.read(url.openStream());
 		assert p.getNodes().size() == 14;
 		}
 
 
 	@Test
-	public void phylogenyDistancesAreCorrect() throws PhyloUtilsException, FileNotFoundException
+	public void phylogenyDistancesAreCorrect() throws PhyloUtilsException, IOException
 		{
-		RootedPhylogeny p = NewickParser.read(new FileInputStream("src/test/data/goodNewickTree.nh"));
+		URL url = ClassLoader.getSystemResource("goodNewickTree.nh");
+		RootedPhylogeny p = NewickParser.read(url.openStream());
 
 		assert p.distanceBetween("raccoon", "bear") == 26;
 		assert p.distanceBetween("raccoon", "raccoon") == 0;
@@ -69,8 +71,9 @@ public class NewickParserTest
 
 
 	@Test(expectedExceptions = {PhyloUtilsException.class})
-	public void newickParserThrowsExceptionOnPrematureTermination() throws PhyloUtilsException, FileNotFoundException
+	public void newickParserThrowsExceptionOnPrematureTermination() throws PhyloUtilsException, IOException
 		{
-		RootedPhylogeny p = NewickParser.read(new FileInputStream("src/test/data/badNewickTree1.nh"));
+		URL url = ClassLoader.getSystemResource("badNewickTree1.nh");
+		RootedPhylogeny p = NewickParser.read(url.openStream());
 		}
 	}
