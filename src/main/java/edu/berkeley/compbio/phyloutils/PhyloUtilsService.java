@@ -52,15 +52,16 @@ public class PhyloUtilsService
 
 	public PhyloUtilsService()
 		{
-		AbstractApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{
-				"phyloutils.xml",
-				"phyloutils-db.xml"
-		});
+		AbstractApplicationContext ctx =
+				new ClassPathXmlApplicationContext(new String[]{"phyloutils.xml", "phyloutils-db.xml"});
 
 		// add a shutdown hook for the above context...
 		ctx.registerShutdownHook();
 
 		phyloUtilsServiceImpl = ((PhyloUtilsServiceImpl) ctx.getBean("phyloUtilsServiceImpl"));
+
+		// we've got what we need, so we can ditch the context already
+		ctx.close();
 		}
 
 	// -------------------------- OTHER METHODS --------------------------
