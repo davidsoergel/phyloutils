@@ -37,11 +37,14 @@ import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNodeDao;
 import edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyNode;
 import org.apache.log4j.Logger;
 
+import javax.persistence.NoResultException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA. User: soergel Date: Nov 6, 2006 Time: 2:21:41 PM To change this template use File |
@@ -59,7 +62,7 @@ public class PhyloUtilsServiceImpl
 	private Map<String, Integer> taxIdByName = new HashMap<String, Integer>();
 	private Map<Integer, Integer> nearestKnownAncestorCache = new HashMap<Integer, Integer>();
 
-	private RootedPhylogeny ciccarelliTree;
+	private RootedPhylogeny<Integer> ciccarelliTree;
 	private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
 
 
@@ -91,7 +94,7 @@ public class PhyloUtilsServiceImpl
 				{
 				is = new FileInputStream(filename);
 				}*/
-			ciccarelliTree = NewickParser.read(is);
+			ciccarelliTree = new NewickParser<Integer>().read(is, new IntegerNodeNamer(100000000));
 			}
 		catch (IOException e)
 			{
@@ -161,20 +164,21 @@ public class PhyloUtilsServiceImpl
 			{
 			return 0;// account for TreeUtils.computeDistance bug
 			}
+		Integer taxIdA = findTaxidByName(speciesNameA);
+		Integer taxIdB = findTaxidByName(speciesNameB);
+
+		return minDistanceBetween(taxIdA, taxIdB);
+		}
+
+	private Integer findTaxidByName(String speciesNameA) throws PhyloUtilsException
+		{
 		Integer taxIdA = taxIdByNameRelaxed.get(speciesNameA);
 		if (taxIdA == null)
 			{
 			taxIdA = ncbiTaxonomyNameDao.findByNameRelaxed(speciesNameA).getTaxon().getId();
 			taxIdByNameRelaxed.put(speciesNameA, taxIdA);
 			}
-		Integer taxIdB = taxIdByNameRelaxed.get(speciesNameB);
-		if (taxIdB == null)
-			{
-			taxIdB = ncbiTaxonomyNameDao.findByNameRelaxed(speciesNameB).getTaxon().getId();
-			taxIdByNameRelaxed.put(speciesNameB, taxIdB);
-			}
-
-		return minDistanceBetween(taxIdA, taxIdB);
+		return taxIdA;
 		}
 
 	/**
@@ -192,13 +196,33 @@ public class PhyloUtilsServiceImpl
 		return exactDistanceBetween(taxIdA, taxIdB);
 		}
 
+	public int nearestKnownAncestor(String speciesName) throws PhyloUtilsException
+		{
+		return nearestKnownAncestor(findTaxidByName(speciesName));
+		}
+
+	/**
+	 * Search up the NCBI taxonomy until a node is encountered that is a leaf in the Ciccarelli taxonomy
+	 *
+	 * @param taxId
+	 * @return
+	 * @throws PhyloUtilsException
+	 */
 	public int nearestKnownAncestor(int taxId) throws PhyloUtilsException
 		{
 		Integer result = nearestKnownAncestorCache.get(taxId);
 		if (result == null)
 			{
-			NcbiTaxonomyNode n = ncbiTaxonomyNodeDao.findByTaxId(taxId);
-			while (ciccarelliTree.getNode("" + n.getId()) == null)
+			NcbiTaxonomyNode n;
+			try
+				{
+				n = ncbiTaxonomyNodeDao.findByTaxId(taxId);
+				}
+			catch (NoResultException e)
+				{
+				throw new PhyloUtilsException("Taxon " + taxId + " does not exist in the NCBI taxonomy.");
+				}
+			while (ciccarelliTree.getNode(n.getId()) == null)
 				{
 				n = n.getParent();
 				if (n.getId() == 1)
@@ -218,7 +242,7 @@ public class PhyloUtilsServiceImpl
 	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
 		{
 
-		return ciccarelliTree.distanceBetween("" + taxIdA, "" + taxIdB);
+		return ciccarelliTree.distanceBetween(taxIdA, taxIdB);
 
 		}
 
@@ -227,4 +251,46 @@ public class PhyloUtilsServiceImpl
 	   {
 	   return ncbiDb;
 	   }*/
+
+	public int commonAncestorID(Integer taxIdA, Integer taxIdB) throws PhyloUtilsException
+		{
+		if (taxIdA == null)
+			{
+			return taxIdB;
+			}
+		if (taxIdB == null)
+			{
+			return taxIdA;
+			}
+
+		taxIdA = nearestKnownAncestor(taxIdA);
+		taxIdB = nearestKnownAncestor(taxIdB);
+
+
+		if (taxIdA == taxIdB)
+			{
+			return taxIdA;
+			}
+
+		return ciccarelliTree.commonAncestor(taxIdA, taxIdB);
+		}
+
+
+	public Integer commonAncestorID(Set<Integer> mergeIds) throws PhyloUtilsException
+		{
+		mergeIds.remove(null);
+		Set<Integer> knownMergeIds = new HashSet<Integer>();
+
+		for (Integer id : mergeIds)
+			{
+			knownMergeIds.add(nearestKnownAncestor(id));
+			}
+
+		if (knownMergeIds.size() == 1)
+			{
+			return knownMergeIds.iterator().next();
+			}
+
+		return ciccarelliTree.commonAncestor(knownMergeIds);
+		}
 	}

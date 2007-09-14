@@ -46,7 +46,7 @@ import java.io.StreamTokenizer;
  * @Author David Soergel
  * @Version 1.0
  */
-public class NewickParser
+public class NewickParser<T>
 	{
 	private static enum State
 		{
@@ -56,7 +56,7 @@ public class NewickParser
 	;
 
 
-	public static RootedPhylogeny read(InputStream is) throws PhyloUtilsException
+	public RootedPhylogeny<T> read(InputStream is, NodeNamer<T> namer) throws PhyloUtilsException
 		{
 		Reader r = new BufferedReader(new InputStreamReader(is));
 		StreamTokenizer st = new StreamTokenizer(r);
@@ -68,8 +68,8 @@ public class NewickParser
 		st.wordChars('_', '_');
 		st.wordChars('-', '-');
 
-		RootedPhylogeny theTree = new RootedPhylogeny();
-		PhylogenyNode currentNode = theTree;
+		RootedPhylogeny<T> theTree = new RootedPhylogeny();
+		PhylogenyNode<T> currentNode = theTree;
 		//List<PhylogenyNode> path = new LinkedList<PhylogenyNode>();
 		//path.add(currentNode);
 
@@ -113,7 +113,8 @@ public class NewickParser
 						else if (state == State.NEWNODE || state == State.NAME)
 							{
 							currentNode
-									.appendToName((int) st.nval);// handle labels with integers in them, but not doubles
+									.appendToName((int) st.nval,
+									              namer);// handle labels with integers in them, but not doubles
 							state = State.NAME;
 							}
 						else if (state == State.POST_CHILDREN)
@@ -131,7 +132,7 @@ public class NewickParser
 					case StreamTokenizer.TT_WORD:
 						if (state == State.NEWNODE || state == State.NAME)
 							{
-							currentNode.appendToName(st.sval);
+							currentNode.appendToName(st.sval, namer);
 							state = State.NAME;
 							}
 						else
@@ -209,7 +210,7 @@ public class NewickParser
 
 			}
 
-		theTree.updateNodes();
+		theTree.updateNodes(namer);
 		return theTree;
 		}
 	}

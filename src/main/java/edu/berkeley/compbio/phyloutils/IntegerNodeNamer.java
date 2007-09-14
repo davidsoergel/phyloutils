@@ -30,50 +30,56 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.MathUtils;
-import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.net.URL;
-
 /* $Id$ */
 
 /**
  * @Author David Soergel
  * @Version 1.0
  */
-public class NewickParserTest
+public class IntegerNodeNamer implements NodeNamer<Integer>
 	{
+	private int unknownBasis;
 
-	@Test
-	public void newickParserReadsAllNodes() throws PhyloUtilsException, IOException
+	public IntegerNodeNamer(int unknownBasis)
 		{
-		URL url = ClassLoader.getSystemResource("goodNewickTree.nh");
-		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));
-		assert p.getNodes().size() == 14;
+		this.unknownBasis = unknownBasis;
 		}
 
-
-	@Test
-	public void phylogenyDistancesAreCorrect() throws PhyloUtilsException, IOException
+	/*
+	 public Integer merge(Integer name, Object s)
+		 {
+		 return null;
+		 }
+ */
+	public Integer nameInternal(int i)
 		{
-		URL url = ClassLoader.getSystemResource("goodNewickTree.nh");
-		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));
-
-		assert p.distanceBetween("raccoon", "bear") == 26;
-		assert p.distanceBetween("raccoon", "raccoon") == 0;
-		double d = p.distanceBetween("raccoon", "dog");
-		assert MathUtils.equalWithinFPError(d, 45.50713);
-		d = p.distanceBetween("raccoon", "seal");
-		assert MathUtils.equalWithinFPError(d, 43.49541);
-
+		return unknownBasis + i;
 		}
 
-
-	@Test(expectedExceptions = {PhyloUtilsException.class})
-	public void newickParserThrowsExceptionOnPrematureTermination() throws PhyloUtilsException, IOException
+	public Integer merge(Integer name, String s) throws PhyloUtilsException
 		{
-		URL url = ClassLoader.getSystemResource("badNewickTree1.nh");
-		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));
+		throw new PhyloUtilsException("Cannot merge integer IDs");
+		}
+
+	public Integer merge(Integer name, Integer s) throws PhyloUtilsException
+		{
+		throw new PhyloUtilsException("Cannot merge integer IDs");
+		}
+
+	public Integer create(Integer s)
+		{
+		return s;
+		}
+
+	public Integer create(String s) throws PhyloUtilsException
+		{
+		try
+			{
+			return new Integer(s);
+			}
+		catch (NumberFormatException e)
+			{
+			throw new PhyloUtilsException(e, "Non-integer ID found.");
+			}
 		}
 	}

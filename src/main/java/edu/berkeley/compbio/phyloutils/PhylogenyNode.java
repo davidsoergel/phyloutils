@@ -42,11 +42,11 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-public class PhylogenyNode
+public class PhylogenyNode<T>
 	{
 	protected PhylogenyNode parent;
 	protected Set<PhylogenyNode> children = new HashSet<PhylogenyNode>();
-	protected String name = "";
+	protected T name = null;
 	protected Double length = null;// distinguish null from zero
 	protected double bootstrap;
 
@@ -75,7 +75,7 @@ public class PhylogenyNode
 		return children;
 		}
 
-	public String getName()
+	public T getName()
 		{
 		return name;
 		}
@@ -85,15 +85,34 @@ public class PhylogenyNode
 	   this.name = name;
 	   }*/
 
-	public void appendToName(String s)
+	public void appendToName(String s, NodeNamer<T> namer) throws PhyloUtilsException
 		{
-		name = name + s;
+		if (name == null)
+			{
+			name = namer.create(s);
+			}
+		else
+			{
+			name = namer.merge(name, s);
+			}
 		}
 
-	public void appendToName(int i)
+	public void appendToName(Integer s, NodeNamer<T> namer) throws PhyloUtilsException
 		{
-		name = name + i;
+		if (name == null)
+			{
+			name = namer.create(s);
+			}
+		else
+			{
+			name = namer.merge(name, s);
+			}
 		}
+
+	/*	public void appendToName(int i)
+	   {
+	   name = name + i;
+	   }*/
 
 	public Double getLength()
 		{
@@ -105,11 +124,11 @@ public class PhylogenyNode
 		this.length = length;
 		}
 
-	protected void addSubtreeToMap(Map<String, PhylogenyNode> nodes) throws PhyloUtilsException
+	protected void addSubtreeToMap(Map<T, PhylogenyNode> nodes, NodeNamer<T> namer) throws PhyloUtilsException
 		{
 		if (!hasName())
 			{
-			name = "UNNAMED_" + nodes.size();
+			name = namer.nameInternal(nodes.size());
 			}
 
 		else if (nodes.get(name) != null)
@@ -122,14 +141,14 @@ public class PhylogenyNode
 
 		for (PhylogenyNode n : children)
 			{
-			n.addSubtreeToMap(nodes);
+			n.addSubtreeToMap(nodes, namer);
 			}
 		}
 
-	public List<PhylogenyNode> getAncestorPath()
+	public List<PhylogenyNode<T>> getAncestorPath()
 		{
-		List<PhylogenyNode> result = new LinkedList<PhylogenyNode>();
-		PhylogenyNode trav = this;
+		List<PhylogenyNode<T>> result = new LinkedList<PhylogenyNode<T>>();
+		PhylogenyNode<T> trav = this;
 
 		while (trav != null)
 			{
@@ -142,7 +161,7 @@ public class PhylogenyNode
 
 	public boolean hasName()
 		{
-		return name != null && !name.equals("");
+		return name != null;// && !name.equals("");
 		}
 
 	public void setBootstrap(double bootstrap)

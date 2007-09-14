@@ -35,6 +35,8 @@ package edu.berkeley.compbio.phyloutils;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.Set;
+
 /**
  * Created by IntelliJ IDEA. User: soergel Date: May 7, 2007 Time: 2:03:39 PM To change this template use File |
  * Settings | File Templates.
@@ -86,5 +88,20 @@ public class PhyloUtilsService
 	public int nearestKnownAncestor(int taxId) throws PhyloUtilsException
 		{
 		return phyloUtilsServiceImpl.nearestKnownAncestor(taxId);
+		}
+
+	public int nearestKnownAncestor(String speciesName) throws PhyloUtilsException
+		{
+		return phyloUtilsServiceImpl.nearestKnownAncestor(speciesName);
+		}
+
+	public Integer commonAncestorID(Integer taxIdA, Integer taxIdB) throws PhyloUtilsException
+		{
+		return phyloUtilsServiceImpl.commonAncestorID(taxIdA, taxIdB);
+		}
+
+	public Integer commonAncestorID(Set<Integer> mergeIds) throws PhyloUtilsException
+		{
+		return phyloUtilsServiceImpl.commonAncestorID(mergeIds);
 		}
 	}

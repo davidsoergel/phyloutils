@@ -30,50 +30,23 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.MathUtils;
-import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.net.URL;
-
 /* $Id$ */
 
 /**
  * @Author David Soergel
  * @Version 1.0
  */
-public class NewickParserTest
+public interface NodeNamer<T>
 	{
+	//T merge(T name, Object s);
 
-	@Test
-	public void newickParserReadsAllNodes() throws PhyloUtilsException, IOException
-		{
-		URL url = ClassLoader.getSystemResource("goodNewickTree.nh");
-		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));
-		assert p.getNodes().size() == 14;
-		}
+	T nameInternal(int i);
 
+	T merge(T name, String s) throws PhyloUtilsException;
 
-	@Test
-	public void phylogenyDistancesAreCorrect() throws PhyloUtilsException, IOException
-		{
-		URL url = ClassLoader.getSystemResource("goodNewickTree.nh");
-		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));
+	T merge(T name, Integer s) throws PhyloUtilsException;
 
-		assert p.distanceBetween("raccoon", "bear") == 26;
-		assert p.distanceBetween("raccoon", "raccoon") == 0;
-		double d = p.distanceBetween("raccoon", "dog");
-		assert MathUtils.equalWithinFPError(d, 45.50713);
-		d = p.distanceBetween("raccoon", "seal");
-		assert MathUtils.equalWithinFPError(d, 43.49541);
+	T create(Integer s);
 
-		}
-
-
-	@Test(expectedExceptions = {PhyloUtilsException.class})
-	public void newickParserThrowsExceptionOnPrematureTermination() throws PhyloUtilsException, IOException
-		{
-		URL url = ClassLoader.getSystemResource("badNewickTree1.nh");
-		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));
-		}
+	T create(String s) throws PhyloUtilsException;
 	}
