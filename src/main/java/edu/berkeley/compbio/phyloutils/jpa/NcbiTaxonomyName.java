@@ -127,4 +127,47 @@ public class NcbiTaxonomyName extends SpringJpaObject
 		{
 		return getName();
 		}
+
+	public boolean equals(Object o)
+		{
+		if (this == o)
+			{
+			return true;
+			}
+		if (!(o instanceof NcbiTaxonomyName))
+			{
+			return false;
+			}
+
+		NcbiTaxonomyName that = (NcbiTaxonomyName) o;
+
+		if (name != null ? !name.equals(that.name) : that.name != null)
+			{
+			return false;
+			}
+		if (nameClass != null ? !nameClass.equals(that.nameClass) : that.nameClass != null)
+			{
+			return false;
+			}
+		if (taxon != null ? !taxon.equals(that.taxon) : that.taxon != null)
+			{
+			return false;
+			}
+		if (uniqueName != null ? !uniqueName.equals(that.uniqueName) : that.uniqueName != null)
+			{
+			return false;
+			}
+
+		return true;
+		}
+
+	public int hashCode()
+		{
+		int result;
+		result = (taxon != null ? taxon.hashCode() : 0);
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (uniqueName != null ? uniqueName.hashCode() : 0);
+		result = 31 * result + (nameClass != null ? nameClass.hashCode() : 0);
+		return result;
+		}
 	}

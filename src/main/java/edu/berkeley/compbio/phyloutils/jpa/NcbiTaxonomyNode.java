@@ -267,4 +267,40 @@ public class NcbiTaxonomyNode extends SpringJpaObject
 		{
 		this.mitachondrialGeneticCodeId = mitachondrialGeneticCodeId;
 		}
+
+
+	//** Using the names collection here probably doesn't work
+	public boolean equals(Object o)
+		{
+		if (this == o)
+			{
+			return true;
+			}
+		if (!(o instanceof NcbiTaxonomyNode))
+			{
+			return false;
+			}
+
+		NcbiTaxonomyNode that = (NcbiTaxonomyNode) o;
+
+		if (names != null ? !names.equals(that.names) : that.names != null)
+			{
+			return false;
+			}
+		if (parent != null ? !parent.equals(that.parent) : that.parent != null)
+			{
+			return false;
+			}
+
+		return true;
+		}
+
+	public int hashCode()
+		{
+		int result;
+		result = (parent != null ? parent.hashCode() : 0);
+		result = 31 * result + (names != null ? names.hashCode() : 0);
+
+		return result;
+		}
 	}
