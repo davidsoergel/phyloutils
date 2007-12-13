@@ -41,7 +41,7 @@ import java.util.Set;
  * Created by IntelliJ IDEA. User: soergel Date: May 7, 2007 Time: 2:03:39 PM To change this template use File |
  * Settings | File Templates.
  */
-public class PhyloUtilsService
+public class PhyloUtilsService//extends SingletonRegistry<PhyloUtilsService>
 	{
 	// ------------------------------ FIELDS ------------------------------
 
@@ -52,10 +52,8 @@ public class PhyloUtilsService
 
 	public PhyloUtilsService()
 		{
-		AbstractApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{
-				"phyloutils.xml",
-				"phyloutils-db.xml"
-		});
+		AbstractApplicationContext ctx =
+				new ClassPathXmlApplicationContext(new String[]{"phyloutils.xml", "phyloutils-db.xml"});
 
 		// add a shutdown hook for the above context...
 		ctx.registerShutdownHook();

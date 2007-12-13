@@ -94,7 +94,7 @@ public class PhyloUtilsServiceImpl
 		{
 		try
 			{
-			readState();
+			readStateIfAvailable();
 
 			URL res = ClassLoader.getSystemResource(ciccarelliFilename);
 			InputStream is = res.openStream();
@@ -310,7 +310,7 @@ public class PhyloUtilsServiceImpl
 		return ciccarelliTree.commonAncestor(knownMergeIds);
 		}
 
-	private void readState()
+	private void readStateIfAvailable()
 		{
 
 		try
@@ -323,8 +323,8 @@ public class PhyloUtilsServiceImpl
 			ois.close();
 			}
 		catch (Exception e)
-			{
-			e.printStackTrace();
+			{// no problem
+			//e.printStackTrace();
 			}
 		}
 
