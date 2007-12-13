@@ -37,6 +37,7 @@ import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNameDao;
 import edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyName;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -78,6 +79,7 @@ public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> im
 
 	// --------------------- Interface GenericDao ---------------------
 
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public NcbiTaxonomyName findById(Integer id)
 		{
 		return entityManager.find(NcbiTaxonomyName.class, id);
@@ -86,8 +88,8 @@ public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> im
 	// --------------------- Interface NcbiTaxonomyNameDao ---------------------
 
 
-	@Transactional(
-			noRollbackFor = {javax.persistence.NoResultException.class, javax.persistence.EntityNotFoundException.class})
+	@Transactional(propagation = Propagation.SUPPORTS,
+	               noRollbackFor = {javax.persistence.NoResultException.class, javax.persistence.EntityNotFoundException.class})
 	public NcbiTaxonomyName findByName(String name) throws PhyloUtilsException
 		{
 		NcbiTaxonomyName result = names.get(name);
@@ -115,6 +117,7 @@ public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> im
 		return result;
 		}
 
+	@Transactional(propagation = Propagation.MANDATORY)
 	public NcbiTaxonomyName findByNameRelaxed(String name) throws PhyloUtilsException
 		{
 		NcbiTaxonomyName result = null;

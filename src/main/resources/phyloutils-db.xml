@@ -38,12 +38,17 @@
     http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
        default-autowire="byName">
 
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<bean id="dataSourceTarget" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
 		<property name="url" value="jdbc:mysql://orchid.berkeley.edu/ncbi_taxonomy"/>
 		<property name="username" value="ncbi_taxonomy"/>
 		<property name="password" value="tNT$$8tt3"/>
 	</bean>
 
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+		<property name="targetDataSource">
+			<ref local="dataSourceTarget"/>
+		</property>
+	</bean>
 </beans>
 

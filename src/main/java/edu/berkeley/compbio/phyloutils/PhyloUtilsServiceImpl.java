@@ -36,10 +36,16 @@ import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNameDao;
 import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNodeDao;
 import edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyNode;
 import org.apache.log4j.Logger;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -88,6 +94,8 @@ public class PhyloUtilsServiceImpl
 		{
 		try
 			{
+			readState();
+
 			URL res = ClassLoader.getSystemResource(ciccarelliFilename);
 			InputStream is = res.openStream();
 			/*if (is == null)
@@ -130,6 +138,7 @@ public class PhyloUtilsServiceImpl
 
 	// -------------------------- OTHER METHODS --------------------------
 
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public double exactDistanceBetween(String speciesNameA, String speciesNameB) throws PhyloUtilsException
 		{
 		Integer taxIdA = taxIdByName.get(speciesNameA);
@@ -158,6 +167,7 @@ public class PhyloUtilsServiceImpl
 	 * @param speciesNameB
 	 * @return
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public double minDistanceBetween(String speciesNameA, String speciesNameB) throws PhyloUtilsException
 		{
 		if (speciesNameA.equals(speciesNameB))
@@ -170,6 +180,7 @@ public class PhyloUtilsServiceImpl
 		return minDistanceBetween(taxIdA, taxIdB);
 		}
 
+	@Transactional(propagation = Propagation.REQUIRED)
 	private Integer findTaxidByName(String speciesNameA) throws PhyloUtilsException
 		{
 		Integer taxIdA = taxIdByNameRelaxed.get(speciesNameA);
@@ -185,6 +196,7 @@ public class PhyloUtilsServiceImpl
 	 * For each species, walk up the NCBI tree until a node that is part of the Ciccarelli tree is found; then return the
 	 * Ciccarelli distance.
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public double minDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
 		{
 		if (taxIdA == taxIdB)
@@ -196,6 +208,7 @@ public class PhyloUtilsServiceImpl
 		return exactDistanceBetween(taxIdA, taxIdB);
 		}
 
+	@Transactional(propagation = Propagation.REQUIRED)
 	public int nearestKnownAncestor(String speciesName) throws PhyloUtilsException
 		{
 		return nearestKnownAncestor(findTaxidByName(speciesName));
@@ -208,6 +221,7 @@ public class PhyloUtilsServiceImpl
 	 * @return
 	 * @throws PhyloUtilsException
 	 */
+	@Transactional(propagation = Propagation.REQUIRED)
 	public int nearestKnownAncestor(int taxId) throws PhyloUtilsException
 		{
 		Integer result = nearestKnownAncestorCache.get(taxId);
@@ -252,6 +266,7 @@ public class PhyloUtilsServiceImpl
 	   return ncbiDb;
 	   }*/
 
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public int commonAncestorID(Integer taxIdA, Integer taxIdB) throws PhyloUtilsException
 		{
 		if (taxIdA == null)
@@ -276,6 +291,7 @@ public class PhyloUtilsServiceImpl
 		}
 
 
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public Integer commonAncestorID(Set<Integer> mergeIds) throws PhyloUtilsException
 		{
 		mergeIds.remove(null);
@@ -292,5 +308,41 @@ public class PhyloUtilsServiceImpl
 			}
 
 		return ciccarelliTree.commonAncestor(knownMergeIds);
+		}
+
+	private void readState()
+		{
+
+		try
+			{
+			FileInputStream fin = new FileInputStream("/tmp/edu.berkeley.compbio.phyloutils.cache");
+			ObjectInputStream ois = new ObjectInputStream(fin);
+			taxIdByNameRelaxed = (Map<String, Integer>) ois.readObject();
+			taxIdByName = (Map<String, Integer>) ois.readObject();
+			nearestKnownAncestorCache = (Map<Integer, Integer>) ois.readObject();
+			ois.close();
+			}
+		catch (Exception e)
+			{
+			e.printStackTrace();
+			}
+		}
+
+
+	public void saveState()
+		{
+		try
+			{
+			FileOutputStream fout = new FileOutputStream("/tmp/edu.berkeley.compbio.phyloutils.cache");
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(taxIdByNameRelaxed);
+			oos.writeObject(taxIdByName);
+			oos.writeObject(nearestKnownAncestorCache);
+			oos.close();
+			}
+		catch (Exception e)
+			{
+			e.printStackTrace();
+			}
 		}
 	}

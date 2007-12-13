@@ -52,8 +52,10 @@ public class PhyloUtilsService
 
 	public PhyloUtilsService()
 		{
-		AbstractApplicationContext ctx =
-				new ClassPathXmlApplicationContext(new String[]{"phyloutils.xml", "phyloutils-db.xml"});
+		AbstractApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{
+				"phyloutils.xml",
+				"phyloutils-db.xml"
+		});
 
 		// add a shutdown hook for the above context...
 		ctx.registerShutdownHook();
@@ -61,16 +63,27 @@ public class PhyloUtilsService
 		phyloUtilsServiceImpl = ((PhyloUtilsServiceImpl) ctx.getBean("phyloUtilsServiceImpl"));
 
 		// we've got what we need, so we can ditch the context already
-		ctx.close();
+		// no, that breaks transactioning
+		//ctx.close();
 		}
 
 	// -------------------------- OTHER METHODS --------------------------
 
+	//private Map<String, Double> exactDistanceBetweenStringsCache = new HashMap<String, Double>();
+
 	public double exactDistanceBetween(String speciesNameA, String speciesNameB) throws PhyloUtilsException
 		{
 		return phyloUtilsServiceImpl.exactDistanceBetween(speciesNameA, speciesNameB);
+		/*	Double result = exactDistanceBetweenStringsCache.get(speciesNameA+"|"+speciesNameB);
+				if(result == null)
+					{
+					result = phyloUtilsServiceImpl.exactDistanceBetween(speciesNameA, speciesNameB);
+					exactDistanceBetweenStringsCache.put(speciesNameA+speciesNameB, result);
+					}
+				return result;*/
 		}
 
+	//	private Map<String, Double> exactDistanceBetweenIntsCache = new HashMap<String, Double>();
 	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
 		{
 		return phyloUtilsServiceImpl.exactDistanceBetween(taxIdA, taxIdB);
@@ -104,5 +117,10 @@ public class PhyloUtilsService
 	public Integer commonAncestorID(Set<Integer> mergeIds) throws PhyloUtilsException
 		{
 		return phyloUtilsServiceImpl.commonAncestorID(mergeIds);
+		}
+
+	public void saveState()
+		{
+		phyloUtilsServiceImpl.saveState();
 		}
 	}

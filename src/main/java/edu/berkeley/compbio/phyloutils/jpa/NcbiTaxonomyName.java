@@ -40,6 +40,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -65,7 +66,7 @@ public class NcbiTaxonomyName extends SpringJpaObject
 	private static Logger logger = Logger.getLogger(NcbiTaxonomyName.class);
 
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tax_id")
 	private NcbiTaxonomyNode taxon;
 

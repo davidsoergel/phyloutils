@@ -36,6 +36,7 @@ import com.davidsoergel.springjpautils.GenericDaoImpl;
 import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNodeDao;
 import edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyNode;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -71,6 +72,7 @@ public class NcbiTaxonomyNodeDaoImpl extends GenericDaoImpl<NcbiTaxonomyNode> im
 
 	// --------------------- Interface GenericDao ---------------------
 
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public NcbiTaxonomyNode findById(Integer id)
 		{
 		return entityManager.find(NcbiTaxonomyNode.class, id);
@@ -79,7 +81,7 @@ public class NcbiTaxonomyNodeDaoImpl extends GenericDaoImpl<NcbiTaxonomyNode> im
 	// --------------------- Interface NcbiTaxonomyNodeDao ---------------------
 
 
-	@Transactional(noRollbackFor = javax.persistence.NoResultException.class)
+	@Transactional(propagation = Propagation.SUPPORTS, noRollbackFor = javax.persistence.NoResultException.class)
 	public NcbiTaxonomyNode findByTaxId(int taxid)
 		{
 		return (NcbiTaxonomyNode) (entityManager.createNamedQuery("NcbiTaxonomyNode.findByTaxId")
