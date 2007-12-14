@@ -41,9 +41,16 @@ import java.util.Set;
  * Created by IntelliJ IDEA. User: soergel Date: May 7, 2007 Time: 2:03:39 PM To change this template use File |
  * Settings | File Templates.
  */
-public class PhyloUtilsService//extends SingletonRegistry<PhyloUtilsService>
+public class PhyloUtilsService//extends Singleton<PhyloUtilsService>
 	{
 	// ------------------------------ FIELDS ------------------------------
+
+	private static final PhyloUtilsService instance = new PhyloUtilsService();
+
+	public static PhyloUtilsService getInstance()
+		{
+		return instance;
+		}
 
 	private PhyloUtilsServiceImpl phyloUtilsServiceImpl;
 
