@@ -44,7 +44,7 @@ public interface NcbiTaxonomyNameDao extends GenericDao<NcbiTaxonomyName, Intege
 	{
 	// -------------------------- OTHER METHODS --------------------------
 
-	public NcbiTaxonomyName findByName(String name) throws PhyloUtilsException;
+	NcbiTaxonomyName findByName(String name) throws PhyloUtilsException;
 
-	public NcbiTaxonomyName findByNameRelaxed(String name) throws PhyloUtilsException;
+	NcbiTaxonomyName findByNameRelaxed(String name) throws PhyloUtilsException;
 	}

@@ -43,5 +43,5 @@ public interface NcbiTaxonomyNodeDao extends GenericDao<NcbiTaxonomyNode, Intege
 	{
 	// -------------------------- OTHER METHODS --------------------------
 
-	public NcbiTaxonomyNode findByTaxId(int taxid);
+	NcbiTaxonomyNode findByTaxId(int taxid);
 	}
