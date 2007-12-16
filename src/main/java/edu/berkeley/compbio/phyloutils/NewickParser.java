@@ -48,10 +48,7 @@ import java.io.StreamTokenizer;
  */
 public class NewickParser<T>
 	{
-	private static enum State
-		{
-			NEWNODE, NAME, POST_CHILDREN, EXPECTING_NUMBER, NODEEND, EOF, FINISHED
-		}
+	// -------------------------- OTHER METHODS --------------------------
 
 	;
 
@@ -142,7 +139,7 @@ public class NewickParser<T>
 							}
 						break;
 
-					case'(':
+					case '(':
 						if (state == State.NEWNODE || state == State.NAME)
 							{
 							currentNode = new PhylogenyNode(currentNode);
@@ -154,7 +151,7 @@ public class NewickParser<T>
 							}
 						break;
 
-					case')':
+					case ')':
 						if (state == State.NAME || state == State.POST_CHILDREN || state == State.NODEEND)
 							{
 							currentNode = currentNode.getParent();
@@ -166,7 +163,7 @@ public class NewickParser<T>
 							}
 						break;
 
-					case',':
+					case ',':
 						if (state == State.NAME || state == State.POST_CHILDREN || state == State.NODEEND)
 							{
 							currentNode = new PhylogenyNode(currentNode.getParent());
@@ -178,7 +175,7 @@ public class NewickParser<T>
 							}
 						break;
 
-					case':':
+					case ':':
 						if (state == State.NAME || state == State.POST_CHILDREN)
 							{
 							state = State.EXPECTING_NUMBER;
@@ -189,7 +186,7 @@ public class NewickParser<T>
 							}
 						break;
 
-					case';':
+					case ';':
 						if (currentNode != theTree)
 							{
 							throw new PhyloUtilsException("Premature end of tree at " + st.lineno());
@@ -200,17 +197,22 @@ public class NewickParser<T>
 					default:
 						throw new PhyloUtilsException(
 								"Illegal character " + (char) st.ttype + " at line " + st.lineno());
-
 					}
 				}
 			}
 		catch (IOException e)
 			{
 			throw new PhyloUtilsException(e, "Could not read Newick tree at line " + st.lineno());
-
 			}
 
 		theTree.updateNodes(namer);
 		return theTree;
+		}
+
+	// -------------------------- ENUMERATIONS --------------------------
+
+	private static enum State
+		{
+			NEWNODE, NAME, POST_CHILDREN, EXPECTING_NUMBER, NODEEND, EOF, FINISHED
 		}
 	}

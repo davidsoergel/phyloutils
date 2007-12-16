@@ -84,8 +84,11 @@ public class PhyloUtilsTest extends AbstractJpaTests
 
 	protected String[] getConfigLocations()
 		{
-		return new String[]{"classpath:phyloutils-test.xml", "classpath:phyloutils.xml",
-		                    "classpath:phyloutils-testdb.xml"};
+		return new String[]{
+				"classpath:phyloutils-test.xml",
+				"classpath:phyloutils.xml",
+				"classpath:phyloutils-testdb.xml"
+		};
 		}
 
 	@BeforeTest

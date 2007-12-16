@@ -44,6 +44,7 @@ import java.net.URL;
  */
 public class NewickParserTest
 	{
+	// -------------------------- OTHER METHODS --------------------------
 
 	@Test
 	public void newickParserReadsAllNodes() throws PhyloUtilsException, IOException
@@ -53,6 +54,12 @@ public class NewickParserTest
 		assert p.getNodes().size() == 14;
 		}
 
+	@Test(expectedExceptions = {PhyloUtilsException.class})
+	public void newickParserThrowsExceptionOnPrematureTermination() throws PhyloUtilsException, IOException
+		{
+		URL url = ClassLoader.getSystemResource("badNewickTree1.nh");
+		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));
+		}
 
 	@Test
 	public void phylogenyDistancesAreCorrect() throws PhyloUtilsException, IOException
@@ -66,14 +73,5 @@ public class NewickParserTest
 		assert MathUtils.equalWithinFPError(d, 45.50713);
 		d = p.distanceBetween("raccoon", "seal");
 		assert MathUtils.equalWithinFPError(d, 43.49541);
-
-		}
-
-
-	@Test(expectedExceptions = {PhyloUtilsException.class})
-	public void newickParserThrowsExceptionOnPrematureTermination() throws PhyloUtilsException, IOException
-		{
-		URL url = ClassLoader.getSystemResource("badNewickTree1.nh");
-		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));
 		}
 	}

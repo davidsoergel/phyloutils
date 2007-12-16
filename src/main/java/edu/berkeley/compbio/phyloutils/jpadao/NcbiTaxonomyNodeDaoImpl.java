@@ -80,7 +80,6 @@ public class NcbiTaxonomyNodeDaoImpl extends GenericDaoImpl<NcbiTaxonomyNode> im
 
 	// --------------------- Interface NcbiTaxonomyNodeDao ---------------------
 
-
 	@Transactional(propagation = Propagation.SUPPORTS, noRollbackFor = javax.persistence.NoResultException.class)
 	public NcbiTaxonomyNode findByTaxId(int taxid)
 		{

@@ -38,12 +38,22 @@ package edu.berkeley.compbio.phyloutils;
  */
 public class IntegerNodeNamer implements NodeNamer<Integer>
 	{
+	// ------------------------------ FIELDS ------------------------------
+
 	private int unknownBasis;
+
+
+	// --------------------------- CONSTRUCTORS ---------------------------
 
 	public IntegerNodeNamer(int unknownBasis)
 		{
 		this.unknownBasis = unknownBasis;
 		}
+
+	// ------------------------ INTERFACE METHODS ------------------------
+
+
+	// --------------------- Interface NodeNamer ---------------------
 
 	/*
 	 public Integer merge(Integer name, Object s)
@@ -51,6 +61,7 @@ public class IntegerNodeNamer implements NodeNamer<Integer>
 		 return null;
 		 }
  */
+
 	public Integer nameInternal(int i)
 		{
 		return unknownBasis + i;

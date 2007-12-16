@@ -47,20 +47,24 @@ public class PhyloUtilsService//extends Singleton<PhyloUtilsService>
 
 	private static final PhyloUtilsService instance = new PhyloUtilsService();
 
+	private PhyloUtilsServiceImpl phyloUtilsServiceImpl;
+
+
+	// -------------------------- STATIC METHODS --------------------------
+
 	public static PhyloUtilsService getInstance()
 		{
 		return instance;
 		}
 
-	private PhyloUtilsServiceImpl phyloUtilsServiceImpl;
-
-
 	// --------------------------- CONSTRUCTORS ---------------------------
 
 	public PhyloUtilsService()
 		{
-		AbstractApplicationContext ctx =
-				new ClassPathXmlApplicationContext(new String[]{"phyloutils.xml", "phyloutils-db.xml"});
+		AbstractApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{
+				"phyloutils.xml",
+				"phyloutils-db.xml"
+		});
 
 		// add a shutdown hook for the above context...
 		ctx.registerShutdownHook();
@@ -73,6 +77,16 @@ public class PhyloUtilsService//extends Singleton<PhyloUtilsService>
 		}
 
 	// -------------------------- OTHER METHODS --------------------------
+
+	public Integer commonAncestorID(Set<Integer> mergeIds) throws PhyloUtilsException
+		{
+		return phyloUtilsServiceImpl.commonAncestorID(mergeIds);
+		}
+
+	public Integer commonAncestorID(Integer taxIdA, Integer taxIdB) throws PhyloUtilsException
+		{
+		return phyloUtilsServiceImpl.commonAncestorID(taxIdA, taxIdB);
+		}
 
 	//private Map<String, Double> exactDistanceBetweenStringsCache = new HashMap<String, Double>();
 
@@ -112,16 +126,6 @@ public class PhyloUtilsService//extends Singleton<PhyloUtilsService>
 	public int nearestKnownAncestor(String speciesName) throws PhyloUtilsException
 		{
 		return phyloUtilsServiceImpl.nearestKnownAncestor(speciesName);
-		}
-
-	public Integer commonAncestorID(Integer taxIdA, Integer taxIdB) throws PhyloUtilsException
-		{
-		return phyloUtilsServiceImpl.commonAncestorID(taxIdA, taxIdB);
-		}
-
-	public Integer commonAncestorID(Set<Integer> mergeIds) throws PhyloUtilsException
-		{
-		return phyloUtilsServiceImpl.commonAncestorID(mergeIds);
 		}
 
 	public void saveState()

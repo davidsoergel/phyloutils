@@ -87,7 +87,6 @@ public class NcbiTaxonomyNameDaoImpl extends GenericDaoImpl<NcbiTaxonomyName> im
 
 	// --------------------- Interface NcbiTaxonomyNameDao ---------------------
 
-
 	@Transactional(propagation = Propagation.SUPPORTS,
 	               noRollbackFor = {javax.persistence.NoResultException.class, javax.persistence.EntityNotFoundException.class})
 	public NcbiTaxonomyName findByName(String name) throws PhyloUtilsException

@@ -38,15 +38,17 @@ package edu.berkeley.compbio.phyloutils;
  */
 public interface NodeNamer<T>
 	{
-	//T merge(T name, Object s);
+	// -------------------------- OTHER METHODS --------------------------
 
-	T nameInternal(int i);
+	T create(Integer s);
+
+	T create(String s) throws PhyloUtilsException;
 
 	T merge(T name, String s) throws PhyloUtilsException;
 
 	T merge(T name, Integer s) throws PhyloUtilsException;
 
-	T create(Integer s);
+	//T merge(T name, Object s);
 
-	T create(String s) throws PhyloUtilsException;
+	T nameInternal(int i);
 	}

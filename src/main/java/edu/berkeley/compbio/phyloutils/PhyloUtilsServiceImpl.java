@@ -124,6 +124,23 @@ public class PhyloUtilsServiceImpl
 			*/
 		}
 
+	private void readStateIfAvailable()
+		{
+		try
+			{
+			FileInputStream fin = new FileInputStream("/tmp/edu.berkeley.compbio.phyloutils.cache");
+			ObjectInputStream ois = new ObjectInputStream(fin);
+			taxIdByNameRelaxed = (Map<String, Integer>) ois.readObject();
+			taxIdByName = (Map<String, Integer>) ois.readObject();
+			nearestKnownAncestorCache = (Map<Integer, Integer>) ois.readObject();
+			ois.close();
+			}
+		catch (Exception e)
+			{// no problem
+			//e.printStackTrace();
+			}
+		}
+
 	// --------------------- GETTER / SETTER METHODS ---------------------
 
 	public void setNcbiTaxonomyNameDao(NcbiTaxonomyNameDao ncbiTaxonomyNameDao)
@@ -137,6 +154,55 @@ public class PhyloUtilsServiceImpl
 		}
 
 	// -------------------------- OTHER METHODS --------------------------
+
+	@Transactional(propagation = Propagation.SUPPORTS)
+	public Integer commonAncestorID(Set<Integer> mergeIds) throws PhyloUtilsException
+		{
+		mergeIds.remove(null);
+		Set<Integer> knownMergeIds = new HashSet<Integer>();
+
+		for (Integer id : mergeIds)
+			{
+			knownMergeIds.add(nearestKnownAncestor(id));
+			}
+
+		if (knownMergeIds.size() == 1)
+			{
+			return knownMergeIds.iterator().next();
+			}
+
+		return ciccarelliTree.commonAncestor(knownMergeIds);
+		}
+
+	/*
+   public static HibernateDB getNcbiDb()
+	   {
+	   return ncbiDb;
+	   }*/
+
+	@Transactional(propagation = Propagation.SUPPORTS)
+	public int commonAncestorID(Integer taxIdA, Integer taxIdB) throws PhyloUtilsException
+		{
+		if (taxIdA == null)
+			{
+			return taxIdB;
+			}
+		if (taxIdB == null)
+			{
+			return taxIdA;
+			}
+
+		taxIdA = nearestKnownAncestor(taxIdA);
+		taxIdB = nearestKnownAncestor(taxIdB);
+
+
+		if (taxIdA == taxIdB)
+			{
+			return taxIdA;
+			}
+
+		return ciccarelliTree.commonAncestor(taxIdA, taxIdB);
+		}
 
 	@Transactional(propagation = Propagation.SUPPORTS)
 	public double exactDistanceBetween(String speciesNameA, String speciesNameB) throws PhyloUtilsException
@@ -208,12 +274,6 @@ public class PhyloUtilsServiceImpl
 		return exactDistanceBetween(taxIdA, taxIdB);
 		}
 
-	@Transactional(propagation = Propagation.REQUIRED)
-	public int nearestKnownAncestor(String speciesName) throws PhyloUtilsException
-		{
-		return nearestKnownAncestor(findTaxidByName(speciesName));
-		}
-
 	/**
 	 * Search up the NCBI taxonomy until a node is encountered that is a leaf in the Ciccarelli taxonomy
 	 *
@@ -255,79 +315,14 @@ public class PhyloUtilsServiceImpl
 
 	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
 		{
-
 		return ciccarelliTree.distanceBetween(taxIdA, taxIdB);
-
 		}
 
-	/*
-   public static HibernateDB getNcbiDb()
-	   {
-	   return ncbiDb;
-	   }*/
-
-	@Transactional(propagation = Propagation.SUPPORTS)
-	public int commonAncestorID(Integer taxIdA, Integer taxIdB) throws PhyloUtilsException
+	@Transactional(propagation = Propagation.REQUIRED)
+	public int nearestKnownAncestor(String speciesName) throws PhyloUtilsException
 		{
-		if (taxIdA == null)
-			{
-			return taxIdB;
-			}
-		if (taxIdB == null)
-			{
-			return taxIdA;
-			}
-
-		taxIdA = nearestKnownAncestor(taxIdA);
-		taxIdB = nearestKnownAncestor(taxIdB);
-
-
-		if (taxIdA == taxIdB)
-			{
-			return taxIdA;
-			}
-
-		return ciccarelliTree.commonAncestor(taxIdA, taxIdB);
+		return nearestKnownAncestor(findTaxidByName(speciesName));
 		}
-
-
-	@Transactional(propagation = Propagation.SUPPORTS)
-	public Integer commonAncestorID(Set<Integer> mergeIds) throws PhyloUtilsException
-		{
-		mergeIds.remove(null);
-		Set<Integer> knownMergeIds = new HashSet<Integer>();
-
-		for (Integer id : mergeIds)
-			{
-			knownMergeIds.add(nearestKnownAncestor(id));
-			}
-
-		if (knownMergeIds.size() == 1)
-			{
-			return knownMergeIds.iterator().next();
-			}
-
-		return ciccarelliTree.commonAncestor(knownMergeIds);
-		}
-
-	private void readStateIfAvailable()
-		{
-
-		try
-			{
-			FileInputStream fin = new FileInputStream("/tmp/edu.berkeley.compbio.phyloutils.cache");
-			ObjectInputStream ois = new ObjectInputStream(fin);
-			taxIdByNameRelaxed = (Map<String, Integer>) ois.readObject();
-			taxIdByName = (Map<String, Integer>) ois.readObject();
-			nearestKnownAncestorCache = (Map<Integer, Integer>) ois.readObject();
-			ois.close();
-			}
-		catch (Exception e)
-			{// no problem
-			//e.printStackTrace();
-			}
-		}
-
 
 	public void saveState()
 		{

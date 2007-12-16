@@ -38,22 +38,32 @@ package edu.berkeley.compbio.phyloutils;
  */
 public class StringNodeNamer implements NodeNamer<String>
 	{
+	// ------------------------------ FIELDS ------------------------------
+
 	private String unknownBasis;
+
+
+	// --------------------------- CONSTRUCTORS ---------------------------
 
 	public StringNodeNamer(String unknownBasis)
 		{
 		this.unknownBasis = unknownBasis;
 		}
 
-	/*
-	 public Integer merge(Integer name, Object s)
-		 {
-		 return null;
-		 }
- */
-	public String nameInternal(int i)
+	// ------------------------ INTERFACE METHODS ------------------------
+
+
+	// --------------------- Interface NodeNamer ---------------------
+
+
+	public String create(Integer s)
 		{
-		return unknownBasis + i;
+		return s.toString();
+		}
+
+	public String create(String s)
+		{
+		return s;
 		}
 
 	public String merge(String name, String s)
@@ -66,13 +76,14 @@ public class StringNodeNamer implements NodeNamer<String>
 		return name + s;
 		}
 
-	public String create(Integer s)
+	/*
+	 public Integer merge(Integer name, Object s)
+		 {
+		 return null;
+		 }
+ */
+	public String nameInternal(int i)
 		{
-		return s.toString();
-		}
-
-	public String create(String s)
-		{
-		return s;
+		return unknownBasis + i;
 		}
 	}

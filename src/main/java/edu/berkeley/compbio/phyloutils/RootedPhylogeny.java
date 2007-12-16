@@ -45,24 +45,108 @@ import java.util.Set;
  */
 public class RootedPhylogeny<T> extends PhylogenyNode<T>
 	{
+	// ------------------------------ FIELDS ------------------------------
+
 	private Map<T, PhylogenyNode> nodes;
+
+
+	// --------------------------- CONSTRUCTORS ---------------------------
 
 	public RootedPhylogeny()
 		{
 		super(null);
 		}
 
-	// we can't do this while building, since the names might change
-	public void updateNodes(NodeNamer<T> namer) throws PhyloUtilsException
+	// -------------------------- OTHER METHODS --------------------------
+
+	public T commonAncestor(Set<T> knownMergeIds)
 		{
-		nodes = new HashMap<T, PhylogenyNode>();
-		addSubtreeToMap(nodes, namer);
+		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
+		for (T id : knownMergeIds)
+			{
+			theAncestorLists.add(getNode(id).getAncestorPath());
+			}
+		PhylogenyNode<T> commonAncestor = null;
+
+		while (allFirstElementsEqual(theAncestorLists))
+			{
+			commonAncestor = (PhylogenyNode<T>) removeAllFirstElements(theAncestorLists);
+			}
+
+		if (commonAncestor == null)
+			{
+			return null;
+			}
+
+		return commonAncestor.getName();
 		}
 
-
-	public PhylogenyNode getNode(T name)
+	private boolean allFirstElementsEqual(Set<List<PhylogenyNode<T>>> theLists)
 		{
-		return nodes.get(name);
+		Object o = null;
+		for (List l : theLists)
+			{
+			if (l.size() == 0)
+				{
+				return false;
+				}
+			if (o != null)
+				{
+				if (!o.equals(l.get(0)))
+					{
+					return false;
+					}
+				}
+			else
+				//if(o == null)
+				{
+				o = l.get(0);
+				}
+
+			if (o == null)
+				{
+				// the first list had null as its first element, that's no good
+				return false;
+				}
+			}
+		return true;
+		}
+
+	private Object removeAllFirstElements(Set<List<PhylogenyNode<T>>> theLists)
+		{
+		Object o = null;
+		for (List l : theLists)
+			{
+			if (l.size() == 0)
+				{
+				return null;
+				}
+			o = l.remove(0);
+			}
+		return o;
+		}
+
+	public T commonAncestor(T nameA, T nameB)
+		{
+		PhylogenyNode<T> a = getNode(nameA);
+		PhylogenyNode<T> b = getNode(nameB);
+
+		List<PhylogenyNode<T>> ancestorsA = a.getAncestorPath();
+		List<PhylogenyNode<T>> ancestorsB = b.getAncestorPath();
+
+		PhylogenyNode<T> commonAncestor = null;
+		while (ancestorsA.size() > 0 && ancestorsB.size() > 0 && ancestorsA.get(0) == ancestorsB.get(0))
+			{
+			commonAncestor = ancestorsA.remove(0);
+			ancestorsB.remove(0);
+			}
+
+		if (commonAncestor == null)
+			{
+			return null;
+			}
+
+		return commonAncestor.getName();
 		}
 
 	public double distanceBetween(T nameA, T nameB)
@@ -92,102 +176,20 @@ public class RootedPhylogeny<T> extends PhylogenyNode<T>
 		return dist;
 		}
 
+	public PhylogenyNode getNode(T name)
+		{
+		return nodes.get(name);
+		}
+
 	public Collection<PhylogenyNode> getNodes()
 		{
 		return nodes.values();
 		}
 
-	public T commonAncestor(T nameA, T nameB)
+	// we can't do this while building, since the names might change
+	public void updateNodes(NodeNamer<T> namer) throws PhyloUtilsException
 		{
-
-		PhylogenyNode<T> a = getNode(nameA);
-		PhylogenyNode<T> b = getNode(nameB);
-
-		List<PhylogenyNode<T>> ancestorsA = a.getAncestorPath();
-		List<PhylogenyNode<T>> ancestorsB = b.getAncestorPath();
-
-		PhylogenyNode<T> commonAncestor = null;
-		while (ancestorsA.size() > 0 && ancestorsB.size() > 0 && ancestorsA.get(0) == ancestorsB.get(0))
-			{
-			commonAncestor = ancestorsA.remove(0);
-			ancestorsB.remove(0);
-			}
-
-		if (commonAncestor == null)
-			{
-			return null;
-			}
-
-		return commonAncestor.getName();
-		}
-
-	public T commonAncestor(Set<T> knownMergeIds)
-		{
-		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
-		for (T id : knownMergeIds)
-			{
-			theAncestorLists.add(getNode(id).getAncestorPath());
-			}
-		PhylogenyNode<T> commonAncestor = null;
-
-		while (allFirstElementsEqual(theAncestorLists))
-			{
-			commonAncestor = (PhylogenyNode<T>) removeAllFirstElements(theAncestorLists);
-			}
-
-		if (commonAncestor == null)
-			{
-			return null;
-			}
-
-		return commonAncestor.getName();
-		}
-
-
-	private boolean allFirstElementsEqual(Set<List<PhylogenyNode<T>>> theLists)
-		{
-		Object o = null;
-		for (List l : theLists)
-			{
-			if (l.size() == 0)
-				{
-				return false;
-				}
-			if (o != null)
-				{
-				if (!o.equals(l.get(0)))
-					{
-					return false;
-					}
-				}
-			else //if(o == null)
-				{
-				o = l.get(0);
-				}
-
-			if (o == null)
-				{
-				// the first list had null as its first element, that's no good
-				return false;
-				}
-
-
-			}
-		return true;
-		}
-
-
-	private Object removeAllFirstElements(Set<List<PhylogenyNode<T>>> theLists)
-		{
-		Object o = null;
-		for (List l : theLists)
-			{
-			if (l.size() == 0)
-				{
-				return null;
-				}
-			o = l.remove(0);
-			}
-		return o;
+		nodes = new HashMap<T, PhylogenyNode>();
+		addSubtreeToMap(nodes, namer);
 		}
 	}

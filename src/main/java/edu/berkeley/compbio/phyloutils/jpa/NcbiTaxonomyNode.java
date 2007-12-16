@@ -240,36 +240,10 @@ public class NcbiTaxonomyNode extends SpringJpaObject
 		this.inheritedMGCFlag = inheritedMGCFlag;
 		}
 
-	// -------------------------- OTHER METHODS --------------------------
-
-	public Set<NcbiTaxonomyNode> getChildSets()
-		{
-		return children;
-		}
-
-	public int getMitochondrialGeneticCodeId()
-		{
-		return mitachondrialGeneticCodeId;
-		}
-
-	//@Transient
-	public long getTaxId()
-		{
-		return getId();
-		}
-
-	public void setChildSets(Set<NcbiTaxonomyNode> childSets)
-		{
-		this.children = childSets;
-		}
-
-	public void setMitochondrialGeneticCodeId(int mitachondrialGeneticCodeId)
-		{
-		this.mitachondrialGeneticCodeId = mitachondrialGeneticCodeId;
-		}
-
+	// ------------------------ CANONICAL METHODS ------------------------
 
 	//** Using the names collection here probably doesn't work
+
 	public boolean equals(Object o)
 		{
 		if (this == o)
@@ -302,5 +276,33 @@ public class NcbiTaxonomyNode extends SpringJpaObject
 		result = 31 * result + (names != null ? names.hashCode() : 0);
 
 		return result;
+		}
+
+	// -------------------------- OTHER METHODS --------------------------
+
+	public Set<NcbiTaxonomyNode> getChildSets()
+		{
+		return children;
+		}
+
+	public int getMitochondrialGeneticCodeId()
+		{
+		return mitachondrialGeneticCodeId;
+		}
+
+	//@Transient
+	public long getTaxId()
+		{
+		return getId();
+		}
+
+	public void setChildSets(Set<NcbiTaxonomyNode> childSets)
+		{
+		this.children = childSets;
+		}
+
+	public void setMitochondrialGeneticCodeId(int mitachondrialGeneticCodeId)
+		{
+		this.mitachondrialGeneticCodeId = mitachondrialGeneticCodeId;
 		}
 	}

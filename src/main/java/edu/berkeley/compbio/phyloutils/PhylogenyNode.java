@@ -44,12 +44,16 @@ import java.util.Set;
  */
 public class PhylogenyNode<T>
 	{
+	// ------------------------------ FIELDS ------------------------------
+
 	protected PhylogenyNode parent;
 	protected Set<PhylogenyNode> children = new HashSet<PhylogenyNode>();
 	protected T name = null;
 	protected Double length = null;// distinguish null from zero
 	protected double bootstrap;
 
+
+	// --------------------------- CONSTRUCTORS ---------------------------
 
 	public PhylogenyNode(PhylogenyNode parent)
 		{
@@ -58,6 +62,33 @@ public class PhylogenyNode<T>
 			{
 			parent.children.add(this);
 			}
+		}
+
+	// --------------------- GETTER / SETTER METHODS ---------------------
+
+	public Set<PhylogenyNode> getChildren()
+		{
+		return children;
+		}
+
+	/*	public void appendToName(int i)
+	   {
+	   name = name + i;
+	   }*/
+
+	public Double getLength()
+		{
+		return length;
+		}
+
+	public void setLength(Double length)
+		{
+		this.length = length;
+		}
+
+	public T getName()
+		{
+		return name;
 		}
 
 	public PhylogenyNode getParent()
@@ -70,14 +101,37 @@ public class PhylogenyNode<T>
 		this.parent = parent;
 		}
 
-	public Set<PhylogenyNode> getChildren()
+	public void setBootstrap(double bootstrap)
 		{
-		return children;
+		this.bootstrap = bootstrap;
 		}
 
-	public T getName()
+	// -------------------------- OTHER METHODS --------------------------
+
+	protected void addSubtreeToMap(Map<T, PhylogenyNode> nodes, NodeNamer<T> namer) throws PhyloUtilsException
 		{
-		return name;
+		if (!hasName())
+			{
+			name = namer.nameInternal(nodes.size());
+			}
+
+		else if (nodes.get(name) != null)
+			{
+			throw new PhyloUtilsException("Node names must be unique");
+			}
+
+		nodes.put(name, this);
+
+
+		for (PhylogenyNode n : children)
+			{
+			n.addSubtreeToMap(nodes, namer);
+			}
+		}
+
+	public boolean hasName()
+		{
+		return name != null;// && !name.equals("");
 		}
 
 	/*	public void setName(String name)
@@ -109,42 +163,6 @@ public class PhylogenyNode<T>
 			}
 		}
 
-	/*	public void appendToName(int i)
-	   {
-	   name = name + i;
-	   }*/
-
-	public Double getLength()
-		{
-		return length;
-		}
-
-	public void setLength(Double length)
-		{
-		this.length = length;
-		}
-
-	protected void addSubtreeToMap(Map<T, PhylogenyNode> nodes, NodeNamer<T> namer) throws PhyloUtilsException
-		{
-		if (!hasName())
-			{
-			name = namer.nameInternal(nodes.size());
-			}
-
-		else if (nodes.get(name) != null)
-			{
-			throw new PhyloUtilsException("Node names must be unique");
-			}
-
-		nodes.put(name, this);
-
-
-		for (PhylogenyNode n : children)
-			{
-			n.addSubtreeToMap(nodes, namer);
-			}
-		}
-
 	public List<PhylogenyNode<T>> getAncestorPath()
 		{
 		List<PhylogenyNode<T>> result = new LinkedList<PhylogenyNode<T>>();
@@ -157,15 +175,5 @@ public class PhylogenyNode<T>
 			}
 
 		return result;
-		}
-
-	public boolean hasName()
-		{
-		return name != null;// && !name.equals("");
-		}
-
-	public void setBootstrap(double bootstrap)
-		{
-		this.bootstrap = bootstrap;
 		}
 	}

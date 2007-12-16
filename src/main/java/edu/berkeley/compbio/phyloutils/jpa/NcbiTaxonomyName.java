@@ -124,11 +124,6 @@ public class NcbiTaxonomyName extends SpringJpaObject
 
 	// ------------------------ CANONICAL METHODS ------------------------
 
-	public String toString()
-		{
-		return getName();
-		}
-
 	public boolean equals(Object o)
 		{
 		if (this == o)
@@ -170,5 +165,10 @@ public class NcbiTaxonomyName extends SpringJpaObject
 		result = 31 * result + (uniqueName != null ? uniqueName.hashCode() : 0);
 		result = 31 * result + (nameClass != null ? nameClass.hashCode() : 0);
 		return result;
+		}
+
+	public String toString()
+		{
+		return getName();
 		}
 	}
