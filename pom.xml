@@ -93,7 +93,7 @@
 	</dependencies>
 
 	<scm>
-		<connection>scm:svn:svn+ssh://svn.davidsoergel.com/home/svn/repos-compbio/phyloutils</connection>
+		<connection>scm:svn:http://svn.davidsoergel.com/repos/phyloutils</connection>
 		<developerConnection>scm:svn:svn+ssh://svn.davidsoergel.com/home/svn/repos-compbio/phyloutils</developerConnection>
 	</scm>
 	<distributionManagement>
