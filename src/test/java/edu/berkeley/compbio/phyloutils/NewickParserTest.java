@@ -31,6 +31,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.MathUtils;
+import org.apache.log4j.Logger;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -44,14 +45,23 @@ import java.net.URL;
  */
 public class NewickParserTest
 	{
+	private static final Logger logger = Logger.getLogger(NewickParserTest.class);
 	// -------------------------- OTHER METHODS --------------------------
 
 	@Test
 	public void newickParserReadsAllNodes() throws PhyloUtilsException, IOException
 		{
+	//	logger.warn("starting newickParserReadsAllNodes");
 		URL url = ClassLoader.getSystemResource("goodNewickTree.nh");
+		// We're in a separate classloader under Maven2 / surefire
+	//	logger.warn("Classloader: " + getClass().getClassLoader().toString());
+	//	logger.warn("file: " + getClass().getClassLoader().getResource("goodNewickTree.sh"));
+	//	URL url = getClass().getResource("goodNewickTree.sh");
+	//	logger.warn("Got file: " + url);
 		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));
+	//	logger.warn("Parsed tree with " + p.getNodes().size() + " nodes.");
 		assert p.getNodes().size() == 14;
+	//	logger.warn("all done");
 		}
 
 	@Test(expectedExceptions = {PhyloUtilsException.class})

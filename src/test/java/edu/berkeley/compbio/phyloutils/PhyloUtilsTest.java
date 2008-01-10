@@ -35,8 +35,8 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.MathUtils;
 import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNameDao;
 import org.springframework.test.jpa.AbstractJpaTests;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -91,13 +91,13 @@ public class PhyloUtilsTest extends AbstractJpaTests
 		};
 		}
 
-	@BeforeTest
+	@BeforeClass
 	public void launchSetup() throws Exception
 		{
 		setUp();
 		}
 
-	@AfterTest
+	@AfterClass
 	public void launchTearDown() throws Exception
 		{
 		tearDown();
