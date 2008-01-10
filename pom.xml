@@ -58,11 +58,11 @@
 
 	<scm>
 		<connection>scm:svn:http://svn.davidsoergel.com/repos/phyloutils</connection>
-		<developerConnection>scm:svn:svn+ssh://svn.davidsoergel.com/home/svn/repos-compbio/phyloutils</developerConnection>
+		<developerConnection>scm:svn:svn+ssh://svn.davidsoergel.com/home/svn/repos-compbio/phyloutils
+		</developerConnection>
 	</scm>
-	
-	
-	
+
+
 	<distributionManagement>
 		<site>
 			<id>website</id>
@@ -71,32 +71,29 @@
 	</distributionManagement>
 
 
-
-
 	<repositories>
-	    <repository>
-	        <id>central</id>
-	        <url>http://dev.davidsoergel.com/artifactory/repo</url>
-	        <snapshots>
-	            <enabled>false</enabled>
-	        </snapshots>
-	    </repository>
-	    <repository>
-	        <id>snapshots</id>
-	        <url>http://dev.davidsoergel.com/artifactory/repo</url>
-	        <releases>
-	            <enabled>false</enabled>
-	        </releases>
-	    </repository>
+		<repository>
+			<id>central</id>
+			<url>http://dev.davidsoergel.com/artifactory/repo</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>snapshots</id>
+			<url>http://dev.davidsoergel.com/artifactory/repo</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
 	</repositories>
-	
-<!--		<repository>
-			<id>maven-snapshot-repository</id>
-			<name>Maven Snapshot Repository</name>
-			<url>http://people.apache.org/maven-snapshot-repository</url>
-		</repository>-->
 
-	
+	<!--		<repository>
+		   <id>maven-snapshot-repository</id>
+		   <name>Maven Snapshot Repository</name>
+		   <url>http://people.apache.org/maven-snapshot-repository</url>
+	   </repository>-->
+
 
 	<dependencies>
 		<!--<dependency>
@@ -135,6 +132,13 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.0.4</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.0</version>
 			<scope>test</scope>
 		</dependency>
 

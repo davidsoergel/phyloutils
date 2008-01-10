@@ -82,6 +82,7 @@ public class PhyloUtilsTest extends AbstractJpaTests
 		assert ncbiTaxonomyNameDao.findByName("Myxococcus xanthus").getTaxon().getTaxId() == 34;
 		}
 
+	@Override
 	protected String[] getConfigLocations()
 		{
 		return new String[]{
