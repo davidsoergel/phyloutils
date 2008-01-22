@@ -63,7 +63,7 @@ public class PhyloUtilsService//extends Singleton<PhyloUtilsService>
 		{
 		AbstractApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{
 				"phyloutils.xml",
-				"phyloutils-db.xml"
+				"phyloutils-db-local.xml"
 		});
 
 		// add a shutdown hook for the above context...
