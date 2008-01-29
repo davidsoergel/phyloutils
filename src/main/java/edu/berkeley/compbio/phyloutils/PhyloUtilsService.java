@@ -32,9 +32,16 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.davidsoergel.dsutils.PropertiesUtils;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.io.ClassPathResource;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -61,19 +68,40 @@ public class PhyloUtilsService//extends Singleton<PhyloUtilsService>
 
 	public PhyloUtilsService()
 		{
-		AbstractApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{
-				"phyloutils.xml",
-				"phyloutils-db-local.xml"
-		});
+		try
+			{
+			File propsFile = PropertiesUtils
+					.findPropertiesFile("NCBI_TAXONOMY_PROPERTIES", ".phyloutils", "ncbi_taxonomy.properties");
+			Properties p = new Properties();
+			p.load(new FileInputStream(propsFile));
+			String dbName = (String) p.get("default");
 
-		// add a shutdown hook for the above context...
-		ctx.registerShutdownHook();
+			Map<String, Properties> databases = PropertiesUtils.splitPeriodDelimitedProperties(p);
 
-		phyloUtilsServiceImpl = ((PhyloUtilsServiceImpl) ctx.getBean("phyloUtilsServiceImpl"));
 
-		// we've got what we need, so we can ditch the context already
-		// no, that breaks transactioning
-		//ctx.close();
+			GenericApplicationContext ctx = new GenericApplicationContext();
+			XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
+			xmlReader.loadBeanDefinitions(new ClassPathResource("phyloutils.xml"));
+
+			PropertyPlaceholderConfigurer cfg = new PropertyPlaceholderConfigurer();
+			cfg.setProperties(databases.get(dbName));
+			ctx.addBeanFactoryPostProcessor(cfg);
+
+			ctx.refresh();
+
+			// add a shutdown hook for the above context...
+			ctx.registerShutdownHook();
+
+			phyloUtilsServiceImpl = ((PhyloUtilsServiceImpl) ctx.getBean("phyloUtilsServiceImpl"));
+
+			// we've got what we need, so we can ditch the context already
+			// no, that breaks transactioning
+			//ctx.close();
+			}
+		catch (Exception e)
+			{
+			throw new RuntimeException("Could not load database properties for NCBI taxonomy");
+			}
 		}
 
 	// -------------------------- OTHER METHODS --------------------------

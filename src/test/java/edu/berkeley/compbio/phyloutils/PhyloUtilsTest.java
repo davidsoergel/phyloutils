@@ -87,8 +87,7 @@ public class PhyloUtilsTest extends AbstractJpaTests
 		{
 		return new String[]{
 				"classpath:phyloutils-test.xml",
-				"classpath:phyloutils.xml",
-				"classpath:phyloutils-testdb-local.xml"
+				"classpath:phyloutils.xml"
 		};
 		}
 
