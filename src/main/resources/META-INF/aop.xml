@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2007 Regents of the University of California
+  ~ Copyright (c) 2008 Regents of the University of California
   ~
   ~ All rights reserved.
   ~
@@ -29,33 +28,10 @@
   ~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   -->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-    http://www.springframework.org/schema/tx
-    http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-    http://www.springframework.org/schema/aop
-    http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
-       default-autowire="byName">
 
-
-	<bean id="phyloUtilsService" class="edu.berkeley.compbio.phyloutils.PhyloUtilsService"/>
-
-	<bean id="dataSourceTarget" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-		<property name="url" value="jdbc:mysql://localhost/ncbi_tx_test"/>
-		<property name="username" value="ncbi_tx_test"/>
-		<property name="password" value="tNT$$8tt4"/>
-	</bean>
-
-
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
-		<property name="targetDataSource">
-			<ref local="dataSourceTarget"/>
-		</property>
-	</bean>
-
-</beans>
+<aspectj>
+	<aspects>
+		<include within="org.springframework.transaction.aspectj.AnnotationTransactionAspect"/>
+		<include within="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"/>
+	</aspects>
+</aspectj>

@@ -100,6 +100,7 @@ public class PhyloUtilsService//extends Singleton<PhyloUtilsService>
 			}
 		catch (Exception e)
 			{
+			e.printStackTrace();
 			throw new RuntimeException("Could not load database properties for NCBI taxonomy");
 			}
 		}
@@ -159,5 +160,10 @@ public class PhyloUtilsService//extends Singleton<PhyloUtilsService>
 	public void saveState()
 		{
 		phyloUtilsServiceImpl.saveState();
+		}
+
+	public int findTaxidByName(String name) throws PhyloUtilsException
+		{
+		return phyloUtilsServiceImpl.findTaxidByName(name);
 		}
 	}

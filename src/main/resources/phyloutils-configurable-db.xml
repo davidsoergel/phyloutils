@@ -35,36 +35,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
     http://www.springframework.org/schema/tx
-    http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-       http://www.springframework.org/schema/aop
-		http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
+    http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
        default-autowire="byName">
-
-	<bean id="entityManagerFactory"
-	      class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="jpaVendorAdapter">
-			<bean
-					class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="showSql" value="false"/>
-				<property name="generateDdl" value="false"/>
-				<property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect"/>
-
-			</bean>
-		</property>
-		<property name="persistenceUnitName" value="ncbiTaxonomy"/>
-	</bean>
-
-	<bean id="transactionManager"
-	      class="org.springframework.orm.jpa.JpaTransactionManager"/>
-
-	<tx:annotation-driven/>
-
-	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
-
-	<bean id="ncbiTaxonomyNameDao" class="edu.berkeley.compbio.phyloutils.jpadao.NcbiTaxonomyNameDaoImpl"/>
-	<bean id="ncbiTaxonomyNodeDao" class="edu.berkeley.compbio.phyloutils.jpadao.NcbiTaxonomyNodeDaoImpl"/>
-
-	<bean id="phyloUtilsServiceImpl" class="edu.berkeley.compbio.phyloutils.PhyloUtilsServiceImpl"/>
 
 	<bean id="dataSourceTarget" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${driver}"/>
@@ -80,12 +52,4 @@
 		</property>
 	</bean>
 
-	<!-- workaround bug arising in testing; see http://forum.springframework.org/showthread.php?t=42870&page=2 -->
-	<bean class="org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator"
-	      depends-on="annotationTransactionAspect"/>
-
-	<bean id="annotationTransactionAspect" class="org.springframework.transaction.aspectj.AnnotationTransactionAspect"
-	      factory-method="aspectOf">
-		<property name="transactionManager" ref="transactionManager"/>
-	</bean>
 </beans>

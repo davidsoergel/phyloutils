@@ -33,9 +33,6 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.MathUtils;
-import edu.berkeley.compbio.phyloutils.dao.NcbiTaxonomyNameDao;
-import org.springframework.test.jpa.AbstractJpaTests;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -43,26 +40,32 @@ import org.testng.annotations.Test;
  * Created by IntelliJ IDEA. User: soergel Date: Nov 6, 2006 Time: 4:29:37 PM To change this template use File |
  * Settings | File Templates.
  */
-public class PhyloUtilsTest extends AbstractJpaTests
+public class PhyloUtilsTest//extends AbstractJpaTests
 	{
 	// ------------------------------ FIELDS ------------------------------
 
-	private NcbiTaxonomyNameDao ncbiTaxonomyNameDao;
+	//	private NcbiTaxonomyNameDao ncbiTaxonomyNameDao;
 	private PhyloUtilsService phyloUtilsService;
 
-
+	/*
+	 public PhyloUtilsTest()
+		 {
+		 super();
+		 setAutowireMode(AUTOWIRE_BY_NAME);
+		 }
+ */
 	// --------------------- GETTER / SETTER METHODS ---------------------
 
-	public void setNcbiTaxonomyNameDao(NcbiTaxonomyNameDao ncbiTaxonomyNameDao)
-		{
-		this.ncbiTaxonomyNameDao = ncbiTaxonomyNameDao;
-		}
+	/*	public void setNcbiTaxonomyNameDao(NcbiTaxonomyNameDao ncbiTaxonomyNameDao)
+		 {
+		 this.ncbiTaxonomyNameDao = ncbiTaxonomyNameDao;
+		 }
 
-	public void setPhyloUtilsService(PhyloUtilsService phyloUtilsService)
-		{
-		this.phyloUtilsService = phyloUtilsService;
-		}
-
+	 public void setPhyloUtilsService(PhyloUtilsService phyloUtilsService)
+		 {
+		 this.phyloUtilsService = phyloUtilsService;
+		 }
+ */
 	// -------------------------- OTHER METHODS --------------------------
 
 	@Test
@@ -79,28 +82,38 @@ public class PhyloUtilsTest extends AbstractJpaTests
 	@Test
 	public void findTaxonByNameWorks() throws PhyloUtilsException
 		{
-		assert ncbiTaxonomyNameDao.findByName("Myxococcus xanthus").getTaxon().getTaxId() == 34;
+		//assert ncbiTaxonomyNameDao.findByName("Myxococcus xanthus").getTaxon().getTaxId() == 34;
+		assert phyloUtilsService.findTaxidByName("Myxococcus xanthus") == 34;
 		}
 
-	@Override
-	protected String[] getConfigLocations()
-		{
-		return new String[]{
-				"classpath:phyloutils-test.xml",
-				"classpath:phyloutils.xml"
-		};
-		}
+	/*
+   @Override
+   protected String[] getConfigLocations()
+	   {
+	   return new String[]{
+			   "classpath:phyloutils-test.xml",
+			   "classpath:phyloutils.xml"
+	   };
+	   }*/
+
+	/*
+	 @BeforeClass
+	 public void launchSetup() throws Exception
+		 {
+		 setUp();
+		 }
+
+	 @AfterClass
+	 public void launchTearDown() throws Exception
+		 {
+		 tearDown();
+		 }
+ */
 
 	@BeforeClass
-	public void launchSetup() throws Exception
+	public void setup()
 		{
-		setUp();
-		}
-
-	@AfterClass
-	public void launchTearDown() throws Exception
-		{
-		tearDown();
+		phyloUtilsService = PhyloUtilsService.getInstance();//new PhyloUtilsService();
 		}
 
 	@Test

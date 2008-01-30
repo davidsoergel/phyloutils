@@ -247,7 +247,7 @@ public class PhyloUtilsServiceImpl
 		}
 
 	@Transactional(propagation = Propagation.REQUIRED)
-	private Integer findTaxidByName(String speciesNameA) throws PhyloUtilsException
+	public Integer findTaxidByName(String speciesNameA) throws PhyloUtilsException
 		{
 		Integer taxIdA = taxIdByNameRelaxed.get(speciesNameA);
 		if (taxIdA == null)
