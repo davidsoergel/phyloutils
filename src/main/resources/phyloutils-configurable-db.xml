@@ -35,8 +35,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
     http://www.springframework.org/schema/tx
-    http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
-       default-autowire="byName">
+    http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+	<!--       default-autowire="byName">-->
 
 	<bean id="dataSourceTarget" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${driver}"/>

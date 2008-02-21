@@ -29,7 +29,14 @@
   -->
 
 
+<!DOCTYPE aspectj PUBLIC
+		"-//AspectJ//DTD//EN"    "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+
 <aspectj>
+	<weaver options="-verbose">
+		<include within="edu.berkeley.compbio.phyloutils..*"/>
+	</weaver>
+
 	<aspects>
 		<include within="org.springframework.transaction.aspectj.AnnotationTransactionAspect"/>
 		<include within="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"/>

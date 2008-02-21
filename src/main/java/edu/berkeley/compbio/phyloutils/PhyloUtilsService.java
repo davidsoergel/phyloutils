@@ -101,7 +101,7 @@ public class PhyloUtilsService//extends Singleton<PhyloUtilsService>
 		catch (Exception e)
 			{
 			e.printStackTrace();
-			throw new RuntimeException("Could not load database properties for NCBI taxonomy");
+			throw new RuntimeException("Could not load database properties for NCBI taxonomy", e);
 			}
 		}
 
