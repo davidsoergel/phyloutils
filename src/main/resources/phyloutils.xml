@@ -41,7 +41,8 @@
 	<!--       default-autowire="byName">-->
 
 	<!--<tx:annotation-driven/>-->
-	<aop:spring-configured/>
+
+	<!--<aop:spring-configured/>-->  <!-- note we do need there to be an AnnotationBeanConfigurerAspect; this one is comented out because it's a singleton and we're already loading it in a different application context. -->
 
 	<bean id="entityManagerFactory"
 	      class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
