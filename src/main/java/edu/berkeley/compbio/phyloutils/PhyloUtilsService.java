@@ -33,6 +33,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.PropertiesUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
@@ -50,6 +51,7 @@ import java.util.Set;
  */
 public class PhyloUtilsService//extends Singleton<PhyloUtilsService>
 	{
+	private static final Logger logger = Logger.getLogger(PhyloUtilsService.class);
 	// ------------------------------ FIELDS ------------------------------
 
 	private static final PhyloUtilsService instance = new PhyloUtilsService();
@@ -72,6 +74,7 @@ public class PhyloUtilsService//extends Singleton<PhyloUtilsService>
 			{
 			File propsFile = PropertiesUtils
 					.findPropertiesFile("NCBI_TAXONOMY_PROPERTIES", ".phyloutils", "ncbi_taxonomy.properties");
+			logger.debug("Using properties file: " + propsFile);
 			Properties p = new Properties();
 			p.load(new FileInputStream(propsFile));
 			String dbName = (String) p.get("default");
