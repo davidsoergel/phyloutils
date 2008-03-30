@@ -340,4 +340,9 @@ public class PhyloUtilsServiceImpl
 			e.printStackTrace();
 			}
 		}
+
+	public RootedPhylogeny<Integer> extractTreeWithLeaves(Set<Integer> ids)
+		{
+		return ciccarelliTree.extractTreeWithLeaves(ids);
+		}
 	}

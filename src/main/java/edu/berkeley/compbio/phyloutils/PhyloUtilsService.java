@@ -169,4 +169,9 @@ public class PhyloUtilsService//extends Singleton<PhyloUtilsService>
 		{
 		return phyloUtilsServiceImpl.findTaxidByName(name);
 		}
+
+	public RootedPhylogeny<Integer> extractTreeWithLeaves(Set<Integer> ids)
+		{
+		return phyloUtilsServiceImpl.extractTreeWithLeaves(ids);
+		}
 	}

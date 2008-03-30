@@ -30,6 +30,8 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import org.apache.log4j.Logger;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,6 +47,7 @@ import java.util.Set;
  */
 public class RootedPhylogeny<T> extends PhylogenyNode<T>
 	{
+	private static final Logger logger = Logger.getLogger(RootedPhylogeny.class);
 	// ------------------------------ FIELDS ------------------------------
 
 	private Map<T, PhylogenyNode> nodes;
@@ -81,50 +84,6 @@ public class RootedPhylogeny<T> extends PhylogenyNode<T>
 		return commonAncestor.getName();
 		}
 
-	private boolean allFirstElementsEqual(Set<List<PhylogenyNode<T>>> theLists)
-		{
-		Object o = null;
-		for (List l : theLists)
-			{
-			if (l.size() == 0)
-				{
-				return false;
-				}
-			if (o != null)
-				{
-				if (!o.equals(l.get(0)))
-					{
-					return false;
-					}
-				}
-			else
-				//if(o == null)
-				{
-				o = l.get(0);
-				}
-
-			if (o == null)
-				{
-				// the first list had null as its first element, that's no good
-				return false;
-				}
-			}
-		return true;
-		}
-
-	private Object removeAllFirstElements(Set<List<PhylogenyNode<T>>> theLists)
-		{
-		Object o = null;
-		for (List l : theLists)
-			{
-			if (l.size() == 0)
-				{
-				return null;
-				}
-			o = l.remove(0);
-			}
-		return o;
-		}
 
 	public T commonAncestor(T nameA, T nameB)
 		{
@@ -192,4 +151,40 @@ public class RootedPhylogeny<T> extends PhylogenyNode<T>
 		nodes = new HashMap<T, PhylogenyNode>();
 		addSubtreeToMap(nodes, namer);
 		}
+
+	public RootedPhylogeny<T> extractTreeWithLeaves(Set<T> ids)
+		{
+		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
+		for (T id : ids)
+			{
+			theAncestorLists.add(getNode(id).getAncestorPath());
+			}
+
+		PhylogenyNode<T> commonAncestor = null;
+		try
+			{
+			commonAncestor = extractTreeWithPaths(theAncestorLists);
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.debug(e);
+			e.printStackTrace();
+			throw new Error(e);
+			}
+
+		RootedPhylogeny<T> newRoot = new RootedPhylogeny<T>();
+		setLength(new Double(0));
+		newRoot.setName(commonAncestor.getName());
+
+		for (PhylogenyNode<T> child : commonAncestor.getChildren())
+			{
+			newRoot.getChildren().add(child);
+			child.setParent(newRoot);
+			}
+
+		return newRoot;
+		}
 	}
+
+
+
