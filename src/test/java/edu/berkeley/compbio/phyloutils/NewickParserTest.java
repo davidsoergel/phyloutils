@@ -1,5 +1,7 @@
 /*
- * Copyright (c) 2007 Regents of the University of California
+ * Copyright (c) 2001-2008 David Soergel
+ * 418 Richmond St., El Cerrito, CA  94530
+ * dev@davidsoergel.com
  *
  * All rights reserved.
  *
@@ -11,9 +13,9 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the University of California, Berkeley nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
+ *     * Neither the name of the author nor the names of any contributors may
+ *       be used to endorse or promote products derived from this software
+ *       without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -51,17 +53,17 @@ public class NewickParserTest
 	@Test
 	public void newickParserReadsAllNodes() throws PhyloUtilsException, IOException
 		{
-	//	logger.warn("starting newickParserReadsAllNodes");
+		//	logger.warn("starting newickParserReadsAllNodes");
 		URL url = ClassLoader.getSystemResource("goodNewickTree.nh");
 		// We're in a separate classloader under Maven2 / surefire
-	//	logger.warn("Classloader: " + getClass().getClassLoader().toString());
-	//	logger.warn("file: " + getClass().getClassLoader().getResource("goodNewickTree.sh"));
-	//	URL url = getClass().getResource("goodNewickTree.sh");
-	//	logger.warn("Got file: " + url);
+		//	logger.warn("Classloader: " + getClass().getClassLoader().toString());
+		//	logger.warn("file: " + getClass().getClassLoader().getResource("goodNewickTree.sh"));
+		//	URL url = getClass().getResource("goodNewickTree.sh");
+		//	logger.warn("Got file: " + url);
 		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));
-	//	logger.warn("Parsed tree with " + p.getNodes().size() + " nodes.");
+		//	logger.warn("Parsed tree with " + p.getNodes().size() + " nodes.");
 		assert p.getNodes().size() == 14;
-	//	logger.warn("all done");
+		//	logger.warn("all done");
 		}
 
 	@Test(expectedExceptions = {PhyloUtilsException.class})
