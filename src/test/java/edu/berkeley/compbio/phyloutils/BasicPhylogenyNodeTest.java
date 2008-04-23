@@ -45,42 +45,42 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-public class PhylogenyNodeTest
+public class BasicPhylogenyNodeTest
 	{
-	private static final Logger logger = Logger.getLogger(PhylogenyNodeTest.class);
+	private static final Logger logger = Logger.getLogger(BasicPhylogenyNodeTest.class);
 
-	PhylogenyNode<String> root = new PhylogenyNode<String>("root", null, 0);
+	BasicPhylogenyNode<String> root = new BasicPhylogenyNode<String>("root", null, 0);
 
-	PhylogenyNode<String> a = new PhylogenyNode<String>("a", root, 10);
-	PhylogenyNode<String> b = new PhylogenyNode<String>("b", root, 4);
-	PhylogenyNode<String> c = new PhylogenyNode<String>("c", root, 1);
+	BasicPhylogenyNode<String> a = new BasicPhylogenyNode<String>("a", root, 10);
+	BasicPhylogenyNode<String> b = new BasicPhylogenyNode<String>("b", root, 4);
+	BasicPhylogenyNode<String> c = new BasicPhylogenyNode<String>("c", root, 1);
 
 
-	PhylogenyNode<String> aa = new PhylogenyNode<String>("aa", a, 20);
-	PhylogenyNode<String> ab = new PhylogenyNode<String>("ab", a, 30);
+	BasicPhylogenyNode<String> aa = new BasicPhylogenyNode<String>("aa", a, 20);
+	BasicPhylogenyNode<String> ab = new BasicPhylogenyNode<String>("ab", a, 30);
 
 
 	//	PhylogenyNode<String> aaa = new PhylogenyNode<String>("aaa", aa, 1);
 	//	PhylogenyNode<String> aab = new PhylogenyNode<String>("aab", aa, 1);
 
 
-	PhylogenyNode<String> ba = new PhylogenyNode<String>("ba", b, 1.1);
-	PhylogenyNode<String> bb = new PhylogenyNode<String>("bb", b, 1.2);
+	BasicPhylogenyNode<String> ba = new BasicPhylogenyNode<String>("ba", b, 1.1);
+	BasicPhylogenyNode<String> bb = new BasicPhylogenyNode<String>("bb", b, 1.2);
 
 
-	PhylogenyNode<String> baa = new PhylogenyNode<String>("baa", ba, 2.1);
-	PhylogenyNode<String> bab = new PhylogenyNode<String>("bab", ba, 2.2);
+	BasicPhylogenyNode<String> baa = new BasicPhylogenyNode<String>("baa", ba, 2.1);
+	BasicPhylogenyNode<String> bab = new BasicPhylogenyNode<String>("bab", ba, 2.2);
 
 
-	PhylogenyNode<String> bba = new PhylogenyNode<String>("bba", bb, 3.1);
-	PhylogenyNode<String> bbb = new PhylogenyNode<String>("bbb", bb, 3.2);
+	BasicPhylogenyNode<String> bba = new BasicPhylogenyNode<String>("bba", bb, 3.1);
+	BasicPhylogenyNode<String> bbb = new BasicPhylogenyNode<String>("bbb", bb, 3.2);
 
 
-	PhylogenyNode<String> bbbb = new PhylogenyNode<String>("bbbb", bbb, 4.1);
+	BasicPhylogenyNode<String> bbbb = new BasicPhylogenyNode<String>("bbbb", bbb, 4.1);
 
 
-	PhylogenyNode<String> ca = new PhylogenyNode<String>("ca", c, 2);
-	PhylogenyNode<String> cb = new PhylogenyNode<String>("cb", c, 3);
+	BasicPhylogenyNode<String> ca = new BasicPhylogenyNode<String>("ca", c, 2);
+	BasicPhylogenyNode<String> cb = new BasicPhylogenyNode<String>("cb", c, 3);
 
 	@Test
 	public void leafSpanEqualsZero()
@@ -129,7 +129,7 @@ public class PhylogenyNodeTest
 		{
 		assert b.getLargestLengthSpan() == 11.8;
 
-		PhylogenyNode<String> extraNode = new PhylogenyNode<String>("bac", ba, 10);
+		BasicPhylogenyNode<String> extraNode = new BasicPhylogenyNode<String>("bac", ba, 10);
 
 		assert b.getLargestLengthSpan() == 19.6;
 
@@ -190,7 +190,7 @@ public class PhylogenyNodeTest
 			PhylogenyNode<String> topLevelNode = it.next();
 
 			int i = 0;
-			PhylogenyIterator<String> sub = topLevelNode.iterator();
+			PhylogenyIterator<String> sub = ((BasicPhylogenyNode)topLevelNode).iterator();
 			while (sub.hasNext())
 				{
 				sub.next();
@@ -215,33 +215,34 @@ public class PhylogenyNodeTest
 	@Test
 	public void extractTreeWithPathsWorks() throws PhyloUtilsException
 		{
-		Set<List<PhylogenyNode<String>>> theAncestorLists = new HashSet<List<PhylogenyNode<String>>>();
+		Set<List<BasicPhylogenyNode<String>>> theAncestorLists = new HashSet<List<BasicPhylogenyNode<String>>>();
 
 		theAncestorLists.add(baa.getAncestorPath());
 		theAncestorLists.add(bbbb.getAncestorPath());
 		theAncestorLists.add(ca.getAncestorPath());
 
-		PhylogenyNode<String> tree = root.extractTreeWithPaths(theAncestorLists);
+		BasicPhylogenyNode<String> tree = root.extractTreeWithPaths(theAncestorLists);
 
-		for (PhylogenyNode<String> node : tree)
+		for (PhylogenyNode<String> xnode : tree)
 			{
-			if (node.getName().equals("root"))
+			BasicPhylogenyNode<String> node = (BasicPhylogenyNode<String>)xnode;
+			if (node.getValue().equals("root"))
 				{
 				assert node.getChildren().size() == 2;
 				}
-			else if (node.getName().equals("baa"))
+			else if (node.getValue().equals("baa"))
 				{
 				assert node.getLength() == 3.2;
 				}
-			else if (node.getName().equals("b"))
+			else if (node.getValue().equals("b"))
 				{
 				assert node.getLength() == 4;
 				}
-			else if (node.getName().equals("bbbb"))
+			else if (node.getValue().equals("bbbb"))
 				{
 				assert node.getLength() == 8.5;
 				}
-			else if (node.getName().equals("ca"))
+			else if (node.getValue().equals("ca"))
 				{
 				assert node.getLength() == 3;
 				}

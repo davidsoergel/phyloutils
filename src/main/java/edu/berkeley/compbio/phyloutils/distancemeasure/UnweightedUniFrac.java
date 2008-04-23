@@ -32,6 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils.distancemeasure;
 
+import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 
 /* $Id$ */
@@ -47,7 +48,7 @@ public class UnweightedUniFrac implements DistanceMeasure<RootedPhylogeny>
 
 	public double distanceFromTo(RootedPhylogeny a, RootedPhylogeny b)
 		{
-
+/*
 		double branchLengthA = a.getTotalBranchLength();
 		double branchLengthB = b.getTotalBranchLength();
 
@@ -56,6 +57,8 @@ public class UnweightedUniFrac implements DistanceMeasure<RootedPhylogeny>
 		intersectionTree = intersectionTree.extractTreeWithLeaves(b.getLeaves());
 
 		double jointLength = intersectionTree.getTotalBranchLength();
+*/
+		return 0;
 		}
 	}
-}
+

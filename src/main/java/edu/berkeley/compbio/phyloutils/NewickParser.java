@@ -67,8 +67,8 @@ public class NewickParser<T>
 		st.wordChars('_', '_');
 		st.wordChars('-', '-');
 
-		RootedPhylogeny<T> theTree = new RootedPhylogeny();
-		PhylogenyNode<T> currentNode = theTree;
+		BasicRootedPhylogeny<T> theTree = new BasicRootedPhylogeny();
+		BasicPhylogenyNode<T> currentNode = theTree;
 		//List<PhylogenyNode> path = new LinkedList<PhylogenyNode>();
 		//path.add(currentNode);
 
@@ -82,7 +82,7 @@ public class NewickParser<T>
 				throw new PhyloUtilsException("Tree must begin with an open parenthesis");
 				}
 
-			currentNode = new PhylogenyNode(currentNode);
+			currentNode = new BasicPhylogenyNode(currentNode);
 
 			/*	boolean eof = false;
 						boolean finished = false;
@@ -112,7 +112,7 @@ public class NewickParser<T>
 						else if (state == State.NEWNODE || state == State.NAME)
 							{
 							currentNode
-									.appendToName((int) st.nval,
+									.appendToValue((int) st.nval,
 									              namer);// handle labels with integers in them, but not doubles
 							state = State.NAME;
 							}
@@ -131,7 +131,7 @@ public class NewickParser<T>
 					case StreamTokenizer.TT_WORD:
 						if (state == State.NEWNODE || state == State.NAME)
 							{
-							currentNode.appendToName(st.sval, namer);
+							currentNode.appendToValue(st.sval, namer);
 							state = State.NAME;
 							}
 						else
@@ -144,7 +144,7 @@ public class NewickParser<T>
 					case '(':
 						if (state == State.NEWNODE || state == State.NAME)
 							{
-							currentNode = new PhylogenyNode(currentNode);
+							currentNode = new BasicPhylogenyNode(currentNode);
 							state = State.NEWNODE;
 							}
 						else
@@ -168,7 +168,7 @@ public class NewickParser<T>
 					case ',':
 						if (state == State.NAME || state == State.POST_CHILDREN || state == State.NODEEND)
 							{
-							currentNode = new PhylogenyNode(currentNode.getParent());
+							currentNode = new BasicPhylogenyNode(currentNode.getParent());
 							state = State.NEWNODE;
 							}
 						else

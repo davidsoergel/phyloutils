@@ -30,10 +30,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package edu.berkeley.compbio.phyloutils.distancemeasure;
+package edu.berkeley.compbio.phyloutils;
 
-import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
-import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
+import org.apache.log4j.Logger;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /* $Id$ */
 
@@ -41,22 +47,43 @@ import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
  * @Author David Soergel
  * @Version 1.0
  */
-public class WeightedUniFrac implements DistanceMeasure<RootedPhylogeny>
+public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	{
-	RootedPhylogeny theBasePhylogeny;
+	private static final Logger logger = Logger.getLogger(BasicRootedPhylogeny.class);
+	// ------------------------------ FIELDS ------------------------------
 
-	public double distanceFromTo(RootedPhylogeny a, RootedPhylogeny b)
+	private Map<T, BasicPhylogenyNode> nodes;
+
+
+	// --------------------------- CONSTRUCTORS ---------------------------
+
+	public BasicRootedPhylogeny()
 		{
-
-/*		double branchLengthA = a.getTotalBranchLength();
-		double branchLengthB = b.getTotalBranchLength();
-
-		RootedPhylogeny intersectionTree = theBasePhylogeny.extractTreeWithLeavesNoMerging(a.getLeaves());
-
-		intersectionTree = intersectionTree.extractTreeWithLeaves(b.getLeaves());
-
-		double jointLength = intersectionTree.getTotalBranchLength();
-*/
-		return 0;
+		super(null);
 		}
+
+	// -------------------------- OTHER METHODS --------------------------
+
+
+	public BasicPhylogenyNode getNode(T name)
+		{
+		return nodes.get(name);
+		}
+
+	public Collection<BasicPhylogenyNode> getNodes()
+		{
+		return nodes.values();
+		}
+
+	// we can't do this while building, since the names might change
+	public void updateNodes(NodeNamer<T> namer) throws PhyloUtilsException
+		{
+		nodes = new HashMap<T, BasicPhylogenyNode>();
+		addSubtreeToMap(nodes, namer);
+		}
+
+
 	}
+
+
+

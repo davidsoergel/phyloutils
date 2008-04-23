@@ -30,10 +30,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package edu.berkeley.compbio.phyloutils.distancemeasure;
+package edu.berkeley.compbio.phyloutils;
 
-import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
-import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
+import org.apache.log4j.Logger;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.net.URL;
+import java.util.Map;
+import java.util.Set;
 
 /* $Id$ */
 
@@ -41,22 +48,48 @@ import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
  * @Author David Soergel
  * @Version 1.0
  */
-public class WeightedUniFrac implements DistanceMeasure<RootedPhylogeny>
+public class CiccarelliUtils
 	{
-	RootedPhylogeny theBasePhylogeny;
+	private static final Logger logger = Logger.getLogger(CiccarelliUtils.class);
 
-	public double distanceFromTo(RootedPhylogeny a, RootedPhylogeny b)
+	private RootedPhylogeny<Integer> ciccarelliTree;
+	private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
+
+
+	public CiccarelliUtils()// throws PhyloUtilsException
 		{
+		try
+			{
 
-/*		double branchLengthA = a.getTotalBranchLength();
-		double branchLengthB = b.getTotalBranchLength();
+			URL res = ClassLoader.getSystemResource(ciccarelliFilename);
+			InputStream is = res.openStream();
+			/*if (is == null)
+				{
+				is = new FileInputStream(filename);
+				}*/
+			ciccarelliTree = new NewickParser<Integer>().read(is, new IntegerNodeNamer(100000000));
+			}
+		catch (IOException e)
+			{
+			e.printStackTrace();//To change body of catch statement use File | Settings | File Templates.
+			logger.error(e);
+			}
+		catch (PhyloUtilsException e)
+			{
+			e.printStackTrace();//To change body of catch statement use File | Settings | File Templates.
+			logger.error(e);
+			}
+		}
 
-		RootedPhylogeny intersectionTree = theBasePhylogeny.extractTreeWithLeavesNoMerging(a.getLeaves());
+	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
+		{
+		return ciccarelliTree.distanceBetween(taxIdA, taxIdB);
+		}
 
-		intersectionTree = intersectionTree.extractTreeWithLeaves(b.getLeaves());
 
-		double jointLength = intersectionTree.getTotalBranchLength();
-*/
-		return 0;
+
+	public RootedPhylogeny<Integer> extractTreeWithLeaves(Set<Integer> ids)
+		{
+		return ciccarelliTree.extractTreeWithLeaves(ids);
 		}
 	}

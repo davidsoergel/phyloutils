@@ -32,14 +32,8 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import org.apache.log4j.Logger;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.Collection;
 
 /* $Id$ */
 
@@ -47,146 +41,17 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-public class RootedPhylogeny<T> extends PhylogenyNode<T>
+public interface RootedPhylogeny<T> extends PhylogenyNode<T>
 	{
-	private static final Logger logger = Logger.getLogger(RootedPhylogeny.class);
-	// ------------------------------ FIELDS ------------------------------
+	T commonAncestor(Set<T> knownMergeIds);
 
-	private Map<T, PhylogenyNode> nodes;
+	T commonAncestor(T nameA, T nameB);
 
+	double distanceBetween(T nameA, T nameB);
 
-	// --------------------------- CONSTRUCTORS ---------------------------
+	PhylogenyNode getNode(T name);
 
-	public RootedPhylogeny()
-		{
-		super(null);
-		}
+	Collection<PhylogenyNode> getNodes();
 
-	// -------------------------- OTHER METHODS --------------------------
-
-	public T commonAncestor(Set<T> knownMergeIds)
-		{
-		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
-		for (T id : knownMergeIds)
-			{
-			theAncestorLists.add(getNode(id).getAncestorPath());
-			}
-		PhylogenyNode<T> commonAncestor = null;
-
-		while (allFirstElementsEqual(theAncestorLists))
-			{
-			commonAncestor = (PhylogenyNode<T>) removeAllFirstElements(theAncestorLists);
-			}
-
-		if (commonAncestor == null)
-			{
-			return null;
-			}
-
-		return commonAncestor.getName();
-		}
-
-
-	public T commonAncestor(T nameA, T nameB)
-		{
-		PhylogenyNode<T> a = getNode(nameA);
-		PhylogenyNode<T> b = getNode(nameB);
-
-		List<PhylogenyNode<T>> ancestorsA = a.getAncestorPath();
-		List<PhylogenyNode<T>> ancestorsB = b.getAncestorPath();
-
-		PhylogenyNode<T> commonAncestor = null;
-		while (ancestorsA.size() > 0 && ancestorsB.size() > 0 && ancestorsA.get(0) == ancestorsB.get(0))
-			{
-			commonAncestor = ancestorsA.remove(0);
-			ancestorsB.remove(0);
-			}
-
-		if (commonAncestor == null)
-			{
-			return null;
-			}
-
-		return commonAncestor.getName();
-		}
-
-	public double distanceBetween(T nameA, T nameB)
-		{
-		PhylogenyNode a = getNode(nameA);
-		PhylogenyNode b = getNode(nameB);
-
-		List<PhylogenyNode> ancestorsA = a.getAncestorPath();
-		List<PhylogenyNode> ancestorsB = b.getAncestorPath();
-
-		while (ancestorsA.size() > 0 && ancestorsB.size() > 0 && ancestorsA.get(0) == ancestorsB.get(0))
-			{
-			ancestorsA.remove(0);
-			ancestorsB.remove(0);
-			}
-
-		double dist = 0;
-		for (PhylogenyNode n : ancestorsA)
-			{
-			dist += n.getLength();
-			}
-		for (PhylogenyNode n : ancestorsB)
-			{
-			dist += n.getLength();
-			}
-
-		return dist;
-		}
-
-	public PhylogenyNode getNode(T name)
-		{
-		return nodes.get(name);
-		}
-
-	public Collection<PhylogenyNode> getNodes()
-		{
-		return nodes.values();
-		}
-
-	// we can't do this while building, since the names might change
-	public void updateNodes(NodeNamer<T> namer) throws PhyloUtilsException
-		{
-		nodes = new HashMap<T, PhylogenyNode>();
-		addSubtreeToMap(nodes, namer);
-		}
-
-	public RootedPhylogeny<T> extractTreeWithLeaves(Set<T> ids)
-		{
-		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
-		for (T id : ids)
-			{
-			theAncestorLists.add(getNode(id).getAncestorPath());
-			}
-
-		PhylogenyNode<T> commonAncestor = null;
-		try
-			{
-			commonAncestor = extractTreeWithPaths(theAncestorLists);
-			}
-		catch (PhyloUtilsException e)
-			{
-			logger.debug(e);
-			e.printStackTrace();
-			throw new Error(e);
-			}
-
-		RootedPhylogeny<T> newRoot = new RootedPhylogeny<T>();
-		setLength(new Double(0));
-		newRoot.setName(commonAncestor.getName());
-
-		for (PhylogenyNode<T> child : commonAncestor.getChildren())
-			{
-			newRoot.getChildren().add(child);
-			child.setParent(newRoot);
-			}
-
-		return newRoot;
-		}
+	RootedPhylogeny<T> extractTreeWithLeaves(Set<T> ids);
 	}
-
-
-

@@ -111,8 +111,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.davidsoergel</groupId>
-			<artifactId>springjpautils</artifactId>
+			<groupId>edu.berkeley.compbio</groupId>
+			<artifactId>ml</artifactId>
 			<version>0.9-SNAPSHOT</version>
 		</dependency>
 
