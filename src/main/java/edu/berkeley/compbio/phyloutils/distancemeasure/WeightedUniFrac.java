@@ -30,23 +30,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package edu.berkeley.compbio.phyloutils.distancemeasure;
+
+import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
+
 /* $Id$ */
 
-package edu.berkeley.compbio.phyloutils.dao;
-
-import com.davidsoergel.springjpautils.GenericDao;
-import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
-import edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyName;
-
 /**
- * Created by IntelliJ IDEA. User: soergel Date: Mar 7, 2007 Time: 1:44:56 PM To change this template use File |
- * Settings | File Templates.
+ * @Author David Soergel
+ * @Version 1.0
  */
-public interface NcbiTaxonomyNameDao extends GenericDao<NcbiTaxonomyName, Integer>
+public class WeightedUniFrac implements DistanceMeasure<RootedPhylogeny>
 	{
-	// -------------------------- OTHER METHODS --------------------------
+	RootedPhylogeny theBasePhylogeny;
 
-	NcbiTaxonomyName findByName(String name) throws PhyloUtilsException;
+	public double distanceFromTo(RootedPhylogeny a, RootedPhylogeny b)
+		{
 
-	NcbiTaxonomyName findByNameRelaxed(String name) throws PhyloUtilsException;
+		double branchLengthA = a.getTotalBranchLength();
+		double branchLengthB = b.getTotalBranchLength();
+
+		RootedPhylogeny intersectionTree = theBasePhylogeny.extractTreeWithLeavesNoMerging(a.getLeaves());
+
+		intersectionTree = intersectionTree.extractTreeWithLeaves(b.getLeaves());
+
+		double jointLength = intersectionTree.getTotalBranchLength();
+
+		}
 	}

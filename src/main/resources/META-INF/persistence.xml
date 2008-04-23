@@ -47,8 +47,8 @@
 		<!--<persistence>
 	  <persistence-unit name="ncbiTaxonomy">
 		  <provider>org.hibernate.ejb.HibernatePersistence</provider>
-		  <class>edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyNameName</class>
-		  <class>edu.berkeley.compbio.phyloutils.jpa.NcbiTaxonomyNodeNode</class>
+		  <class>edu.berkeley.compbio.ncbitaxonomy.jpa.NcbiTaxonomyNameName</class>
+		  <class>edu.berkeley.compbio.ncbitaxonomy.jpa.NcbiTaxonomyNodeNode</class>
 		  <properties>
 			  <property name="hibernate.connection.url" value="jdbc:mysql://orchid.berkeley.edu/ncbi_taxonomy"/>
 			  <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>

@@ -67,10 +67,10 @@
 
 	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
-	<bean id="ncbiTaxonomyNameDao" class="edu.berkeley.compbio.phyloutils.jpadao.NcbiTaxonomyNameDaoImpl"/>
-	<bean id="ncbiTaxonomyNodeDao" class="edu.berkeley.compbio.phyloutils.jpadao.NcbiTaxonomyNodeDaoImpl"/>
+	<bean id="ncbiTaxonomyNameDao" class="edu.berkeley.compbio.ncbitaxonomy.jpadao.NcbiTaxonomyNameDaoImpl"/>
+	<bean id="ncbiTaxonomyNodeDao" class="edu.berkeley.compbio.ncbitaxonomy.jpadao.NcbiTaxonomyNodeDaoImpl"/>
 
-	<bean id="phyloUtilsServiceImpl" class="edu.berkeley.compbio.phyloutils.PhyloUtilsServiceImpl">
+	<bean id="phyloUtilsServiceImpl" class="edu.berkeley.compbio.ncbitaxonomy.PhyloUtilsServiceImpl">
 		<property name="ncbiTaxonomyNameDao" ref="ncbiTaxonomyNameDao"/>
 		<property name="ncbiTaxonomyNodeDao" ref="ncbiTaxonomyNodeDao"/>
 	</bean>
