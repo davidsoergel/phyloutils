@@ -136,7 +136,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		this.value = value;
 		}
 
-	public BasicPhylogenyNode getParent()
+	public BasicPhylogenyNode<T> getParent()
 		{
 		return parent;
 		}
@@ -149,10 +149,10 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		}
 
 
-	public void setParent(HierarchyNode<? extends T> parent) //BasicPhylogenyNode parent)
+	public void setParent(HierarchyNode<? extends T> parent)//BasicPhylogenyNode parent)
 		{
 
-		this.parent = (BasicPhylogenyNode)parent;  // may produce ClassCastException
+		this.parent = (BasicPhylogenyNode<T>) parent;// may produce ClassCastException
 		if (parent != null)
 			{
 			this.parent.invalidateAggregatedChildInfo();
@@ -166,7 +166,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 
 	// -------------------------- OTHER METHODS --------------------------
 
-	protected void addSubtreeToMap(Map<T, BasicPhylogenyNode> nodes, NodeNamer<T> namer) throws PhyloUtilsException
+	protected void addSubtreeToMap(Map<T, BasicPhylogenyNode<T>> nodes, NodeNamer<T> namer) throws PhyloUtilsException
 		{
 		if (!hasValue())
 			{
@@ -181,7 +181,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		nodes.put(value, this);
 
 
-		for (BasicPhylogenyNode n : children)
+		for (BasicPhylogenyNode<T> n : children)
 			{
 			n.addSubtreeToMap(nodes, namer);
 			}
@@ -321,7 +321,6 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		}
 
 
-
 	public PhylogenyIterator<T> iterator()
 		{
 		return new DepthFirstIterator();
@@ -393,7 +392,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		// largestLengthSpan = child.length + child.greatestDepth;
 		}
 
-	public void removeChild(BasicPhylogenyNode child)
+	public void removeChild(BasicPhylogenyNode<T> child)
 		{
 		children.remove(child);
 		child.setParent(null);
@@ -401,7 +400,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		}
 
 
-	public void addChild(BasicPhylogenyNode child)
+	public void addChild(BasicPhylogenyNode<T> child)
 		{
 		children.add(child);
 		child.setParent(this);

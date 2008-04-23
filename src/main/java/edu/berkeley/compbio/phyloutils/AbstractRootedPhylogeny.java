@@ -120,37 +120,4 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		return dist;
 		}
-
-	public RootedPhylogeny<T> extractTreeWithLeaves(Set<T> ids)
-		{
-		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
-		for (T id : ids)
-			{
-			theAncestorLists.add(getNode(id).getAncestorPath());
-			}
-
-		PhylogenyNode<T> commonAncestor = null;
-		try
-			{
-			commonAncestor = extractTreeWithPaths(theAncestorLists);
-			}
-		catch (PhyloUtilsException e)
-			{
-			logger.debug(e);
-			e.printStackTrace();
-			throw new Error(e);
-			}
-
-		BasicRootedPhylogeny<T> newRoot = new BasicRootedPhylogeny<T>();
-		newRoot.setLength(new Double(0));
-		newRoot.setValue(commonAncestor.getValue());
-
-		for (PhylogenyNode<T> child : commonAncestor.getChildren())
-			{
-			newRoot.getChildren().add(new BasicPhylogenyNode(child));// may produce ClassCastException
-			child.setParent(newRoot);
-			}
-
-		return newRoot;
-		}
 	}

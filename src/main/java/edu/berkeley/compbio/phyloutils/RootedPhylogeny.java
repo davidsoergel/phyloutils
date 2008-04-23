@@ -32,8 +32,8 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import java.util.Set;
 import java.util.Collection;
+import java.util.Set;
 
 /* $Id$ */
 
@@ -49,9 +49,9 @@ public interface RootedPhylogeny<T> extends PhylogenyNode<T>
 
 	double distanceBetween(T nameA, T nameB);
 
-	PhylogenyNode getNode(T name);
+	PhylogenyNode<T> getNode(T name);
 
-	Collection<PhylogenyNode> getNodes();
+	Collection<PhylogenyNode<T>> getNodes();
 
 	RootedPhylogeny<T> extractTreeWithLeaves(Set<T> ids);
 	}

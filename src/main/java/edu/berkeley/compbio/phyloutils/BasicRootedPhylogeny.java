@@ -52,25 +52,18 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	private static final Logger logger = Logger.getLogger(BasicRootedPhylogeny.class);
 	// ------------------------------ FIELDS ------------------------------
 
-	private Map<T, BasicPhylogenyNode> nodes;
-
-
-	// --------------------------- CONSTRUCTORS ---------------------------
-
-	public BasicRootedPhylogeny()
-		{
-		super(null);
-		}
+	private Map<T, PhylogenyNode<T>> nodes;
+	BasicPhylogenyNode<T> root;
 
 	// -------------------------- OTHER METHODS --------------------------
 
 
-	public BasicPhylogenyNode getNode(T name)
+	public PhylogenyNode<T> getNode(T name)
 		{
 		return nodes.get(name);
 		}
 
-	public Collection<BasicPhylogenyNode> getNodes()
+	public Collection<PhylogenyNode<T>> getNodes()
 		{
 		return nodes.values();
 		}
@@ -78,11 +71,43 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	// we can't do this while building, since the names might change
 	public void updateNodes(NodeNamer<T> namer) throws PhyloUtilsException
 		{
-		nodes = new HashMap<T, BasicPhylogenyNode>();
-		addSubtreeToMap(nodes, namer);
+		nodes = new HashMap<T, PhylogenyNode<T>>();
+		root.addSubtreeToMap(nodes, namer);
 		}
 
 
+	public RootedPhylogeny<T> extractTreeWithLeaves(Set<T> ids)
+		{
+		Set<List<BasicPhylogenyNode<T>>> theAncestorLists = new HashSet<List<BasicPhylogenyNode<T>>>();
+		for (T id : ids)
+			{
+			theAncestorLists.add(getNode(id).getAncestorPath());
+			}
+
+		PhylogenyNode<T> commonAncestor = null;
+		try
+			{
+			commonAncestor = root.extractTreeWithPaths(theAncestorLists);
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.debug(e);
+			e.printStackTrace();
+			throw new Error(e);
+			}
+
+		BasicRootedPhylogeny<T> newRoot = new BasicRootedPhylogeny<T>();
+		newRoot.setLength(new Double(0));
+		newRoot.setValue(commonAncestor.getValue());
+
+		for (PhylogenyNode<T> child : commonAncestor.getChildren())
+			{
+			newRoot.getChildren().add(new BasicPhylogenyNode(child));// may produce ClassCastException
+			child.setParent(newRoot);
+			}
+
+		return newRoot;
+		}
 	}
 
 
