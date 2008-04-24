@@ -32,10 +32,11 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
+import java.util.HashMap;
+import java.util.Map;
 
 /* $Id$ */
 
@@ -47,111 +48,23 @@ import javax.persistence.NoResultException;
  * @Author David Soergel
  * @Version 1.0
  */
-public class HybridRootedPhylogeny
+public class HybridRootedPhylogeny<T>
 	{
 
-	public double minDistanceBetween(String speciesNameA, String speciesNameB) throws NcbiTaxonomyException
+	RootedPhylogeny<T> rootPhylogeny;
+	RootedPhylogeny<T> leafPhylogeny;
+
+	//private Map<T, T> nearestKnownAncestorCache = new HashMap<T, T>();
+
+	public HybridRootedPhylogeny(RootedPhylogeny<T> rootPhylogeny, RootedPhylogeny<T> leafPhylogeny)
 		{
-		return ncbiTaxonomyServiceImpl.minDistanceBetween(speciesNameA, speciesNameB);
+		this.rootPhylogeny = rootPhylogeny;
+		this.leafPhylogeny = leafPhylogeny;
 		}
 
-	public double minDistanceBetween(int taxIdA, int taxIdB) throws NcbiTaxonomyException
+	public T nearestKnownAncestor(T leafId) throws PhyloUtilsException
 		{
-		return ncbiTaxonomyServiceImpl.minDistanceBetween(taxIdA, taxIdB);
+		return leafPhylogeny.nearestKnownAncestor(rootPhylogeny, leafId);
 		}
 
-
-	public int nearestKnownAncestor(int taxId) throws NcbiTaxonomyException
-		{
-		return ncbiTaxonomyServiceImpl.nearestKnownAncestor(taxId);
-		}
-
-	public int nearestKnownAncestor(String speciesName) throws NcbiTaxonomyException
-		{
-		return ncbiTaxonomyServiceImpl.nearestKnownAncestor(speciesName);
-		}
-
-
-	/**
-	 * For each species, walk up the NCBI tree until a node that is part of the Ciccarelli tree is found; then return the
-	 * Ciccarelli distance.
-	 *
-	 * @param speciesNameA
-	 * @param speciesNameB
-	 * @return
-	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
-	public double minDistanceBetween(RootedPhylogeny tree, String speciesNameA, String speciesNameB) throws NcbiTaxonomyException
-		{
-		if (speciesNameA.equals(speciesNameB))
-			{
-			return 0;// account for TreeUtils.computeDistance bug
-			}
-		Integer taxIdA = findTaxidByName(speciesNameA);
-		Integer taxIdB = findTaxidByName(speciesNameB);
-
-		return minDistanceBetween(tree, taxIdA, taxIdB);
-		}
-
-	/**
-	 * For each species, walk up the NCBI tree until a node that is part of the Ciccarelli tree is found; then return the
-	 * Ciccarelli distance.
-	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
-	public double minDistanceBetween(RootedPhylogeny tree, int taxIdA, int taxIdB) throws NcbiTaxonomyException
-		{
-		if (taxIdA == taxIdB)
-			{
-			return 0;// account for TreeUtils.computeDistance bug
-			}
-		taxIdA = nearestKnownAncestor(tree, taxIdA);
-		taxIdB = nearestKnownAncestor(tree, taxIdB);
-		return tree.distanceBetween(taxIdA, taxIdB);
-		}
-
-	/**
-	 * Search up the NCBI taxonomy until a node is encountered that is a leaf in the Ciccarelli taxonomy
-	 *
-	 * @param taxId
-	 * @return
-	 * @throws PhyloUtilsException
-	 */
-	@Transactional(propagation = Propagation.REQUIRED)
-	public int nearestKnownAncestor(RootedPhylogeny tree, int taxId) throws NcbiTaxonomyException
-		{
-		Integer result = nearestKnownAncestorCache.get(taxId);
-		if (result == null)
-			{
-			NcbiTaxonomyNode n;
-			try
-				{
-				n = ncbiTaxonomyNodeDao.findByTaxId(taxId);
-				}
-			catch (NoResultException e)
-				{
-				throw new NcbiTaxonomyException("Taxon " + taxId + " does not exist in the NCBI taxonomy.");
-				}
-			while (tree.getNode(n.getId()) == null)
-				{
-				n = n.getParent();
-				if (n.getId() == 1)
-					{
-					// arrived at root, too bad
-					throw new NcbiTaxonomyException("Taxon " + taxId + " not found in tree.");
-					}
-				//ncbiDb.getEntityManager().refresh(n);
-				}
-			result = n.getId();
-			nearestKnownAncestorCache.put(taxId, result);
-			}
-		//return n.getId();
-		return result;
-		}
-
-
-	@Transactional(propagation = Propagation.REQUIRED)
-	public int nearestKnownAncestor(RootedPhylogeny tree, String speciesName) throws NcbiTaxonomyException
-		{
-		return nearestKnownAncestor(tree, findTaxidByName(speciesName));
-		}
 	}

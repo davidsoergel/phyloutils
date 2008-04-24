@@ -56,6 +56,15 @@ public class CiccarelliUtils
 	private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
 
 
+	private static final CiccarelliUtils instance = new CiccarelliUtils();
+
+
+	public static CiccarelliUtils getInstance()
+		{
+		return instance;
+		}
+
+
 	public CiccarelliUtils()// throws PhyloUtilsException
 		{
 		try
@@ -91,5 +100,10 @@ public class CiccarelliUtils
 	public RootedPhylogeny<Integer> extractTreeWithLeaves(Set<Integer> ids)
 		{
 		return ciccarelliTree.extractTreeWithLeaves(ids);
+		}
+
+	public RootedPhylogeny<Integer> getTree()
+		{
+		return ciccarelliTree;
 		}
 	}

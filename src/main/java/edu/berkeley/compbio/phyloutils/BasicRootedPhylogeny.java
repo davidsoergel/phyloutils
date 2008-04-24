@@ -40,10 +40,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Iterator;
+import java.util.LinkedList;
+
+import com.davidsoergel.dsutils.HierarchyNode;
 
 /* $Id$ */
 
 /**
+ * Really this wants to extend BasicPhylogenyNode, but we can't (multiple inheritance, etc.), so we just facade a root node for many methods.
  * @Author David Soergel
  * @Version 1.0
  */
@@ -57,6 +62,16 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 
 	// -------------------------- OTHER METHODS --------------------------
 
+	public BasicRootedPhylogeny()
+		{
+		root = new BasicPhylogenyNode<T>();
+		}
+
+	public BasicRootedPhylogeny(T rootValue)
+		{
+		root = new BasicPhylogenyNode<T>(null, rootValue, 0);
+		}
+
 
 	public PhylogenyNode<T> getNode(T name)
 		{
@@ -68,6 +83,33 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		return nodes.values();
 		}
 
+	public Collection<PhylogenyNode<T>> getLeaves()
+		{
+		Set<PhylogenyNode<T>> result = new HashSet<PhylogenyNode<T>>();
+		for (T t : nodes.keySet())
+			{
+			PhylogenyNode<T> node = nodes.get(t);
+			if (node.isLeaf())
+				{
+				result.add(node);
+				}
+			}
+		return result;
+		}
+
+	public Collection<T> getLeafValues()
+		{
+		Set<T> result = new HashSet<T>();
+		for (T t : nodes.keySet())
+			{
+			if(nodes.get(t).isLeaf())
+				{
+				result.add(t);
+				}
+			}
+		return result;
+		}
+
 	// we can't do this while building, since the names might change
 	public void updateNodes(NodeNamer<T> namer) throws PhyloUtilsException
 		{
@@ -76,37 +118,135 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		}
 
 
-	public RootedPhylogeny<T> extractTreeWithLeaves(Set<T> ids)
+
+	public Set<? extends PhylogenyNode<T>> getChildren()
 		{
-		Set<List<BasicPhylogenyNode<T>>> theAncestorLists = new HashSet<List<BasicPhylogenyNode<T>>>();
-		for (T id : ids)
-			{
-			theAncestorLists.add(getNode(id).getAncestorPath());
-			}
+		return root.getChildren();
+		}
 
-		PhylogenyNode<T> commonAncestor = null;
-		try
-			{
-			commonAncestor = root.extractTreeWithPaths(theAncestorLists);
-			}
-		catch (PhyloUtilsException e)
-			{
-			logger.debug(e);
-			e.printStackTrace();
-			throw new Error(e);
-			}
+	public T getValue()
+		{
+		return root.getValue();
+		}
 
-		BasicRootedPhylogeny<T> newRoot = new BasicRootedPhylogeny<T>();
-		newRoot.setLength(new Double(0));
-		newRoot.setValue(commonAncestor.getValue());
+	public PhylogenyNode getParent()
+		{
+		return null;
+		}
 
-		for (PhylogenyNode<T> child : commonAncestor.getChildren())
+	public HierarchyNode<? extends T> newChild()
+		{
+		return root.newChild();
+		}
+
+	public void setValue(T contents)
+		{
+		root.setValue(contents);
+		}
+
+	public void setParent(HierarchyNode<? extends T> parent)
+		{
+		logger.error("Can't set the parent of the root node");
+		}
+
+	public boolean hasValue()
+		{
+		return root.hasValue();
+		}
+
+	public List<PhylogenyNode<T>> getAncestorPath()
+		{
+		// this is the root node
+		List<PhylogenyNode<T>> result = new LinkedList<PhylogenyNode<T>>();
+
+		result.add(0, root);
+
+		return result;
+		}
+
+	public Double getLength()
+		{
+		return 0.;
+		}
+
+	public Double getLargestLengthSpan()
+		{
+		return root.getLargestLengthSpan();
+		}
+
+
+	/**
+	 * Returns an iterator over a set of elements of type T.
+	 *
+	 * @return an Iterator.
+	 */
+	public Iterator<PhylogenyNode<T>> iterator()
+		{
+		return root.iterator();
+		}
+
+	public PhylogenyIterator<T> phylogenyIterator()
+		{
+		return root.iterator();
+		}
+
+	public T nearestKnownAncestor(RootedPhylogeny<T> rootPhylogeny, T leafId) throws PhyloUtilsException
+		{
+		T result = null; //nearestKnownAncestorCache.get(leafId);
+		if (result == null)
 			{
-			newRoot.getChildren().add(new BasicPhylogenyNode(child));// may produce ClassCastException
-			child.setParent(newRoot);
-			}
+			PhylogenyNode<T> n;
 
-		return newRoot;
+			n = getNode(leafId);
+
+			if (n == null)
+				{
+				throw new PhyloUtilsException("Leaf phylogeny does not contain node " + leafId + ".");
+				}
+
+			while (rootPhylogeny.getNode(n.getValue()) == null)
+				{
+				n = n.getParent();
+				if (n.getParent() == null)
+					{
+					// arrived at root, too bad
+					throw new PhyloUtilsException("Taxon " + leafId + " not found in tree.");
+					}
+				//ncbiDb.getEntityManager().refresh(n);
+				}
+			result = n.getValue();
+		//	nearestKnownAncestorCache.put(leafId, result);
+			}
+		//return n.getId();
+		return result;
+		}
+
+	public BasicPhylogenyNode<T> getRoot()
+		{
+		return root;
+		}
+
+	public boolean isLeaf()
+		{
+		return root.isLeaf();
+		}
+
+	public double getWeight()
+		{
+		return 1;
+		}
+
+	public void setWeight(double v)
+		{
+		if(v != 1.)
+			{
+			throw new Error("Can't set root weight to anything other than 1");
+			}
+		}
+
+	public void propagateWeightFromBelow()
+		{
+		root.propagateWeightFromBelow();
 		}
 	}
 

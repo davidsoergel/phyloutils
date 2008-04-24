@@ -67,8 +67,8 @@ public class NewickParser<T>
 		st.wordChars('_', '_');
 		st.wordChars('-', '-');
 
-		BasicRootedPhylogeny<T> theTree = new BasicRootedPhylogeny();
-		BasicPhylogenyNode<T> currentNode = theTree;
+		BasicRootedPhylogeny<T> theTree = new BasicRootedPhylogeny<T>();
+		BasicPhylogenyNode<T> currentNode = theTree.getRoot();
 		//List<PhylogenyNode> path = new LinkedList<PhylogenyNode>();
 		//path.add(currentNode);
 
@@ -189,7 +189,7 @@ public class NewickParser<T>
 						break;
 
 					case ';':
-						if (currentNode != theTree)
+						if (currentNode != theTree.getRoot())
 							{
 							throw new PhyloUtilsException("Premature end of tree at " + st.lineno());
 							}

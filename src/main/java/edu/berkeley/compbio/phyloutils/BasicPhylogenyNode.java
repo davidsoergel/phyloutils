@@ -84,11 +84,16 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		this.length = length;
 		}
 
-	public BasicPhylogenyNode(T value, BasicPhylogenyNode<T> parent, double length)
+	public BasicPhylogenyNode(BasicPhylogenyNode<T> parent, T value, double length)
 		{
 		this(parent);
 		this.value = value;
 		this.length = length;
+		}
+
+	public BasicPhylogenyNode(BasicPhylogenyNode<T> parent, PhylogenyNode<T> child)
+		{
+		this(parent, child.getValue(), child.getLength());
 		}
 
 	// --------------------- GETTER / SETTER METHODS ---------------------
@@ -96,6 +101,11 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	public Set<BasicPhylogenyNode<T>> getChildren()
 		{
 		return children;
+		}
+
+	public boolean isLeaf()
+		{
+		return children.size() == 0;
 		}
 
 	/*	public void appendToName(int i)
@@ -123,6 +133,29 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		if (parent != null)
 			{
 			parent.invalidateAggregatedChildInfo();
+			}
+		}
+
+	public double getWeight()
+		{
+		return weight;
+		}
+
+	public void setWeight(double v)
+		{
+		weight = v;
+		}
+
+	public void propagateWeightFromBelow()
+		{
+		if(!isLeaf())
+			{
+			weight = 0.;
+			for (BasicPhylogenyNode<T> child : children)
+				{
+				child.propagateWeightFromBelow();
+				weight += child.getWeight();
+				}
 			}
 		}
 
@@ -166,7 +199,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 
 	// -------------------------- OTHER METHODS --------------------------
 
-	protected void addSubtreeToMap(Map<T, BasicPhylogenyNode<T>> nodes, NodeNamer<T> namer) throws PhyloUtilsException
+	protected void addSubtreeToMap(Map<T, PhylogenyNode<T>> nodes, NodeNamer<T> namer) throws PhyloUtilsException
 		{
 		if (!hasValue())
 			{
@@ -236,90 +269,6 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		}
 
 
-	protected BasicPhylogenyNode<T> extractTreeWithPaths(Set<List<BasicPhylogenyNode<T>>> theAncestorLists)
-			throws PhyloUtilsException
-		{
-		double accumulatedLength = 0;
-
-		// use this as a marker to test that the provided lists were actually consistent
-		BasicPhylogenyNode<T> commonAncestor = null;
-
-		while (CollectionUtils.allFirstElementsEqual(theAncestorLists))
-			{
-			commonAncestor = CollectionUtils.removeAllFirstElements(theAncestorLists);
-			Double d = commonAncestor.getLength();
-			if (d == null)
-				{
-				logger.warn("Ignoring null length at node " + commonAncestor);
-				}
-			else
-				{
-				accumulatedLength += d;
-				}
-			}
-
-		if (commonAncestor == null)
-			{
-			throw new PhyloUtilsException("Provided ancestor lists do not have a common root");
-			}
-
-		BasicPhylogenyNode<T> node = new BasicPhylogenyNode<T>(null);
-		node.setLength(accumulatedLength);
-
-		// the commonAncestor is now the most recent one, so that's the most sensible name for the new node
-		node.setValue(commonAncestor.getValue());
-
-		Collection<Set<List<BasicPhylogenyNode<T>>>> childAncestorLists = separateFirstAncestorSets(theAncestorLists);
-
-		for (Set<List<BasicPhylogenyNode<T>>> childAncestorList : childAncestorLists)
-			{
-			BasicPhylogenyNode<T> child = extractTreeWithPaths(childAncestorList);
-			node.getChildren().add(child);
-			child.setParent(node);
-			}
-
-		return node;
-		}
-
-
-	private Collection<Set<List<BasicPhylogenyNode<T>>>> separateFirstAncestorSets(
-			Set<List<BasicPhylogenyNode<T>>> theAncestorLists)
-		{
-		// assert allFirstElementsEqual(theAncestorLists);
-
-		Map<BasicPhylogenyNode<T>, Set<List<BasicPhylogenyNode<T>>>> theSeparatedSets =
-				new HashMap<BasicPhylogenyNode<T>, Set<List<BasicPhylogenyNode<T>>>>();
-
-		for (List<BasicPhylogenyNode<T>> theAncestorList : theAncestorLists)
-			{
-			if (theAncestorList.isEmpty())
-				{
-				//we've arrived at one of the originally requested nodes.
-
-				// if it's a leaf, then theAncestorLists should contain only one (empty) list.
-				// no problem, we just return an empty set since there are no children.
-
-				// if it's an internal node, we can just ignore it since it's already accounted for in the subtree extraction.
-				// we do want to process any descendants though.
-
-				// in either case, we just ignore this situation.
-				}
-			else
-				{
-				BasicPhylogenyNode<T> commonAncestor = theAncestorList.get(0);
-				Set<List<BasicPhylogenyNode<T>>> theChildList = theSeparatedSets.get(commonAncestor);
-				if (theChildList == null)
-					{
-					theChildList = new HashSet<List<BasicPhylogenyNode<T>>>();
-					theSeparatedSets.put(commonAncestor, theChildList);
-					}
-				theChildList.add(theAncestorList);
-				}
-			}
-
-		return theSeparatedSets.values();
-		}
-
 
 	public PhylogenyIterator<T> iterator()
 		{
@@ -331,7 +280,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	Double secondGreatestDepth = null;
 	Double largestLengthSpan = null;
 
-	public double getLargestLengthSpan()
+	public Double getLargestLengthSpan()
 		{
 		computeDepthsIfNeeded();
 		return largestLengthSpan;

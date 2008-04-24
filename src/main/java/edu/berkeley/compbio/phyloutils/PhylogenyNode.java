@@ -56,4 +56,16 @@ public interface PhylogenyNode<T> extends Iterable<PhylogenyNode<T>>, HierarchyN
 	boolean hasValue();
 
 	List<PhylogenyNode<T>> getAncestorPath();
+
+	Double getLength();
+
+	Double getLargestLengthSpan();
+
+	boolean isLeaf();
+
+	double getWeight();
+
+	void setWeight(double v);
+
+	void propagateWeightFromBelow();
 	}

@@ -35,6 +35,9 @@ package edu.berkeley.compbio.phyloutils.distancemeasure;
 import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /* $Id$ */
 
 /**
@@ -42,23 +45,28 @@ import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
  * @Version 1.0
  */
 
-public class UnweightedUniFrac implements DistanceMeasure<RootedPhylogeny>
+public class UnweightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
 	{
-	RootedPhylogeny theBasePhylogeny;
+	RootedPhylogeny<T> theBasePhylogeny;
 
-	public double distanceFromTo(RootedPhylogeny a, RootedPhylogeny b)
+	public double distanceFromTo(RootedPhylogeny<T> a, RootedPhylogeny<T> b)
 		{
-/*
-		double branchLengthA = a.getTotalBranchLength();
-		double branchLengthB = b.getTotalBranchLength();
+		//double branchLengthA = a.getTotalBranchLength();
+		//double branchLengthB = b.getTotalBranchLength();
 
-		RootedPhylogeny intersectionTree = theBasePhylogeny.extractTreeWithLeavesNoMerging(a.getLeaves());
+		Set<T> unionLeaves = new HashSet<T>();
+		unionLeaves.addAll(a.getLeafValues());
+		unionLeaves.addAll(b.getLeafValues());
 
-		intersectionTree = intersectionTree.extractTreeWithLeaves(b.getLeaves());
+		RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeaves(unionLeaves);
 
-		double jointLength = intersectionTree.getTotalBranchLength();
-*/
-		return 0;
+		RootedPhylogeny<T> intersectionTree = unionTree.extractTreeWithLeaves(a.getLeafValues());
+		intersectionTree = intersectionTree.extractTreeWithLeaves(b.getLeafValues());
+
+		double unionLength = unionTree.getTotalBranchLength();
+		double intersectionLength = intersectionTree.getTotalBranchLength();
+
+		return 1. - (intersectionLength / unionLength);
 		}
 	}
 

@@ -32,8 +32,8 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import java.util.Collection;
-import java.util.Set;
+import org.testng.annotations.Test;
+import com.davidsoergel.dsutils.MathUtils;
 
 /* $Id$ */
 
@@ -41,27 +41,20 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-public interface RootedPhylogeny<T> extends PhylogenyNode<T>
+public class CiccarelliUtilsTest
 	{
-	T commonAncestor(Set<T> knownMergeIds);
 
-	T commonAncestor(T nameA, T nameB);
 
-	double distanceBetween(T nameA, T nameB);
+	private static final CiccarelliUtils ciccarelli = CiccarelliUtils.getInstance();
 
-	PhylogenyNode<T> getNode(T name);
+	@Test
+	public void ciccarelliExactDistancesAreComputedCorrectly() throws PhyloUtilsException
+		{
+		double d = ciccarelli.exactDistanceBetween(217992, 562);
+		assert d == 0.000221;
 
-	Collection<PhylogenyNode<T>> getNodes();
-
-	Collection<PhylogenyNode<T>> getLeaves();
-
-	RootedPhylogeny<T> extractTreeWithLeaves(Collection<T> ids);
-
-	PhylogenyIterator<T> phylogenyIterator();
-
-	T nearestKnownAncestor(RootedPhylogeny<T> rootPhylogeny, T leafId) throws PhyloUtilsException;
-
-	Collection<T> getLeafValues();
-
-	double getTotalBranchLength();
+		d = ciccarelli.exactDistanceBetween(217992, 59919);
+		//System.err.println(d);
+		assert MathUtils.equalWithinFPError(d, 1.47739);
+		}
 	}
