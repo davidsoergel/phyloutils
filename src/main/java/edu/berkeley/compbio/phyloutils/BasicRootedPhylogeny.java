@@ -32,23 +32,24 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.HierarchyNode;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
-import java.util.LinkedList;
-
-import com.davidsoergel.dsutils.HierarchyNode;
 
 /* $Id$ */
 
 /**
- * Really this wants to extend BasicPhylogenyNode, but we can't (multiple inheritance, etc.), so we just facade a root node for many methods.
+ * Really this wants to extend BasicPhylogenyNode, but we can't (multiple inheritance, etc.), so we just facade a root
+ * node for many methods.
+ *
  * @Author David Soergel
  * @Version 1.0
  */
@@ -71,7 +72,6 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		{
 		root = new BasicPhylogenyNode<T>(null, rootValue, 0);
 		}
-
 
 	public PhylogenyNode<T> getNode(T name)
 		{
@@ -102,7 +102,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		Set<T> result = new HashSet<T>();
 		for (T t : nodes.keySet())
 			{
-			if(nodes.get(t).isLeaf())
+			if (nodes.get(t).isLeaf())
 				{
 				result.add(t);
 				}
@@ -116,7 +116,6 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		nodes = new HashMap<T, PhylogenyNode<T>>();
 		root.addSubtreeToMap(nodes, namer);
 		}
-
 
 
 	public Set<? extends PhylogenyNode<T>> getChildren()
@@ -192,12 +191,10 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 
 	public T nearestKnownAncestor(RootedPhylogeny<T> rootPhylogeny, T leafId) throws PhyloUtilsException
 		{
-		T result = null; //nearestKnownAncestorCache.get(leafId);
+		T result = null;//nearestKnownAncestorCache.get(leafId);
 		if (result == null)
 			{
-			PhylogenyNode<T> n;
-
-			n = getNode(leafId);
+			PhylogenyNode<T> n = getNode(leafId);
 
 			if (n == null)
 				{
@@ -215,10 +212,32 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 				//ncbiDb.getEntityManager().refresh(n);
 				}
 			result = n.getValue();
-		//	nearestKnownAncestorCache.put(leafId, result);
+			//	nearestKnownAncestorCache.put(leafId, result);
 			}
 		//return n.getId();
 		return result;
+		}
+
+	public T nearestAncestorWithBranchLength(T leafId) throws PhyloUtilsException
+		{
+		PhylogenyNode<T> n = getNode(leafId);
+
+		if (n == null)
+			{
+			throw new PhyloUtilsException("Leaf phylogeny does not contain node " + leafId + ".");
+			}
+
+		while (n.getLength() == null)
+			{
+			n = n.getParent();
+			if (n.getParent() == null)
+				{
+				// arrived at root, too bad
+				throw new PhyloUtilsException("No ancestor of " + leafId + " has a branch length.");
+				}
+			}
+
+		return n.getValue();
 		}
 
 	public BasicPhylogenyNode<T> getRoot()
@@ -238,7 +257,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 
 	public void setWeight(double v)
 		{
-		if(v != 1.)
+		if (v != 1.)
 			{
 			throw new Error("Can't set root weight to anything other than 1");
 			}
@@ -247,6 +266,16 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	public void propagateWeightFromBelow()
 		{
 		root.propagateWeightFromBelow();
+		}
+
+	public double distanceToRoot()
+		{
+		return 0;
+		}
+
+	public void setRoot(BasicPhylogenyNode<T> root)
+		{
+		this.root = root;
 		}
 	}
 

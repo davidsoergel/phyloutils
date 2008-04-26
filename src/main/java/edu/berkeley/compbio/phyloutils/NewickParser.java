@@ -52,8 +52,6 @@ public class NewickParser<T>
 	{
 	// -------------------------- OTHER METHODS --------------------------
 
-	;
-
 
 	public RootedPhylogeny<T> read(InputStream is, NodeNamer<T> namer) throws PhyloUtilsException
 		{

@@ -33,6 +33,8 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.CollectionUtils;
+import com.davidsoergel.stats.ContinuousDistribution1D;
+import com.davidsoergel.stats.DistributionException;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -51,6 +53,7 @@ import java.util.Set;
 public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	{
 	private static final Logger logger = Logger.getLogger(AbstractRootedPhylogeny.class);
+	private RootedPhylogeny<T> basePhylogeny;
 
 	public T commonAncestor(Set<T> knownMergeIds)
 		{
@@ -98,18 +101,46 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		}
 
 
-	public RootedPhylogeny<T> extractTreeWithLeaves(Collection<T> ids)
+	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids) throws PhyloUtilsException
 		{
-		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
+		return extractTreeWithLeafIDs(ids, false);
+		}
+
+	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes)
+			throws PhyloUtilsException
+		{
+		Set<PhylogenyNode<T>> theLeaves = new HashSet<PhylogenyNode<T>>();
 		for (T id : ids)
 			{
-			theAncestorLists.add(getNode(id).getAncestorPath());
+			PhylogenyNode<T> n = getNode(id);
+			if (n == null)
+				{
+				if (!ignoreAbsentNodes)
+					{
+					throw new PhyloUtilsException("Can't extract tree; requested node " + id + " not found");
+					}
+				}
+			else
+				{
+				theLeaves.add(n);
+				}
+			}
+		return extractTreeWithLeaves(theLeaves);
+		}
+
+	public RootedPhylogeny<T> extractTreeWithLeaves(Collection<PhylogenyNode<T>> leaves)
+			throws PhyloUtilsException
+		{
+		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
+		for (PhylogenyNode<T> leaf : leaves)
+			{
+			theAncestorLists.add(leaf.getAncestorPath());
 			}
 
-		PhylogenyNode<T> commonAncestor = null;
+		BasicPhylogenyNode<T> commonAncestor = null;
 		try
 			{
-			commonAncestor = extractTreeWithPaths(theAncestorLists);
+			commonAncestor = extractTreeWithLeafPaths(theAncestorLists);
 			}
 		catch (PhyloUtilsException e)
 			{
@@ -118,21 +149,49 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			throw new Error(e);
 			}
 
-		BasicRootedPhylogeny<T> newRoot = new BasicRootedPhylogeny<T>();
-		//newRoot.setLength(new Double(0));  // implicit
-		newRoot.setValue(commonAncestor.getValue());
+		// always use the same root, even if it has only one child
+		BasicRootedPhylogeny<T> newTree = new BasicRootedPhylogeny<T>(this.getValue());
 
-		for (PhylogenyNode<T> child : commonAncestor.getChildren())
+		if (commonAncestor.getValue() != this.getValue())
 			{
-			new BasicPhylogenyNode<T>(newRoot.getRoot(), child);// may produce ClassCastException
-			//child.setParent(newRoot);
+			// add a single branch descending from the root to the common ancestor
+			newTree.getRoot().addChild(commonAncestor);
+			//newRoot = new BasicPhylogenyNode<T>(newRoot, commonAncestor.getValue(), commonAncestor.getLength());
+			}
+		else
+			{
+			newTree.setRoot(commonAncestor);
 			}
 
-		return newRoot;
+		// now the root is a copy of the common ancestor node.
+		// also need to deep copy the whole tree.
+
+		//deepCopy(commonAncestor, newRoot);
+
+		newTree.updateNodes(null);
+		newTree.setBasePhylogeny(this);
+		return newTree;
 		}
 
+	/*
+	private void deepCopy(PhylogenyNode<T> from, BasicPhylogenyNode<T> to)
+		{
+		for (PhylogenyNode<T> fromChild : from.getChildren())
+			{
+			BasicPhylogenyNode<T> toChild = new BasicPhylogenyNode<T>(to, fromChild);// may produce ClassCastException
+			deepCopy(fromChild, toChild);
+			//child.setParent(newRoot);
+			}
+		}
+	*/
 
-	protected BasicPhylogenyNode<T> extractTreeWithPaths(Set<List<PhylogenyNode<T>>> theAncestorLists)
+	/**
+	 * note this does not allow for the case where one path terminates at an internal node of another path
+	 * @param theAncestorLists
+	 * @return
+	 * @throws PhyloUtilsException
+	 */
+	protected BasicPhylogenyNode<T> extractTreeWithLeafPaths(Set<List<PhylogenyNode<T>>> theAncestorLists)
 			throws PhyloUtilsException
 		{
 		double accumulatedLength = 0;
@@ -140,13 +199,14 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		// use this as a marker to test that the provided lists were actually consistent
 		PhylogenyNode<T> commonAncestor = null;
 
+
 		while (CollectionUtils.allFirstElementsEqual(theAncestorLists))
 			{
 			commonAncestor = CollectionUtils.removeAllFirstElements(theAncestorLists);
 			Double d = commonAncestor.getLength();
 			if (d == null)
 				{
-				logger.warn("Ignoring null length at node " + commonAncestor);
+				//logger.warn("Ignoring null length at node " + commonAncestor);
 				}
 			else
 				{
@@ -169,7 +229,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		for (Set<List<PhylogenyNode<T>>> childAncestorList : childAncestorLists)
 			{
-			BasicPhylogenyNode<T> child = extractTreeWithPaths(childAncestorList);
+			BasicPhylogenyNode<T> child = extractTreeWithLeafPaths(childAncestorList);
 			node.getChildren().add(child);
 			child.setParent(node);
 			}
@@ -256,6 +316,15 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return result;
 		}
 
+	public void randomizeLeafWeights(ContinuousDistribution1D speciesAbundanceDistribution) throws DistributionException
+		{
+		for (PhylogenyNode<T> leaf : getLeaves())
+			{
+			leaf.setWeight(speciesAbundanceDistribution.sample());
+			}
+		normalizeWeights();
+		}
+
 	public void normalizeWeights()
 		{
 		// first normalize at the leaves
@@ -274,6 +343,55 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		// then propagate up
 
 		propagateWeightFromBelow();
+		}
+
+
+	public RootedPhylogeny<T> getBasePhylogeny()
+		{
+		return basePhylogeny;
+		}
+
+	public RootedPhylogeny<T> getBasePhylogenyRecursive()
+		{
+		if (basePhylogeny == null)
+			{
+			return this;
+			}
+		return basePhylogeny.getBasePhylogenyRecursive();
+		}
+
+	public void setBasePhylogeny(RootedPhylogeny<T> basePhylogeny)
+		{
+		this.basePhylogeny = basePhylogeny;
+		}
+
+	public RootedPhylogeny<T> extractIntersectionTree(Collection<T> leafIdsA, Collection<T> leafIdsB) throws
+	                                                                                                  PhyloUtilsException
+		{
+		Set<PhylogenyNode<T>> allTreeNodesA = new HashSet<PhylogenyNode<T>>();
+		for (T id : leafIdsA)
+			{
+			allTreeNodesA.addAll(getNode(id).getAncestorPath());
+			}
+
+		Set<PhylogenyNode<T>> allTreeNodesB = new HashSet<PhylogenyNode<T>>();
+		for (T id : leafIdsB)
+			{
+			allTreeNodesB.addAll(getNode(id).getAncestorPath());
+			}
+
+		allTreeNodesA.retainAll(allTreeNodesB);
+
+		// now allTreeNodesA contains all nodes that are in common between the two input leaf sets, including internal nodes
+
+		// remove internal nodes
+		for (PhylogenyNode<T> node : new HashSet<PhylogenyNode<T>>(allTreeNodesA))
+			{
+			allTreeNodesA.remove(node.getParent());
+			}
+
+
+		return extractTreeWithLeaves(allTreeNodesA);
 
 		}
 	}

@@ -32,11 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 
 /* $Id$ */
 
@@ -48,7 +44,7 @@ import java.util.Map;
  * @Author David Soergel
  * @Version 1.0
  */
-public class HybridRootedPhylogeny<T>
+public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//extends AbstractRootedPhylogeny<Integer>
 	{
 
 	RootedPhylogeny<T> rootPhylogeny;
@@ -67,4 +63,22 @@ public class HybridRootedPhylogeny<T>
 		return leafPhylogeny.nearestKnownAncestor(rootPhylogeny, leafId);
 		}
 
+	public T nearestAncestorWithBranchLength(T id) throws PhyloUtilsException
+		{
+		T rootId = nearestKnownAncestor(id);
+		return rootPhylogeny.nearestAncestorWithBranchLength(rootId);
+		}
+
+	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers) throws PhyloUtilsException
+		{
+		// this is sort of a hack... extracting a tree where some leaves are in the leaf phylogeny only is not allowed, and will throw an exception
+		return rootPhylogeny.extractTreeWithLeafIDs(integers);
+		}
+
+
+	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers, boolean ignoreAbsentNodes) throws PhyloUtilsException
+		{
+		// this is sort of a hack... extracting a tree where some leaves are in the leaf phylogeny only is not allowed, and will throw an exception
+		return rootPhylogeny.extractTreeWithLeafIDs(integers, ignoreAbsentNodes);
+		}
 	}

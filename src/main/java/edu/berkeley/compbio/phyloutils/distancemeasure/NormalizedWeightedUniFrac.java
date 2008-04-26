@@ -47,10 +47,9 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-public class WeightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
+public class NormalizedWeightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
 	{
 	private static final Logger logger = Logger.getLogger(WeightedUniFrac.class);
-
 
 	public double distanceFromTo(RootedPhylogeny<T> a, RootedPhylogeny<T> b)
 		{
@@ -71,6 +70,9 @@ public class WeightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
 
 			double result = 0;
 			double totalLength = 0;
+
+			double normalizingFactor = 0;
+
 			for (PhylogenyNode<T> node : unionTree)
 				{
 				T id = node.getValue();
@@ -80,9 +82,14 @@ public class WeightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
 				double bWeight = bNode == null ? 0 : bNode.getWeight();
 				result += node.getLength() * Math.abs(aWeight - bWeight);
 				totalLength += node.getLength();
+
+				if (node.isLeaf())
+					{
+					normalizingFactor += node.distanceToRoot() * (aWeight + bWeight);
+					}
 				}
 
-			return result / totalLength;
+			return (result / totalLength) / normalizingFactor;
 			}
 		catch (PhyloUtilsException e)
 			{

@@ -32,6 +32,9 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.stats.ContinuousDistribution1D;
+import com.davidsoergel.stats.DistributionException;
+
 import java.util.Collection;
 import java.util.Set;
 
@@ -41,7 +44,7 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-public interface RootedPhylogeny<T> extends PhylogenyNode<T>
+public interface RootedPhylogeny<T> extends PhylogenyNode<T>, TaxonMergingPhylogeny<T>
 	{
 	T commonAncestor(Set<T> knownMergeIds);
 
@@ -55,13 +58,24 @@ public interface RootedPhylogeny<T> extends PhylogenyNode<T>
 
 	Collection<PhylogenyNode<T>> getLeaves();
 
-	RootedPhylogeny<T> extractTreeWithLeaves(Collection<T> ids);
+	//RootedPhylogeny<T> extractTreeWithLeaves(Collection<T> ids);
 
 	PhylogenyIterator<T> phylogenyIterator();
 
 	T nearestKnownAncestor(RootedPhylogeny<T> rootPhylogeny, T leafId) throws PhyloUtilsException;
 
+	//T nearestAncestorWithBranchLength(T leafId) throws PhyloUtilsException;
+
 	Collection<T> getLeafValues();
 
 	double getTotalBranchLength();
+
+	void randomizeLeafWeights(ContinuousDistribution1D speciesAbundanceDistribution) throws DistributionException;
+
+	RootedPhylogeny<T> getBasePhylogeny();
+
+	RootedPhylogeny<T> getBasePhylogenyRecursive();
+
+	RootedPhylogeny<T> extractIntersectionTree(Collection<T> leafValues, Collection<T> leafValues1) throws
+	                                                                                                PhyloUtilsException;
 	}

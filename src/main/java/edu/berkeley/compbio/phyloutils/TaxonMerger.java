@@ -32,10 +32,12 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
+import edu.berkeley.compbio.phyloutils.PhylogenyIterator;
+import edu.berkeley.compbio.phyloutils.PhylogenyNode;
+import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 import org.apache.log4j.Logger;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,82 +59,66 @@ public class TaxonMerger
 	/**
 	 * Separates a set of taxon ids into the smallest possible number of disjoint sets such that the maximum pairwise
 	 * phylogenetic distance within each set is less than a given threshold.
-	 *
-	 * @param files
-	 * @return
 	 */
-	@Transactional
+	//@Transactional
 	//(propagation = Propagation.MANDATORY)
-	public Map<Integer, Set<Integer>> merge(Collection<Integer> leafIds, double ciccarelliMergeThreshold)
+	public static Map<Integer, Set<Integer>> merge(Collection<Integer> leafIds, TaxonMergingPhylogeny<Integer> basePhylogeny, double ciccarelliMergeThreshold)
+			throws PhyloUtilsException
 		{
 		Map<Integer, Set<Integer>> theTaxonsetsByTaxid = new HashMap<Integer, Set<Integer>>();
-		try
+
+		// first merge all those taxa that are at the same leaf in the known distance tree
+		for (Integer id : leafIds)
 			{
-			// first merge all those taxa that are at the same leaf in the known distance tree
-			for (Integer id : leafIds)
+			int knownId = basePhylogeny.nearestAncestorWithBranchLength(id);
+			Set<Integer> currentTaxonset = theTaxonsetsByTaxid.get(knownId);
+			if (currentTaxonset == null)
 				{
-				int knownId = NcbiCiccarelliHybridService.nearestKnownAncestor(id);
-				Set<Integer> currentTaxonset = theTaxonsetsByTaxid.get(knownId);
-				if (currentTaxonset == null)
+				currentTaxonset = new HashSet<Integer>();
+				theTaxonsetsByTaxid.put(id, currentTaxonset);
+				}
+
+			currentTaxonset.add(id);
+			}
+
+		if (ciccarelliMergeThreshold == 0)
+			{
+			//logger.info("No merging, using " + leafIds.size() + " taxa.");
+			return theTaxonsetsByTaxid;
+			}
+
+		// now iterate oven the tree, merging subtrees that meet the criterion
+
+		Map<Integer, Set<Integer>> theMergedTaxa = new HashMap<Integer, Set<Integer>>();
+
+		RootedPhylogeny<Integer> theTree = basePhylogeny.extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet());
+
+		PhylogenyIterator<Integer> it = theTree.phylogenyIterator();
+
+		while (it.hasNext())
+			{
+			PhylogenyNode<Integer> node = it.next();
+
+			// the iterator is depth-first by default
+
+			if (node.getLargestLengthSpan() < ciccarelliMergeThreshold)
+				{
+				Set<Integer> mergeTaxa = new HashSet<Integer>();
+				for (PhylogenyNode<Integer> descendant : node)
 					{
-					theTaxonsetsByTaxid.put(id, new HashSet<Integer>());
+					// we'll include intermediate nodes even if they aren't p'rt of the query (i.e., not leaves)
+					mergeTaxa.add(descendant.getValue());
 					}
 
-				currentTaxonset.add(id);
+				// we also need to advance the main iterator, so once we've merged this node,
+				// we'll move on to the next sibling (or uncle, etc.)
+				it.skipAllDescendants(node);
+
+				theMergedTaxa.put(node.getValue(), mergeTaxa);
 				}
-
-			if (ciccarelliMergeThreshold == 0)
-				{
-				logger.info("No merging, using " + leafIds.size() + " taxa.");
-				return theTaxonsetsByTaxid;
-				}
-
-			// now iterate oven the tree, merging subtrees that meet the criterion
-
-			Map<Integer, Set<Integer>> theMergedTaxa = new HashMap<Integer, Set<Integer>>();
-
-			RootedPhylogeny<Integer> theTree =
-					NcbiCiccarelliHybridService.extractTreeWithLeaves(theTaxonsetsByTaxid.keySet());
-
-			PhylogenyIterator<Integer> it = theTree.phylogenyIterator();
-
-			while (it.hasNext())
-				{
-				PhylogenyNode<Integer> node = it.next();
-
-				// the iterator is depth-first by default
-
-				if (node.getLargestLengthSpan() < ciccarelliMergeThreshold)
-					{
-					Set<Integer> mergeTaxa = new HashSet<Integer>();
-					for (PhylogenyNode<Integer> descendant : node)
-						{
-						// we'll include intermediate nodes even if they aren't p'rt of the query (i.e., not leaves)
-						mergeTaxa.add(descendant.getValue());
-						}
-
-					// we also need to advance the main iterator, so once we've merged this node,
-					// we'll move on to the next sibling (or uncle, etc.)
-					it.skipAllDescendants(node);
-
-					theMergedTaxa.add(mergeTaxa);
-					}
-				}
-
-			logger.info("Merged " + leafIds.size() + " taxa into " + theMergedTaxa.size() + " groups.");
-			return theMergedTaxa;
 			}
-		catch (IOException e)
-			{
-			logger.debug(e);
-			e.printStackTrace();
-			throw new MsensrRuntimeException(e);
-			}
-		catch (PhyloUtilsException e)
-			{
-			logger.debug(e);
-			e.printStackTrace();
-			throw new MsensrRuntimeException(e);
-			}
+
+		logger.info("Merged " + leafIds.size() + " taxa into " + theMergedTaxa.size() + " groups.");
+		return theMergedTaxa;
 		}
 	}

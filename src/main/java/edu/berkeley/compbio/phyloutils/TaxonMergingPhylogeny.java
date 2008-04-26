@@ -32,10 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.HierarchyNode;
-
-import java.util.Set;
-import java.util.List;
+import java.util.Collection;
 
 /* $Id$ */
 
@@ -43,31 +40,11 @@ import java.util.List;
  * @Author David Soergel
  * @Version 1.0
  */
-public interface PhylogenyNode<T> extends Iterable<PhylogenyNode<T>>, HierarchyNode<T>
+public interface TaxonMergingPhylogeny<T>
 	{
-	Set<? extends PhylogenyNode<T>> getChildren();
+	T nearestAncestorWithBranchLength(T id) throws PhyloUtilsException;
 
-	// the "name" of this PhylogenyNode is the same as the "value" of the hierarchynode
-	//T getName();
+	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids) throws PhyloUtilsException;
 
-
-	PhylogenyNode getParent();
-
-	boolean hasValue();
-
-	List<PhylogenyNode<T>> getAncestorPath();
-
-	Double getLength();
-
-	Double getLargestLengthSpan();
-
-	boolean isLeaf();
-
-	double getWeight();
-
-	void setWeight(double v);
-
-	void propagateWeightFromBelow();
-
-	double distanceToRoot();
+	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes) throws PhyloUtilsException;
 	}

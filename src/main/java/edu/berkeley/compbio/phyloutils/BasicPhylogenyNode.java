@@ -32,12 +32,9 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.CollectionUtils;
 import com.davidsoergel.dsutils.HierarchyNode;
 import org.apache.log4j.Logger;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -148,7 +145,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 
 	public void propagateWeightFromBelow()
 		{
-		if(!isLeaf())
+		if (!isLeaf())
 			{
 			weight = 0.;
 			for (BasicPhylogenyNode<T> child : children)
@@ -157,6 +154,11 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 				weight += child.getWeight();
 				}
 			}
+		}
+
+	public double distanceToRoot()
+		{
+		return length + (parent == null ? 0 : parent.distanceToRoot());
 		}
 
 	public T getValue()
@@ -203,6 +205,10 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		{
 		if (!hasValue())
 			{
+			if (namer == null)
+				{
+				throw new PhyloUtilsException("Need to name a node, but no namer was provided");
+				}
 			value = namer.nameInternal(nodes.size());
 			}
 
@@ -267,7 +273,6 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 
 		return result;
 		}
-
 
 
 	public PhylogenyIterator<T> iterator()

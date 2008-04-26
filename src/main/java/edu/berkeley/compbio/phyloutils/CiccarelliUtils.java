@@ -32,12 +32,11 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.CollectionUtils;
 import org.apache.log4j.Logger;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
@@ -97,13 +96,22 @@ public class CiccarelliUtils
 
 
 
-	public RootedPhylogeny<Integer> extractTreeWithLeaves(Set<Integer> ids)
+	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Set<Integer> ids) throws PhyloUtilsException
 		{
-		return ciccarelliTree.extractTreeWithLeaves(ids);
+		return ciccarelliTree.extractTreeWithLeafIDs(ids);
 		}
 
 	public RootedPhylogeny<Integer> getTree()
 		{
 		return ciccarelliTree;
+		}
+
+	public RootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double ciccarelliMergeThreshold) throws
+	                                                                                               PhyloUtilsException
+		{
+		Map<Integer, Set<Integer>> mergeIdSets = TaxonMerger.merge(ciccarelliTree.getLeafValues(), ciccarelliTree, ciccarelliMergeThreshold);
+		Set<Integer> mergedIds = mergeIdSets.keySet();
+		CollectionUtils.retainRandom(mergedIds, numTaxa);
+		return ciccarelliTree.extractTreeWithLeafIDs(mergedIds);
 		}
 	}

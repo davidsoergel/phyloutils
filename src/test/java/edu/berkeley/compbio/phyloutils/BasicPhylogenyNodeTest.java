@@ -225,7 +225,7 @@ public class BasicPhylogenyNodeTest
 		theAncestorLists.add(bbbb.getAncestorPath());
 		theAncestorLists.add(ca.getAncestorPath());
 
-		BasicPhylogenyNode<String> tree = rootPhylogeny.extractTreeWithPaths(theAncestorLists);
+		BasicPhylogenyNode<String> tree = rootPhylogeny.extractTreeWithLeafPaths(theAncestorLists);
 
 		for (PhylogenyNode<String> xnode : tree)
 			{

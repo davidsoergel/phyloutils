@@ -33,7 +33,9 @@
 package edu.berkeley.compbio.phyloutils.distancemeasure;
 
 import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
+import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
+import org.apache.log4j.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,26 +49,55 @@ import java.util.Set;
 
 public class UnweightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
 	{
-	RootedPhylogeny<T> theBasePhylogeny;
+	private static final Logger logger = Logger.getLogger(UnweightedUniFrac.class);
 
 	public double distanceFromTo(RootedPhylogeny<T> a, RootedPhylogeny<T> b)
 		{
-		//double branchLengthA = a.getTotalBranchLength();
-		//double branchLengthB = b.getTotalBranchLength();
+		try
+			{
+			//double branchLengthA = a.getTotalBranchLength();
+			//double branchLengthB = b.getTotalBranchLength();
 
-		Set<T> unionLeaves = new HashSet<T>();
-		unionLeaves.addAll(a.getLeafValues());
-		unionLeaves.addAll(b.getLeafValues());
+			RootedPhylogeny<T> theBasePhylogeny = a.getBasePhylogeny();
+			if(theBasePhylogeny != b.getBasePhylogeny())
+				{
+				throw new PhyloUtilsException("UniFrac can be computed only between trees extracted from the same underlying tree");
+				}
 
-		RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeaves(unionLeaves);
+			Set<T> unionLeafIDs = new HashSet<T>();
+			unionLeafIDs.addAll(a.getLeafValues());
+			unionLeafIDs.addAll(b.getLeafValues());
 
-		RootedPhylogeny<T> intersectionTree = unionTree.extractTreeWithLeaves(a.getLeafValues());
-		intersectionTree = intersectionTree.extractTreeWithLeaves(b.getLeafValues());
+			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeafIDs);
 
-		double unionLength = unionTree.getTotalBranchLength();
-		double intersectionLength = intersectionTree.getTotalBranchLength();
+			// careful: the "intersection" tree needs to contain branches terminating at internal nodes that are common between the two trees,
+			// even if there are no leaves in common below that node.
 
-		return 1. - (intersectionLength / unionLength);
+			// i.e., this is completely wrong, since it only considers leaves in common between the two trees
+			//RootedPhylogeny<T> intersectionTree = unionTree.extractTreeWithLeaves(a.getLeafValues(), true);
+			//intersectionTree = intersectionTree.extractTreeWithLeaves(b.getLeafValues(), true);
+
+			// we must do this starting from the union tree because there may be intermediate branch points that are collapsed in the individual trees
+			RootedPhylogeny<T> intersectionTree = unionTree.extractIntersectionTree(a.getLeafValues(), b.getLeafValues());
+
+			double unionLength = unionTree.getTotalBranchLength();
+			double intersectionLength = intersectionTree.getTotalBranchLength();
+
+			return 1. - (intersectionLength / unionLength);
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.debug(e);
+			e.printStackTrace();
+			throw new Error(e);
+			}
+		}
+
+	public String toString()
+		{
+		String shortname = getClass().getName();
+		shortname = shortname.substring(shortname.lastIndexOf(".") + 1);
+		return shortname;
 		}
 	}
 
