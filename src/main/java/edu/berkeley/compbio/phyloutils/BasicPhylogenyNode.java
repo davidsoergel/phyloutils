@@ -545,4 +545,25 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		{
 		return value == null ? "null" : value.toString();
 		}
+
+	public BasicPhylogenyNode<T> clone()
+		{
+		BasicPhylogenyNode<T> result = new BasicPhylogenyNode<T>();
+
+		result.setLength(length);
+		result.setValue(value);//** value.clone() ??
+		result.setBootstrap(bootstrap);
+
+		for (BasicPhylogenyNode<T> child : children)
+			{
+			result.addChild((BasicPhylogenyNode<T>) child.clone());
+			}
+
+		// set weight after children, since it would get wiped
+		result.setWeight(weight);
+
+		// we don't set the parent here; addChild takes care of that, except for the root, where the parent is null anyway
+
+		return result;
+		}
 	}

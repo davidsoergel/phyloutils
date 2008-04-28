@@ -82,4 +82,8 @@ public interface RootedPhylogeny<T> extends PhylogenyNode<T>, TaxonMergingPhylog
 			throws PhyloUtilsException;
 
 	RootedPhylogeny<T> mixWith(RootedPhylogeny<T> phylogeny, double mixingProportion) throws PhyloUtilsException;
+
+	 void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor) throws PhyloUtilsException;
+
+	RootedPhylogeny<T> clone();
 	}

@@ -69,7 +69,13 @@ public class PhylogeneticKullbackLeibler<T> implements DistanceMeasure<RootedPhy
 
 			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves);
 
-			return klDivergenceBelow(unionTree, a, b);
+			RootedPhylogeny<T> aTreeSmoothed = unionTree.clone();
+			aTreeSmoothed.smoothWeightsFrom(a, .000001);
+
+			RootedPhylogeny<T> bTreeSmoothed = unionTree.clone();
+			bTreeSmoothed.smoothWeightsFrom(b, .000001);
+
+			return klDivergenceBelow(unionTree, aTreeSmoothed, bTreeSmoothed);
 			}
 		catch (PhyloUtilsException e)
 			{
@@ -92,11 +98,11 @@ public class PhylogeneticKullbackLeibler<T> implements DistanceMeasure<RootedPhy
 
 			// the provided weights are absolute, not conditional
 
-			double p = aWeight / aNode.getParent().getWeight();
-			double q = bWeight / bNode.getParent().getWeight();
+			double p = aWeight == 0 ? 0 : aWeight / aNode.getParent().getWeight();
+			double q = bWeight == 0 ? 0 : bWeight / bNode.getParent().getWeight();
 
-
-			divergence += p * MathUtils.approximateLog2(p / q);
+			// weight the contribution of each node to the divergence by the branch length leading to it
+			divergence += node.getLength() * p * MathUtils.approximateLog2(p / q);
 
 			// information at each node below this one is weighted by the probability of
 			// getting there in the first place, according to realTree

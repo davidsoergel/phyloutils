@@ -422,4 +422,30 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		unionTree.normalizeWeights();
 		return unionTree;
 		}
+
+
+	public void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor) throws PhyloUtilsException
+		{
+		/*RootedPhylogeny<T> theBasePhylogeny = getBasePhylogeny();
+		if (theBasePhylogeny != otherTree.getBasePhylogeny())
+			{
+			throw new PhyloUtilsException(
+					"Phylogeny mixtures can be computed only between trees extracted from the same underlying tree");
+			}
+*/
+
+		//** if the otherTree has leaves that are not present in this tree, we'll ignore them and never know.
+		// That circumstance should probably throw an exception, but it's a bit of a drag to test for it.
+
+		for (PhylogenyNode<T> leaf : getLeaves())//theBasePhylogeny.getLeaves())
+			{
+			T leafId = leaf.getValue();
+			PhylogenyNode<T> otherLeaf = otherTree.getNode(leafId);
+			getNode(leafId).setWeight((otherLeaf == null ? 0 : otherLeaf.getWeight()) + smoothingFactor);
+			}
+
+		normalizeWeights();
+		}
+
+	public abstract RootedPhylogeny<T> clone();
 	}

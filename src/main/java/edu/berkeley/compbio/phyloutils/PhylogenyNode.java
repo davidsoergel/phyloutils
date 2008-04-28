@@ -74,4 +74,6 @@ public interface PhylogenyNode<T> extends Iterable<PhylogenyNode<T>>, HierarchyN
 	PhylogenyNode<T> getChild(T id);
 
 	void incrementWeightBy(double v);
+
+	PhylogenyNode<T> clone();
 	}

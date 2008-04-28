@@ -32,6 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils.alphadiversity;
 
+import edu.berkeley.compbio.ml.Statistic;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 
 /* $Id$ */
@@ -40,10 +41,17 @@ import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
  * @Author David Soergel
  * @Version 1.0
  */
-public class FaithPD<T> implements AlphaDiversity<T>
+public class FaithPD<T> implements Statistic<RootedPhylogeny<T>>
 	{
 	public double measure(RootedPhylogeny<T> p)
 		{
 		return p.getTotalBranchLength();
+		}
+
+	public String toString()
+		{
+		String shortname = getClass().getName();
+		shortname = shortname.substring(shortname.lastIndexOf(".") + 1);
+		return shortname;
 		}
 	}

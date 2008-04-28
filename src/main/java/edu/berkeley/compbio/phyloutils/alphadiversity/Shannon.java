@@ -33,6 +33,7 @@
 package edu.berkeley.compbio.phyloutils.alphadiversity;
 
 import com.davidsoergel.dsutils.MathUtils;
+import edu.berkeley.compbio.ml.Statistic;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 
@@ -42,7 +43,7 @@ import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
  * @Author David Soergel
  * @Version 1.0
  */
-public class Shannon<T> implements AlphaDiversity<T>
+public class Shannon<T> implements Statistic<RootedPhylogeny<T>>
 	{
 	public double measure(RootedPhylogeny<T> tree)
 		{
@@ -55,8 +56,15 @@ public class Shannon<T> implements AlphaDiversity<T>
 
 		entropy /= MathUtils.LOGTWO;//logTwo;// Math.log is base e
 
-		double information = 2 - entropy;
+		//double information = 2 - entropy;
 
-		return information;
+		return entropy;
+		}
+
+	public String toString()
+		{
+		String shortname = getClass().getName();
+		shortname = shortname.substring(shortname.lastIndexOf(".") + 1);
+		return shortname;
 		}
 	}

@@ -289,6 +289,24 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		{
 		this.root = root;
 		}
+
+	public RootedPhylogeny<T> clone()
+		{
+		try
+			{
+			BasicRootedPhylogeny<T> result = new BasicRootedPhylogeny<T>();
+			result.setRoot(root.clone());
+			result.setBasePhylogeny(getBasePhylogeny());
+			result.updateNodes(null);
+			return result;
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.debug(e);
+			e.printStackTrace();
+			throw new Error(e);
+			}
+		}
 	}
 
 
