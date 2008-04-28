@@ -48,7 +48,7 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-public class PhylogeneticKullbackLeibler<T> implements DistanceMeasure<RootedPhylogeny<T>>
+public class KullbackLeibler<T> implements DistanceMeasure<RootedPhylogeny<T>>
 	{
 	private static final Logger logger = Logger.getLogger(WeightedUniFrac.class);
 
@@ -60,7 +60,7 @@ public class PhylogeneticKullbackLeibler<T> implements DistanceMeasure<RootedPhy
 			if (theBasePhylogeny != b.getBasePhylogeny())
 				{
 				throw new PhyloUtilsException(
-						"Phylogenetic K-L can be computed only between trees extracted from the same underlying tree");
+						"K-L can be computed only between trees extracted from the same underlying tree");
 				}
 
 			Set<T> unionLeaves = new HashSet<T>();
@@ -75,7 +75,7 @@ public class PhylogeneticKullbackLeibler<T> implements DistanceMeasure<RootedPhy
 			RootedPhylogeny<T> bTreeSmoothed = unionTree.clone();
 			bTreeSmoothed.smoothWeightsFrom(b, .000001);
 
-			return klDivergenceBelow(unionTree, aTreeSmoothed, bTreeSmoothed);
+			return klDivergence(unionTree, a, b);
 			}
 		catch (PhyloUtilsException e)
 			{
@@ -85,28 +85,21 @@ public class PhylogeneticKullbackLeibler<T> implements DistanceMeasure<RootedPhy
 			}
 		}
 
-	protected double klDivergenceBelow(PhylogenyNode<T> u, PhylogenyNode<T> a, PhylogenyNode<T> b)
+	protected double klDivergence(RootedPhylogeny<T> unionTree, RootedPhylogeny<T> a, RootedPhylogeny<T> b)
 		{
 		double divergence = 0;
-		for (PhylogenyNode<T> node : u.getChildren())
+
+		for (PhylogenyNode<T> node : unionTree.getLeaves())
 			{
 			T id = node.getValue();
 			PhylogenyNode<T> aNode = a.getChild(id);
 			PhylogenyNode<T> bNode = b.getChild(id);
-			double aWeight = aNode == null ? 0 : aNode.getWeight();
-			double bWeight = bNode == null ? 0 : bNode.getWeight();
+			double p = aNode == null ? 0 : aNode.getWeight();
+			double q = bNode == null ? 0 : bNode.getWeight();
 
-			// the provided weights are absolute, not conditional
+			// the provided weights are absolute, not conditional, and that's just what we want
 
-			double p = aWeight == 0 ? 0 : aWeight / aNode.getParent().getWeight();
-			double q = bWeight == 0 ? 0 : bWeight / bNode.getParent().getWeight();
-
-			// weight the contribution of each node to the divergence by the branch length leading to it
-			divergence += node.getLength() * p * MathUtils.approximateLog2(p / q);
-
-			// information at each node below this one is weighted by the probability of
-			// getting there in the first place, according to realTree
-			divergence += p * klDivergenceBelow(node, aNode, bNode);
+			divergence += p * MathUtils.approximateLog2(p / q);
 			}
 
 		return divergence;
