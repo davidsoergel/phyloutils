@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package edu.berkeley.compbio.phyloutils.distancemeasure;
+package edu.berkeley.compbio.phyloutils.betadiversity;
 
 import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
@@ -68,8 +68,7 @@ public class NormalizedWeightedUniFrac<T> implements DistanceMeasure<RootedPhylo
 
 			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves);
 
-			double result = 0;
-			double totalLength = 0;
+			double u = 0;
 
 			double normalizingFactor = 0;
 
@@ -80,16 +79,14 @@ public class NormalizedWeightedUniFrac<T> implements DistanceMeasure<RootedPhylo
 				PhylogenyNode<T> bNode = b.getNode(id);
 				double aWeight = aNode == null ? 0 : aNode.getWeight();
 				double bWeight = bNode == null ? 0 : bNode.getWeight();
-				result += node.getLength() * Math.abs(aWeight - bWeight);
-				totalLength += node.getLength();
+				u += node.getLength() * Math.abs(aWeight - bWeight);
 
 				if (node.isLeaf())
 					{
 					normalizingFactor += node.distanceToRoot() * (aWeight + bWeight);
 					}
 				}
-
-			return (result / totalLength) / normalizingFactor;
+			return u / normalizingFactor;
 			}
 		catch (PhyloUtilsException e)
 			{

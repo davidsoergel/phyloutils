@@ -30,12 +30,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package edu.berkeley.compbio.phyloutils;
+package edu.berkeley.compbio.phyloutils.alphadiversity;
 
-import com.davidsoergel.dsutils.HierarchyNode;
-
-import java.util.Collection;
-import java.util.List;
+import com.davidsoergel.dsutils.MathUtils;
+import edu.berkeley.compbio.phyloutils.PhylogenyNode;
+import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 
 /* $Id$ */
 
@@ -43,35 +42,21 @@ import java.util.List;
  * @Author David Soergel
  * @Version 1.0
  */
-public interface PhylogenyNode<T> extends Iterable<PhylogenyNode<T>>, HierarchyNode<T>
+public class Shannon<T> implements AlphaDiversity<T>
 	{
-	Collection<? extends PhylogenyNode<T>> getChildren();
+	public double measure(RootedPhylogeny<T> tree)
+		{
+		double entropy = 0;
+		for (PhylogenyNode<T> node : tree.getLeaves())
+			{
+			double p = node.getWeight();
+			entropy -= p * MathUtils.approximateLog(p);
+			}
 
-	// the "name" of this PhylogenyNode is the same as the "value" of the hierarchynode
-	//T getName();
+		entropy /= MathUtils.LOGTWO;//logTwo;// Math.log is base e
 
+		double information = 2 - entropy;
 
-	PhylogenyNode getParent();
-
-	boolean hasValue();
-
-	List<PhylogenyNode<T>> getAncestorPath();
-
-	Double getLength();
-
-	Double getLargestLengthSpan();
-
-	boolean isLeaf();
-
-	double getWeight();
-
-	void setWeight(double v);
-
-	void propagateWeightFromBelow();
-
-	double distanceToRoot();
-
-	PhylogenyNode<T> getChild(T id);
-
-	void incrementWeightBy(double v);
+		return information;
+		}
 	}

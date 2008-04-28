@@ -30,12 +30,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package edu.berkeley.compbio.phyloutils;
+package edu.berkeley.compbio.phyloutils.alphadiversity;
 
-import com.davidsoergel.dsutils.HierarchyNode;
-
-import java.util.Collection;
-import java.util.List;
+import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 
 /* $Id$ */
 
@@ -43,35 +40,10 @@ import java.util.List;
  * @Author David Soergel
  * @Version 1.0
  */
-public interface PhylogenyNode<T> extends Iterable<PhylogenyNode<T>>, HierarchyNode<T>
+public class FaithPD<T> implements AlphaDiversity<T>
 	{
-	Collection<? extends PhylogenyNode<T>> getChildren();
-
-	// the "name" of this PhylogenyNode is the same as the "value" of the hierarchynode
-	//T getName();
-
-
-	PhylogenyNode getParent();
-
-	boolean hasValue();
-
-	List<PhylogenyNode<T>> getAncestorPath();
-
-	Double getLength();
-
-	Double getLargestLengthSpan();
-
-	boolean isLeaf();
-
-	double getWeight();
-
-	void setWeight(double v);
-
-	void propagateWeightFromBelow();
-
-	double distanceToRoot();
-
-	PhylogenyNode<T> getChild(T id);
-
-	void incrementWeightBy(double v);
+	public double measure(RootedPhylogeny<T> p)
+		{
+		return p.getTotalBranchLength();
+		}
 	}

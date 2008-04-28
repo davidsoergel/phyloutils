@@ -30,12 +30,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package edu.berkeley.compbio.phyloutils;
+package edu.berkeley.compbio.phyloutils.betadiversity;
 
-import com.davidsoergel.stats.ContinuousDistribution1D;
-import com.davidsoergel.stats.DistributionException;
+import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
+import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
+import edu.berkeley.compbio.phyloutils.PhylogenyNode;
+import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
+import org.apache.log4j.Logger;
 
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /* $Id$ */
@@ -44,42 +47,53 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-public interface RootedPhylogeny<T> extends PhylogenyNode<T>, TaxonMergingPhylogeny<T>
+public class WeightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
 	{
-	T commonAncestor(Set<T> knownMergeIds);
+	private static final Logger logger = Logger.getLogger(WeightedUniFrac.class);
 
-	T commonAncestor(T nameA, T nameB);
 
-	double distanceBetween(T nameA, T nameB);
+	public double distanceFromTo(RootedPhylogeny<T> a, RootedPhylogeny<T> b)
+		{
+		try
+			{
+			RootedPhylogeny<T> theBasePhylogeny = a.getBasePhylogeny();
+			if (theBasePhylogeny != b.getBasePhylogeny())
+				{
+				throw new PhyloUtilsException(
+						"UniFrac can be computed only between trees extracted from the same underlying tree");
+				}
 
-	PhylogenyNode<T> getNode(T name);
+			Set<T> unionLeaves = new HashSet<T>();
+			unionLeaves.addAll(a.getLeafValues());
+			unionLeaves.addAll(b.getLeafValues());
 
-	Collection<PhylogenyNode<T>> getNodes();
+			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves);
 
-	Collection<PhylogenyNode<T>> getLeaves();
+			double u = 0;
+			for (PhylogenyNode<T> node : unionTree)
+				{
+				T id = node.getValue();
+				PhylogenyNode<T> aNode = a.getNode(id);
+				PhylogenyNode<T> bNode = b.getNode(id);
+				double aWeight = aNode == null ? 0 : aNode.getWeight();
+				double bWeight = bNode == null ? 0 : bNode.getWeight();
+				u += node.getLength() * Math.abs(aWeight - bWeight);
+				}
 
-	//RootedPhylogeny<T> extractTreeWithLeaves(Collection<T> ids);
+			return u;
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.debug(e);
+			e.printStackTrace();
+			throw new Error(e);
+			}
+		}
 
-	PhylogenyIterator<T> phylogenyIterator();
-
-	T nearestKnownAncestor(RootedPhylogeny<T> rootPhylogeny, T leafId) throws PhyloUtilsException;
-
-	//T nearestAncestorWithBranchLength(T leafId) throws PhyloUtilsException;
-
-	Collection<T> getLeafValues();
-
-	double getTotalBranchLength();
-
-	void randomizeLeafWeights(ContinuousDistribution1D speciesAbundanceDistribution) throws DistributionException;
-
-	void normalizeWeights();
-
-	RootedPhylogeny<T> getBasePhylogeny();
-
-	RootedPhylogeny<T> getBasePhylogenyRecursive();
-
-	RootedPhylogeny<T> extractIntersectionTree(Collection<T> leafValues, Collection<T> leafValues1)
-			throws PhyloUtilsException;
-
-	RootedPhylogeny<T> mixWith(RootedPhylogeny<T> phylogeny, double mixingProportion) throws PhyloUtilsException;
+	public String toString()
+		{
+		String shortname = getClass().getName();
+		shortname = shortname.substring(shortname.lastIndexOf(".") + 1);
+		return shortname;
+		}
 	}

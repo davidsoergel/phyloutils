@@ -128,8 +128,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return extractTreeWithLeaves(theLeaves);
 		}
 
-	public RootedPhylogeny<T> extractTreeWithLeaves(Collection<PhylogenyNode<T>> leaves)
-			throws PhyloUtilsException
+	public RootedPhylogeny<T> extractTreeWithLeaves(Collection<PhylogenyNode<T>> leaves) throws PhyloUtilsException
 		{
 		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
 		for (PhylogenyNode<T> leaf : leaves)
@@ -187,6 +186,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 	/**
 	 * note this does not allow for the case where one path terminates at an internal node of another path
+	 *
 	 * @param theAncestorLists
 	 * @return
 	 * @throws PhyloUtilsException
@@ -365,8 +365,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		this.basePhylogeny = basePhylogeny;
 		}
 
-	public RootedPhylogeny<T> extractIntersectionTree(Collection<T> leafIdsA, Collection<T> leafIdsB) throws
-	                                                                                                  PhyloUtilsException
+	public RootedPhylogeny<T> extractIntersectionTree(Collection<T> leafIdsA, Collection<T> leafIdsB)
+			throws PhyloUtilsException
 		{
 		Set<PhylogenyNode<T>> allTreeNodesA = new HashSet<PhylogenyNode<T>>();
 		for (T id : leafIdsA)
@@ -392,6 +392,34 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 
 		return extractTreeWithLeaves(allTreeNodesA);
+		}
 
+	public RootedPhylogeny<T> mixWith(RootedPhylogeny<T> otherTree, double mixingProportion) throws PhyloUtilsException
+		{
+		RootedPhylogeny<T> theBasePhylogeny = getBasePhylogeny();
+		if (theBasePhylogeny != otherTree.getBasePhylogeny())
+			{
+			throw new PhyloUtilsException(
+					"Phylogeny mixtures can be computed only between trees extracted from the same underlying tree");
+			}
+
+		Set<T> unionLeaves = new HashSet<T>();
+		unionLeaves.addAll(getLeafValues());
+		unionLeaves.addAll(otherTree.getLeafValues());
+
+		RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves);
+
+		for (PhylogenyNode<T> node : getLeaves())
+			{
+			unionTree.getNode(node.getValue()).setWeight(node.getWeight() * mixingProportion);
+			}
+
+		for (PhylogenyNode<T> node : otherTree.getLeaves())
+			{
+			unionTree.getNode(node.getValue()).incrementWeightBy(node.getWeight() * (1. - mixingProportion));
+			}
+
+		unionTree.normalizeWeights();
+		return unionTree;
 		}
 	}

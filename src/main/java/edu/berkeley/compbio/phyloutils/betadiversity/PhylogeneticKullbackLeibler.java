@@ -30,10 +30,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package edu.berkeley.compbio.phyloutils.distancemeasure;
+package edu.berkeley.compbio.phyloutils.betadiversity;
 
+import com.davidsoergel.dsutils.MathUtils;
 import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
+import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 import org.apache.log4j.Logger;
 
@@ -46,44 +48,28 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-
-public class UnweightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
+public class PhylogeneticKullbackLeibler<T> implements DistanceMeasure<RootedPhylogeny<T>>
 	{
-	private static final Logger logger = Logger.getLogger(UnweightedUniFrac.class);
+	private static final Logger logger = Logger.getLogger(WeightedUniFrac.class);
 
 	public double distanceFromTo(RootedPhylogeny<T> a, RootedPhylogeny<T> b)
 		{
 		try
 			{
-			//double branchLengthA = a.getTotalBranchLength();
-			//double branchLengthB = b.getTotalBranchLength();
-
 			RootedPhylogeny<T> theBasePhylogeny = a.getBasePhylogeny();
-			if(theBasePhylogeny != b.getBasePhylogeny())
+			if (theBasePhylogeny != b.getBasePhylogeny())
 				{
-				throw new PhyloUtilsException("UniFrac can be computed only between trees extracted from the same underlying tree");
+				throw new PhyloUtilsException(
+						"Phylogenetic K-L can be computed only between trees extracted from the same underlying tree");
 				}
 
-			Set<T> unionLeafIDs = new HashSet<T>();
-			unionLeafIDs.addAll(a.getLeafValues());
-			unionLeafIDs.addAll(b.getLeafValues());
+			Set<T> unionLeaves = new HashSet<T>();
+			unionLeaves.addAll(a.getLeafValues());
+			unionLeaves.addAll(b.getLeafValues());
 
-			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeafIDs);
+			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves);
 
-			// careful: the "intersection" tree needs to contain branches terminating at internal nodes that are common between the two trees,
-			// even if there are no leaves in common below that node.
-
-			// i.e., this is completely wrong, since it only considers leaves in common between the two trees
-			//RootedPhylogeny<T> intersectionTree = unionTree.extractTreeWithLeaves(a.getLeafValues(), true);
-			//intersectionTree = intersectionTree.extractTreeWithLeaves(b.getLeafValues(), true);
-
-			// we must do this starting from the union tree because there may be intermediate branch points that are collapsed in the individual trees
-			RootedPhylogeny<T> intersectionTree = unionTree.extractIntersectionTree(a.getLeafValues(), b.getLeafValues());
-
-			double unionLength = unionTree.getTotalBranchLength();
-			double intersectionLength = intersectionTree.getTotalBranchLength();
-
-			return 1. - (intersectionLength / unionLength);
+			return klDivergenceBelow(unionTree, a, b);
 			}
 		catch (PhyloUtilsException e)
 			{
@@ -93,6 +79,33 @@ public class UnweightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
 			}
 		}
 
+	private double klDivergenceBelow(PhylogenyNode<T> u, PhylogenyNode<T> a, PhylogenyNode<T> b)
+		{
+		double divergence = 0;
+		for (PhylogenyNode<T> node : u.getChildren())
+			{
+			T id = node.getValue();
+			PhylogenyNode<T> aNode = a.getChild(id);
+			PhylogenyNode<T> bNode = b.getChild(id);
+			double aWeight = aNode == null ? 0 : aNode.getWeight();
+			double bWeight = bNode == null ? 0 : bNode.getWeight();
+
+			// the provided weights are absolute, not conditional
+
+			double p = aWeight / aNode.getParent().getWeight();
+			double q = bWeight / bNode.getParent().getWeight();
+
+
+			divergence += p * MathUtils.approximateLog2(p / q);
+
+			// information at each node below this one is weighted by the probability of
+			// getting there in the first place, according to realTree
+			divergence += p * klDivergenceBelow(node, aNode, bNode);
+			}
+
+		return divergence;
+		}
+
 	public String toString()
 		{
 		String shortname = getClass().getName();
@@ -100,4 +113,3 @@ public class UnweightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
 		return shortname;
 		}
 	}
-

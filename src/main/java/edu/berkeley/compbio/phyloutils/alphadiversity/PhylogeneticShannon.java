@@ -30,12 +30,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package edu.berkeley.compbio.phyloutils;
+package edu.berkeley.compbio.phyloutils.alphadiversity;
 
-import com.davidsoergel.dsutils.HierarchyNode;
-
-import java.util.Collection;
-import java.util.List;
+import com.davidsoergel.dsutils.MathUtils;
+import edu.berkeley.compbio.phyloutils.PhylogenyNode;
+import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 
 /* $Id$ */
 
@@ -43,35 +42,38 @@ import java.util.List;
  * @Author David Soergel
  * @Version 1.0
  */
-public interface PhylogenyNode<T> extends Iterable<PhylogenyNode<T>>, HierarchyNode<T>
+public class PhylogeneticShannon<T> implements AlphaDiversity<T>
 	{
-	Collection<? extends PhylogenyNode<T>> getChildren();
+	public double measure(RootedPhylogeny<T> tree)
+		{
+		return informationBelow(tree);
+		}
 
-	// the "name" of this PhylogenyNode is the same as the "value" of the hierarchynode
-	//T getName();
+	// -------------------------- OTHER METHODS --------------------------
 
+	private double informationBelow(PhylogenyNode<T> node)
+		{
+		double entropy = 0;
+		double nodeWeight = node.getWeight();
 
-	PhylogenyNode getParent();
+		for (PhylogenyNode<T> child : node.getChildren())
+			{
+			double p = child.getWeight() / nodeWeight;
+			entropy -= p * MathUtils.approximateLog(p);
+			}
 
-	boolean hasValue();
+		entropy /= MathUtils.LOGTWO;//logTwo;// Math.log is base e
 
-	List<PhylogenyNode<T>> getAncestorPath();
+		double information = 2 - entropy;
 
-	Double getLength();
+		// information at each node below this one is weighted by the probability of
+		// getting there in the first place
 
-	Double getLargestLengthSpan();
+		for (PhylogenyNode<T> child : node.getChildren())
+			{
+			information += child.getWeight() * informationBelow(child);
+			}
 
-	boolean isLeaf();
-
-	double getWeight();
-
-	void setWeight(double v);
-
-	void propagateWeightFromBelow();
-
-	double distanceToRoot();
-
-	PhylogenyNode<T> getChild(T id);
-
-	void incrementWeightBy(double v);
+		return information;
+		}
 	}

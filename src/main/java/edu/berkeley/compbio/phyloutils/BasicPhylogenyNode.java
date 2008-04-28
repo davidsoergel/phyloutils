@@ -35,6 +35,7 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.HierarchyNode;
 import org.apache.log4j.Logger;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -95,9 +96,25 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 
 	// --------------------- GETTER / SETTER METHODS ---------------------
 
-	public Set<BasicPhylogenyNode<T>> getChildren()
+	public Collection<BasicPhylogenyNode<T>> getChildren()
 		{
 		return children;
+		}
+
+	public PhylogenyNode<T> getChild(T id)
+		{
+		// We could map the children collection as a Map; but that's some hassle, and since there are generally just 2 children anyway, this is simpler
+
+		// also, the child id is often not known when it is added to the children Set, so putting the child into a children Map wouldn't work
+
+		for (PhylogenyNode<T> child : children)
+			{
+			if (child.getValue() == id)
+				{
+				return child;
+				}
+			}
+		return null;
 		}
 
 	public boolean isLeaf()
@@ -141,6 +158,11 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	public void setWeight(double v)
 		{
 		weight = v;
+		}
+
+	public void incrementWeightBy(double v)
+		{
+		weight = weight == null ? v : weight + v;
 		}
 
 	public void propagateWeightFromBelow()
@@ -521,6 +543,6 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 
 	public String toString()
 		{
-		return value.toString();
+		return value == null ? "null" : value.toString();
 		}
 	}

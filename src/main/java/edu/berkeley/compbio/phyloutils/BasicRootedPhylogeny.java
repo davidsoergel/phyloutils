@@ -118,9 +118,14 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		}
 
 
-	public Set<? extends PhylogenyNode<T>> getChildren()
+	public Collection<? extends PhylogenyNode<T>> getChildren()
 		{
 		return root.getChildren();
+		}
+
+	public PhylogenyNode<T> getChild(T id)
+		{
+		return root.getChild(id);
 		}
 
 	public T getValue()
@@ -262,6 +267,13 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 			throw new Error("Can't set root weight to anything other than 1");
 			}
 		}
+
+
+	public void incrementWeightBy(double v)
+		{
+		throw new Error("Can't increment root weight");
+		}
+
 
 	public void propagateWeightFromBelow()
 		{
