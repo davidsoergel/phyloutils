@@ -39,7 +39,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.net.URL;
 
-/* $Id$ */
+
 
 /**
  * @Author David Soergel

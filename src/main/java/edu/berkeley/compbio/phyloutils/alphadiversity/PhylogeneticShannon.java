@@ -37,7 +37,7 @@ import edu.berkeley.compbio.ml.Statistic;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 
-/* $Id$ */
+
 
 /**
  * @Author David Soergel

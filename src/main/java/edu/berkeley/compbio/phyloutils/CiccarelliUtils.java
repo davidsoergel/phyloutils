@@ -41,7 +41,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
-/* $Id$ */
+
 
 /**
  * @Author David Soergel

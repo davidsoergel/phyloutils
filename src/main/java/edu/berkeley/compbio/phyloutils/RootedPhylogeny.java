@@ -38,7 +38,7 @@ import com.davidsoergel.stats.DistributionException;
 import java.util.Collection;
 import java.util.Set;
 
-/* $Id$ */
+
 
 /**
  * @Author David Soergel

@@ -34,7 +34,7 @@ package edu.berkeley.compbio.phyloutils;
 
 import java.util.Iterator;
 
-/* $Id$ */
+
 
 /**
  * @Author David Soergel

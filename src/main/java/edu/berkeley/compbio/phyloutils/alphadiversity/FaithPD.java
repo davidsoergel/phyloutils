@@ -35,7 +35,7 @@ package edu.berkeley.compbio.phyloutils.alphadiversity;
 import edu.berkeley.compbio.ml.Statistic;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 
-/* $Id$ */
+
 
 /**
  * @Author David Soergel

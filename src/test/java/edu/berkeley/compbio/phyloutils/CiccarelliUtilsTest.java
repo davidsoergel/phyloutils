@@ -35,7 +35,7 @@ package edu.berkeley.compbio.phyloutils;
 import org.testng.annotations.Test;
 import com.davidsoergel.dsutils.MathUtils;
 
-/* $Id$ */
+
 
 /**
  * @Author David Soergel

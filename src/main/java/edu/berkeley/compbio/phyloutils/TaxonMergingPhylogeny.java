@@ -34,7 +34,7 @@ package edu.berkeley.compbio.phyloutils;
 
 import java.util.Collection;
 
-/* $Id$ */
+
 
 /**
  * @Author David Soergel

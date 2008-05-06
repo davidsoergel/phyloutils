@@ -32,7 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-/* $Id$ */
+
 
 /**
  * @Author David Soergel

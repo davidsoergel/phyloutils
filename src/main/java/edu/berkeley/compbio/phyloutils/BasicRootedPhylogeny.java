@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/* $Id$ */
+
 
 /**
  * Really this wants to extend BasicPhylogenyNode, but we can't (multiple inheritance, etc.), so we just facade a root

@@ -34,7 +34,7 @@ package edu.berkeley.compbio.phyloutils;
 
 import java.util.Collection;
 
-/* $Id$ */
+
 
 /**
  * Sometimes we have branch lengths on one phylogeny, but we want to know distances between nodes that are not on that
