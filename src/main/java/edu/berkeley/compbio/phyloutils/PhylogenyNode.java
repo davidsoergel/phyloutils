@@ -32,7 +32,6 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.HierarchyNode;
 import com.davidsoergel.dsutils.LengthWeightHierarchyNode;
 
 import java.util.Collection;
@@ -72,4 +71,5 @@ public interface PhylogenyNode<T> extends Iterable<PhylogenyNode<T>>, LengthWeig
 	void incrementWeightBy(double v);
 
 	PhylogenyNode<T> clone();
+
 	}
