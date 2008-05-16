@@ -156,15 +156,11 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 			}
 		}
 
-	public double getWeight()
+	public Double getWeight()
 		{
 		return weight;
 		}
 
-	public void setWeight(double v)
-		{
-		weight = v;
-		}
 
 	public void incrementWeightBy(double v)
 		{

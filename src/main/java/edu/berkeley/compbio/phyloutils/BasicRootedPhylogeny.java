@@ -172,9 +172,19 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		return 0.;
 		}
 
+	public void setLength(Double d)
+		{
+		logger.error("Can't set length of the root node");
+		}
+
 	public Double getLargestLengthSpan()
 		{
 		return root.getLargestLengthSpan();
+		}
+
+	public void addChild(LengthWeightHierarchyNode<T> a)
+		{
+		root.addChild(a);
 		}
 
 
@@ -254,12 +264,12 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		return root.isLeaf();
 		}
 
-	public double getWeight()
+	public Double getWeight()
 		{
-		return 1;
+		return 1.;
 		}
 
-	public void setWeight(double v)
+	public void setWeight(Double v)
 		{
 		if (v != 1.)
 			{
@@ -267,6 +277,14 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 			}
 		}
 
+/*	public void setWeight(double v)
+		{
+		if (v != 1.)
+			{
+			throw new Error("Can't set root weight to anything other than 1");
+			}
+		}
+*/
 
 	public void incrementWeightBy(double v)
 		{

@@ -218,7 +218,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			throw new PhyloUtilsException("Provided ancestor lists do not have a common root");
 			}
 
-		BasicPhylogenyNode<T> node = new BasicPhylogenyNode<T>(null);
+		BasicPhylogenyNode<T> node = new BasicPhylogenyNode<T>();
 		node.setLength(accumulatedLength);
 
 		// the commonAncestor is now the most recent one, so that's the most sensible name for the new node

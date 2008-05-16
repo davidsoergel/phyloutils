@@ -53,7 +53,7 @@ public interface PhylogenyNode<T> extends Iterable<PhylogenyNode<T>>, LengthWeig
 
 	List<PhylogenyNode<T>> getAncestorPath();
 
-	void setWeight(double v);
+	//void setWeight(double v);
 
 	void propagateWeightFromBelow();
 

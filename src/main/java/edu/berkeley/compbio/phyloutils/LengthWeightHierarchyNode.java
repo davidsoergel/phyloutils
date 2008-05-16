@@ -45,7 +45,7 @@ public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T>
 
 	void setLength(Double d);
 
-	double getWeight();
+	Double getWeight();
 
 	void setWeight(Double d);
 
