@@ -32,36 +32,25 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import java.util.Collection;
-import java.util.List;
+import com.davidsoergel.dsutils.tree.HierarchyNode;
 
 
 /**
  * @Author David Soergel
  * @Version 1.0
  */
-public interface PhylogenyNode<T> extends Iterable<PhylogenyNode<T>>, LengthWeightHierarchyNode<T>
+public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T>
 	{
-	Collection<? extends PhylogenyNode<T>> getChildren();
+	Double getLength();
 
-	// the "name" of this PhylogenyNode is the same as the "value" of the hierarchynode
-	//T getName();
+	void setLength(Double d);
 
-	PhylogenyNode getParent();
+	double getWeight();
 
-	boolean hasValue();
+	void setWeight(Double d);
 
-	List<PhylogenyNode<T>> getAncestorPath();
 
-	void setWeight(double v);
+	Double getLargestLengthSpan();
 
-	void propagateWeightFromBelow();
-
-	double distanceToRoot();
-
-	PhylogenyNode<T> getChild(T id);
-
-	void incrementWeightBy(double v);
-
-	PhylogenyNode<T> clone();
+	void addChild(LengthWeightHierarchyNode<T> a);
 	}

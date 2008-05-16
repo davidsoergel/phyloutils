@@ -32,7 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.CollectionUtils;
+import com.davidsoergel.dsutils.collections.CollectionUtils;
 import com.davidsoergel.stats.ContinuousDistribution1D;
 import com.davidsoergel.stats.DistributionException;
 import org.apache.log4j.Logger;
@@ -43,7 +43,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 
 
 /**

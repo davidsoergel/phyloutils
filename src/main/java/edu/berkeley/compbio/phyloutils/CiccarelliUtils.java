@@ -32,7 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.CollectionUtils;
+import com.davidsoergel.dsutils.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -40,7 +40,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
-
 
 
 /**
@@ -95,7 +94,6 @@ public class CiccarelliUtils
 		}
 
 
-
 	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Set<Integer> ids) throws PhyloUtilsException
 		{
 		return ciccarelliTree.extractTreeWithLeafIDs(ids);
@@ -106,10 +104,11 @@ public class CiccarelliUtils
 		return ciccarelliTree;
 		}
 
-	public RootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double ciccarelliMergeThreshold) throws
-	                                                                                               PhyloUtilsException
+	public RootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double ciccarelliMergeThreshold)
+			throws PhyloUtilsException
 		{
-		Map<Integer, Set<Integer>> mergeIdSets = TaxonMerger.merge(ciccarelliTree.getLeafValues(), ciccarelliTree, ciccarelliMergeThreshold);
+		Map<Integer, Set<Integer>> mergeIdSets =
+				TaxonMerger.merge(ciccarelliTree.getLeafValues(), ciccarelliTree, ciccarelliMergeThreshold);
 		Set<Integer> mergedIds = mergeIdSets.keySet();
 		CollectionUtils.retainRandom(mergedIds, numTaxa);
 		return ciccarelliTree.extractTreeWithLeafIDs(mergedIds);

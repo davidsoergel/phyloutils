@@ -32,9 +32,8 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.math.MathUtils;
 import org.testng.annotations.Test;
-import com.davidsoergel.dsutils.MathUtils;
-
 
 
 /**

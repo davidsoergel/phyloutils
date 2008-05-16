@@ -32,13 +32,12 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.MathUtils;
+import com.davidsoergel.dsutils.math.MathUtils;
 import org.apache.log4j.Logger;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.net.URL;
-
 
 
 /**

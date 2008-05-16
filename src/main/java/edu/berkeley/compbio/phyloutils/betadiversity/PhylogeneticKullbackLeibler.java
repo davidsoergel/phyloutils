@@ -32,7 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
-import com.davidsoergel.dsutils.MathUtils;
+import com.davidsoergel.dsutils.math.MathUtils;
 import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;
@@ -41,7 +41,6 @@ import org.apache.log4j.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
-
 
 
 /**

@@ -32,7 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.HierarchyNode;
+import com.davidsoergel.dsutils.tree.HierarchyNode;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -42,7 +42,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 
 
 /**
@@ -68,8 +67,15 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		{
 		}
 
+	public BasicPhylogenyNode(T value)
+		{
+		this();
+		setValue(value);
+		}
+
 	public BasicPhylogenyNode(BasicPhylogenyNode<T> parent)
 		{
+		this();
 		if (parent != null)
 			{
 			parent.addChild(this);// automatically sets this.parent as well
@@ -368,7 +374,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		// largestLengthSpan = child.length + child.greatestDepth;
 		}
 
-	public void removeChild(BasicPhylogenyNode<T> child)
+	public void removeChild(LengthWeightHierarchyNode<T> child)
 		{
 		children.remove(child);
 		child.setParent(null);
@@ -376,9 +382,9 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		}
 
 
-	public void addChild(BasicPhylogenyNode<T> child)
+	public void addChild(LengthWeightHierarchyNode<T> child)
 		{
-		children.add(child);
+		children.add((BasicPhylogenyNode<T>) child);
 		child.setParent(this);
 		invalidateAggregatedChildInfo();
 		}
@@ -395,6 +401,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 			parent.invalidateAggregatedChildInfo();
 			}
 		}
+
 
 	/**
 	 * Returns the nodes in the tree in depth-first order.  The branches from a given node have no ordering, though, so the
