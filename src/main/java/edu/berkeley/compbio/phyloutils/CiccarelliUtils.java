@@ -33,6 +33,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.collections.CollectionUtils;
+import com.davidsoergel.dsutils.tree.TreeException;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -105,7 +106,7 @@ public class CiccarelliUtils
 		}
 
 	public RootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double ciccarelliMergeThreshold)
-			throws PhyloUtilsException
+			throws PhyloUtilsException, TreeException
 		{
 		Map<Integer, Set<Integer>> mergeIdSets =
 				TaxonMerger.merge(ciccarelliTree.getLeafValues(), ciccarelliTree, ciccarelliMergeThreshold);

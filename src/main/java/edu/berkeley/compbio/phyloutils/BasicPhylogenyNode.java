@@ -32,6 +32,8 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
+import com.davidsoergel.dsutils.tree.DepthFirstTreeIteratorImpl;
 import com.davidsoergel.dsutils.tree.HierarchyNode;
 import org.apache.log4j.Logger;
 
@@ -200,7 +202,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		return parent;
 		}
 
-	public HierarchyNode<? extends T> newChild()
+	public HierarchyNode<? extends T, LengthWeightHierarchyNode<T>> newChild()
 		{
 		BasicPhylogenyNode<T> child = new BasicPhylogenyNode<T>();
 		addChild(child);
@@ -208,10 +210,10 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		}
 
 
-	public void setParent(HierarchyNode<? extends T> parent)//BasicPhylogenyNode parent)
+	public void setParent(BasicPhylogenyNode<T> parent)//BasicPhylogenyNode parent)
 		{
 
-		this.parent = (BasicPhylogenyNode<T>) parent;// may produce ClassCastException
+		this.parent = parent;// may produce ClassCastException
 		if (parent != null)
 			{
 			this.parent.invalidateAggregatedChildInfo();
@@ -299,9 +301,14 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		}
 
 
-	public PhylogenyIterator<T> iterator()
+	public Iterator<LengthWeightHierarchyNode<T>> iterator()
 		{
-		return new DepthFirstIterator();
+		return new DepthFirstTreeIteratorImpl(this);
+		}
+
+	public DepthFirstTreeIterator<T, LengthWeightHierarchyNode<T>> depthFirstIterator()
+		{
+		return new DepthFirstTreeIteratorImpl(this);
 		}
 
 
@@ -370,7 +377,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		// largestLengthSpan = child.length + child.greatestDepth;
 		}
 
-	public void removeChild(LengthWeightHierarchyNode<T> child)
+	public void removeChild(BasicPhylogenyNode<T> child)
 		{
 		children.remove(child);
 		child.setParent(null);
@@ -381,7 +388,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	public void addChild(LengthWeightHierarchyNode<T> child)
 		{
 		children.add((BasicPhylogenyNode<T>) child);
-		child.setParent(this);
+		((BasicPhylogenyNode<T>) child).setParent(this);
 		invalidateAggregatedChildInfo();
 		}
 
@@ -399,155 +406,11 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		}
 
 
-	/**
-	 * Returns the nodes in the tree in depth-first order.  The branches from a given node have no ordering, though, so the
-	 * ordering is not guaranteed; the depth-first guarantee is only that, once a node is provided, all of its descendants
-	 * will be provided before any of its siblings.
-	 */
-	private class DepthFirstIterator implements PhylogenyIterator<T>
-		{
-
-		Iterator<BasicPhylogenyNode<T>> breadthIterator = null;
-		PhylogenyIterator<T> subtreeIterator = null;
-
-		/**
-		 * Returns <tt>true</tt> if the iteration has more elements. (In other words, returns <tt>true</tt> if <tt>next</tt>
-		 * would return an element rather than throwing an exception.)
-		 *
-		 * @return <tt>true</tt> if the iterator has more elements.
-		 */
-		public boolean hasNext()
-			{
-			return
-					// we haven't yet returned this node
-					breadthIterator == null
-
-							// there is a child that we haven't yet returned
-							|| (subtreeIterator != null && subtreeIterator.hasNext())
-
-							// the current child has pending nodes
-							|| breadthIterator.hasNext();
-			}
-
-		/**
-		 * Returns the next element in the iteration.  Calling this method repeatedly until the {@link #hasNext()} method
-		 * returns false will return each element in the underlying collection exactly once.
-		 *
-		 * @return the next element in the iteration.
-		 * @throws java.util.NoSuchElementException
-		 *          iteration has no more elements.
-		 */
-		public PhylogenyNode<T> next()
-			{
-			// this whole class, and especially this method, are pretty confusing.
-			// expanded the logic a bit for clarity
-
-			if (breadthIterator == null)
-				{
-				// we haven't yet returned this node
-
-				// prep the iterators for the next call
-				breadthIterator = children.iterator();
-
-				if (breadthIterator.hasNext())
-					{
-					subtreeIterator = breadthIterator.next().iterator();
-					}
-				// else this node has no children
-
-				return BasicPhylogenyNode.this;
-				}
-			else if (subtreeIterator == null)
-				{
-				// this node has no children, and we've already returned the node itself.
-				return null;
-				}
-			else
-				{
-				// the currently selected subtree has more nodes
-				if (subtreeIterator.hasNext())
-					{
-					return subtreeIterator.next();
-					}
-				else
-					// there is a currently selected subtree, but it's exhausted.  Try the next one.
-					{
-					if (breadthIterator.hasNext())
-						{
-						// note the next subtreeIterator is guaranteed to have at least one node: the immediate child itself,
-						// even if it has no descendants
-						subtreeIterator = breadthIterator.next().iterator();
-						return subtreeIterator.next();
-						}
-					else
-						{
-						// the currently selected subtree is exhausted, and there aren't any more.
-						return null;
-						}
-					}
-				}
-			}
-
-		// the requested node must be on the current path
-		public void skipAllDescendants(PhylogenyNode<T> node) throws PhyloUtilsException
-			{
-			if (node == BasicPhylogenyNode.this)
-				{
-				// we want to produce the situation that causes next() to fire the breadthIterator.
-				// if there is no sibling, then hasNext() will detect the same situation so the parent iterator will fire its breadthIterator, etc.
-
-				// The conditions are:
-				// the breadthIterator must exist, indicating that this node itself has been consumed.
-				if (breadthIterator == null)
-					{
-					throw new PhyloUtilsException("Can't skip descendants of a node that hasn't been returned yet");
-					}
-
-				// the subtreeIterator must equal null, making it look like the node has no children
-				subtreeIterator = null;
-
-				// the breadthIterator must be exhausted, making it look like all the subtrees have been processed
-
-				while (breadthIterator.hasNext())// annoying way to consume the children
-					{
-					breadthIterator.next();
-					}
-				}
-			else
-				{
-				if (subtreeIterator != null)
-					{
-					subtreeIterator.skipAllDescendants(node);
-					}
-				else
-					{
-					// we haven't found the requested node on the path so far, and there is no further selected subtree from here.
-					throw new PhyloUtilsException("Can't skip descendants of a node that is not on the current path");
-					}
-				}
-			}
-
-
-		/**
-		 * Removes from the underlying collection the last element returned by the iterator (optional operation).  This method
-		 * can be called only once per call to <tt>next</tt>.  The behavior of an iterator is unspecified if the underlying
-		 * collection is modified while the iteration is in progress in any way other than by calling this method.
-		 *
-		 * @throws UnsupportedOperationException if the <tt>remove</tt> operation is not supported by this Iterator.
-		 * @throws IllegalStateException         if the <tt>next</tt> method has not yet been called, or the <tt>remove</tt>
-		 *                                       method has already been called after the last call to the <tt>next</tt>
-		 *                                       method.
-		 */
-		public void remove()
-			{
-			throw new UnsupportedOperationException();
-			}
-		}
-
 	public String toString()
 		{
 		return value == null ? "null" : value.toString();
 		}
+
 
 	public BasicPhylogenyNode<T> clone()
 		{

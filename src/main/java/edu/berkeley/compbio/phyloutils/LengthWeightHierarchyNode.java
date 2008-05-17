@@ -39,7 +39,7 @@ import com.davidsoergel.dsutils.tree.HierarchyNode;
  * @Author David Soergel
  * @Version 1.0
  */
-public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T>
+public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T, LengthWeightHierarchyNode<T>>
 	{
 	Double getLength();
 
@@ -53,4 +53,6 @@ public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T>
 	Double getLargestLengthSpan();
 
 	void addChild(LengthWeightHierarchyNode<T> a);
+
+	double distanceToRoot();
 	}

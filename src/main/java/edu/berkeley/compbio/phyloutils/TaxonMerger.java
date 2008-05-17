@@ -32,10 +32,8 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
-import edu.berkeley.compbio.phyloutils.PhylogenyIterator;
-import edu.berkeley.compbio.phyloutils.PhylogenyNode;
-import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
+import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
+import com.davidsoergel.dsutils.tree.TreeException;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -43,7 +41,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 
 
 /**
@@ -62,8 +59,10 @@ public class TaxonMerger
 	 */
 	//@Transactional
 	//(propagation = Propagation.MANDATORY)
-	public static Map<Integer, Set<Integer>> merge(Collection<Integer> leafIds, TaxonMergingPhylogeny<Integer> basePhylogeny, double ciccarelliMergeThreshold)
-			throws PhyloUtilsException
+	public static Map<Integer, Set<Integer>> merge(Collection<Integer> leafIds,
+	                                               TaxonMergingPhylogeny<Integer> basePhylogeny,
+	                                               double ciccarelliMergeThreshold)
+			throws TreeException, PhyloUtilsException
 		{
 		Map<Integer, Set<Integer>> theTaxonsetsByTaxid = new HashMap<Integer, Set<Integer>>();
 
@@ -93,18 +92,18 @@ public class TaxonMerger
 
 		RootedPhylogeny<Integer> theTree = basePhylogeny.extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet());
 
-		PhylogenyIterator<Integer> it = theTree.phylogenyIterator();
+		DepthFirstTreeIterator<Integer, LengthWeightHierarchyNode<Integer>> it = theTree.depthFirstIterator();
 
 		while (it.hasNext())
 			{
-			PhylogenyNode<Integer> node = it.next();
+			LengthWeightHierarchyNode<Integer> node = it.next();
 
 			// the iterator is depth-first by default
 
 			if (node.getLargestLengthSpan() < ciccarelliMergeThreshold)
 				{
 				Set<Integer> mergeTaxa = new HashSet<Integer>();
-				for (PhylogenyNode<Integer> descendant : node)
+				for (LengthWeightHierarchyNode<Integer> descendant : node)
 					{
 					// we'll include intermediate nodes even if they aren't p'rt of the query (i.e., not leaves)
 					mergeTaxa.add(descendant.getValue());

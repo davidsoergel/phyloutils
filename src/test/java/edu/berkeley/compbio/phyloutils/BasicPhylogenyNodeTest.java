@@ -32,13 +32,15 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
+import com.davidsoergel.dsutils.tree.HierarchyNode;
+import com.davidsoergel.dsutils.tree.TreeException;
 import org.apache.log4j.Logger;
 import org.testng.annotations.Test;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 
 
 /**
@@ -57,11 +59,11 @@ public class BasicPhylogenyNodeTest
 
 	BasicPhylogenyNode<String> a = new BasicPhylogenyNode<String>(root, "a", 10);
 	BasicPhylogenyNode<String> b = new BasicPhylogenyNode<String>(root, "b", 4);
-	BasicPhylogenyNode<String> c = new BasicPhylogenyNode<String>( root, "c",1);
+	BasicPhylogenyNode<String> c = new BasicPhylogenyNode<String>(root, "c", 1);
 
 
-	BasicPhylogenyNode<String> aa = new BasicPhylogenyNode<String>( a, "aa",20);
-	BasicPhylogenyNode<String> ab = new BasicPhylogenyNode<String>( a, "ab",30);
+	BasicPhylogenyNode<String> aa = new BasicPhylogenyNode<String>(a, "aa", 20);
+	BasicPhylogenyNode<String> ab = new BasicPhylogenyNode<String>(a, "ab", 30);
 
 
 	//	PhylogenyNode<String> aaa = new PhylogenyNode<String>("aaa", aa, 1);
@@ -72,19 +74,19 @@ public class BasicPhylogenyNodeTest
 	BasicPhylogenyNode<String> bb = new BasicPhylogenyNode<String>(b, "bb", 1.2);
 
 
-	BasicPhylogenyNode<String> baa = new BasicPhylogenyNode<String>( ba, "baa", 2.1);
+	BasicPhylogenyNode<String> baa = new BasicPhylogenyNode<String>(ba, "baa", 2.1);
 	BasicPhylogenyNode<String> bab = new BasicPhylogenyNode<String>(ba, "bab", 2.2);
 
 
-	BasicPhylogenyNode<String> bba = new BasicPhylogenyNode<String>( bb, "bba",3.1);
-	BasicPhylogenyNode<String> bbb = new BasicPhylogenyNode<String>( bb, "bbb", 3.2);
+	BasicPhylogenyNode<String> bba = new BasicPhylogenyNode<String>(bb, "bba", 3.1);
+	BasicPhylogenyNode<String> bbb = new BasicPhylogenyNode<String>(bb, "bbb", 3.2);
 
 
-	BasicPhylogenyNode<String> bbbb = new BasicPhylogenyNode<String>( bbb, "bbbb", 4.1);
+	BasicPhylogenyNode<String> bbbb = new BasicPhylogenyNode<String>(bbb, "bbbb", 4.1);
 
 
-	BasicPhylogenyNode<String> ca = new BasicPhylogenyNode<String>( c, "ca",2);
-	BasicPhylogenyNode<String> cb = new BasicPhylogenyNode<String>( c, "cb", 3);
+	BasicPhylogenyNode<String> ca = new BasicPhylogenyNode<String>(c, "ca", 2);
+	BasicPhylogenyNode<String> cb = new BasicPhylogenyNode<String>(c, "cb", 3);
 
 	@Test
 	public void leafSpanEqualsZero()
@@ -147,7 +149,7 @@ public class BasicPhylogenyNodeTest
 	public void treeIteratorProvidesAllNodes()
 		{
 		int i = 0;
-		for (PhylogenyNode<String> node : root)
+		for (LengthWeightHierarchyNode<String> node : root)
 			{
 			logger.info("Tree iterator provided node: " + node);
 			i++;
@@ -156,15 +158,15 @@ public class BasicPhylogenyNodeTest
 		}
 
 	@Test
-	public void skipAllDescendantsWorksProperly() throws PhyloUtilsException
+	public void skipAllDescendantsWorksProperly() throws TreeException
 		{
-		PhylogenyIterator<String> it = root.iterator();
+		DepthFirstTreeIterator<String, LengthWeightHierarchyNode<String>> it = root.depthFirstIterator();
 		assert it.next() == root;
 
 		int i = 0;
 		while (it.hasNext())
 			{
-			PhylogenyNode<String> topLevelNode = it.next();
+			HierarchyNode<String, LengthWeightHierarchyNode<String>> topLevelNode = it.next();
 
 			if (topLevelNode == b)
 				{
@@ -186,15 +188,16 @@ public class BasicPhylogenyNodeTest
 	@Test
 	public void individualNodeIteratorsWorkProperly()
 		{
-		PhylogenyIterator<String> it = root.iterator();
+		DepthFirstTreeIterator<String, LengthWeightHierarchyNode<String>> it = root.depthFirstIterator();
 		assert it.next() == root;
 
 		while (it.hasNext())
 			{
-			PhylogenyNode<String> topLevelNode = it.next();
+			HierarchyNode<String, LengthWeightHierarchyNode<String>> topLevelNode = it.next();
 
 			int i = 0;
-			PhylogenyIterator<String> sub = ((BasicPhylogenyNode)topLevelNode).iterator();
+			DepthFirstTreeIterator<String, LengthWeightHierarchyNode<String>> sub =
+					((BasicPhylogenyNode) topLevelNode).depthFirstIterator();
 			while (sub.hasNext())
 				{
 				sub.next();
@@ -227,9 +230,9 @@ public class BasicPhylogenyNodeTest
 
 		BasicPhylogenyNode<String> tree = rootPhylogeny.extractTreeWithLeafPaths(theAncestorLists);
 
-		for (PhylogenyNode<String> xnode : tree)
+		for (LengthWeightHierarchyNode<String> xnode : tree)
 			{
-			BasicPhylogenyNode<String> node = (BasicPhylogenyNode<String>)xnode;
+			BasicPhylogenyNode<String> node = (BasicPhylogenyNode<String>) xnode;
 			if (node.getValue().equals("root"))
 				{
 				assert node.getChildren().size() == 2;

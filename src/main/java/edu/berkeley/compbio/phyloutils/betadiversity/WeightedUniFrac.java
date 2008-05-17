@@ -33,6 +33,7 @@
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
 import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
+import edu.berkeley.compbio.phyloutils.LengthWeightHierarchyNode;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
@@ -40,7 +41,6 @@ import org.apache.log4j.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
-
 
 
 /**
@@ -70,7 +70,7 @@ public class WeightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
 			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves);
 
 			double u = 0;
-			for (PhylogenyNode<T> node : unionTree)
+			for (LengthWeightHierarchyNode<T> node : unionTree)
 				{
 				T id = node.getValue();
 				PhylogenyNode<T> aNode = a.getNode(id);

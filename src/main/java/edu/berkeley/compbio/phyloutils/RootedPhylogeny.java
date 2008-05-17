@@ -39,7 +39,6 @@ import java.util.Collection;
 import java.util.Set;
 
 
-
 /**
  * @Author David Soergel
  * @Version 1.0
@@ -59,8 +58,6 @@ public interface RootedPhylogeny<T> extends PhylogenyNode<T>, TaxonMergingPhylog
 	Collection<PhylogenyNode<T>> getLeaves();
 
 	//RootedPhylogeny<T> extractTreeWithLeaves(Collection<T> ids);
-
-	PhylogenyIterator<T> phylogenyIterator();
 
 	T nearestKnownAncestor(RootedPhylogeny<T> rootPhylogeny, T leafId) throws PhyloUtilsException;
 
@@ -83,7 +80,7 @@ public interface RootedPhylogeny<T> extends PhylogenyNode<T>, TaxonMergingPhylog
 
 	RootedPhylogeny<T> mixWith(RootedPhylogeny<T> phylogeny, double mixingProportion) throws PhyloUtilsException;
 
-	 void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor) throws PhyloUtilsException;
+	void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor) throws PhyloUtilsException;
 
 	RootedPhylogeny<T> clone();
 	}

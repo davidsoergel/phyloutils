@@ -32,6 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
 import com.davidsoergel.dsutils.tree.HierarchyNode;
 import org.apache.log4j.Logger;
 
@@ -137,7 +138,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		return null;
 		}
 
-	public HierarchyNode<? extends T> newChild()
+	public HierarchyNode<? extends T, LengthWeightHierarchyNode<T>> newChild()
 		{
 		return root.newChild();
 		}
@@ -147,7 +148,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		root.setValue(contents);
 		}
 
-	public void setParent(HierarchyNode<? extends T> parent)
+	public void setParent(HierarchyNode<? extends T, LengthWeightHierarchyNode<T>> parent)
 		{
 		logger.error("Can't set the parent of the root node");
 		}
@@ -193,14 +194,14 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	 *
 	 * @return an Iterator.
 	 */
-	public Iterator<PhylogenyNode<T>> iterator()
+	public Iterator<LengthWeightHierarchyNode<T>> iterator()
 		{
 		return root.iterator();
 		}
 
-	public PhylogenyIterator<T> phylogenyIterator()
+	public DepthFirstTreeIterator<T, LengthWeightHierarchyNode<T>> depthFirstIterator()
 		{
-		return root.iterator();
+		return root.depthFirstIterator();
 		}
 
 	public T nearestKnownAncestor(RootedPhylogeny<T> rootPhylogeny, T leafId) throws PhyloUtilsException
@@ -277,14 +278,14 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 			}
 		}
 
-/*	public void setWeight(double v)
-		{
-		if (v != 1.)
-			{
-			throw new Error("Can't set root weight to anything other than 1");
-			}
-		}
-*/
+	/*	public void setWeight(double v)
+		 {
+		 if (v != 1.)
+			 {
+			 throw new Error("Can't set root weight to anything other than 1");
+			 }
+		 }
+ */
 
 	public void incrementWeightBy(double v)
 		{
