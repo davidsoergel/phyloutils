@@ -48,13 +48,13 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-@PropertyConsumer
+//@PropertyConsumer
 public class PhylogeneticJDivergence<T> implements DistanceMeasure<RootedPhylogeny<T>>
 	{
 	private static final Logger logger = Logger.getLogger(WeightedUniFrac.class);
 
-	@Property(defaultvalue = "edu.berkeley.compbio.phyloutils.betadiversity.PhylogeneticKullbackLeibler")
-	public PhylogeneticKullbackLeibler<T> kl;
+	//@Property(defaultvalue = "edu.berkeley.compbio.phyloutils.betadiversity.PhylogeneticKullbackLeibler")
+	public PhylogeneticKullbackLeibler<T> kl = new PhylogeneticKullbackLeibler<T>();
 
 	public double distanceFromTo(RootedPhylogeny<T> a, RootedPhylogeny<T> b)
 		{
