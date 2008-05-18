@@ -32,8 +32,6 @@
 
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
-import com.davidsoergel.runutils.Property;
-import com.davidsoergel.runutils.PropertyConsumer;
 import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
@@ -41,7 +39,6 @@ import org.apache.log4j.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
-
 
 
 /**
