@@ -111,6 +111,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.davidsoergel</groupId>
+			<artifactId>stats</artifactId>
+			<version>0.9-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
 			<groupId>edu.berkeley.compbio</groupId>
 			<artifactId>ml</artifactId>
 			<version>0.9-SNAPSHOT</version>
