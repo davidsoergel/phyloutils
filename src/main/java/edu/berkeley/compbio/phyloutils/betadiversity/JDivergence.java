@@ -32,8 +32,6 @@
 
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
-import com.davidsoergel.runutils.Property;
-import com.davidsoergel.runutils.PropertyConsumer;
 import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
@@ -41,7 +39,6 @@ import org.apache.log4j.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
-
 
 
 /**
@@ -79,7 +76,7 @@ public class JDivergence<T> implements DistanceMeasure<RootedPhylogeny<T>>
 			RootedPhylogeny<T> bTreeSmoothed = unionTree.clone();
 			bTreeSmoothed.smoothWeightsFrom(b, .000001);
 
-		return kl.klDivergence(unionTree,a,b) + kl.klDivergence(unionTree,b,a);
+			return kl.klDivergence(unionTree, a, b) + kl.klDivergence(unionTree, b, a);
 			}
 		catch (PhyloUtilsException e)
 			{
