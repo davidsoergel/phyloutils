@@ -70,6 +70,11 @@ public class CiccarelliUtils
 			{
 
 			URL res = ClassLoader.getSystemResource(ciccarelliFilename);
+			if (res == null)
+				{
+				logger.debug("Ciccarelli tree not found: " + ciccarelliFilename);
+				return;
+				}
 			InputStream is = res.openStream();
 			/*if (is == null)
 				{
