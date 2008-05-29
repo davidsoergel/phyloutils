@@ -39,6 +39,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,11 +69,21 @@ public class CiccarelliUtils
 		{
 		try
 			{
-
 			URL res = ClassLoader.getSystemResource(ciccarelliFilename);
 			if (res == null)
 				{
-				logger.debug("Ciccarelli tree not found: " + ciccarelliFilename);
+				logger.error("Ciccarelli tree not found: " + ciccarelliFilename);
+				//Get the System Classloader
+				ClassLoader sysClassLoader = ClassLoader.getSystemClassLoader();
+
+				//Get the URLs
+				URL[] urls = ((URLClassLoader) sysClassLoader).getURLs();
+
+				for (int i = 0; i < urls.length; i++)
+					{
+					System.err.println(urls[i].getFile());
+					}
+
 				return;
 				}
 			InputStream is = res.openStream();
