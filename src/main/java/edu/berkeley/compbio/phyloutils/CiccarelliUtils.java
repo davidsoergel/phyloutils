@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,9 +53,9 @@ public class CiccarelliUtils
 	{
 	private static final Logger logger = Logger.getLogger(CiccarelliUtils.class);
 
-	private RootedPhylogeny<Integer> ciccarelliTree;
-	private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
-
+	private RootedPhylogeny<String> ciccarelliTree;
+	//private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
+	private String ciccarelliFilename = "itol080605_newick.txt";
 
 	private static final CiccarelliUtils instance = new CiccarelliUtils();
 
@@ -91,7 +92,7 @@ public class CiccarelliUtils
 				{
 				is = new FileInputStream(filename);
 				}*/
-			ciccarelliTree = new NewickParser<Integer>().read(is, new IntegerNodeNamer(100000000));
+			ciccarelliTree = new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED NODE "));
 			}
 		catch (IOException e)
 			{
@@ -105,28 +106,32 @@ public class CiccarelliUtils
 			}
 		}
 
-	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
+	/*	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
+		 {
+		 return ciccarelliTree.distanceBetween(taxIdA, taxIdB);
+		 }
+ */
+	public double exactDistanceBetween(String a, String b)
 		{
-		return ciccarelliTree.distanceBetween(taxIdA, taxIdB);
+		return ciccarelliTree.distanceBetween(a, b);
 		}
 
-
-	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Set<Integer> ids) throws PhyloUtilsException
+	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids) throws PhyloUtilsException
 		{
 		return ciccarelliTree.extractTreeWithLeafIDs(ids);
 		}
 
-	public RootedPhylogeny<Integer> getTree()
+	public RootedPhylogeny<String> getTree()
 		{
 		return ciccarelliTree;
 		}
 
-	public RootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double ciccarelliMergeThreshold)
+	public RootedPhylogeny<String> getRandomSubtree(int numTaxa, Double ciccarelliMergeThreshold)
 			throws PhyloUtilsException, TreeException
 		{
-		Map<Integer, Set<Integer>> mergeIdSets =
+		Map<String, Set<String>> mergeIdSets =
 				TaxonMerger.merge(ciccarelliTree.getLeafValues(), ciccarelliTree, ciccarelliMergeThreshold);
-		Set<Integer> mergedIds = mergeIdSets.keySet();
+		Set<String> mergedIds = mergeIdSets.keySet();
 		CollectionUtils.retainRandom(mergedIds, numTaxa);
 		return ciccarelliTree.extractTreeWithLeafIDs(mergedIds);
 		}

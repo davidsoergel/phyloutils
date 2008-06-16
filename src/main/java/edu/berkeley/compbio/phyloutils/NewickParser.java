@@ -40,7 +40,6 @@ import java.io.Reader;
 import java.io.StreamTokenizer;
 
 
-
 /**
  * Parser for New Hampshire (aka Newick) tree files.  Does not yet handle quoted labels or NHX extensions.  Simple state
  * machine implementation.
@@ -64,6 +63,7 @@ public class NewickParser<T>
 		st.slashStarComments(false);
 		st.wordChars('_', '_');
 		st.wordChars('-', '-');
+		st.wordChars('/', '/');
 
 		BasicRootedPhylogeny<T> theTree = new BasicRootedPhylogeny<T>();
 		BasicPhylogenyNode<T> currentNode = theTree.getRoot();
@@ -71,6 +71,7 @@ public class NewickParser<T>
 		//path.add(currentNode);
 
 		State state = State.NEWNODE;
+		State prevState = null;// only used for comments
 
 		try
 			{
@@ -111,13 +112,18 @@ public class NewickParser<T>
 							{
 							currentNode
 									.appendToValue((int) st.nval,
-									              namer);// handle labels with integers in them, but not doubles
+									               namer);// handle labels with integers in them, but not doubles
 							state = State.NAME;
 							}
 						else if (state == State.POST_CHILDREN)
 							{
 							currentNode.setBootstrap(st.nval);
 							state = State.POST_CHILDREN;// unchanged
+							}
+						else if (state == State.COMMENT)
+							{
+							// ignore
+							//currentNode.setBootstrap(st.nval);
 							}
 						else
 							{
@@ -131,6 +137,15 @@ public class NewickParser<T>
 							{
 							currentNode.appendToValue(st.sval, namer);
 							state = State.NAME;
+							}
+						else if (state == State.POST_CHILDREN)
+							{
+							currentNode.appendToValue(st.sval, namer);
+							state = State.POST_CHILDREN;
+							}
+						else if (state == State.COMMENT)
+							{
+							// ignore
 							}
 						else
 							{
@@ -194,6 +209,22 @@ public class NewickParser<T>
 						state = State.FINISHED;
 						break;
 
+					case '[':
+						prevState = state;
+						state = State.COMMENT;
+						break;
+
+					case ']':
+						if (state == State.COMMENT)
+							{
+							state = prevState;// likely NODEEND anyway
+							}
+						else
+							{
+							throw new PhyloUtilsException("End comment in an unexpected place at line " + st.lineno());
+							}
+						break;
+
 					default:
 						throw new PhyloUtilsException(
 								"Illegal character " + (char) st.ttype + " at line " + st.lineno());
@@ -213,6 +244,6 @@ public class NewickParser<T>
 
 	private static enum State
 		{
-			NEWNODE, NAME, POST_CHILDREN, EXPECTING_NUMBER, NODEEND, EOF, FINISHED
+			NEWNODE, NAME, POST_CHILDREN, EXPECTING_NUMBER, NODEEND, EOF, FINISHED, COMMENT
 		}
 	}

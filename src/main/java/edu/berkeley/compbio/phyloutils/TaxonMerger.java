@@ -59,21 +59,19 @@ public class TaxonMerger
 	 */
 	//@Transactional
 	//(propagation = Propagation.MANDATORY)
-	public static Map<Integer, Set<Integer>> merge(Collection<Integer> leafIds,
-	                                               TaxonMergingPhylogeny<Integer> basePhylogeny,
-	                                               double ciccarelliMergeThreshold)
-			throws TreeException, PhyloUtilsException
+	public static <T> Map<T, Set<T>> merge(Collection<T> leafIds, TaxonMergingPhylogeny<T> basePhylogeny,
+	                                       double ciccarelliMergeThreshold) throws TreeException, PhyloUtilsException
 		{
-		Map<Integer, Set<Integer>> theTaxonsetsByTaxid = new HashMap<Integer, Set<Integer>>();
+		Map<T, Set<T>> theTaxonsetsByTaxid = new HashMap<T, Set<T>>();
 
 		// first merge all those taxa that are at the same leaf in the known distance tree
-		for (Integer id : leafIds)
+		for (T id : leafIds)
 			{
-			int knownId = basePhylogeny.nearestAncestorWithBranchLength(id);
-			Set<Integer> currentTaxonset = theTaxonsetsByTaxid.get(knownId);
+			T knownId = basePhylogeny.nearestAncestorWithBranchLength(id);
+			Set<T> currentTaxonset = theTaxonsetsByTaxid.get(knownId);
 			if (currentTaxonset == null)
 				{
-				currentTaxonset = new HashSet<Integer>();
+				currentTaxonset = new HashSet<T>();
 				theTaxonsetsByTaxid.put(id, currentTaxonset);
 				}
 
@@ -88,22 +86,22 @@ public class TaxonMerger
 
 		// now iterate oven the tree, merging subtrees that meet the criterion
 
-		Map<Integer, Set<Integer>> theMergedTaxa = new HashMap<Integer, Set<Integer>>();
+		Map<T, Set<T>> theMergedTaxa = new HashMap<T, Set<T>>();
 
-		RootedPhylogeny<Integer> theTree = basePhylogeny.extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet());
+		RootedPhylogeny<T> theTree = basePhylogeny.extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet());
 
-		DepthFirstTreeIterator<Integer, LengthWeightHierarchyNode<Integer>> it = theTree.depthFirstIterator();
+		DepthFirstTreeIterator<T, LengthWeightHierarchyNode<T>> it = theTree.depthFirstIterator();
 
 		while (it.hasNext())
 			{
-			LengthWeightHierarchyNode<Integer> node = it.next();
+			LengthWeightHierarchyNode<T> node = it.next();
 
 			// the iterator is depth-first by default
 
 			if (node.getLargestLengthSpan() < ciccarelliMergeThreshold)
 				{
-				Set<Integer> mergeTaxa = new HashSet<Integer>();
-				for (LengthWeightHierarchyNode<Integer> descendant : node)
+				Set<T> mergeTaxa = new HashSet<T>();
+				for (LengthWeightHierarchyNode<T> descendant : node)
 					{
 					// we'll include intermediate nodes even if they aren't p'rt of the query (i.e., not leaves)
 					mergeTaxa.add(descendant.getValue());
