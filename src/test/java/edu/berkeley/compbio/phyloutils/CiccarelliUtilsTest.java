@@ -49,7 +49,7 @@ public class CiccarelliUtilsTest
 	@Test
 	public void ciccarelliExactDistancesAreComputedCorrectly() throws PhyloUtilsException
 		{
-		double d = ciccarelli.exactDistanceBetween("Escherichia coli O6", "Escherichia coli_K12");//(217992, 562);
+		double d = ciccarelli.exactDistanceBetween("Escherichia coli O6", "Escherichia coli K12");//(217992, 562);
 		assert d == 0.000221;
 
 		d = ciccarelli.exactDistanceBetween("Escherichia coli O6", "");//(217992, 59919);
