@@ -33,7 +33,6 @@
 package edu.berkeley.compbio.phyloutils;
 
 
-
 /**
  * @Author David Soergel
  * @Version 1.0
@@ -43,6 +42,7 @@ public class StringNodeNamer implements NodeNamer<String>
 	// ------------------------------ FIELDS ------------------------------
 
 	private String unknownBasis;
+	private int currentId = 0;
 
 
 	// --------------------------- CONSTRUCTORS ---------------------------
@@ -84,8 +84,16 @@ public class StringNodeNamer implements NodeNamer<String>
 		 return null;
 		 }
  */
-	public String nameInternal(int i)
+
+	/*	public String nameInternal(int i)
+	   {
+	   return unknownBasis + i;
+	   }
+	   */
+
+
+	public String generate()
 		{
-		return unknownBasis + i;
+		return unknownBasis + currentId++;
 		}
 	}

@@ -33,7 +33,6 @@
 package edu.berkeley.compbio.phyloutils;
 
 
-
 /**
  * @Author David Soergel
  * @Version 1.0
@@ -43,13 +42,14 @@ public class IntegerNodeNamer implements NodeNamer<Integer>
 	// ------------------------------ FIELDS ------------------------------
 
 	private int unknownBasis;
-
+	private int currentId;
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
 	public IntegerNodeNamer(int unknownBasis)
 		{
 		this.unknownBasis = unknownBasis;
+		this.currentId = unknownBasis;
 		}
 
 	// ------------------------ INTERFACE METHODS ------------------------
@@ -64,10 +64,12 @@ public class IntegerNodeNamer implements NodeNamer<Integer>
 		 }
  */
 
+	/*
 	public Integer nameInternal(int i)
 		{
 		return unknownBasis + i;
 		}
+	*/
 
 	public Integer merge(Integer name, String s) throws PhyloUtilsException
 		{
@@ -94,5 +96,10 @@ public class IntegerNodeNamer implements NodeNamer<Integer>
 			{
 			throw new PhyloUtilsException(e, "Non-integer ID found.");
 			}
+		}
+
+	public Integer generate()
+		{
+		return currentId++;
 		}
 	}

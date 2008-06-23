@@ -237,7 +237,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 				{
 				throw new PhyloUtilsException("Need to name a node, but no namer was provided");
 				}
-			value = namer.nameInternal(nodes.size());
+			value = namer.generate();//nameInternal(nodes.size());
 			}
 		/*
 		  else if (nodes.get(value) != null)

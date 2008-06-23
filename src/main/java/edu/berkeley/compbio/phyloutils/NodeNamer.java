@@ -33,7 +33,6 @@
 package edu.berkeley.compbio.phyloutils;
 
 
-
 /**
  * @Author David Soergel
  * @Version 1.0
@@ -52,5 +51,7 @@ public interface NodeNamer<T>
 
 	//T merge(T name, Object s);
 
-	T nameInternal(int i);
+	//T nameInternal(int i);
+
+	T generate();
 	}

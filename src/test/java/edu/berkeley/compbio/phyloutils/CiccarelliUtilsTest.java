@@ -50,10 +50,11 @@ public class CiccarelliUtilsTest
 	public void ciccarelliExactDistancesAreComputedCorrectly() throws PhyloUtilsException
 		{
 		double d = ciccarelli.exactDistanceBetween("Escherichia coli O6", "Escherichia coli K12");//(217992, 562);
-		assert d == 0.000221;
+		assert d == 0.00022;
 
-		d = ciccarelli.exactDistanceBetween("Escherichia coli O6", "");//(217992, 59919);
+		d = ciccarelli.exactDistanceBetween("Escherichia coli O6",
+		                                    "Prochlorococcus marinus CCMP1378");//sp. MED4");//(217992, 59919);
 		//System.err.println(d);
-		assert MathUtils.equalWithinFPError(d, 1.47739);
+		assert MathUtils.equalWithinFPError(d, 1.47741);
 		}
 	}
