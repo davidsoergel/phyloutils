@@ -32,58 +32,56 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.stats.ContinuousDistribution1D;
-import com.davidsoergel.stats.DistributionException;
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-
 /**
- * @Author David Soergel
- * @Version 1.0
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
+ * @version $Rev$
  */
-public interface RootedPhylogeny<T> extends PhylogenyNode<T>, TaxonMergingPhylogeny<T>
+public class EnvironmentParser
 	{
-	T commonAncestor(Set<T> knownMergeIds);
 
-	T commonAncestor(T nameA, T nameB);
+	public Collection<RootedPhylogeny<String>> read(InputStream is, RootedPhylogeny<String> tree)
+			throws PhyloUtilsException, IOException
+		{
+		BufferedReader r = new BufferedReader(new InputStreamReader(is));
 
-	double distanceBetween(T nameA, T nameB);
+		Map<String, Multiset<String>> environmentCounts = new HashMap<String, Multiset<String>>();
 
-	PhylogenyNode<T> getNode(T name);
+		String line;
+		while ((line = r.readLine()) != null)
+			{
+			String[] tokens = line.split(" ");
+			Multiset<String> env = environmentCounts.get(tokens[1]);
+			if (env == null)
+				{
+				env = new HashMultiset<String>();
+				environmentCounts.put(tokens[1], env);
+				}
+			env.add(tokens[0], Integer.parseInt(tokens[2]));
+			}
 
-	Collection<PhylogenyNode<T>> getNodes();
 
-	Collection<PhylogenyNode<T>> getLeaves();
-
-	//RootedPhylogeny<T> extractTreeWithLeaves(Collection<T> ids);
-
-	T nearestKnownAncestor(RootedPhylogeny<T> rootPhylogeny, T leafId) throws PhyloUtilsException;
-
-	//T nearestAncestorWithBranchLength(T leafId) throws PhyloUtilsException;
-
-	Collection<T> getLeafValues();
-
-	double getTotalBranchLength();
-
-	void randomizeLeafWeights(ContinuousDistribution1D speciesAbundanceDistribution) throws DistributionException;
-
-	void normalizeWeights();
-
-	RootedPhylogeny<T> getBasePhylogeny();
-
-	RootedPhylogeny<T> getBasePhylogenyRecursive();
-
-	RootedPhylogeny<T> extractIntersectionTree(Collection<T> leafValues, Collection<T> leafValues1)
-			throws PhyloUtilsException;
-
-	RootedPhylogeny<T> mixWith(RootedPhylogeny<T> phylogeny, double mixingProportion) throws PhyloUtilsException;
-
-	void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor) throws PhyloUtilsException;
-
-	RootedPhylogeny<T> clone();
-
-	void setLeafWeights(Multiset<T> ids);
+		Set<RootedPhylogeny<String>> result = new HashSet<RootedPhylogeny<String>>();
+		for (String name : environmentCounts.keySet())
+			{
+			Multiset<String> ids = environmentCounts.get(name);
+			RootedPhylogeny<String> subtree = tree.extractTreeWithLeafIDs(ids);
+			subtree.setValue(name);
+			subtree.setLeafWeights(ids);
+			result.add(subtree);
+			}
+		return result;
+		}
 	}

@@ -35,6 +35,7 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.collections.CollectionUtils;
 import com.davidsoergel.stats.ContinuousDistribution1D;
 import com.davidsoergel.stats.DistributionException;
+import com.google.common.collect.Multiset;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -320,6 +321,15 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		for (PhylogenyNode<T> leaf : getLeaves())
 			{
 			leaf.setWeight(speciesAbundanceDistribution.sample());
+			}
+		normalizeWeights();
+		}
+
+	public void setLeafWeights(Multiset<T> leafWeights)
+		{
+		for (PhylogenyNode<T> leaf : getLeaves())
+			{
+			leaf.setWeight(new Double(leafWeights.count(leaf.getValue())));
 			}
 		normalizeWeights();
 		}
