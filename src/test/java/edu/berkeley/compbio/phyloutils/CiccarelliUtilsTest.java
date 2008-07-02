@@ -54,7 +54,7 @@ public class CiccarelliUtilsTest
 
 		d = ciccarelli.exactDistanceBetween("Escherichia coli O6",
 		                                    "Prochlorococcus marinus CCMP1378");//sp. MED4");//(217992, 59919);
-		//System.err.println(d);
+		//logger.warn(d);
 		assert MathUtils.equalWithinFPError(d, 1.47741);
 		}
 	}

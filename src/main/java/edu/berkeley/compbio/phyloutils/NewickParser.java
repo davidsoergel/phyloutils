@@ -70,7 +70,7 @@ public class NewickParser<T>
 
 			for (int i = 0; i < urls.length; i++)
 				{
-				System.err.println(urls[i].getFile());
+				logger.warn(urls[i].getFile());
 				}
 
 			throw new PhyloUtilsException("tree not found: " + filename);
