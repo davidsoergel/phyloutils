@@ -37,9 +37,6 @@ import com.davidsoergel.dsutils.tree.TreeException;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -70,29 +67,30 @@ public class CiccarelliUtils
 		{
 		try
 			{
-			URL res = ClassLoader.getSystemResource(ciccarelliFilename);
-			if (res == null)
-				{
-				logger.error("Ciccarelli tree not found: " + ciccarelliFilename);
-				//Get the System Classloader
-				ClassLoader sysClassLoader = ClassLoader.getSystemClassLoader();
+			/*		URL res = ClassLoader.getSystemResource(ciccarelliFilename);
+						if (res == null)
+							{
+							logger.error("Ciccarelli tree not found: " + ciccarelliFilename);
+							//Get the System Classloader
+							ClassLoader sysClassLoader = ClassLoader.getSystemClassLoader();
 
-				//Get the URLs
-				URL[] urls = ((URLClassLoader) sysClassLoader).getURLs();
+							//Get the URLs
+							URL[] urls = ((URLClassLoader) sysClassLoader).getURLs();
 
-				for (int i = 0; i < urls.length; i++)
-					{
-					System.err.println(urls[i].getFile());
-					}
+							for (int i = 0; i < urls.length; i++)
+								{
+								System.err.println(urls[i].getFile());
+								}
 
-				return;
-				}
-			InputStream is = res.openStream();
+							return;
+							}
+						InputStream is = res.openStream();*/
 			/*if (is == null)
 				{
 				is = new FileInputStream(filename);
 				}*/
-			ciccarelliTree = new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED NODE "));
+			//	ciccarelliTree = new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED NODE "));
+			ciccarelliTree = NewickParser.readWithStringIds(ciccarelliFilename);
 			}
 		catch (IOException e)
 			{

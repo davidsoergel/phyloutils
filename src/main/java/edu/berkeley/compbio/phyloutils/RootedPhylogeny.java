@@ -44,7 +44,8 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-public interface RootedPhylogeny<T> extends PhylogenyNode<T>, TaxonMergingPhylogeny<T>
+public interface RootedPhylogeny<T>
+		extends PhylogenyNode<T>, TaxonMergingPhylogeny<T>//, Clusterable<RootedPhylogeny<T>>
 	{
 	T commonAncestor(Set<T> knownMergeIds);
 

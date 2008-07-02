@@ -34,6 +34,7 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
 import com.davidsoergel.dsutils.tree.HierarchyNode;
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -324,6 +325,40 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 			e.printStackTrace();
 			throw new Error(e);
 			}
+		}
+
+	/**
+	 * Test whether the given object is the same as this one.  Differs from equals() in that implementations of this
+	 * interface may contain additional state which make them not strictly equal; here we're only interested in whether
+	 * they're equal as far as this interface is concerned, i.e., for purposes of clustering.
+	 *
+	 * @param other The clusterable object to compare against
+	 * @return True if they are equivalent, false otherwise
+	 */
+	public boolean equalValue(RootedPhylogeny<T> other)
+		{
+		throw new NotImplementedException();
+		}
+
+	/**
+	 * Returns a String identifying this object.  Ideally each clusterable object being analyzed should have a unique
+	 * identifier.
+	 *
+	 * @return a unique identifier for this object
+	 */
+	public String getId()
+		{
+		return root.getValue().toString();
+		}
+
+	/**
+	 * Get the primary classification label, if available (optional operation)
+	 *
+	 * @return a Strings describing this object
+	 */
+	public String getLabel()
+		{
+		return null;
 		}
 	}
 

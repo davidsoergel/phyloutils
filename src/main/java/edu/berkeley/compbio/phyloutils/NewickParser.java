@@ -32,12 +32,16 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StreamTokenizer;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 
 /**
@@ -49,8 +53,35 @@ import java.io.StreamTokenizer;
  */
 public class NewickParser<T>
 	{
+	private static final Logger logger = Logger.getLogger(NewickParser.class);
 	// -------------------------- OTHER METHODS --------------------------
 
+	public static RootedPhylogeny<String> readWithStringIds(String filename) throws PhyloUtilsException, IOException
+		{
+		URL res = ClassLoader.getSystemResource(filename);
+		if (res == null)
+			{
+			logger.error("tree not found: " + filename);
+			//Get the System Classloader
+			ClassLoader sysClassLoader = ClassLoader.getSystemClassLoader();
+
+			//Get the URLs
+			URL[] urls = ((URLClassLoader) sysClassLoader).getURLs();
+
+			for (int i = 0; i < urls.length; i++)
+				{
+				System.err.println(urls[i].getFile());
+				}
+
+			throw new PhyloUtilsException("tree not found: " + filename);
+			}
+		InputStream is = res.openStream();
+		/*if (is == null)
+					 {
+					 is = new FileInputStream(filename);
+					 }*/
+		return new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED NODE "));
+		}
 
 	public RootedPhylogeny<T> read(InputStream is, NodeNamer<T> namer) throws PhyloUtilsException
 		{

@@ -52,7 +52,7 @@ import java.util.Set;
 public class EnvironmentParser
 	{
 
-	public Collection<RootedPhylogeny<String>> read(InputStream is, RootedPhylogeny<String> tree)
+	public static Collection<RootedPhylogeny<String>> read(InputStream is, RootedPhylogeny<String> tree)
 			throws PhyloUtilsException, IOException
 		{
 		BufferedReader r = new BufferedReader(new InputStreamReader(is));
