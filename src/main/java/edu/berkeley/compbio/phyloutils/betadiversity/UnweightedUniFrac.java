@@ -32,14 +32,13 @@
 
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
-import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
+import com.davidsoergel.stats.DistanceMeasure;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 import org.apache.log4j.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
-
 
 
 /**
@@ -59,9 +58,10 @@ public class UnweightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
 			//double branchLengthB = b.getTotalBranchLength();
 
 			RootedPhylogeny<T> theBasePhylogeny = a.getBasePhylogeny();
-			if(theBasePhylogeny != b.getBasePhylogeny())
+			if (theBasePhylogeny != b.getBasePhylogeny())
 				{
-				throw new PhyloUtilsException("UniFrac can be computed only between trees extracted from the same underlying tree");
+				throw new PhyloUtilsException(
+						"UniFrac can be computed only between trees extracted from the same underlying tree");
 				}
 
 			Set<T> unionLeafIDs = new HashSet<T>();
@@ -78,7 +78,8 @@ public class UnweightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
 			//intersectionTree = intersectionTree.extractTreeWithLeaves(b.getLeafValues(), true);
 
 			// we must do this starting from the union tree because there may be intermediate branch points that are collapsed in the individual trees
-			RootedPhylogeny<T> intersectionTree = unionTree.extractIntersectionTree(a.getLeafValues(), b.getLeafValues());
+			RootedPhylogeny<T> intersectionTree =
+					unionTree.extractIntersectionTree(a.getLeafValues(), b.getLeafValues());
 
 			double unionLength = unionTree.getTotalBranchLength();
 			double intersectionLength = intersectionTree.getTotalBranchLength();

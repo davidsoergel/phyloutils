@@ -32,7 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
-import edu.berkeley.compbio.ml.distancemeasure.DistanceMeasure;
+import com.davidsoergel.stats.DistanceMeasure;
 import edu.berkeley.compbio.phyloutils.LengthWeightHierarchyNode;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;

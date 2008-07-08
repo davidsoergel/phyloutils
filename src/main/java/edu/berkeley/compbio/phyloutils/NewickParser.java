@@ -58,15 +58,22 @@ public class NewickParser<T>
 
 	public static RootedPhylogeny<String> readWithStringIds(String filename) throws PhyloUtilsException, IOException
 		{
-		URL res = ClassLoader.getSystemResource(filename);
+		//ClassLoader classClassLoader = new NewickParser().getClass().getClassLoader();
+		ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
+		//ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+
+		//URL res1 = classClassLoader.getResource(filename);
+		URL res = threadClassLoader.getResource(filename);
+		//URL res3 = systemClassLoader.getResource(filename);
+
 		if (res == null)
 			{
 			logger.error("tree not found: " + filename);
 			//Get the System Classloader
-			ClassLoader sysClassLoader = ClassLoader.getSystemClassLoader();
+			//ClassLoader.getSystemClassLoader();
 
 			//Get the URLs
-			URL[] urls = ((URLClassLoader) sysClassLoader).getURLs();
+			URL[] urls = ((URLClassLoader) threadClassLoader).getURLs();
 
 			for (int i = 0; i < urls.length; i++)
 				{

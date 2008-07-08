@@ -33,7 +33,7 @@
 package edu.berkeley.compbio.phyloutils.alphadiversity;
 
 import com.davidsoergel.dsutils.math.MathUtils;
-import edu.berkeley.compbio.ml.Statistic;
+import com.davidsoergel.stats.Statistic;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 

@@ -32,9 +32,8 @@
 
 package edu.berkeley.compbio.phyloutils.alphadiversity;
 
-import edu.berkeley.compbio.ml.Statistic;
+import com.davidsoergel.stats.Statistic;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
-
 
 
 /**
