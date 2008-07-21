@@ -26,6 +26,12 @@ public class TransitionMatrix
 
 	public String filename;
 
+	public TransitionMatrix(String filename) throws FileNotFoundException
+		{
+		this.filename = filename;
+		init();
+		}
+
 	public void init() throws FileNotFoundException
 		{
 		Reader r;
