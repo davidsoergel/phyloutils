@@ -2,7 +2,7 @@ package edu.berkeley.compbio.phyloutils.old;
 
 import com.davidsoergel.dsutils.ArrayUtils;
 import com.davidsoergel.stats.DistributionException;
-import edu.berkeley.compbio.sequtils.TransitionMatrix;
+import edu.berkeley.compbio.phyloutils.TransitionMatrix;
 import org.apache.log4j.Logger;
 
 import java.util.Arrays;
