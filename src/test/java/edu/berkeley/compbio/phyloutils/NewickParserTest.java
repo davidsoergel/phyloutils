@@ -65,6 +65,22 @@ public class NewickParserTest
 		//	logger.warn("all done");
 		}
 
+	@Test
+	public void newickParserSkipsComments() throws PhyloUtilsException, IOException
+		{
+		//	logger.warn("starting newickParserReadsAllNodes");
+		URL url = ClassLoader.getSystemResource("goodNewickTreeWithComments.nh");
+		// We're in a separate classloader under Maven2 / surefire
+		//	logger.warn("Classloader: " + getClass().getClassLoader().toString());
+		//	logger.warn("file: " + getClass().getClassLoader().getResource("goodNewickTree.sh"));
+		//	URL url = getClass().getResource("goodNewickTree.sh");
+		//	logger.warn("Got file: " + url);
+		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));
+		//	logger.warn("Parsed tree with " + p.getNodes().size() + " nodes.");
+		assert p.getNodes().size() == 14;
+		//	logger.warn("all done");
+		}
+
 	@Test(expectedExceptions = {PhyloUtilsException.class})
 	public void newickParserThrowsExceptionOnPrematureTermination() throws PhyloUtilsException, IOException
 		{

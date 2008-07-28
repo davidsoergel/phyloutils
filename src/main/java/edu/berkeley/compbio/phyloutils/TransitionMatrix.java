@@ -54,7 +54,7 @@ public class TransitionMatrix
 
 		StreamTokenizer input;
 		StringBuffer buffer = new StringBuffer();
-		int i, j, numResidues;
+		int i, j, numStates = 0;
 		input = new StreamTokenizer(matrix);
 		try
 			{
@@ -74,19 +74,23 @@ public class TransitionMatrix
 
 			while (input.ttype != StreamTokenizer.TT_EOL)
 				{
-				buffer.append(input.sval.charAt(0));
+				//buffer.append(input.sval.charAt(0));
 
 				input.nextToken();
 
 				logger.debug("input2 = " + input);
+				numStates++;
 				}
+
+			logger.debug("numStates = " + numStates);
 
 			// Create appropriately-sized matrix
 
-			//**  IN PROGRESS HERE
-			numResidues = 1;
-			transitions = new MultinomialDistribution[numResidues];
-			buffer.delete(0, numResidues);
+			transitions = new MultinomialDistribution[numStates];
+			for (int k = 0; k < numStates; k++)
+				{
+				transitions[k] = new MultinomialDistribution();
+				}
 
 
 			while (input.ttype == StreamTokenizer.TT_EOL)
@@ -98,16 +102,16 @@ public class TransitionMatrix
 
 			// Read in substitution matrix values
 
-			for (i = 0; i < numResidues; i++)
+			for (i = 0; i < numStates; i++)
 				{
-				buffer.append(input.sval.charAt(0));
+				//				buffer.append(input.sval.charAt(0));
 
-				logger.debug("input4 = " + input);
+				//				logger.debug("input4 = " + input);
 
-				input.nextToken();
+				//				input.nextToken();
 
 
-				for (j = 0; j < numResidues; j++)
+				for (j = 0; j < numStates; j++)
 					{
 					transitions[i].add(input.nval);
 					input.nextToken();

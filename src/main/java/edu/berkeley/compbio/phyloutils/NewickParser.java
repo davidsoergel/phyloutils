@@ -35,6 +35,7 @@ package edu.berkeley.compbio.phyloutils;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -65,6 +66,15 @@ public class NewickParser<T>
 		//URL res1 = classClassLoader.getResource(filename);
 		URL res = threadClassLoader.getResource(filename);
 		//URL res3 = systemClassLoader.getResource(filename);
+
+		if (res == null)
+			{
+			File f = new File(filename);
+			if (f.exists())
+				{
+				res = new URL("file://" + filename);
+				}
+			}
 
 		if (res == null)
 			{
@@ -114,6 +124,18 @@ public class NewickParser<T>
 		try
 			{
 			st.nextToken();
+
+			// allow comments before the tree
+			while (((char) st.ttype == '['))
+				{
+				do
+					{
+					st.nextToken();
+					}
+				while ((((char) st.ttype != ']')));
+				st.nextToken();
+				}
+
 			if (!((char) st.ttype == '('))
 				{
 				throw new PhyloUtilsException("Tree must begin with an open parenthesis");
@@ -262,6 +284,16 @@ public class NewickParser<T>
 							throw new PhyloUtilsException("End comment in an unexpected place at line " + st.lineno());
 							}
 						break;
+
+
+					case '\'':
+						// ignore single quotes entirely
+						break;
+
+					case '\"':
+						// ignore double quotes entirely
+						break;
+
 
 					default:
 						throw new PhyloUtilsException(
