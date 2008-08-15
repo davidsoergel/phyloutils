@@ -54,11 +54,15 @@ public class CiccarelliUtils
 	//private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
 	private String ciccarelliFilename = "itol080605_newick.txt";
 
-	private static final CiccarelliUtils instance = new CiccarelliUtils();
+	private static CiccarelliUtils instance;// = new CiccarelliUtils();
 
 
 	public static CiccarelliUtils getInstance()
 		{
+		if (instance == null)
+			{
+			instance = new CiccarelliUtils();
+			}
 		return instance;
 		}
 
