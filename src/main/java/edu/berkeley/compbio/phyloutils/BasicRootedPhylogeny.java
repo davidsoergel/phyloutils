@@ -111,6 +111,11 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		return result;
 		}
 
+	public Collection<T> getNodeValues()
+		{
+		return nodes.keySet();
+		}
+
 	// we can't do this while building, since the names might change
 	public void updateNodes(NodeNamer<T> namer) throws PhyloUtilsException
 		{

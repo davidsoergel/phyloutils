@@ -36,10 +36,6 @@ import java.util.Collection;
 import java.util.List;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>//Iterable<PhylogenyNode<T>>,
 	{
 	Collection<? extends PhylogenyNode<T>> getChildren();

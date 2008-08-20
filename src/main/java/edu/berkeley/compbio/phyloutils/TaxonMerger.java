@@ -53,6 +53,7 @@ public class TaxonMerger
 
 	private static Logger logger = Logger.getLogger(TaxonMerger.class);
 
+
 	/**
 	 * Separates a set of taxon ids into the smallest possible number of disjoint sets such that the maximum pairwise
 	 * phylogenetic distance within each set is less than a given threshold.
@@ -72,7 +73,7 @@ public class TaxonMerger
 			if (currentTaxonset == null)
 				{
 				currentTaxonset = new HashSet<T>();
-				theTaxonsetsByTaxid.put(id, currentTaxonset);
+				theTaxonsetsByTaxid.put(knownId, currentTaxonset);
 				}
 
 			currentTaxonset.add(id);
@@ -84,13 +85,19 @@ public class TaxonMerger
 			return theTaxonsetsByTaxid;
 			}
 
-		// now iterate oven the tree, merging subtrees that meet the criterion
+		// now iterate over the tree, merging subtrees that meet the criterion
 
 		Map<T, Set<T>> theMergedTaxa = new HashMap<T, Set<T>>();
 
 		RootedPhylogeny<T> theTree = basePhylogeny.extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet());
 
+		assert theTaxonsetsByTaxid.keySet().containsAll(theTree.getLeafValues());
+		assert theTree.getNodeValues().containsAll(theTaxonsetsByTaxid.keySet());
+
 		DepthFirstTreeIterator<T, LengthWeightHierarchyNode<T>> it = theTree.depthFirstIterator();
+
+		// for sanity checking only
+		Set<T> allMergedTaxa = new HashSet<T>();
 
 		while (it.hasNext())
 			{
@@ -98,13 +105,21 @@ public class TaxonMerger
 
 			// the iterator is depth-first by default
 
-			if (node.getLargestLengthSpan() < ciccarelliMergeThreshold)
+			double span = node.getLargestLengthSpan();
+			if (span < ciccarelliMergeThreshold)
 				{
 				Set<T> mergeTaxa = new HashSet<T>();
 				for (LengthWeightHierarchyNode<T> descendant : node)
 					{
-					// we'll include intermediate nodes even if they aren't p'rt of the query (i.e., not leaves)
-					mergeTaxa.add(descendant.getValue());
+					// we'll include intermediate nodes even if they aren't part of the query (i.e., not leaves)
+					T id = descendant.getValue();
+					mergeTaxa.add(id);
+
+					Set<T> subIds = theTaxonsetsByTaxid.remove(id);
+					if (subIds != null)
+						{
+						mergeTaxa.addAll(subIds);
+						}
 					}
 
 				// we also need to advance the main iterator, so once we've merged this node,
@@ -112,8 +127,22 @@ public class TaxonMerger
 				it.skipAllDescendants(node);
 
 				theMergedTaxa.put(node.getValue(), mergeTaxa);
+				allMergedTaxa.addAll(mergeTaxa);
+				}
+			else
+				{
+				T id = node.getValue();
+				Set<T> subIds = theTaxonsetsByTaxid.remove(id);
+				if (subIds != null)
+					{
+					logger.warn("Dropping " + subIds.size() + " taxa at node " + id + " with span " + span + " > "
+							+ ciccarelliMergeThreshold + " (i.e., our base tree is not detailed enough)");
+					}
 				}
 			}
+
+		assert theTaxonsetsByTaxid.isEmpty();
+		//assert allMergedTaxa.containsAll(leafIds);
 
 		logger.info("Merged " + leafIds.size() + " taxa into " + theMergedTaxa.size() + " groups.");
 		return theMergedTaxa;

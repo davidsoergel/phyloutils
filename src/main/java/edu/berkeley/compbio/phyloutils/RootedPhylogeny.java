@@ -40,10 +40,6 @@ import java.util.Collection;
 import java.util.Set;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public interface RootedPhylogeny<T>
 		extends PhylogenyNode<T>, TaxonMergingPhylogeny<T>//, Clusterable<RootedPhylogeny<T>>
 	{
@@ -66,6 +62,9 @@ public interface RootedPhylogeny<T>
 	//T nearestAncestorWithBranchLength(T leafId) throws PhyloUtilsException;
 
 	Collection<T> getLeafValues();
+
+	Collection<T> getNodeValues();
+
 
 	double getTotalBranchLength();
 

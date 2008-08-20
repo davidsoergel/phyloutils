@@ -46,10 +46,6 @@ import java.util.Map;
 import java.util.Set;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	{
 	private static final Logger logger = Logger.getLogger(AbstractRootedPhylogeny.class);
@@ -125,7 +121,18 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 				theLeaves.add(n);
 				}
 			}
-		return extractTreeWithLeaves(theLeaves);
+		RootedPhylogeny<T> result = extractTreeWithLeaves(theLeaves);
+		Collection<T> gotLeaves = result.getLeafValues();
+		Collection<T> gotNodes = result.getNodeValues();
+
+		// all the leaves that were found were leaves that were requested
+		assert ids.containsAll(gotLeaves);
+
+		// some requested leaves may turn out to be internal nodes, but at least they should all be accounted for
+		assert gotNodes.containsAll(ids);
+
+		//assert gotLeaves.containsAll(ids);
+		return result;
 		}
 
 	public RootedPhylogeny<T> extractTreeWithLeaves(Collection<PhylogenyNode<T>> leaves) throws PhyloUtilsException
@@ -169,6 +176,10 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		newTree.updateNodes(null);
 		newTree.setBasePhylogeny(this);
+
+		//		assert newTree.getNodes().containsAll(leaves);
+		//		assert CollectionUtils.isEqualCollection(newTree.getLeaves(),leaves);
+
 		return newTree;
 		}
 
@@ -185,7 +196,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	*/
 
 	/**
-	 * note this does not allow for the case where one path terminates at an internal node of another path
+	 * note this does not allow for the case where one path terminates at an internal node of another path.  Wait, yes it
+	 * does...??
 	 *
 	 * @param theAncestorLists
 	 * @return
@@ -213,6 +225,15 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 				accumulatedLength += d;
 				}
 			}
+		/*
+		  for(List<PhylogenyNode<T>> ancestorList : theAncestorLists)
+			  {
+			  if(ancestorList.isEmpty())
+				  {
+				  logger.warn("")
+				  }
+			  }
+  */
 
 		if (commonAncestor == null)
 			{

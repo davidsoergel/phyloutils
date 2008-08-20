@@ -36,8 +36,10 @@ import com.davidsoergel.dsutils.tree.HierarchyNode;
 
 
 /**
- * @Author David Soergel
- * @Version 1.0
+ * Represents a node of a tree with an associated branch length and weight.
+ *
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Rev$
  */
 public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T, LengthWeightHierarchyNode<T>>
 	{
@@ -49,10 +51,25 @@ public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T, LengthWei
 
 	void setWeight(Double d);
 
-
+	/**
+	 * Returns the sum of the two longest nonoverlapping paths from this node to leaves.
+	 *
+	 * @return
+	 */
 	Double getLargestLengthSpan();
 
+	/**
+	 * Adds a child node and automatically updates the child's parent link.
+	 *
+	 * @param a the child node to add
+	 */
 	void addChild(LengthWeightHierarchyNode<T> a);
 
+	/**
+	 * Returns the total branch length between the root and this node.
+	 *
+	 * @return the sum of the branch lengths associated with all the nodes on the ancestor path from this node to the root,
+	 *         inclusive.
+	 */
 	double distanceToRoot();
 	}
