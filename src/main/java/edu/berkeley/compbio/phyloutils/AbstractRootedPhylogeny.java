@@ -51,6 +51,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	private static final Logger logger = Logger.getLogger(AbstractRootedPhylogeny.class);
 	private RootedPhylogeny<T> basePhylogeny;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public T commonAncestor(Set<T> knownMergeIds)
 		{
 		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
@@ -73,6 +76,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return commonAncestor.getValue();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public T commonAncestor(T nameA, T nameB)
 		{
 		PhylogenyNode<T> a = getNode(nameA);
@@ -97,11 +103,17 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids) throws PhyloUtilsException
 		{
 		return extractTreeWithLeafIDs(ids, false);
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes)
 			throws PhyloUtilsException
 		{
@@ -134,6 +146,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		//assert gotLeaves.containsAll(ids);
 		return result;
 		}
+
 
 	public RootedPhylogeny<T> extractTreeWithLeaves(Collection<PhylogenyNode<T>> leaves) throws PhyloUtilsException
 		{
@@ -300,6 +313,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 	public abstract PhylogenyNode<T> getRoot();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public double distanceBetween(T nameA, T nameB)
 		{
 		PhylogenyNode a = getNode(nameA);
@@ -327,6 +343,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return dist;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public double getTotalBranchLength()
 		{
 		double result = 0;
@@ -337,6 +356,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return result;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void randomizeLeafWeights(ContinuousDistribution1D speciesAbundanceDistribution) throws DistributionException
 		{
 		for (PhylogenyNode<T> leaf : getLeaves())
@@ -346,6 +368,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		normalizeWeights();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setLeafWeights(Multiset<T> leafWeights)
 		{
 		for (PhylogenyNode<T> leaf : getLeaves())
@@ -355,6 +380,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		normalizeWeights();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void normalizeWeights()
 		{
 		// first normalize at the leaves
@@ -376,11 +404,17 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public RootedPhylogeny<T> getBasePhylogeny()
 		{
 		return basePhylogeny;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public RootedPhylogeny<T> getBasePhylogenyRecursive()
 		{
 		if (basePhylogeny == null)
@@ -395,6 +429,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		this.basePhylogeny = basePhylogeny;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public RootedPhylogeny<T> extractIntersectionTree(Collection<T> leafIdsA, Collection<T> leafIdsB)
 			throws PhyloUtilsException
 		{
@@ -424,6 +461,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return extractTreeWithLeaves(allTreeNodesA);
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public RootedPhylogeny<T> mixWith(RootedPhylogeny<T> otherTree, double mixingProportion) throws PhyloUtilsException
 		{
 		RootedPhylogeny<T> theBasePhylogeny = getBasePhylogeny();
@@ -454,6 +494,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor) throws PhyloUtilsException
 		{
 		/*RootedPhylogeny<T> theBasePhylogeny = getBasePhylogeny();
@@ -477,5 +520,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		normalizeWeights();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public abstract RootedPhylogeny<T> clone();
 	}

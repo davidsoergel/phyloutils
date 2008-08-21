@@ -46,10 +46,6 @@ import java.util.Map;
 import java.util.Set;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	{
 	private static final Logger logger = Logger.getLogger(BasicPhylogenyNode.class);
@@ -104,11 +100,17 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 
 	// --------------------- GETTER / SETTER METHODS ---------------------
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Collection<BasicPhylogenyNode<T>> getChildren()
 		{
 		return children;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public PhylogenyNode<T> getChild(T id)
 		{
 		// We could map the children collection as a Map; but that's some hassle, and since there are generally just 2 children anyway, this is simpler
@@ -125,6 +127,9 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		return null;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isLeaf()
 		{
 		return children.size() == 0;
@@ -135,11 +140,17 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	   name = name + i;
 	   }*/
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Double getLength()
 		{
 		return length;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setLength(Double length)
 		{
 		this.length = length;
@@ -149,6 +160,9 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 			}
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setWeight(Double weight)
 		{
 		this.weight = weight;
@@ -158,17 +172,26 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 			}
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Double getWeight()
 		{
 		return weight;
 		}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void incrementWeightBy(double v)
 		{
 		weight = weight == null ? v : weight + v;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void propagateWeightFromBelow()
 		{
 		if (!isLeaf())
@@ -182,26 +205,41 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 			}
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public double distanceToRoot()
 		{
 		return length + (parent == null ? 0 : parent.distanceToRoot());
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public T getValue()
 		{
 		return value;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setValue(T value)
 		{
 		this.value = value;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public BasicPhylogenyNode<T> getParent()
 		{
 		return parent;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public HierarchyNode<? extends T, LengthWeightHierarchyNode<T>> newChild()
 		{
 		BasicPhylogenyNode<T> child = new BasicPhylogenyNode<T>();
@@ -255,6 +293,9 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 			}
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean hasValue()
 		{
 		return value != null;// && !name.equals("");
@@ -289,6 +330,9 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 			}
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public List<PhylogenyNode<T>> getAncestorPath()
 		{
 		List<PhylogenyNode<T>> result = new LinkedList<PhylogenyNode<T>>();
@@ -304,11 +348,17 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Iterator<LengthWeightHierarchyNode<T>> iterator()
 		{
 		return new DepthFirstTreeIteratorImpl(this);
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public DepthFirstTreeIterator<T, LengthWeightHierarchyNode<T>> depthFirstIterator()
 		{
 		return new DepthFirstTreeIteratorImpl(this);
@@ -319,6 +369,10 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	Double secondGreatestDepth = null;
 	Double largestLengthSpan = null;
 
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Double getLargestLengthSpan()
 		{
 		computeDepthsIfNeeded();
@@ -388,6 +442,9 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addChild(LengthWeightHierarchyNode<T> child)
 		{
 		children.add((BasicPhylogenyNode<T>) child);
@@ -409,12 +466,20 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString()
 		{
 		return value == null ? "null" : value.toString();
 		}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public BasicPhylogenyNode<T> clone()
 		{
 		BasicPhylogenyNode<T> result = new BasicPhylogenyNode<T>();

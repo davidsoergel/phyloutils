@@ -33,10 +33,6 @@
 package edu.berkeley.compbio.phyloutils;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public class IntegerNodeNamer implements NodeNamer<Integer>
 	{
 	// ------------------------------ FIELDS ------------------------------
@@ -71,21 +67,33 @@ public class IntegerNodeNamer implements NodeNamer<Integer>
 		}
 	*/
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Integer merge(Integer name, String s) throws PhyloUtilsException
 		{
 		throw new PhyloUtilsException("Cannot merge integer IDs");
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Integer merge(Integer name, Integer s) throws PhyloUtilsException
 		{
 		throw new PhyloUtilsException("Cannot merge integer IDs");
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Integer create(Integer s)
 		{
 		return s;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Integer create(String s) throws PhyloUtilsException
 		{
 		try
@@ -98,6 +106,9 @@ public class IntegerNodeNamer implements NodeNamer<Integer>
 			}
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Integer generate()
 		{
 		return currentId++;

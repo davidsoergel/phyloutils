@@ -36,10 +36,6 @@ import com.davidsoergel.dsutils.math.MathUtils;
 import org.testng.annotations.Test;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public class CiccarelliUtilsTest
 	{
 

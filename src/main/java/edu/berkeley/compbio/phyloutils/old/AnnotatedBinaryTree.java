@@ -37,6 +37,10 @@ public class AnnotatedBinaryTree extends BinaryTree
 		return characters;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	protected String nodeInfo(int node)
 		{
 		return "" + (characters[0].get(node) == 1 ? "*" : "-");

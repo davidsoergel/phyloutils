@@ -43,14 +43,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public class NormalizedWeightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
 	{
 	private static final Logger logger = Logger.getLogger(WeightedUniFrac.class);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public double distanceFromTo(RootedPhylogeny<T> a, RootedPhylogeny<T> b)
 		{
 		try
@@ -96,6 +95,10 @@ public class NormalizedWeightedUniFrac<T> implements DistanceMeasure<RootedPhylo
 			}
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString()
 		{
 		String shortname = getClass().getName();

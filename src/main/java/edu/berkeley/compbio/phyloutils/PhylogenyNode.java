@@ -38,26 +38,41 @@ import java.util.List;
 
 public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>//Iterable<PhylogenyNode<T>>,
 	{
+	/**
+	 * {@inheritDoc}
+	 */
 	Collection<? extends PhylogenyNode<T>> getChildren();
 
 	// the "name" of this PhylogenyNode is the same as the "value" of the hierarchynode
 	//T getName();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	PhylogenyNode getParent();
 
 	boolean hasValue();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	List<PhylogenyNode<T>> getAncestorPath();
 
-	//void setWeight(double v);
 
 	void propagateWeightFromBelow();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	double distanceToRoot();
 
 	PhylogenyNode<T> getChild(T id);
 
 	void incrementWeightBy(double v);
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	PhylogenyNode<T> clone();
 	}

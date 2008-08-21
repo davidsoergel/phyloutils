@@ -74,16 +74,25 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		root = new BasicPhylogenyNode<T>(null, rootValue, 0);
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public PhylogenyNode<T> getNode(T name)
 		{
 		return nodes.get(name);
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Collection<PhylogenyNode<T>> getNodes()
 		{
 		return nodes.values();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Collection<PhylogenyNode<T>> getLeaves()
 		{
 		Set<PhylogenyNode<T>> result = new HashSet<PhylogenyNode<T>>();
@@ -98,6 +107,9 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		return result;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Collection<T> getLeafValues()
 		{
 		Set<T> result = new HashSet<T>();
@@ -111,6 +123,9 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		return result;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Collection<T> getNodeValues()
 		{
 		return nodes.keySet();
@@ -124,31 +139,49 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Collection<? extends PhylogenyNode<T>> getChildren()
 		{
 		return root.getChildren();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public PhylogenyNode<T> getChild(T id)
 		{
 		return root.getChild(id);
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public T getValue()
 		{
 		return root.getValue();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public PhylogenyNode getParent()
 		{
 		return null;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public HierarchyNode<? extends T, LengthWeightHierarchyNode<T>> newChild()
 		{
 		return root.newChild();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setValue(T contents)
 		{
 		root.setValue(contents);
@@ -159,11 +192,17 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		logger.error("Can't set the parent of the root node");
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean hasValue()
 		{
 		return root.hasValue();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public List<PhylogenyNode<T>> getAncestorPath()
 		{
 		// this is the root node
@@ -174,21 +213,33 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		return result;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Double getLength()
 		{
 		return 0.;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setLength(Double d)
 		{
 		logger.error("Can't set length of the root node");
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Double getLargestLengthSpan()
 		{
 		return root.getLargestLengthSpan();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addChild(LengthWeightHierarchyNode<T> a)
 		{
 		root.addChild(a);
@@ -205,11 +256,17 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		return root.iterator();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public DepthFirstTreeIterator<T, LengthWeightHierarchyNode<T>> depthFirstIterator()
 		{
 		return root.depthFirstIterator();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public T nearestKnownAncestor(RootedPhylogeny<T> rootPhylogeny, T leafId) throws PhyloUtilsException
 		{
 		T result = null;//nearestKnownAncestorCache.get(leafId);
@@ -239,6 +296,9 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		return result;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public T nearestAncestorWithBranchLength(T leafId) throws PhyloUtilsException
 		{
 		PhylogenyNode<T> n = getNode(leafId);
@@ -261,21 +321,34 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		return n.getValue();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public BasicPhylogenyNode<T> getRoot()
 		{
 		return root;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isLeaf()
 		{
 		return root.isLeaf();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Double getWeight()
 		{
 		return 1.;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setWeight(Double v)
 		{
 		if (v != 1.)
@@ -293,17 +366,26 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		 }
  */
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void incrementWeightBy(double v)
 		{
 		throw new Error("Can't increment root weight");
 		}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void propagateWeightFromBelow()
 		{
 		root.propagateWeightFromBelow();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public double distanceToRoot()
 		{
 		return 0;
@@ -314,6 +396,10 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		this.root = root;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public RootedPhylogeny<T> clone()
 		{
 		try

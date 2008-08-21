@@ -43,14 +43,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public class KullbackLeibler<T> implements DistanceMeasure<RootedPhylogeny<T>>
 	{
 	private static final Logger logger = Logger.getLogger(WeightedUniFrac.class);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public double distanceFromTo(RootedPhylogeny<T> a, RootedPhylogeny<T> b)
 		{
 		try
@@ -104,6 +103,10 @@ public class KullbackLeibler<T> implements DistanceMeasure<RootedPhylogeny<T>>
 		return divergence;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString()
 		{
 		String shortname = getClass().getName();

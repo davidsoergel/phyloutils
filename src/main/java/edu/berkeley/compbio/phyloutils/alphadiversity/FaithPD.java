@@ -36,17 +36,20 @@ import com.davidsoergel.stats.Statistic;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public class FaithPD<T> implements Statistic<RootedPhylogeny<T>>
 	{
+	/**
+	 * {@inheritDoc}
+	 */
 	public double measure(RootedPhylogeny<T> p)
 		{
 		return p.getTotalBranchLength();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString()
 		{
 		String shortname = getClass().getName();

@@ -40,10 +40,6 @@ import java.io.IOException;
 import java.net.URL;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public class NewickParserTest
 	{
 	private static final Logger logger = Logger.getLogger(NewickParserTest.class);

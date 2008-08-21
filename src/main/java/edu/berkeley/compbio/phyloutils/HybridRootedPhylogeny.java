@@ -35,7 +35,6 @@ package edu.berkeley.compbio.phyloutils;
 import java.util.Collection;
 
 
-
 /**
  * Sometimes we have branch lengths on one phylogeny, but we want to know distances between nodes that are not on that
  * phylogeny.  In that case we may want to travel up a different phylogeny (e.g., the NCBI taxonomy) until we find
@@ -63,12 +62,18 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		return leafPhylogeny.nearestKnownAncestor(rootPhylogeny, leafId);
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public T nearestAncestorWithBranchLength(T id) throws PhyloUtilsException
 		{
 		T rootId = nearestKnownAncestor(id);
 		return rootPhylogeny.nearestAncestorWithBranchLength(rootId);
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers) throws PhyloUtilsException
 		{
 		// this is sort of a hack... extracting a tree where some leaves are in the leaf phylogeny only is not allowed, and will throw an exception
@@ -76,7 +81,11 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		}
 
 
-	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers, boolean ignoreAbsentNodes) throws PhyloUtilsException
+	/**
+	 * {@inheritDoc}
+	 */
+	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers, boolean ignoreAbsentNodes)
+			throws PhyloUtilsException
 		{
 		// this is sort of a hack... extracting a tree where some leaves are in the leaf phylogeny only is not allowed, and will throw an exception
 		return rootPhylogeny.extractTreeWithLeafIDs(integers, ignoreAbsentNodes);

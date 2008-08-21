@@ -35,11 +35,6 @@ package edu.berkeley.compbio.phyloutils;
 import java.util.Collection;
 
 
-
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public interface TaxonMergingPhylogeny<T>
 	{
 	T nearestAncestorWithBranchLength(T id) throws PhyloUtilsException;

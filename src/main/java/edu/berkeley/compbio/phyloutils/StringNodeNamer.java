@@ -33,10 +33,6 @@
 package edu.berkeley.compbio.phyloutils;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public class StringNodeNamer implements NodeNamer<String>
 	{
 	// ------------------------------ FIELDS ------------------------------
@@ -58,21 +54,33 @@ public class StringNodeNamer implements NodeNamer<String>
 	// --------------------- Interface NodeNamer ---------------------
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String create(Integer s)
 		{
 		return s.toString();
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String create(String s)
 		{
 		return s;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String merge(String name, String s)
 		{
 		return name + s;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String merge(String name, Integer s)
 		{
 		return name + s;
@@ -92,6 +100,9 @@ public class StringNodeNamer implements NodeNamer<String>
 	   */
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String generate()
 		{
 		return unknownBasis + currentId++;

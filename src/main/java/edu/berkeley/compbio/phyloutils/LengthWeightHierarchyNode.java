@@ -40,15 +40,37 @@ import com.davidsoergel.dsutils.tree.HierarchyNode;
  *
  * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
  * @version $Rev$
+ * @JavadocOK
  */
 public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T, LengthWeightHierarchyNode<T>>
 	{
+
+	/**
+	 * Returns the length
+	 *
+	 * @return the length
+	 */
 	Double getLength();
 
+	/**
+	 * Sets the length
+	 *
+	 * @param d the length
+	 */
 	void setLength(Double d);
 
+	/**
+	 * Returns the weight
+	 *
+	 * @return the weight
+	 */
 	Double getWeight();
 
+	/**
+	 * Sets the weight
+	 *
+	 * @param d the weight
+	 */
 	void setWeight(Double d);
 
 	/**

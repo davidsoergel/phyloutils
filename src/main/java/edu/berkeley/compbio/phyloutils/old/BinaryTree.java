@@ -133,6 +133,10 @@ public class BinaryTree
 		return breadthFirst;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString()
 
 		{

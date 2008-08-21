@@ -43,10 +43,6 @@ import java.util.Map;
 import java.util.Set;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public class TaxonMerger
 	{
 	// ------------------------------ FIELDS ------------------------------

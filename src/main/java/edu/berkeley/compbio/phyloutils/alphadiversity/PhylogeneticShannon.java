@@ -38,12 +38,11 @@ import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public class PhylogeneticShannon<T> implements Statistic<RootedPhylogeny<T>>
 	{
+	/**
+	 * {@inheritDoc}
+	 */
 	public double measure(RootedPhylogeny<T> tree)
 		{
 		return informationBelow(tree);
@@ -79,6 +78,10 @@ public class PhylogeneticShannon<T> implements Statistic<RootedPhylogeny<T>>
 		return information;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString()
 		{
 		String shortname = getClass().getName();

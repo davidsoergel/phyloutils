@@ -41,10 +41,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 //@PropertyConsumer
 public class PhylogeneticJDivergence<T> implements DistanceMeasure<RootedPhylogeny<T>>
 	{
@@ -53,6 +49,9 @@ public class PhylogeneticJDivergence<T> implements DistanceMeasure<RootedPhyloge
 	//@Property(defaultvalue = "edu.berkeley.compbio.phyloutils.betadiversity.PhylogeneticKullbackLeibler")
 	public PhylogeneticKullbackLeibler<T> kl = new PhylogeneticKullbackLeibler<T>();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public double distanceFromTo(RootedPhylogeny<T> a, RootedPhylogeny<T> b)
 		{
 		try
@@ -87,6 +86,10 @@ public class PhylogeneticJDivergence<T> implements DistanceMeasure<RootedPhyloge
 			}
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString()
 		{
 		String shortname = getClass().getName();

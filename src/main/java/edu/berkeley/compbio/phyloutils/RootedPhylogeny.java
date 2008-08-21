@@ -83,6 +83,10 @@ public interface RootedPhylogeny<T>
 
 	void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor) throws PhyloUtilsException;
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	RootedPhylogeny<T> clone();
 
 	void setLeafWeights(Multiset<T> ids);

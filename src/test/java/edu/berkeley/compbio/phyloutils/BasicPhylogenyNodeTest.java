@@ -43,10 +43,6 @@ import java.util.List;
 import java.util.Set;
 
 
-/**
- * @Author David Soergel
- * @Version 1.0
- */
 public class BasicPhylogenyNodeTest
 	{
 	private static final Logger logger = Logger.getLogger(BasicPhylogenyNodeTest.class);

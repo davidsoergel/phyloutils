@@ -1,11 +1,3 @@
-/**
- * Created by IntelliJ IDEA.
- * User: lorax
- * Date: Apr 29, 2004
- * Time: 6:42:51 PM
- * To change this template use File | Settings | File Templates.
- */
-
 package edu.berkeley.compbio.phyloutils;
 
 import org.apache.log4j.Logger;
