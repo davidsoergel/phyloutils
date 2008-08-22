@@ -53,10 +53,13 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 	{
 	private BasicRootedPhylogenyWithSpecificNodeHandles testInstance;
 
+
 	public BasicPhylogenyNode createInstance() throws Exception
 		{
 		return new BasicRootedPhylogenyWithSpecificNodeHandles().root;
 		}
+
+	protected TestInstanceFactory<BasicPhylogenyNode> tif;
 
 	public void addContractTestsToQueue(Queue<Object> theContractTests)
 		{
@@ -66,9 +69,9 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 		}
 
 	@Factory
-	public Object[] testInterfacesNoReally()
+	public Object[] instantiateAllContractTests()
 		{
-		return testInterfaces();
+		return super.instantiateAllContractTests();
 		}
 
 	private static final Logger logger = Logger.getLogger(BasicPhylogenyNodeTest.class);
