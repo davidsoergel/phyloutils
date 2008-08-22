@@ -74,7 +74,7 @@ public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T, LengthWei
 	void setWeight(Double d);
 
 	/**
-	 * Returns the sum of the two longest nonoverlapping paths from this node to leaves.
+	 * Returns the largest tree distance between any pair of leaves descending from this node.
 	 *
 	 * @return
 	 */

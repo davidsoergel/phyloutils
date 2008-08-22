@@ -32,46 +32,57 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import java.util.Collection;
-import java.util.List;
+import com.davidsoergel.dsutils.TestInstanceFactory;
+import com.davidsoergel.dsutils.tree.HierarchyNodeInterfaceTest;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 
-
-public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>//Iterable<PhylogenyNode<T>>,
+/**
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
+ * @version $Rev$
+ */
+public class LengthWeightHierarchyNodeTest
 	{
-	/**
-	 * {@inheritDoc}
-	 */
-	Collection<? extends PhylogenyNode<T>> getChildren();
-
-	// the "name" of this PhylogenyNode is the same as the "value" of the hierarchynode
-	//T getName();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	PhylogenyNode getParent();
-
-	boolean hasValue();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	List<PhylogenyNode<T>> getAncestorPath();
+	private TestInstanceFactory<? extends LengthWeightHierarchyNode> tif;
 
 
-	void propagateWeightFromBelow();
+	// --------------------------- CONSTRUCTORS ---------------------------
+
+	public LengthWeightHierarchyNodeTest(TestInstanceFactory<? extends LengthWeightHierarchyNode> tif)
+		{
+		this.tif = tif;
+		}
+
+	@Factory
+	public Object[] testInterfaces()
+		{
+		Object[] result = new Object[1];
+		result[0] = new HierarchyNodeInterfaceTest(tif)
+		{
+		};// this is the trick
+		return result;
+		}
+
 
 	/**
-	 * {@inheritDoc}
+	 * In order for this test to be informative, the provided test tree must contain a confusing case, i.e. where the
+	 * longest span below some node does not pass through the node itself.
 	 */
-	double distanceToRoot();
+	@Test
+	public void largestLengthSpanIsMonotonicDownTree() throws Exception
+		{
+		LengthWeightHierarchyNode<Object> testInstance = tif.createInstance();
 
-	PhylogenyNode<T> getChild(T id);
+		// yeah we calculate each span twice, but so what
 
-	void incrementWeightBy(double v);
-
-	/**
-	 * {@inheritDoc}
-	 */
-	PhylogenyNode<T> clone();
+		for (LengthWeightHierarchyNode<Object> n : testInstance)
+			{
+			Double span = n.getLargestLengthSpan();
+			LengthWeightHierarchyNode p = (LengthWeightHierarchyNode) n.getParent();
+			if (p != null)
+				{
+				assert p.getLargestLengthSpan() <= span;
+				}
+			}
+		}
 	}
