@@ -59,11 +59,9 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 		return new BasicRootedPhylogenyWithSpecificNodeHandles().root;
 		}
 
-	protected TestInstanceFactory<BasicPhylogenyNode> tif;
-
 	public void addContractTestsToQueue(Queue<Object> theContractTests)
 		{
-		theContractTests.add(new PhylogenyNodeInterfaceTest(tif)
+		theContractTests.add(new PhylogenyNodeInterfaceTest(this)
 		{
 		});
 		}

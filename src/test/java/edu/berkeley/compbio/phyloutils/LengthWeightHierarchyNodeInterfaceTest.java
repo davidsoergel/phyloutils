@@ -35,7 +35,6 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.ContractTestAware;
 import com.davidsoergel.dsutils.TestInstanceFactory;
 import com.davidsoergel.dsutils.tree.HierarchyNodeInterfaceTest;
-import org.testng.ITest;
 import org.testng.annotations.Test;
 
 import java.util.Queue;
@@ -45,7 +44,7 @@ import java.util.Queue;
  * @version $Rev$
  */
 public abstract class LengthWeightHierarchyNodeInterfaceTest extends ContractTestAware<LengthWeightHierarchyNode>
-		implements ITest
+		//	implements ITest
 	{
 	protected TestInstanceFactory<? extends LengthWeightHierarchyNode> tif;
 
@@ -64,21 +63,23 @@ public abstract class LengthWeightHierarchyNodeInterfaceTest extends ContractTes
 		}
 
 
-	public String getTestName()
-		{
-		try
-			{
-			// this sucks because createInstance() may be expensive.
-			// Instead we could get the concrete class name by some other means, e.g. adding a getConcreteClassName()
-			// to the TestInterfaceFactory method.
-			return getClass().getSimpleName() + " -> " + tif.createInstance().getClass().getSimpleName();
-			}
-		catch (Exception e)
-			{
-			e.printStackTrace();
-			return getClass().getSimpleName();
-			}
-		}
+	/*	public String getTestName()
+	   {
+	   String result;
+	   try
+		   {
+		   // this sucks because createInstance() may be expensive.
+		   // Instead we could get the concrete class name by some other means, e.g. adding a getConcreteClassName()
+		   // to the TestInterfaceFactory method.
+		   result = getClass().getSimpleName() + " -> " + tif.createInstance().getClass().getSimpleName();
+		   }
+	   catch (Exception e)
+		   {
+		   e.printStackTrace();
+		   result = getClass().getSimpleName();
+		   }
+	   return result;
+	   }*/
 
 	/**
 	 * In order for this test to be informative, the provided test tree must contain a confusing case, i.e. where the
@@ -97,7 +98,7 @@ public abstract class LengthWeightHierarchyNodeInterfaceTest extends ContractTes
 			LengthWeightHierarchyNode p = (LengthWeightHierarchyNode) n.getParent();
 			if (p != null)
 				{
-				assert p.getLargestLengthSpan() <= span;
+				assert p.getLargestLengthSpan() >= span;
 				}
 			}
 		}
