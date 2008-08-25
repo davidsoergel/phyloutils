@@ -36,6 +36,7 @@ import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIteratorImpl;
 import com.davidsoergel.dsutils.tree.HierarchyNode;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -43,6 +44,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 
@@ -111,6 +113,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	/**
 	 * {@inheritDoc}
 	 */
+	@NotNull
 	public PhylogenyNode<T> getChild(T id)
 		{
 		// We could map the children collection as a Map; but that's some hassle, and since there are generally just 2 children anyway, this is simpler
@@ -124,7 +127,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 				return child;
 				}
 			}
-		return null;
+		throw new NoSuchElementException();
 		}
 
 	/**

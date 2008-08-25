@@ -36,6 +36,13 @@ import java.util.Collection;
 import java.util.List;
 
 
+/**
+ * A node of a weighted phylogenetic tree.
+ *
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Rev$
+ * @JavadocOK
+ */
 public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>//Iterable<PhylogenyNode<T>>,
 	{
 	/**
@@ -59,6 +66,10 @@ public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>//Iterable
 	List<PhylogenyNode<T>> getAncestorPath();
 
 
+	/**
+	 * Recursively set the weight of this node, and the weights of all of its descendants, to the sum of the weights of the
+	 * descendant leaves below each node.
+	 */
 	void propagateWeightFromBelow();
 
 	/**
@@ -66,8 +77,21 @@ public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>//Iterable
 	 */
 	double distanceToRoot();
 
+	/**
+	 * Get the child of this node which has the given value
+	 *
+	 * @param id the T value to search for among the children
+	 * @return the PhylogenyNode<T> child with the given value
+	 * @throws NoSuchElementException when a matching child is not found
+	 */
 	PhylogenyNode<T> getChild(T id);
 
+	/**
+	 * Increment the weight of this node by the given amount.  This will cause the weights of the ancestor nodes to be
+	 * inconsistent, so it will likely be necessary to call propagateWeightFromBelow on theroot.
+	 *
+	 * @param v the double
+	 */
 	void incrementWeightBy(double v);
 
 	/**

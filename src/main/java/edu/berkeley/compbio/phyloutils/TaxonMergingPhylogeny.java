@@ -35,11 +35,49 @@ package edu.berkeley.compbio.phyloutils;
 import java.util.Collection;
 
 
+/**
+ * A phylogenetic tree supporting the extraction of subtrees and ignoring branches with no length
+ *
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Rev$
+ * @JavadocOK
+ */
 public interface TaxonMergingPhylogeny<T>
 	{
+	/**
+	 * Locate the node with the given id, and navigate up the tree if necessary) until a node is found that has a branch
+	 * length greater than zero.
+	 *
+	 * @param id the T identifying the starting node
+	 * @return the T identifying the most recent ancestor of the given node with a nonzero branch length (perhaps the node
+	 *         itself)
+	 * @throws PhyloUtilsException when the target node is not found in the tree, or when no node with a branch length is
+	 *                             found
+	 */
 	T nearestAncestorWithBranchLength(T id) throws PhyloUtilsException;
 
+	/**
+	 * Extract a tree which contains exactly those leaves that are requested.  I.e., prunes any branches not leading to
+	 * those leaves.  Aggregates chains of nodes with exactly one child each into a single branch of the appropriate
+	 * length.  Creates the extracted tree from newly instantiated nodes; does not reuse nodes from the base tree.
+	 *
+	 * @param ids the Collection<T> of leaves desired for the extracted tree
+	 * @return the extracted RootedPhylogeny<T>
+	 * @throws PhyloUtilsException when the given collection contains a node id that is not found in the tree
+	 */
 	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids) throws PhyloUtilsException;
 
+	/**
+	 * Extract a tree which contains exactly those leaves that are requested.  I.e., prunes any branches not leading to
+	 * those leaves.  Aggregates chains of nodes with exactly one child each into a single branch of the appropriate
+	 * length.  Creates the extracted tree from newly instantiated nodes; does not reuse nodes from the base tree.
+	 *
+	 * @param ids               the Collection<T> of leaves desired for the extracted tree
+	 * @param ignoreAbsentNodes silently ignore requests for leaves that are not present in the tree, simply returning the
+	 *                          extracted tree with those leaves that are found.
+	 * @return the extracted RootedPhylogeny<T>
+	 * @throws PhyloUtilsException when the given collection contains a node id that is not found in the tree and
+	 *                             ignoreAbsentNodes is false
+	 */
 	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes) throws PhyloUtilsException;
 	}
