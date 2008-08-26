@@ -34,7 +34,6 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.collections.CollectionUtils;
 import com.davidsoergel.stats.ContinuousDistribution1D;
-import com.davidsoergel.stats.DistributionException;
 import com.google.common.collect.Multiset;
 import org.apache.log4j.Logger;
 
@@ -49,7 +48,7 @@ import java.util.Set;
 public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	{
 	private static final Logger logger = Logger.getLogger(AbstractRootedPhylogeny.class);
-	private RootedPhylogeny<T> basePhylogeny;
+	private RootedPhylogeny<T> basePhylogeny = this;
 
 	/**
 	 * {@inheritDoc}
@@ -359,7 +358,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public void randomizeLeafWeights(ContinuousDistribution1D speciesAbundanceDistribution) throws DistributionException
+	public void randomizeLeafWeights(
+			ContinuousDistribution1D speciesAbundanceDistribution)//throws DistributionException
 		{
 		for (PhylogenyNode<T> leaf : getLeaves())
 			{
@@ -466,6 +466,11 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	 */
 	public RootedPhylogeny<T> mixWith(RootedPhylogeny<T> otherTree, double mixingProportion) throws PhyloUtilsException
 		{
+		if (mixingProportion < 0 || mixingProportion > 1)
+			{
+			throw new PhyloUtilsException("Mixing proportion must be between 0 and 1");
+			}
+
 		RootedPhylogeny<T> theBasePhylogeny = getBasePhylogeny();
 		if (theBasePhylogeny != otherTree.getBasePhylogeny())
 			{
@@ -497,7 +502,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor) throws PhyloUtilsException
+	public void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor)//throws PhyloUtilsException
 		{
 		/*RootedPhylogeny<T> theBasePhylogeny = getBasePhylogeny();
 		if (theBasePhylogeny != otherTree.getBasePhylogeny())

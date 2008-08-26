@@ -2,6 +2,7 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.ContractTestAware;
 import com.davidsoergel.dsutils.TestInstanceFactory;
+import org.testng.annotations.Test;
 
 import java.util.Queue;
 
@@ -26,6 +27,24 @@ public abstract class PhylogenyNodeInterfaceTest extends ContractTestAware<Lengt
 		theContractTests.add(new LengthWeightHierarchyNodeInterfaceTest(tif)
 		{
 		});
+		}
+
+	@Test
+	public void getChildWorksIfChildIsPresent()
+		{
+		assert false;
+		}
+
+	@Test
+	public void getChildThrowsExceptionIfChildIsAbsent()
+		{
+		assert false;
+		}
+
+	@Test
+	public void propagateWeightFromBelowUpdatesAllDescendants()
+		{
+		assert false;
 		}
 	}
 
