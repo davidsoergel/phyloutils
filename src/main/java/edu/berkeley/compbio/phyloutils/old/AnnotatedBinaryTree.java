@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
  * @author lorax
  * @version 1.0
  */
+@Deprecated
 public class AnnotatedBinaryTree extends BinaryTree
 	{
 	private static Logger logger = Logger.getLogger(AnnotatedBinaryTree.class);

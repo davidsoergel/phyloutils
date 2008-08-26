@@ -14,6 +14,7 @@ import java.util.Arrays;
  * @author lorax
  * @version 1.0
  */
+@Deprecated
 public class CharacterDistributionOnTree
 	{
 	private static Logger logger = Logger.getLogger(CharacterDistributionOnTree.class);

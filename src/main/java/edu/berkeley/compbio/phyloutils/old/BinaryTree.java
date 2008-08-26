@@ -11,6 +11,7 @@ import java.util.Arrays;
  * @author lorax
  * @version 1.0
  */
+@Deprecated
 public class BinaryTree
 	{
 	private static Logger logger = Logger.getLogger(BinaryTree.class);

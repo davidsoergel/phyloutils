@@ -15,6 +15,7 @@ import java.util.List;
  * @author lorax
  * @version 1.0
  */
+@Deprecated
 public class TreeFactory
 	{
 	private static Logger logger = Logger.getLogger(TreeFactory.class);
