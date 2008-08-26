@@ -65,45 +65,45 @@ public class TreeFactory
 		remainingNodes.add(0, 0);
 
 		//Iterator<Integer> remainingParentsIterator = remainingNodes.iterator();
-		try
+		//try
+		//	{
+		int parent;
+		double newBranchLength;
+		// the root is always node 0, so we skip it here.  Every other node must be a child of somebody.
+		for (int i = 1; i < t.getNumNodes(); i++)
 			{
-			int parent;
-			double newBranchLength;
-			// the root is always node 0, so we skip it here.  Every other node must be a child of somebody.
-			for (int i = 1; i < t.getNumNodes(); i++)
+			int parentIndex = mtf.nextInt(possibleParents.size());
+			parent = possibleParents.get(parentIndex);
+			possibleParents.remove(parentIndex);
+			t.setParent(i, parent);
+			do
 				{
-				int parentIndex = mtf.nextInt(possibleParents.size());
-				parent = possibleParents.get(parentIndex);
-				possibleParents.remove(parentIndex);
-				t.setParent(i, parent);
-				do
-					{
-					newBranchLength = branchLengthDistribution.sample();
-					}
-				while (newBranchLength < 0);
-				t.setBranchLength(i, newBranchLength);
-				possibleParents.add(i);
-
-				// if a parent has one child, then it must also have a second.
-				i++;
-				t.setParent(i, parent);
-				do
-					{
-					newBranchLength = branchLengthDistribution.sample();
-					}
-				while (newBranchLength < 0);
-				t.setBranchLength(i, newBranchLength);
-				possibleParents.add(i);
+				newBranchLength = branchLengthDistribution.sample();
 				}
-			// ** assert the root has two children
-			// ** assert every node has either zero or two children
-			// ** assert the tree is fully connected
-			// ** assert there are no loops
+			while (newBranchLength < 0);
+			t.setBranchLength(i, newBranchLength);
+			possibleParents.add(i);
+
+			// if a parent has one child, then it must also have a second.
+			i++;
+			t.setParent(i, parent);
+			do
+				{
+				newBranchLength = branchLengthDistribution.sample();
+				}
+			while (newBranchLength < 0);
+			t.setBranchLength(i, newBranchLength);
+			possibleParents.add(i);
 			}
+		// ** assert the root has two children
+		// ** assert every node has either zero or two children
+		// ** assert the tree is fully connected
+		// ** assert there are no loops
+		/*	}
 		catch (DistributionException e)
 			{
 			logger.debug(e);
-			}
+			}*/
 		}
 
 
