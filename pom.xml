@@ -45,7 +45,7 @@
 	<parent>
 		<groupId>edu.berkeley.compbio</groupId>
 		<artifactId>basepom</artifactId>
-		<version>0.9</version>
+		<version>0.92-SNAPSHOT</version>
 	</parent>
 
 	<inceptionYear>2006</inceptionYear>
@@ -103,6 +103,14 @@
 			<artifactId>pal</artifactId>
 			<version>1.5.1</version>
 		</dependency>-->
+
+		<dependency>
+			<groupId>com.davidsoergel</groupId>
+			<artifactId>dsutils</artifactId>
+			<version>0.9-SNAPSHOT</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>com.davidsoergel</groupId>
