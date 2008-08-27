@@ -48,15 +48,15 @@ import java.util.Queue;
 import java.util.Set;
 
 
-public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode>
-		implements TestInstanceFactory<BasicPhylogenyNode>
+public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode<String>>
+		implements TestInstanceFactory<BasicPhylogenyNode<String>>
 	{
-	private BasicRootedPhylogenyWithSpecificNodeHandles testInstance;
+	private BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles testInstance;
 
 
 	public BasicPhylogenyNode createInstance() throws Exception
 		{
-		return new BasicRootedPhylogenyWithSpecificNodeHandles().root;
+		return new BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles().root;
 		}
 
 	public void addContractTestsToQueue(Queue<Object> theContractTests)
@@ -74,50 +74,11 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 
 	private static final Logger logger = Logger.getLogger(BasicPhylogenyNodeTest.class);
 
-	public class BasicRootedPhylogenyWithSpecificNodeHandles
-		{
-		BasicRootedPhylogeny<String> rootPhylogeny = new BasicRootedPhylogeny<String>("root");
-
-
-		BasicPhylogenyNode<String> root = rootPhylogeny.getRoot();
-		//new BasicPhylogenyNode<String>(null, "root", 0);
-
-		BasicPhylogenyNode<String> a = new BasicPhylogenyNode<String>(root, "a", 10);
-		BasicPhylogenyNode<String> b = new BasicPhylogenyNode<String>(root, "b", 4);
-		BasicPhylogenyNode<String> c = new BasicPhylogenyNode<String>(root, "c", 1);
-
-
-		BasicPhylogenyNode<String> aa = new BasicPhylogenyNode<String>(a, "aa", 20);
-		BasicPhylogenyNode<String> ab = new BasicPhylogenyNode<String>(a, "ab", 30);
-
-
-		//	PhylogenyNode<String> aaa = new PhylogenyNode<String>("aaa", aa, 1);
-		//	PhylogenyNode<String> aab = new PhylogenyNode<String>("aab", aa, 1);
-
-
-		BasicPhylogenyNode<String> ba = new BasicPhylogenyNode<String>(b, "ba", 1.1);
-		BasicPhylogenyNode<String> bb = new BasicPhylogenyNode<String>(b, "bb", 1.2);
-
-
-		BasicPhylogenyNode<String> baa = new BasicPhylogenyNode<String>(ba, "baa", 2.1);
-		BasicPhylogenyNode<String> bab = new BasicPhylogenyNode<String>(ba, "bab", 2.2);
-
-
-		BasicPhylogenyNode<String> bba = new BasicPhylogenyNode<String>(bb, "bba", 3.1);
-		BasicPhylogenyNode<String> bbb = new BasicPhylogenyNode<String>(bb, "bbb", 3.2);
-
-
-		BasicPhylogenyNode<String> bbbb = new BasicPhylogenyNode<String>(bbb, "bbbb", 4.1);
-
-
-		BasicPhylogenyNode<String> ca = new BasicPhylogenyNode<String>(c, "ca", 2);
-		BasicPhylogenyNode<String> cb = new BasicPhylogenyNode<String>(c, "cb", 3);
-		}
 
 	@BeforeMethod
 	public void setUp()
 		{
-		testInstance = new BasicRootedPhylogenyWithSpecificNodeHandles();
+		testInstance = new BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles();
 		}
 
 	@Test

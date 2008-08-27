@@ -37,6 +37,7 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 /**
  * Tests instances of TaxonMergingPhylogeny.  The instances created by the provided factory must have certain properties
@@ -82,14 +83,33 @@ public abstract class TaxonMergingPhylogenyInterfaceTest
 		}
 
 	@Test
-	public void extractsTreeCorrectlyGivenInternalLeaves()
+	public void extractsTreeCorrectlyGivenInternalLeaves() throws Exception
 		{
+		TaxonMergingPhylogeny<String> tmp = tif.createInstance();
+		Collection<String> leafIDs = Arrays.asList(new String[]{
+				"ExtractInternalLeaf1",
+				"ExtractInternalLeaf2",
+				"ExtractInternalLeaf3",
+				"ExtractInternalLeaf4"
+		});
+
+		RootedPhylogeny<String> result = tmp.extractTreeWithLeafIDs(leafIDs);
+
+		assert result.getNodes().size() == 7;
 		assert false;
 		}
 
-	@Test
-	public void treeExtractionThrowsExceptionOnLeafNotFound()
+	@Test(expectedExceptions = NoSuchElementException.class)
+	public void treeExtractionThrowsExceptionOnLeafNotFound() throws Exception
 		{
-		assert false;
+		TaxonMergingPhylogeny<String> tmp = tif.createInstance();
+		Collection<String> leafIDs = Arrays.asList(new String[]{
+				"ExtractInternalLeaf1",
+				"ExtractInternalLeaf2",
+				"Not Present Node",
+				"ExtractInternalLeaf4"
+		});
+
+		RootedPhylogeny<String> result = tmp.extractTreeWithLeafIDs(leafIDs);
 		}
 	}
