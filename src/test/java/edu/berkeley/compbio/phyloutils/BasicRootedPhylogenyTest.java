@@ -10,24 +10,24 @@ import java.util.Queue;
 
 /**
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
- * @version $Rev$
+ * @version $Id$
  */
 public class BasicRootedPhylogenyTest extends ContractTestAware<BasicRootedPhylogeny>
-		implements TestInstanceFactory<BasicRootedPhylogeny<String>>
+		implements TestInstanceFactory<BasicRootedPhylogeny>
 	{
 	private BasicRootedPhylogenyWithSpecificNodeHandles testInstance;
 
 
-	public BasicRootedPhylogeny<String> createInstance() throws Exception
+	public BasicRootedPhylogeny createInstance() throws Exception
 		{
 		return new BasicRootedPhylogenyWithSpecificNodeHandles().rootPhylogeny;
 		}
 
-	public void addContractTestsToQueue(Queue<Object> theContractTests)
+	public void addContractTestsToQueue(Queue theContractTests)
 		{
-		theContractTests.add(new AbstractRootedPhylogenyAbstractTest(this)
-		{
-		});
+		theContractTests.add(new AbstractRootedPhylogenyAbstractTest<BasicRootedPhylogeny>(this));
+		theContractTests.add(new AbstractRootedPhylogenyAbstractTest(this));
+		theContractTests.add(new AbstractRootedPhylogenyAbstractTest(this));
 		}
 
 	@Factory

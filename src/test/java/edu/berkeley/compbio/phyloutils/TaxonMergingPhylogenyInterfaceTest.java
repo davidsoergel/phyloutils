@@ -44,16 +44,16 @@ import java.util.NoSuchElementException;
  * which we'll then test for; see the comments on each test.
  *
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
- * @version $Rev$
+ * @version $Id$
  */
-public abstract class TaxonMergingPhylogenyInterfaceTest
+public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 	{
-	private TestInstanceFactory<? extends TaxonMergingPhylogeny<String>> tif;
+	private TestInstanceFactory<T> tif;
 
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
-	public TaxonMergingPhylogenyInterfaceTest(TestInstanceFactory<? extends TaxonMergingPhylogeny<String>> tif)
+	public TaxonMergingPhylogenyInterfaceTest(TestInstanceFactory<T> tif)
 		{
 		this.tif = tif;
 		}
@@ -68,15 +68,15 @@ public abstract class TaxonMergingPhylogenyInterfaceTest
 	@Test
 	public void extractsTreeCorrectlyGivenBaseLeaves() throws Exception
 		{
-		TaxonMergingPhylogeny<String> tmp = tif.createInstance();
-		Collection<String> leafIDs = Arrays.asList(new String[]{
+		TaxonMergingPhylogeny tmp = tif.createInstance();
+		Collection leafIDs = Arrays.asList(new Object[]{
 				"ExtractLeaf1",
 				"ExtractLeaf2",
 				"ExtractLeaf3",
 				"ExtractLeaf4"
 		});
 
-		RootedPhylogeny<String> result = tmp.extractTreeWithLeafIDs(leafIDs);
+		RootedPhylogeny result = tmp.extractTreeWithLeafIDs(leafIDs);
 
 		assert result.getNodes().size() == 7;
 		assert false;
@@ -85,15 +85,15 @@ public abstract class TaxonMergingPhylogenyInterfaceTest
 	@Test
 	public void extractsTreeCorrectlyGivenInternalLeaves() throws Exception
 		{
-		TaxonMergingPhylogeny<String> tmp = tif.createInstance();
-		Collection<String> leafIDs = Arrays.asList(new String[]{
+		TaxonMergingPhylogeny tmp = tif.createInstance();
+		Collection leafIDs = Arrays.asList(new Object[]{
 				"ExtractInternalLeaf1",
 				"ExtractInternalLeaf2",
 				"ExtractInternalLeaf3",
 				"ExtractInternalLeaf4"
 		});
 
-		RootedPhylogeny<String> result = tmp.extractTreeWithLeafIDs(leafIDs);
+		RootedPhylogeny result = tmp.extractTreeWithLeafIDs(leafIDs);
 
 		assert result.getNodes().size() == 7;
 		assert false;
@@ -102,14 +102,14 @@ public abstract class TaxonMergingPhylogenyInterfaceTest
 	@Test(expectedExceptions = NoSuchElementException.class)
 	public void treeExtractionThrowsExceptionOnLeafNotFound() throws Exception
 		{
-		TaxonMergingPhylogeny<String> tmp = tif.createInstance();
-		Collection<String> leafIDs = Arrays.asList(new String[]{
+		TaxonMergingPhylogeny tmp = tif.createInstance();
+		Collection leafIDs = Arrays.asList(new Object[]{
 				"ExtractInternalLeaf1",
 				"ExtractInternalLeaf2",
 				"Not Present Node",
 				"ExtractInternalLeaf4"
 		});
 
-		RootedPhylogeny<String> result = tmp.extractTreeWithLeafIDs(leafIDs);
+		RootedPhylogeny result = tmp.extractTreeWithLeafIDs(leafIDs);
 		}
 	}

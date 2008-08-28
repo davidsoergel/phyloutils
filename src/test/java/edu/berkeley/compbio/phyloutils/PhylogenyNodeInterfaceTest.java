@@ -9,38 +9,36 @@ import java.util.Queue;
 
 /**
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
- * @version $Rev$
+ * @version $Id$
  */
-public abstract class PhylogenyNodeInterfaceTest extends ContractTestAware<PhylogenyNode<String>>
+public class PhylogenyNodeInterfaceTest<T extends PhylogenyNode> extends ContractTestAware<PhylogenyNode<String>>
 	{
-	private TestInstanceFactory<? extends PhylogenyNode<String>> tif;
+	private TestInstanceFactory<T> tif;
 
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
-	public PhylogenyNodeInterfaceTest(TestInstanceFactory<? extends PhylogenyNode<String>> tif)
+	public PhylogenyNodeInterfaceTest(TestInstanceFactory<T> tif)
 		{
 		this.tif = tif;
 		}
 
-	public void addContractTestsToQueue(Queue<Object> theContractTests)
+	public void addContractTestsToQueue(Queue theContractTests)
 		{
-		theContractTests.add(new LengthWeightHierarchyNodeInterfaceTest(tif)
-		{
-		});
+		theContractTests.add(new LengthWeightHierarchyNodeInterfaceTest<T>(tif));
 		}
 
 	@Test
 	public void getChildWorksIfChildIsPresent() throws Exception
 		{
-		PhylogenyNode<String> tmp = tif.createInstance();
+		PhylogenyNode tmp = tif.createInstance();
 		tmp.getChild("Node Present");
 		}
 
 	@Test(expectedExceptions = NoSuchElementException.class)
 	public void getChildThrowsExceptionIfChildIsAbsent() throws Exception
 		{
-		PhylogenyNode<String> tmp = tif.createInstance();
+		PhylogenyNode tmp = tif.createInstance();
 		tmp.getChild("Node Absent");
 		}
 
@@ -48,14 +46,14 @@ public abstract class PhylogenyNodeInterfaceTest extends ContractTestAware<Phylo
 	@Test
 	public void propagateWeightFromBelowUpdatesAllDescendants() throws Exception
 		{
-		PhylogenyNode<String> tmp = tif.createInstance();
+		PhylogenyNode<Object> tmp = tif.createInstance();
 		assert tmp.getWeight() == 0;
-		for (LengthWeightHierarchyNode<String> n : tmp)
+		for (LengthWeightHierarchyNode n : tmp)
 			{
 			assert n.isLeaf() || n.getWeight() == 0;
 			}
 		tmp.propagateWeightFromBelow();
-		for (LengthWeightHierarchyNode<String> n : tmp)
+		for (LengthWeightHierarchyNode n : tmp)
 			{
 			assert n.getWeight() != 0;
 			}

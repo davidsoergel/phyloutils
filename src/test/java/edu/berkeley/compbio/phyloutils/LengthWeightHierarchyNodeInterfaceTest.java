@@ -42,30 +42,31 @@ import java.util.Queue;
 
 /**
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
- * @version $Rev$
+ * @version $Id$
  */
-public abstract class LengthWeightHierarchyNodeInterfaceTest extends ContractTestAware<LengthWeightHierarchyNode>
-		implements ITest
+public class LengthWeightHierarchyNodeInterfaceTest<T extends LengthWeightHierarchyNode>
+		extends ContractTestAware<LengthWeightHierarchyNode> implements ITest
 	{
-	protected TestInstanceFactory<? extends LengthWeightHierarchyNode> tif;
+	protected TestInstanceFactory<T> tif;
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
-	public LengthWeightHierarchyNodeInterfaceTest(TestInstanceFactory<? extends LengthWeightHierarchyNode> tif)
+	public LengthWeightHierarchyNodeInterfaceTest(TestInstanceFactory<T> tif)
 		{
 		this.tif = tif;
 		}
 
-	public void addContractTestsToQueue(Queue<Object> theContractTests)
+	public void addContractTestsToQueue(Queue theContractTests)
 		{
-		theContractTests.add(new HierarchyNodeInterfaceTest(tif)
-		{
-		});
+		theContractTests.add(new HierarchyNodeInterfaceTest<T>(tif)
+
+		);
 		}
 
 
 	public String getTestName()
 		{
+		return "BAGEUCUCH";/*
 		String result;
 		try
 			{
@@ -79,7 +80,7 @@ public abstract class LengthWeightHierarchyNodeInterfaceTest extends ContractTes
 			e.printStackTrace();
 			result = getClass().getSimpleName();
 			}
-		return result;
+		return result;*/
 		}
 
 	/**
@@ -93,7 +94,7 @@ public abstract class LengthWeightHierarchyNodeInterfaceTest extends ContractTes
 
 		// yeah we calculate each span twice, but so what
 
-		for (LengthWeightHierarchyNode<Object> n : testInstance)
+		for (LengthWeightHierarchyNode n : testInstance)
 			{
 			Double span = n.getLargestLengthSpan();
 			LengthWeightHierarchyNode p = (LengthWeightHierarchyNode) n.getParent();

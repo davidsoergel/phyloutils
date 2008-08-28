@@ -7,22 +7,21 @@ import java.util.Queue;
 
 /**
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
- * @version $Rev$
+ * @version $Id$
  */
-public abstract class AbstractRootedPhylogenyAbstractTest extends ContractTestAware<AbstractRootedPhylogeny>
+public class AbstractRootedPhylogenyAbstractTest<T extends AbstractRootedPhylogeny>
+		extends ContractTestAware<AbstractRootedPhylogeny>
 
 	{
-	private TestInstanceFactory<? extends AbstractRootedPhylogeny<String>> tif;
+	private TestInstanceFactory<T> tif;
 
-	public AbstractRootedPhylogenyAbstractTest(TestInstanceFactory<? extends AbstractRootedPhylogeny<String>> tif)
+	public AbstractRootedPhylogenyAbstractTest(TestInstanceFactory<T> tif)
 		{
 		this.tif = tif;
 		}
 
-	public void addContractTestsToQueue(Queue<Object> theContractTests)
+	public void addContractTestsToQueue(Queue theContractTests)
 		{
-		theContractTests.add(new RootedPhylogenyInterfaceTest(tif)
-		{
-		});
+		theContractTests.add(new RootedPhylogenyInterfaceTest<T>(tif));
 		}
 	}

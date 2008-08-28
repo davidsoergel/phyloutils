@@ -40,7 +40,7 @@ import java.util.List;
  * A node of a weighted phylogenetic tree.
  *
  * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
- * @version $Rev$
+ * @version $Id$
  * @JavadocOK
  */
 public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>//Iterable<PhylogenyNode<T>>,

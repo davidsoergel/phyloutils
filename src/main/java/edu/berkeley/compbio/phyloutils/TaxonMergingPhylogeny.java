@@ -39,7 +39,7 @@ import java.util.Collection;
  * A phylogenetic tree supporting the extraction of subtrees and ignoring branches with no length
  *
  * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
- * @version $Rev$
+ * @version $Id$
  * @JavadocOK
  */
 public interface TaxonMergingPhylogeny<T>

@@ -46,7 +46,7 @@ import java.util.Set;
  * used (typiclly String or Integer); these IDs should be unique.
  *
  * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
- * @version $Rev$
+ * @version $Id$
  * @JavadocOK
  */
 public interface RootedPhylogeny<T>

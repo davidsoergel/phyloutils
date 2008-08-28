@@ -15,7 +15,7 @@ import java.io.StreamTokenizer;
  * A matrix of state-to-state probabilities, in log probability units.
  *
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
- * @version $Rev$
+ * @version $Id$
  */
 public class LogTransitionMatrix//extends TransitionMatrix
 	{

@@ -34,8 +34,12 @@
 
 <suite name="TestAll" verbose="1" parallel="false" thread-count="1">
 	<test name="TestAll" junit="false">
-		<packages>
+		<!--<packages>
 			<package name="edu.berkeley.compbio.phyloutils"/>
-		</packages>
+		</packages>-->
+		<classes>
+			<class name="edu.berkeley.compbio.phyloutils.BasicRootedPhylogenyTest"/>
+			<class name="edu.berkeley.compbio.phyloutils.BasicPhylogenyNodeTest"/>
+		</classes>
 	</test>
 </suite>

@@ -48,8 +48,8 @@ import java.util.Queue;
 import java.util.Set;
 
 
-public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode<String>>
-		implements TestInstanceFactory<BasicPhylogenyNode<String>>
+public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode>
+		implements TestInstanceFactory<BasicPhylogenyNode>
 	{
 	private BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles testInstance;
 
@@ -59,11 +59,9 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 		return new BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles().root;
 		}
 
-	public void addContractTestsToQueue(Queue<Object> theContractTests)
+	public void addContractTestsToQueue(Queue theContractTests)
 		{
-		theContractTests.add(new PhylogenyNodeInterfaceTest(this)
-		{
-		});
+		theContractTests.add(new PhylogenyNodeInterfaceTest(this));
 		}
 
 	@Factory

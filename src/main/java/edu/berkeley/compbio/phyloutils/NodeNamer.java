@@ -38,7 +38,7 @@ package edu.berkeley.compbio.phyloutils;
  * tree for which only the leaves have known names.
  *
  * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
- * @version $Rev$
+ * @version $Id$
  * @JavadocOK
  */
 public interface NodeNamer<T>

@@ -31,7 +31,6 @@
  */
 
 
-
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.ChainedException;

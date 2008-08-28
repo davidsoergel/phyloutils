@@ -13,28 +13,24 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
- * @version $Rev$
+ * @version $Id$
  */
-public abstract class RootedPhylogenyInterfaceTest extends ContractTestAware<RootedPhylogeny>
+public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny> extends ContractTestAware<RootedPhylogeny>
 	{
-	private TestInstanceFactory<? extends RootedPhylogeny<String>> tif;
+	private TestInstanceFactory<T> tif;
 
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
-	public void addContractTestsToQueue(Queue<Object> theContractTests)
+	public void addContractTestsToQueue(Queue theContractTests)
 		{
-		theContractTests.add(new PhylogenyNodeInterfaceTest(tif)
-		{
-		});
-		theContractTests.add(new TaxonMergingPhylogenyInterfaceTest(tif)
-		{
-		});
+		theContractTests.add(new PhylogenyNodeInterfaceTest<T>(tif));
+		theContractTests.add(new TaxonMergingPhylogenyInterfaceTest<T>(tif));
 		}
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
-	public RootedPhylogenyInterfaceTest(TestInstanceFactory<? extends RootedPhylogeny<String>> tif)
+	public RootedPhylogenyInterfaceTest(TestInstanceFactory<T> tif)
 		{
 		this.tif = tif;
 		}
@@ -42,15 +38,15 @@ public abstract class RootedPhylogenyInterfaceTest extends ContractTestAware<Roo
 	@Test
 	public void findsCommonAncestorOfTwoNodes() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
+		T tmp = tif.createInstance();
 		assert tmp.commonAncestor("Pair1", "Pair2").equals("PairCommonAncestor");
 		}
 
 	@Test
 	public void findsCommonAncestorOfManyNodes() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
-		Set<String> nodeSet = new HashSet<String>(Arrays.asList(new String[]{
+		T tmp = tif.createInstance();
+		Set nodeSet = new HashSet(Arrays.asList(new String[]{
 				"node1",
 				"node2",
 				"node3",
@@ -62,54 +58,54 @@ public abstract class RootedPhylogenyInterfaceTest extends ContractTestAware<Roo
 	@Test
 	public void computesDistanceBetweenTwoNodes() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
+		T tmp = tif.createInstance();
 		assert tmp.distanceBetween("Pair1", "Pair2") == 10;
 		}
 
 	@Test
 	public void returnsAllNodes() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
+		T tmp = tif.createInstance();
 		assert tmp.getNodes().size() == 10;
 		}
 
 	@Test
 	public void returnsAllLeaves() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
+		T tmp = tif.createInstance();
 		assert tmp.getLeaves().size() == 6;
 		}
 
 	@Test
 	public void returnsAllNodeValues() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
+		T tmp = tif.createInstance();
 		assert tmp.getNodeValues().size() == 10;
 		}
 
 	@Test
 	public void returnsAllLeafValues() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
+		T tmp = tif.createInstance();
 		assert tmp.getLeaves().size() == 6;
 		}
 
 	@Test
 	public void computesTotalBranchLength() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
+		T tmp = tif.createInstance();
 		assert tmp.getTotalBranchLength() == 50;
 		}
 
 	@Test
 	public void randomizedLeafWeightsAreNormalized() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
+		RootedPhylogeny<Object> tmp = tif.createInstance();
 		tmp.randomizeLeafWeights(new UniformDistribution(0, 1));
 		assert MathUtils.equalWithinFPError(tmp.getWeight(), 1);
 
 		double leafSum = 0;
-		for (PhylogenyNode<String> n : tmp.getLeaves())
+		for (PhylogenyNode n : tmp.getLeaves())
 			{
 			leafSum += n.getWeight();
 			}
@@ -120,35 +116,35 @@ public abstract class RootedPhylogenyInterfaceTest extends ContractTestAware<Roo
 	@Test
 	public void findsNearestKnownAncestorInAnotherTree() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
+		T tmp = tif.createInstance();
 		assert false;
 		}
 
 	@Test
 	public void computesIntersectionBetweenTwoSubtrees() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
+		T tmp = tif.createInstance();
 		assert false;
 		}
 
 	@Test
 	public void providesWeightMixedTree() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
+		T tmp = tif.createInstance();
 		assert false;
 		}
 
 	@Test
 	public void copiesWeightsFromAnotherTreeWithPseudocounts() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
+		T tmp = tif.createInstance();
 		assert false;
 		}
 
 	@Test
 	public void setsAndNormalizesLeafWeightsFromMultiset() throws Exception
 		{
-		RootedPhylogeny<String> tmp = tif.createInstance();
+		T tmp = tif.createInstance();
 		assert false;
 		}
 	}
