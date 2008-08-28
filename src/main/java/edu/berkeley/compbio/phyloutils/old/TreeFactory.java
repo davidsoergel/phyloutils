@@ -96,10 +96,10 @@ public class TreeFactory
 			t.setBranchLength(i, newBranchLength);
 			possibleParents.add(i);
 			}
-		// ** assert the root has two children
-		// ** assert every node has either zero or two children
-		// ** assert the tree is fully connected
-		// ** assert there are no loops
+		// MAYBE assert the root has two children
+		// MAYBE assert every node has either zero or two children
+		// MAYBE assert the tree is fully connected
+		// MAYBE assert there are no loops
 		/*	}
 		catch (DistributionException e)
 			{

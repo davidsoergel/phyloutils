@@ -23,7 +23,7 @@ public class CharacterDistributionOnTree
 
 	private double[][] valueProbability;
 
-	// ** Map chars, strings etc. to integer values
+	// MAYBE Map chars, strings etc. to integer values
 	private int values;
 	private AnnotatedBinaryTree theTree;
 
@@ -134,7 +134,7 @@ public class CharacterDistributionOnTree
 	public double logLikelihood(int node, TransitionMatrix tm)
 
 		{
-		// ** uncomment and complete
+		// MAYBE uncomment and complete
 		/*		if(theTree.isLeaf(node)) { return 0; }
 				double result = 0;
 				int child1 = theTree.getChild1(node);

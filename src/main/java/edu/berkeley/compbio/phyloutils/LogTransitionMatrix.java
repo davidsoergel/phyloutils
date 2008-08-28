@@ -154,7 +154,7 @@ public class LogTransitionMatrix//extends TransitionMatrix
 
 	public double getLogTransitionProbability(int e, int g, Double length)
 		{
-		//** TEMPORARY SIMPLIFICATION: IGNORE BRANCH LENGTH
+		// BAD TEMPORARY SIMPLIFICATION: IGNORE BRANCH LENGTH
 		return logTransitions[e][g];
 		//return getPowerMatrix(length).getTransitionProbability(e, g);
 		}

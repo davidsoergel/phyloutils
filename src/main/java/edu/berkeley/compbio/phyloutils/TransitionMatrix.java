@@ -161,7 +161,7 @@ public class TransitionMatrix
 
 	public double getTransitionProbability(int e, int g, Double length)
 		{
-		//** TEMPORARY SIMPLIFICATION: IGNORE BRANCH LENGTH
+		// BAD TEMPORARY SIMPLIFICATION: IGNORE BRANCH LENGTH
 		return transitions[e].getProbs()[g];
 		//return getPowerMatrix(length).getTransitionProbability(e, g);
 		}
