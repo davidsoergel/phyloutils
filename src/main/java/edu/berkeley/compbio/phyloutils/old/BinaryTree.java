@@ -14,7 +14,7 @@ import java.util.Arrays;
 @Deprecated
 public class BinaryTree
 	{
-	private static Logger logger = Logger.getLogger(BinaryTree.class);
+	private static final Logger logger = Logger.getLogger(BinaryTree.class);
 
 	private double[] branchlength;
 	private int[] parent;

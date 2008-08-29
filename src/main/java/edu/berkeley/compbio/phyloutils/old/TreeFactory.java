@@ -18,7 +18,7 @@ import java.util.List;
 @Deprecated
 public class TreeFactory
 	{
-	private static Logger logger = Logger.getLogger(TreeFactory.class);
+	private static final Logger logger = Logger.getLogger(TreeFactory.class);
 
 	private static MersenneTwisterFast mtf = new MersenneTwisterFast();
 

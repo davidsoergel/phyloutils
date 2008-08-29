@@ -44,7 +44,7 @@ public class PhyloUtilsException extends ChainedException
 	{
 	// ------------------------------ FIELDS ------------------------------
 
-	private static Logger logger = Logger.getLogger(PhyloUtilsException.class);
+	private static final Logger logger = Logger.getLogger(PhyloUtilsException.class);
 
 
 	// --------------------------- CONSTRUCTORS ---------------------------

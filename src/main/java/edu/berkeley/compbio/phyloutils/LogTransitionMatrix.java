@@ -21,7 +21,7 @@ public class LogTransitionMatrix//extends TransitionMatrix
 	{
 
 
-	private static Logger logger = Logger.getLogger(LogTransitionMatrix.class);
+	private static final Logger logger = Logger.getLogger(LogTransitionMatrix.class);
 
 	private int states;
 	private double[][] logTransitions;
@@ -54,7 +54,7 @@ public class LogTransitionMatrix//extends TransitionMatrix
 		{
 
 		StreamTokenizer input;
-		StringBuffer buffer = new StringBuffer();
+		//		StringBuffer buffer = new StringBuffer();
 		int i, j, numStates = 0;
 		input = new StreamTokenizer(matrix);
 		try

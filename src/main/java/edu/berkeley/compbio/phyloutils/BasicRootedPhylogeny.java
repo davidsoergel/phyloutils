@@ -36,6 +36,7 @@ import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
 import com.davidsoergel.dsutils.tree.HierarchyNode;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -150,6 +151,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
+	@NotNull
 	public PhylogenyNode<T> getChild(T id)
 		{
 		return root.getChild(id);

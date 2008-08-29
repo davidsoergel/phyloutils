@@ -32,6 +32,8 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -82,8 +84,10 @@ public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>//Iterable
 	 *
 	 * @param id the T value to search for among the children
 	 * @return the PhylogenyNode<T> child with the given value
-	 * @throws NoSuchElementException when a matching child is not found
+	 * @throws java.util.NoSuchElementException
+	 *          when a matching child is not found
 	 */
+	@NotNull
 	PhylogenyNode<T> getChild(T id);
 
 	/**

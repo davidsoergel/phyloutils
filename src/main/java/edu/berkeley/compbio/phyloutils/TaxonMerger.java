@@ -47,7 +47,7 @@ public class TaxonMerger
 	{
 	// ------------------------------ FIELDS ------------------------------
 
-	private static Logger logger = Logger.getLogger(TaxonMerger.class);
+	private static final Logger logger = Logger.getLogger(TaxonMerger.class);
 
 
 	/**

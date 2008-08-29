@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 @Deprecated
 public class TreeException extends ChainedException
 	{
-	private static Logger logger = Logger.getLogger(TreeException.class);
+	private static final Logger logger = Logger.getLogger(TreeException.class);
 
 	public TreeException(String s)
 		{

@@ -20,7 +20,7 @@ import java.io.StreamTokenizer;
  */
 public class TransitionMatrix
 	{
-	private static Logger logger = Logger.getLogger(TransitionMatrix.class);
+	private static final Logger logger = Logger.getLogger(TransitionMatrix.class);
 
 	private int states;
 	private MultinomialDistribution[] transitions;
@@ -53,7 +53,7 @@ public class TransitionMatrix
 		{
 
 		StreamTokenizer input;
-		StringBuffer buffer = new StringBuffer();
+		//	StringBuffer buffer = new StringBuffer();
 		int i, j, numStates = 0;
 		input = new StreamTokenizer(matrix);
 		try

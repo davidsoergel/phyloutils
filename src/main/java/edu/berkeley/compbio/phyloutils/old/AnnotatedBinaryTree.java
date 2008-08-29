@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 @Deprecated
 public class AnnotatedBinaryTree extends BinaryTree
 	{
-	private static Logger logger = Logger.getLogger(AnnotatedBinaryTree.class);
+	private static final Logger logger = Logger.getLogger(AnnotatedBinaryTree.class);
 
 	private CharacterDistributionOnTree[] characters;
 

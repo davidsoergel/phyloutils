@@ -15,7 +15,7 @@ import java.io.StreamTokenizer;
 public class LogOddsSubstitutionMatrix
 	{
 
-	private static Logger logger = Logger.getLogger(LogOddsSubstitutionMatrix.class);
+	private static final Logger logger = Logger.getLogger(LogOddsSubstitutionMatrix.class);
 
 	int[][] SubstitutionMatrix;
 	String residues;

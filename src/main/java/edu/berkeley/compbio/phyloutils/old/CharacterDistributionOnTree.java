@@ -17,7 +17,7 @@ import java.util.Arrays;
 @Deprecated
 public class CharacterDistributionOnTree
 	{
-	private static Logger logger = Logger.getLogger(CharacterDistributionOnTree.class);
+	private static final Logger logger = Logger.getLogger(CharacterDistributionOnTree.class);
 
 	private static int UNKNOWN = -1;
 
