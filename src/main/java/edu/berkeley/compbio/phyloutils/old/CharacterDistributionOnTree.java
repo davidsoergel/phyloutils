@@ -1,6 +1,6 @@
 package edu.berkeley.compbio.phyloutils.old;
 
-import com.davidsoergel.dsutils.ArrayUtils;
+import com.davidsoergel.dsutils.DSArrayUtils;
 import com.davidsoergel.stats.DistributionException;
 import edu.berkeley.compbio.phyloutils.TransitionMatrix;
 import org.apache.log4j.Logger;
@@ -77,7 +77,7 @@ public class CharacterDistributionOnTree
 				{
 				continue;
 				}
-			setValue(n, m.sampleTransition(ArrayUtils.argmax(valueProbability[theTree.getParent(n)])));
+			setValue(n, m.sampleTransition(DSArrayUtils.argmax(valueProbability[theTree.getParent(n)])));
 			}
 		}
 
@@ -94,7 +94,7 @@ public class CharacterDistributionOnTree
 
 	public int get(int node)
 		{
-		return ArrayUtils.argmax(valueProbability[node]);
+		return DSArrayUtils.argmax(valueProbability[node]);
 		}
 
 	public void setAncestorsUnknown()

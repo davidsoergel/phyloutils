@@ -25,7 +25,7 @@ public class BinaryTree
 	private int[] child2;
 
 
-	public static int NONE = -1;
+	public static final int NONE = -1;
 	private int[] breadthFirst = null;
 
 	public BinaryTree(int nodes)

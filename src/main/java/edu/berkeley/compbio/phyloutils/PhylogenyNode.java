@@ -45,7 +45,7 @@ import java.util.List;
  * @version $Id$
  * @JavadocOK
  */
-public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>//Iterable<PhylogenyNode<T>>,
+public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>, Cloneable//Iterable<PhylogenyNode<T>>,
 	{
 	/**
 	 * {@inheritDoc}

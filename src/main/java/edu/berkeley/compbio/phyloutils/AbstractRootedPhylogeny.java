@@ -32,7 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.collections.CollectionUtils;
+import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.stats.ContinuousDistribution1D;
 import com.google.common.collect.Multiset;
 import org.apache.log4j.Logger;
@@ -62,9 +62,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			}
 		PhylogenyNode<T> commonAncestor = null;
 
-		while (CollectionUtils.allFirstElementsEqual(theAncestorLists))
+		while (DSCollectionUtils.allFirstElementsEqual(theAncestorLists))
 			{
-			commonAncestor = CollectionUtils.removeAllFirstElements(theAncestorLists);
+			commonAncestor = DSCollectionUtils.removeAllFirstElements(theAncestorLists);
 			}
 
 		if (commonAncestor == null)
@@ -224,9 +224,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		PhylogenyNode<T> commonAncestor = null;
 
 
-		while (CollectionUtils.allFirstElementsEqual(theAncestorLists))
+		while (DSCollectionUtils.allFirstElementsEqual(theAncestorLists))
 			{
-			commonAncestor = CollectionUtils.removeAllFirstElements(theAncestorLists);
+			commonAncestor = DSCollectionUtils.removeAllFirstElements(theAncestorLists);
 			Double d = commonAncestor.getLength();
 			if (d == null)
 				{

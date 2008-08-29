@@ -32,7 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.collections.CollectionUtils;
+import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.dsutils.tree.TreeException;
 import org.apache.log4j.Logger;
 
@@ -130,7 +130,7 @@ public class CiccarelliUtils
 		Map<String, Set<String>> mergeIdSets =
 				TaxonMerger.merge(ciccarelliTree.getLeafValues(), ciccarelliTree, ciccarelliMergeThreshold);
 		Set<String> mergedIds = mergeIdSets.keySet();
-		CollectionUtils.retainRandom(mergedIds, numTaxa);
+		DSCollectionUtils.retainRandom(mergedIds, numTaxa);
 		return ciccarelliTree.extractTreeWithLeafIDs(mergedIds);
 		}
 	}

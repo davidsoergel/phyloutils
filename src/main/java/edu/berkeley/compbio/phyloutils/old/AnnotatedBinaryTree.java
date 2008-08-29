@@ -1,6 +1,6 @@
 package edu.berkeley.compbio.phyloutils.old;
 
-import com.davidsoergel.dsutils.ArrayUtils;
+import com.davidsoergel.dsutils.DSArrayUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -30,7 +30,7 @@ public class AnnotatedBinaryTree extends BinaryTree
 
 	public CharacterDistributionOnTree[] getCharacters()
 		{
-		if (ArrayUtils.contains(characters, null))
+		if (DSArrayUtils.contains(characters, null))
 			{
 
 			logger.warn("Not all characters have been set");
