@@ -66,21 +66,21 @@ public class LengthWeightHierarchyNodeInterfaceTest<T extends LengthWeightHierar
 
 	public String getTestName()
 		{
-		return "BAGEUCUCH";/*
 		String result;
 		try
 			{
 			// this sucks because createInstance() may be expensive.
 			// Instead we could get the concrete class name by some other means, e.g. adding a getConcreteClassName()
 			// to the TestInterfaceFactory method.
-			result = getClass().getSimpleName() + " -> " + tif.createInstance().getClass().getSimpleName();
+			// result = getClass().getSimpleName() + " -> " + tif.createInstance().getClass().getSimpleName();
+			result = tif.createInstance().getClass().getSimpleName();
 			}
 		catch (Exception e)
 			{
 			e.printStackTrace();
 			result = getClass().getSimpleName();
 			}
-		return result;*/
+		return result;
 		}
 
 	/**
