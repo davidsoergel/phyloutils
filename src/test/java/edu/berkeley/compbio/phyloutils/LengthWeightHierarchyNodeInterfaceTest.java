@@ -32,7 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.ContractTestAware;
+import com.davidsoergel.dsutils.ContractTestAwareContractTest;
 import com.davidsoergel.dsutils.TestInstanceFactory;
 import com.davidsoergel.dsutils.tree.HierarchyNodeInterfaceTest;
 import org.testng.ITest;
@@ -45,7 +45,7 @@ import java.util.Queue;
  * @version $Id$
  */
 public class LengthWeightHierarchyNodeInterfaceTest<T extends LengthWeightHierarchyNode>
-		extends ContractTestAware<LengthWeightHierarchyNode> implements ITest
+		extends ContractTestAwareContractTest<LengthWeightHierarchyNode> implements ITest
 	{
 	protected TestInstanceFactory<T> tif;
 
@@ -63,26 +63,26 @@ public class LengthWeightHierarchyNodeInterfaceTest<T extends LengthWeightHierar
 		);
 		}
 
-
-	public String getTestName()
-		{
-		String result;
-		try
-			{
-			// this sucks because createInstance() may be expensive.
-			// Instead we could get the concrete class name by some other means, e.g. adding a getConcreteClassName()
-			// to the TestInterfaceFactory method.
-			// result = getClass().getSimpleName() + " -> " + tif.createInstance().getClass().getSimpleName();
-			result = tif.createInstance().getClass().getSimpleName();
-			}
-		catch (Exception e)
-			{
-			e.printStackTrace();
-			result = getClass().getSimpleName();
-			}
-		return result;
-		}
-
+	/*
+	 public String getTestName()
+		 {
+		 String result;
+		 try
+			 {
+			 // this sucks because createInstance() may be expensive.
+			 // Instead we could get the concrete class name by some other means, e.g. adding a getConcreteClassName()
+			 // to the TestInterfaceFactory method.
+			 // result = getClass().getSimpleName() + " -> " + tif.createInstance().getClass().getSimpleName();
+			 result = tif.createInstance().getClass().getCanonicalName();
+			 }
+		 catch (Exception e)
+			 {
+			 e.printStackTrace();
+			 result = getClass().getSimpleName();
+			 }
+		 return result;
+		 }
+ */
 	/**
 	 * In order for this test to be informative, the provided test tree must contain a confusing case, i.e. where the
 	 * longest span below some node does not pass through the node itself.

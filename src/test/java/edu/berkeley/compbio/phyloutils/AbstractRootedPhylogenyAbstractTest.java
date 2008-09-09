@@ -1,6 +1,6 @@
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.ContractTestAware;
+import com.davidsoergel.dsutils.ContractTestAwareContractTest;
 import com.davidsoergel.dsutils.TestInstanceFactory;
 
 import java.util.Queue;
@@ -10,7 +10,7 @@ import java.util.Queue;
  * @version $Id$
  */
 public class AbstractRootedPhylogenyAbstractTest<T extends AbstractRootedPhylogeny>
-		extends ContractTestAware<AbstractRootedPhylogeny>
+		extends ContractTestAwareContractTest<AbstractRootedPhylogeny>
 
 	{
 	private TestInstanceFactory<T> tif;

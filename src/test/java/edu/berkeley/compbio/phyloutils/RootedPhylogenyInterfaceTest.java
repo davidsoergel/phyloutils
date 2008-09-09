@@ -1,6 +1,6 @@
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.ContractTestAware;
+import com.davidsoergel.dsutils.ContractTestAwareContractTest;
 import com.davidsoergel.dsutils.TestInstanceFactory;
 import com.davidsoergel.dsutils.math.MathUtils;
 import com.davidsoergel.stats.UniformDistribution;
@@ -15,7 +15,8 @@ import java.util.Set;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
-public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny> extends ContractTestAware<RootedPhylogeny>
+public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
+		extends ContractTestAwareContractTest<RootedPhylogeny>
 	{
 	private TestInstanceFactory<T> tif;
 

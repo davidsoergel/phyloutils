@@ -26,14 +26,12 @@ public class BasicRootedPhylogenyTest extends ContractTestAware<BasicRootedPhylo
 	public void addContractTestsToQueue(Queue theContractTests)
 		{
 		theContractTests.add(new AbstractRootedPhylogenyAbstractTest<BasicRootedPhylogeny>(this));
-		theContractTests.add(new AbstractRootedPhylogenyAbstractTest(this));
-		theContractTests.add(new AbstractRootedPhylogenyAbstractTest(this));
 		}
 
 	@Factory
 	public Object[] instantiateAllContractTests()
 		{
-		return super.instantiateAllContractTests();
+		return super.instantiateAllContractTestsWithName(BasicRootedPhylogeny.class.getCanonicalName());
 		}
 
 	@Test
@@ -54,7 +52,7 @@ public class BasicRootedPhylogenyTest extends ContractTestAware<BasicRootedPhylo
 		BasicPhylogenyNode<String> a = new BasicPhylogenyNode<String>(root, "a", 10);
 		BasicPhylogenyNode<String> b = new BasicPhylogenyNode<String>(root, "b", 4);
 		BasicPhylogenyNode<String> c = new BasicPhylogenyNode<String>(root, "c", 1);
-
+		BasicPhylogenyNode<String> nodePresent = new BasicPhylogenyNode<String>(root, "Node Present", 1);
 
 		BasicPhylogenyNode<String> aa = new BasicPhylogenyNode<String>(a, "aa", 20);
 		BasicPhylogenyNode<String> ab = new BasicPhylogenyNode<String>(a, "ab", 30);

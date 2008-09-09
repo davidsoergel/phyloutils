@@ -1,6 +1,6 @@
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.ContractTestAware;
+import com.davidsoergel.dsutils.ContractTestAwareContractTest;
 import com.davidsoergel.dsutils.TestInstanceFactory;
 import org.testng.annotations.Test;
 
@@ -11,7 +11,8 @@ import java.util.Queue;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
-public class PhylogenyNodeInterfaceTest<T extends PhylogenyNode> extends ContractTestAware<PhylogenyNode<String>>
+public class PhylogenyNodeInterfaceTest<T extends PhylogenyNode>
+		extends ContractTestAwareContractTest<PhylogenyNode<String>>
 	{
 	private TestInstanceFactory<T> tif;
 

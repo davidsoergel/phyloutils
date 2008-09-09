@@ -32,6 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.ContractTest;
 import com.davidsoergel.dsutils.ContractTestAware;
 import com.davidsoergel.dsutils.TestInstanceFactory;
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
@@ -59,7 +60,7 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 		return new BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles().root;
 		}
 
-	public void addContractTestsToQueue(Queue theContractTests)
+	public void addContractTestsToQueue(Queue<ContractTest> theContractTests)
 		{
 		theContractTests.add(new PhylogenyNodeInterfaceTest(this));
 		}
@@ -67,7 +68,7 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 	@Factory
 	public Object[] instantiateAllContractTests()
 		{
-		return super.instantiateAllContractTests();
+		return super.instantiateAllContractTestsWithName(BasicPhylogenyNode.class.getCanonicalName());
 		}
 
 	private static final Logger logger = Logger.getLogger(BasicPhylogenyNodeTest.class);

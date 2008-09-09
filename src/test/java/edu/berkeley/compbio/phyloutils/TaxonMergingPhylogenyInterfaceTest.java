@@ -32,6 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.AtomicContractTest;
 import com.davidsoergel.dsutils.TestInstanceFactory;
 import org.testng.annotations.Test;
 
@@ -46,7 +47,7 @@ import java.util.NoSuchElementException;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
-public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
+public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny> extends AtomicContractTest
 	{
 	private TestInstanceFactory<T> tif;
 
