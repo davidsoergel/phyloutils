@@ -36,10 +36,13 @@ import com.davidsoergel.dsutils.math.MathUtils;
 import com.davidsoergel.stats.Statistic;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
+import org.apache.log4j.Logger;
 
 
 public class PhylogeneticShannon<T> implements Statistic<RootedPhylogeny<T>>
 	{
+	private static final Logger logger = Logger.getLogger(PhylogeneticShannon.class);
+
 	/**
 	 * {@inheritDoc}
 	 */

@@ -52,11 +52,13 @@ public class BasicRootedPhylogenyTest extends ContractTestAware<BasicRootedPhylo
 		BasicPhylogenyNode<String> a = new BasicPhylogenyNode<String>(root, "a", 10);
 		BasicPhylogenyNode<String> b = new BasicPhylogenyNode<String>(root, "b", 4);
 		BasicPhylogenyNode<String> c = new BasicPhylogenyNode<String>(root, "c", 1);
-		BasicPhylogenyNode<String> nodePresent = new BasicPhylogenyNode<String>(root, "Node Present", 1);
 
 		BasicPhylogenyNode<String> aa = new BasicPhylogenyNode<String>(a, "aa", 20);
 		BasicPhylogenyNode<String> ab = new BasicPhylogenyNode<String>(a, "ab", 30);
 
+
+		BasicPhylogenyNode<String> aaa = new BasicPhylogenyNode<String>(aa, "aaa");
+		BasicPhylogenyNode<String> aaaa = new BasicPhylogenyNode<String>(aaa, "aaaa");
 
 		//	PhylogenyNode<String> aaa = new PhylogenyNode<String>("aaa", aa, 1);
 		//	PhylogenyNode<String> aab = new PhylogenyNode<String>("aab", aa, 1);
@@ -74,7 +76,7 @@ public class BasicRootedPhylogenyTest extends ContractTestAware<BasicRootedPhylo
 		BasicPhylogenyNode<String> bbb = new BasicPhylogenyNode<String>(bb, "bbb", 3.2);
 
 
-		BasicPhylogenyNode<String> bbbb = new BasicPhylogenyNode<String>(bbb, "bbbb", 4.1);
+		BasicPhylogenyNode<String> bbba = new BasicPhylogenyNode<String>(bbb, "bbba", 4.1);
 
 
 		BasicPhylogenyNode<String> ca = new BasicPhylogenyNode<String>(c, "ca", 2);
@@ -87,6 +89,7 @@ public class BasicRootedPhylogenyTest extends ContractTestAware<BasicRootedPhylo
 			try
 				{
 				rootPhylogeny.updateNodes(namer);
+				rootPhylogeny.uniformizeLeafWeights();
 				}
 			catch (PhyloUtilsException e)
 				{

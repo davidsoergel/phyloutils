@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 
@@ -115,6 +116,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	 */
 	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes)
 			throws PhyloUtilsException
+
 		{
 		Set<PhylogenyNode<T>> theLeaves = new HashSet<PhylogenyNode<T>>();
 		for (T id : ids)
@@ -124,7 +126,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 				{
 				if (!ignoreAbsentNodes)
 					{
-					throw new PhyloUtilsException("Can't extract tree; requested node " + id + " not found");
+					throw new NoSuchElementException("Can't extract tree; requested node " + id + " not found");
 					}
 				}
 			else
@@ -350,7 +352,10 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		double result = 0;
 		for (PhylogenyNode<T> node : getNodes())
 			{
-			result += node.getLength();
+			if (node.getLength() != null)// count null length as zero
+				{
+				result += node.getLength();
+				}
 			}
 		return result;
 		}
@@ -365,6 +370,20 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			{
 			leaf.setWeight(speciesAbundanceDistribution.sample());
 			}
+
+		normalizeWeights();
+		}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void uniformizeLeafWeights()//throws DistributionException
+		{
+		for (PhylogenyNode<T> leaf : getLeaves())
+			{
+			leaf.setWeight(1.);
+			}
+
 		normalizeWeights();
 		}
 
@@ -377,6 +396,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			{
 			leaf.setWeight(new Double(leafWeights.count(leaf.getValue())));
 			}
+
 		normalizeWeights();
 		}
 
@@ -400,7 +420,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		// then propagate up
 
-		propagateWeightFromBelow();
+		//propagateWeightFromBelow();
 		}
 
 
@@ -514,6 +534,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		//** if the otherTree has leaves that are not present in this tree, we'll ignore them and never know.
 		// That circumstance should probably throw an exception, but it's a bit of a drag to test for it.
+
 
 		for (PhylogenyNode<T> leaf : getLeaves())//theBasePhylogeny.getLeaves())
 			{

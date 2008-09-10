@@ -30,76 +30,37 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 package edu.berkeley.compbio.phyloutils;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
-import java.util.List;
-
+import com.davidsoergel.dsutils.ChainedRuntimeException;
+import org.apache.log4j.Logger;
 
 /**
- * A node of a weighted phylogenetic tree.
- *
- * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
- * @version $Id$
- * @JavadocOK
+ * @author lorax
+ * @version 1.0
  */
-public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>, Cloneable//Iterable<PhylogenyNode<T>>,
+public class PhyloUtilsRuntimeException extends ChainedRuntimeException
 	{
-	/**
-	 * {@inheritDoc}
-	 */
-	Collection<? extends PhylogenyNode<T>> getChildren();
+	// ------------------------------ FIELDS ------------------------------
 
-	// the "name" of this PhylogenyNode is the same as the "value" of the hierarchynode
-	//T getName();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	PhylogenyNode getParent();
-
-	boolean hasValue();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	List<PhylogenyNode<T>> getAncestorPath();
+	private static final Logger logger = Logger.getLogger(PhyloUtilsRuntimeException.class);
 
 
-	/**
-	 * Recursively set the weight of this node, and the weights of all of its descendants, to the sum of the weights of the
-	 * descendant leaves below each node.
-	 */
-	//void propagateWeightFromBelow();
+	// --------------------------- CONSTRUCTORS ---------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
-	double distanceToRoot();
+	public PhyloUtilsRuntimeException(String s)
+		{
+		super(s);
+		}
 
-	/**
-	 * Get the child of this node which has the given value
-	 *
-	 * @param id the T value to search for among the children
-	 * @return the PhylogenyNode<T> child with the given value
-	 * @throws java.util.NoSuchElementException
-	 *          when a matching child is not found
-	 */
-	@NotNull
-	PhylogenyNode<T> getChild(T id);
+	public PhyloUtilsRuntimeException(Exception e)
+		{
+		super(e);
+		}
 
-	/**
-	 * Increment the weight of this node by the given amount.  This will cause the weights of the ancestor nodes to be
-	 * inconsistent, so it will likely be necessary to call propagateWeightFromBelow on theroot.
-	 *
-	 * @param v the double
-	 */
-	void incrementWeightBy(double v);
-
-	/**
-	 * {@inheritDoc}
-	 */
-	PhylogenyNode<T> clone();
+	public PhyloUtilsRuntimeException(Exception e, String s)
+		{
+		super(e, s);
+		}
 	}

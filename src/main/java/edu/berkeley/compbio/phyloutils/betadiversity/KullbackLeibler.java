@@ -84,6 +84,7 @@ public class KullbackLeibler<T> implements DistanceMeasure<RootedPhylogeny<T>>
 		}
 
 	protected double klDivergence(RootedPhylogeny<T> unionTree, RootedPhylogeny<T> a, RootedPhylogeny<T> b)
+			throws PhyloUtilsException
 		{
 		double divergence = 0;
 

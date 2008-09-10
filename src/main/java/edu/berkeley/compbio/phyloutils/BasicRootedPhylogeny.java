@@ -380,10 +380,10 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public void propagateWeightFromBelow()
-		{
-		root.propagateWeightFromBelow();
-		}
+	/*	public void propagateWeightFromBelow()
+	   {
+	   root.propagateWeightFromBelow();
+	   }*/
 
 	/**
 	 * {@inheritDoc}
@@ -452,6 +452,12 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	public String getLabel()
 		{
 		return null;
+		}
+
+
+	public HierarchyNode<T, LengthWeightHierarchyNode<T>> getSelfNode()
+		{
+		return root;
 		}
 	}
 

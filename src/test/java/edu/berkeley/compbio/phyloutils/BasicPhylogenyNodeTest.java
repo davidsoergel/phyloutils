@@ -146,7 +146,7 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 			logger.info("Tree iterator provided node: " + node);
 			i++;
 			}
-		assert i == 15;
+		assert i == 17;
 		}
 
 	@Test
@@ -200,7 +200,7 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 
 			if (topLevelNode == testInstance.a)
 				{
-				assert i == 3;
+				assert i == 5;
 				}
 			else if (topLevelNode == testInstance.b)
 				{
@@ -219,7 +219,7 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 		Set<List<PhylogenyNode<String>>> theAncestorLists = new HashSet<List<PhylogenyNode<String>>>();
 
 		theAncestorLists.add(testInstance.baa.getAncestorPath());
-		theAncestorLists.add(testInstance.bbbb.getAncestorPath());
+		theAncestorLists.add(testInstance.bbba.getAncestorPath());
 		theAncestorLists.add(testInstance.ca.getAncestorPath());
 
 		BasicPhylogenyNode<String> tree = testInstance.rootPhylogeny.extractTreeWithLeafPaths(theAncestorLists);
@@ -239,7 +239,7 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 				{
 				assert node.getLength() == 4;
 				}
-			else if (node.getValue().equals("bbbb"))
+			else if (node.getValue().equals("bbba"))
 				{
 				assert node.getLength() == 8.5;
 				}
@@ -249,6 +249,7 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 				}
 			else
 				{
+				logger.error("Got wrong node: " + node.getValue());
 				assert false;
 				}
 			}

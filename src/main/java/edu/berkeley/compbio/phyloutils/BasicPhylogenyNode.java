@@ -95,11 +95,18 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		this.length = length;
 		}
 
-	public BasicPhylogenyNode(BasicPhylogenyNode<T> parent, PhylogenyNode<T> child)
+	public BasicPhylogenyNode(BasicPhylogenyNode<T> parent, T value)
 		{
-		this(parent, child.getValue(), child.getLength());
+		this(parent);
+		this.value = value;
 		}
 
+	/*
+	 public BasicPhylogenyNode(BasicPhylogenyNode<T> parent, PhylogenyNode<T> child)
+		 {
+		 this(parent, child.getValue(), child.getLength());
+		 }
+ */
 	// --------------------- GETTER / SETTER METHODS ---------------------
 
 	/**
@@ -180,6 +187,14 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	 */
 	public Double getWeight()
 		{
+		if (weight == null)
+			{
+			if (isLeaf())
+				{
+				throw new PhyloUtilsRuntimeException("Node has undefined weight");
+				}
+			propagateWeightFromBelow();
+			}
 		return weight;
 		}
 
@@ -195,15 +210,15 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public void propagateWeightFromBelow()
+	private void propagateWeightFromBelow()
 		{
 		if (!isLeaf())
 			{
 			weight = 0.;
 			for (BasicPhylogenyNode<T> child : children)
 				{
-				child.propagateWeightFromBelow();
-				weight += child.getWeight();
+				//child.propagateWeightFromBelow();
+				incrementWeightBy(child.getWeight());
 				}
 			}
 		}
@@ -398,36 +413,39 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 
 			for (BasicPhylogenyNode<T> child : children)
 				{
-				child.computeDepthsIfNeeded();
-
-				// case 1: the child replaces the greatest depth
-
-				if (child.length + child.greatestDepth > greatestDepth)
+				if (child.length != null)
 					{
-					secondGreatestDepth = greatestDepth;// must be from a different child, or 0
-					greatestDepth = child.length + child.greatestDepth;
+					child.computeDepthsIfNeeded();
+
+					// case 1: the child replaces the greatest depth
+
+					if (child.length + child.greatestDepth > greatestDepth)
+						{
+						secondGreatestDepth = greatestDepth;// must be from a different child, or 0
+						greatestDepth = child.length + child.greatestDepth;
+						}
+
+					// case 2: the child replaces the second-greatest depth
+
+					else if (child.length + child.greatestDepth > secondGreatestDepth)
+						{
+						secondGreatestDepth = child.length + child.greatestDepth;
+						}
+
+					// the child's second-greatest depth should never figure in to the second-greatest depth at this level,
+					// because of the different-branches constraint!
+					// however, it may contribute to the maximum span.
+
+					// assume by default that the maximum span spans branches
+					// need to take the max in case it's already been overridden by the spanViaChild on a previous branch
+					largestLengthSpan = Math.max(largestLengthSpan, greatestDepth + secondGreatestDepth);
+
+					// then check if this child overrides it, counting the common portion only once
+
+					double spanViaChild = child.length + child.largestLengthSpan;
+
+					largestLengthSpan = Math.max(largestLengthSpan, spanViaChild);
 					}
-
-				// case 2: the child replaces the second-greatest depth
-
-				else if (child.length + child.greatestDepth > secondGreatestDepth)
-					{
-					secondGreatestDepth = child.length + child.greatestDepth;
-					}
-
-				// the child's second-greatest depth should never figure in to the second-greatest depth at this level,
-				// because of the different-branches constraint!
-				// however, it may contribute to the maximum span.
-
-				// assume by default that the maximum span spans branches
-				// need to take the max in case it's already been overridden by the spanViaChild on a previous branch
-				largestLengthSpan = Math.max(largestLengthSpan, greatestDepth + secondGreatestDepth);
-
-				// then check if this child overrides it, counting the common portion only once
-
-				double spanViaChild = child.length + child.largestLengthSpan;
-
-				largestLengthSpan = Math.max(largestLengthSpan, spanViaChild);
 				}
 			}
 
@@ -502,5 +520,10 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		// we don't set the parent here; addChild takes care of that, except for the root, where the parent is null anyway
 
 		return result;
+		}
+
+	public HierarchyNode<T, LengthWeightHierarchyNode<T>> getSelfNode()
+		{
+		return this;
 		}
 	}

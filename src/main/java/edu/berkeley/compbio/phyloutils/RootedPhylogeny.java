@@ -150,6 +150,11 @@ public interface RootedPhylogeny<T>
 	void randomizeLeafWeights(ContinuousDistribution1D speciesAbundanceDistribution);// throws DistributionException;
 
 	/**
+	 * Assigns equal weights to all of the leaf nodes, and normalizes them to sum to 1.
+	 */
+	void uniformizeLeafWeights();// throws DistributionException;
+
+	/**
 	 * Normalizes the leaf weights to sum to one, and propagates these up the tree.
 	 */
 	void normalizeWeights();

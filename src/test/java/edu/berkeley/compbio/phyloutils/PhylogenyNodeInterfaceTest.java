@@ -2,6 +2,7 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.ContractTestAwareContractTest;
 import com.davidsoergel.dsutils.TestInstanceFactory;
+import com.davidsoergel.dsutils.math.MathUtils;
 import org.testng.annotations.Test;
 
 import java.util.NoSuchElementException;
@@ -33,7 +34,7 @@ public class PhylogenyNodeInterfaceTest<T extends PhylogenyNode>
 	public void getChildWorksIfChildIsPresent() throws Exception
 		{
 		PhylogenyNode tmp = tif.createInstance();
-		tmp.getChild("Node Present");
+		tmp.getChild("a");
 		}
 
 	@Test(expectedExceptions = NoSuchElementException.class)
@@ -45,15 +46,22 @@ public class PhylogenyNodeInterfaceTest<T extends PhylogenyNode>
 
 
 	@Test
-	public void propagateWeightFromBelowUpdatesAllDescendants() throws Exception
+	public void getWeightPropagatesWeightFromBelowIfNeeded() throws Exception
 		{
 		PhylogenyNode<Object> tmp = tif.createInstance();
-		assert tmp.getWeight() == 0;
 		for (LengthWeightHierarchyNode n : tmp)
 			{
-			assert n.isLeaf() || n.getWeight() == 0;
+			if (!n.isLeaf())
+				{
+				n.setWeight(null);
+				}
 			}
-		tmp.propagateWeightFromBelow();
+		assert MathUtils.equalWithinFPError(tmp.getWeight(), 1.);// root is always 1
+		/*	for (LengthWeightHierarchyNode n : tmp)
+			{
+			assert n.isLeaf() || n.getWeight() == null;
+			}
+		tmp.propagateWeightFromBelow();*/
 		for (LengthWeightHierarchyNode n : tmp)
 			{
 			assert n.getWeight() != 0;

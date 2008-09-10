@@ -84,6 +84,7 @@ public class PhylogeneticKullbackLeibler<T> implements DistanceMeasure<RootedPhy
 		}
 
 	protected double klDivergenceBelow(PhylogenyNode<T> u, PhylogenyNode<T> a, PhylogenyNode<T> b)
+			throws PhyloUtilsException
 		{
 		double divergence = 0;
 		for (PhylogenyNode<T> node : u.getChildren())

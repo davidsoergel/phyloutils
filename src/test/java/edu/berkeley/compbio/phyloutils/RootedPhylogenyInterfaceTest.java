@@ -40,7 +40,7 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 	public void findsCommonAncestorOfTwoNodes() throws Exception
 		{
 		T tmp = tif.createInstance();
-		assert tmp.commonAncestor("Pair1", "Pair2").equals("PairCommonAncestor");
+		assert tmp.commonAncestor("baa", "bbba").equals("b");
 		}
 
 	@Test
@@ -48,54 +48,54 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 		{
 		T tmp = tif.createInstance();
 		Set nodeSet = new HashSet(Arrays.asList(new String[]{
-				"node1",
-				"node2",
-				"node3",
-				"node4"
+				"baa",
+				"ba",
+				"bba",
+				"bbba"
 		}));
-		assert tmp.commonAncestor(nodeSet).equals("PairCommonAncestor");
+		assert tmp.commonAncestor(nodeSet).equals("b");
 		}
 
 	@Test
 	public void computesDistanceBetweenTwoNodes() throws Exception
 		{
 		T tmp = tif.createInstance();
-		assert tmp.distanceBetween("Pair1", "Pair2") == 10;
+		assert tmp.distanceBetween("baa", "cb") == 11.2;
 		}
 
 	@Test
 	public void returnsAllNodes() throws Exception
 		{
 		T tmp = tif.createInstance();
-		assert tmp.getNodes().size() == 10;
+		assert tmp.getNodes().size() == 17;
 		}
 
 	@Test
 	public void returnsAllLeaves() throws Exception
 		{
 		T tmp = tif.createInstance();
-		assert tmp.getLeaves().size() == 6;
+		assert tmp.getLeaves().size() == 8;
 		}
 
 	@Test
 	public void returnsAllNodeValues() throws Exception
 		{
 		T tmp = tif.createInstance();
-		assert tmp.getNodeValues().size() == 10;
+		assert tmp.getNodeValues().size() == 17;
 		}
 
 	@Test
 	public void returnsAllLeafValues() throws Exception
 		{
 		T tmp = tif.createInstance();
-		assert tmp.getLeaves().size() == 6;
+		assert tmp.getLeaves().size() == 8;
 		}
 
 	@Test
 	public void computesTotalBranchLength() throws Exception
 		{
 		T tmp = tif.createInstance();
-		assert tmp.getTotalBranchLength() == 50;
+		assert MathUtils.equalWithinFPError(tmp.getTotalBranchLength(), 87);
 		}
 
 	@Test
