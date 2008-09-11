@@ -83,7 +83,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 
 		Collection<String> okNodes = Arrays.asList("baa", "bbba", "b", "ca", "cb", "c", "root");
 
-		for (LengthWeightHierarchyNode<Object> n : result)
+		for (LengthWeightHierarchyNode n : result)
 			{
 			String s = (String) n.getValue();
 			assert okNodes.contains(s);
@@ -93,7 +93,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 	@Test
 	public void extractsTreeCorrectlyGivenInternalLeaves() throws Exception
 		{
-		TaxonMergingPhylogeny<Object> tmp = tif.createInstance();
+		TaxonMergingPhylogeny<String> tmp = tif.createInstance();
 		Collection leafIDs = Arrays.asList(new Object[]{
 				"ba",
 				"bb",
@@ -101,13 +101,13 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 				"a"
 		});
 
-		RootedPhylogeny<Object> result = tmp.extractTreeWithLeafIDs(leafIDs);
+		RootedPhylogeny<String> result = tmp.extractTreeWithLeafIDs(leafIDs);
 
 		assert result.getNodes().size() == 6;
 
 		Collection<String> okNodes = Arrays.asList("ba", "bb", "b", "c", "a", "root");
 
-		for (LengthWeightHierarchyNode<Object> n : result)
+		for (PhylogenyNode<String> n : result)
 			{
 			String s = (String) n.getValue();
 			assert okNodes.contains(s);

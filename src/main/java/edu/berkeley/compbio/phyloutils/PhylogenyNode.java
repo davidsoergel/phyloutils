@@ -32,8 +32,6 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -45,7 +43,8 @@ import java.util.List;
  * @version $Id$
  * @JavadocOK
  */
-public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>, Cloneable//Iterable<PhylogenyNode<T>>,
+public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T, PhylogenyNode<T>>
+		//Iterable<PhylogenyNode<T>>,
 	{
 	/**
 	 * {@inheritDoc}
@@ -59,6 +58,8 @@ public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>, Cloneabl
 	 * {@inheritDoc}
 	 */
 	PhylogenyNode getParent();
+
+	public void setParent(PhylogenyNode<T> parent);
 
 	boolean hasValue();
 
@@ -74,21 +75,6 @@ public interface PhylogenyNode<T> extends LengthWeightHierarchyNode<T>, Cloneabl
 	 */
 	//void propagateWeightFromBelow();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	double distanceToRoot();
-
-	/**
-	 * Get the child of this node which has the given value
-	 *
-	 * @param id the T value to search for among the children
-	 * @return the PhylogenyNode<T> child with the given value
-	 * @throws java.util.NoSuchElementException
-	 *          when a matching child is not found
-	 */
-	@NotNull
-	PhylogenyNode<T> getChild(T id);
 
 	/**
 	 * Increment the weight of this node by the given amount.  This will cause the weights of the ancestor nodes to be

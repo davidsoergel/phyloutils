@@ -90,14 +90,14 @@ public class TaxonMerger
 		assert theTaxonsetsByTaxid.keySet().containsAll(theTree.getLeafValues());
 		assert theTree.getNodeValues().containsAll(theTaxonsetsByTaxid.keySet());
 
-		DepthFirstTreeIterator<T, LengthWeightHierarchyNode<T>> it = theTree.depthFirstIterator();
+		DepthFirstTreeIterator<T, PhylogenyNode<T>> it = theTree.depthFirstIterator();
 
 		// for sanity checking only
 		Set<T> allMergedTaxa = new HashSet<T>();
 
 		while (it.hasNext())
 			{
-			LengthWeightHierarchyNode<T> node = it.next();
+			PhylogenyNode<T> node = it.next();
 
 			// the iterator is depth-first by default
 
@@ -105,7 +105,7 @@ public class TaxonMerger
 			if (span < ciccarelliMergeThreshold)
 				{
 				Set<T> mergeTaxa = new HashSet<T>();
-				for (LengthWeightHierarchyNode<T> descendant : node)
+				for (PhylogenyNode<T> descendant : node)
 					{
 					// we'll include intermediate nodes even if they aren't part of the query (i.e., not leaves)
 					T id = descendant.getValue();

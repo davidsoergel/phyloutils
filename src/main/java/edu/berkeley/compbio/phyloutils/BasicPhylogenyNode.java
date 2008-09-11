@@ -34,11 +34,9 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIteratorImpl;
-import com.davidsoergel.dsutils.tree.HierarchyNode;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -48,7 +46,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 
-public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
+public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<T, BasicPhylogenyNode<T>>
 	{
 	private static final Logger logger = Logger.getLogger(BasicPhylogenyNode.class);
 	// ------------------------------ FIELDS ------------------------------
@@ -112,7 +110,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<BasicPhylogenyNode<T>> getChildren()
+	public Set<BasicPhylogenyNode<T>> getChildren()
 		{
 		return children;
 		}
@@ -191,7 +189,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 			{
 			if (isLeaf())
 				{
-				throw new PhyloUtilsRuntimeException("Node has undefined weight");
+				throw new PhyloUtilsRuntimeException("Node has undefined weight: " + getValue());
 				}
 			propagateWeightFromBelow();
 			}
@@ -228,7 +226,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	 */
 	public double distanceToRoot()
 		{
-		return length + (parent == null ? 0 : parent.distanceToRoot());
+		return (length == null ? 0 : length) + (parent == null ? 0 : parent.distanceToRoot());
 		}
 
 	/**
@@ -258,7 +256,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public HierarchyNode<? extends T, LengthWeightHierarchyNode<T>> newChild()
+	public BasicPhylogenyNode<T> newChild()
 		{
 		BasicPhylogenyNode<T> child = new BasicPhylogenyNode<T>();
 		addChild(child);
@@ -266,10 +264,10 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		}
 
 
-	public void setParent(BasicPhylogenyNode<T> parent)//BasicPhylogenyNode parent)
+	public void setParent(PhylogenyNode<T> parent)//BasicPhylogenyNode parent)
 		{
 
-		this.parent = parent;// may produce ClassCastException
+		this.parent = (BasicPhylogenyNode<T>) parent;// may produce ClassCastException
 		if (parent != null)
 			{
 			this.parent.invalidateAggregatedChildInfo();
@@ -369,7 +367,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public Iterator<LengthWeightHierarchyNode<T>> iterator()
+	public Iterator<PhylogenyNode<T>> iterator()
 		{
 		return new DepthFirstTreeIteratorImpl(this);
 		}
@@ -377,7 +375,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public DepthFirstTreeIterator<T, LengthWeightHierarchyNode<T>> depthFirstIterator()
+	public DepthFirstTreeIterator<T, PhylogenyNode<T>> depthFirstIterator()
 		{
 		return new DepthFirstTreeIteratorImpl(this);
 		}
@@ -466,7 +464,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addChild(LengthWeightHierarchyNode<T> child)
+	public void addChild(PhylogenyNode<T> child)
 		{
 		children.add((BasicPhylogenyNode<T>) child);
 		((BasicPhylogenyNode<T>) child).setParent(this);
@@ -522,7 +520,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>
 		return result;
 		}
 
-	public HierarchyNode<T, LengthWeightHierarchyNode<T>> getSelfNode()
+	public BasicPhylogenyNode<T> getSelfNode()
 		{
 		return this;
 		}

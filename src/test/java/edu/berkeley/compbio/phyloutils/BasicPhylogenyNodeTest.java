@@ -36,7 +36,6 @@ import com.davidsoergel.dsutils.ContractTest;
 import com.davidsoergel.dsutils.ContractTestAware;
 import com.davidsoergel.dsutils.TestInstanceFactory;
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
-import com.davidsoergel.dsutils.tree.HierarchyNode;
 import com.davidsoergel.dsutils.tree.TreeException;
 import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeMethod;
@@ -141,7 +140,7 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 	public void treeIteratorProvidesAllNodes()
 		{
 		int i = 0;
-		for (LengthWeightHierarchyNode<String> node : testInstance.root)
+		for (LengthWeightHierarchyNode node : testInstance.root)
 			{
 			logger.info("Tree iterator provided node: " + node);
 			i++;
@@ -152,13 +151,13 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 	@Test
 	public void skipAllDescendantsWorksProperly() throws TreeException
 		{
-		DepthFirstTreeIterator<String, LengthWeightHierarchyNode<String>> it = testInstance.root.depthFirstIterator();
+		DepthFirstTreeIterator<String, PhylogenyNode<String>> it = testInstance.root.depthFirstIterator();
 		assert it.next() == testInstance.root;
 
 		int i = 0;
 		while (it.hasNext())
 			{
-			HierarchyNode<String, LengthWeightHierarchyNode<String>> topLevelNode = it.next();
+			PhylogenyNode<String> topLevelNode = it.next();
 
 			if (topLevelNode == testInstance.b)
 				{
@@ -182,15 +181,15 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 	@Test
 	public void individualNodeIteratorsWorkProperly()
 		{
-		DepthFirstTreeIterator<String, LengthWeightHierarchyNode<String>> it = testInstance.root.depthFirstIterator();
+		DepthFirstTreeIterator<String, PhylogenyNode<String>> it = testInstance.root.depthFirstIterator();
 		assert it.next() == testInstance.root;
 
 		while (it.hasNext())
 			{
-			HierarchyNode<String, LengthWeightHierarchyNode<String>> topLevelNode = it.next();
+			PhylogenyNode<String> topLevelNode = it.next();
 
 			int i = 0;
-			DepthFirstTreeIterator<String, LengthWeightHierarchyNode<String>> sub =
+			DepthFirstTreeIterator<String, PhylogenyNode<String>> sub =
 					((BasicPhylogenyNode) topLevelNode).depthFirstIterator();
 			while (sub.hasNext())
 				{
@@ -214,7 +213,7 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 		}
 
 	@Test
-	public void extractTreeWithPathsWorks() throws PhyloUtilsException
+	public void extractTreeWithPathsRemovesInternalNodes() throws PhyloUtilsException
 		{
 		Set<List<PhylogenyNode<String>>> theAncestorLists = new HashSet<List<PhylogenyNode<String>>>();
 
@@ -224,7 +223,7 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 
 		BasicPhylogenyNode<String> tree = testInstance.rootPhylogeny.extractTreeWithLeafPaths(theAncestorLists);
 
-		for (LengthWeightHierarchyNode<String> xnode : tree)
+		for (PhylogenyNode<String> xnode : tree)
 			{
 			BasicPhylogenyNode<String> node = (BasicPhylogenyNode<String>) xnode;
 			if (node.getValue().equals("root"))

@@ -4,7 +4,6 @@ import com.davidsoergel.dsutils.ContractTestAware;
 import com.davidsoergel.dsutils.TestInstanceFactory;
 import org.apache.log4j.Logger;
 import org.testng.annotations.Factory;
-import org.testng.annotations.Test;
 
 import java.util.Queue;
 
@@ -32,11 +31,6 @@ public class BasicRootedPhylogenyTest extends ContractTestAware<BasicRootedPhylo
 	public Object[] instantiateAllContractTests()
 		{
 		return super.instantiateAllContractTestsWithName(BasicRootedPhylogeny.class.getCanonicalName());
-		}
-
-	@Test
-	public void bogusTest()
-		{
 		}
 
 	public static class BasicRootedPhylogenyWithSpecificNodeHandles

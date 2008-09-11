@@ -42,7 +42,8 @@ import com.davidsoergel.dsutils.tree.HierarchyNode;
  * @version $Id$
  * @JavadocOK
  */
-public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T, LengthWeightHierarchyNode<T>>
+public interface LengthWeightHierarchyNode<T, I extends LengthWeightHierarchyNode<T, I>> extends HierarchyNode<T, I>
+		//public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T, LengthWeightHierarchyNode<T>>
 	{
 
 	/**
@@ -80,12 +81,6 @@ public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T, LengthWei
 	 */
 	Double getLargestLengthSpan();
 
-	/**
-	 * Adds a child node and automatically updates the child's parent link.
-	 *
-	 * @param a the child node to add
-	 */
-	void addChild(LengthWeightHierarchyNode<T> a);
 
 	/**
 	 * Returns the total branch length between the root and this node.
@@ -94,4 +89,16 @@ public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T, LengthWei
 	 *         inclusive.
 	 */
 	double distanceToRoot();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	//	@NotNull
+	//	LengthWeightHierarchyNode<T> getChild(T id);
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	//	Collection<? extends LengthWeightHierarchyNode<T>> getChildren();
 	}

@@ -37,6 +37,7 @@ public class PhylogenyNodeInterfaceTest<T extends PhylogenyNode>
 		tmp.getChild("a");
 		}
 
+
 	@Test(expectedExceptions = NoSuchElementException.class)
 	public void getChildThrowsExceptionIfChildIsAbsent() throws Exception
 		{

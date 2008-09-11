@@ -90,7 +90,7 @@ public class LengthWeightHierarchyNodeInterfaceTest<T extends LengthWeightHierar
 	@Test
 	public void largestLengthSpanIsMonotonicDownTree() throws Exception
 		{
-		LengthWeightHierarchyNode<Object> testInstance = tif.createInstance();
+		LengthWeightHierarchyNode<String, ? extends LengthWeightHierarchyNode> testInstance = tif.createInstance();
 
 		// yeah we calculate each span twice, but so what
 
@@ -103,5 +103,14 @@ public class LengthWeightHierarchyNodeInterfaceTest<T extends LengthWeightHierar
 				assert p.getLargestLengthSpan() >= span;
 				}
 			}
+		}
+
+
+	@Test
+	public void distanceToRootWorks() throws Exception
+		{
+		LengthWeightHierarchyNode tmp = tif.createInstance();
+		LengthWeightHierarchyNode t = (LengthWeightHierarchyNode) tmp.getChild("a").getChild("aa").getChild("aaa");
+		assert t.distanceToRoot() == 30;
 		}
 	}

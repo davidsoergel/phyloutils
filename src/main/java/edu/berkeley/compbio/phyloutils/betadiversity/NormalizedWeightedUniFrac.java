@@ -33,7 +33,6 @@
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
 import com.davidsoergel.stats.DistanceMeasure;
-import edu.berkeley.compbio.phyloutils.LengthWeightHierarchyNode;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
@@ -71,7 +70,7 @@ public class NormalizedWeightedUniFrac<T> implements DistanceMeasure<RootedPhylo
 
 			double normalizingFactor = 0;
 
-			for (LengthWeightHierarchyNode<T> node : unionTree)
+			for (PhylogenyNode<T> node : unionTree)
 				{
 				T id = node.getValue();
 				PhylogenyNode<T> aNode = a.getNode(id);

@@ -33,7 +33,6 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
-import com.davidsoergel.dsutils.tree.HierarchyNode;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -143,7 +142,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<? extends PhylogenyNode<T>> getChildren()
+	public Set<BasicPhylogenyNode<T>> getChildren()
 		{
 		return root.getChildren();
 		}
@@ -176,7 +175,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public HierarchyNode<? extends T, LengthWeightHierarchyNode<T>> newChild()
+	public PhylogenyNode<T> newChild()
 		{
 		return root.newChild();
 		}
@@ -189,7 +188,10 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		root.setValue(contents);
 		}
 
-	public void setParent(HierarchyNode<? extends T, LengthWeightHierarchyNode<T>> parent)
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setParent(PhylogenyNode<T> parent)
 		{
 		logger.error("Can't set the parent of the root node");
 		}
@@ -242,7 +244,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addChild(LengthWeightHierarchyNode<T> a)
+	public void addChild(PhylogenyNode<T> a)
 		{
 		root.addChild(a);
 		}
@@ -253,7 +255,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	 *
 	 * @return an Iterator.
 	 */
-	public Iterator<LengthWeightHierarchyNode<T>> iterator()
+	public Iterator<PhylogenyNode<T>> iterator()
 		{
 		return root.iterator();
 		}
@@ -261,7 +263,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public DepthFirstTreeIterator<T, LengthWeightHierarchyNode<T>> depthFirstIterator()
+	public DepthFirstTreeIterator<T, PhylogenyNode<T>> depthFirstIterator()
 		{
 		return root.depthFirstIterator();
 		}
@@ -449,13 +451,11 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	 *
 	 * @return a Strings describing this object
 	 */
-	public String getLabel()
-		{
-		return null;
-		}
-
-
-	public HierarchyNode<T, LengthWeightHierarchyNode<T>> getSelfNode()
+	/*	public String getLabel()
+	   {
+	   return null;
+	   }*/
+	public BasicPhylogenyNode<T> getSelfNode()
 		{
 		return root;
 		}
