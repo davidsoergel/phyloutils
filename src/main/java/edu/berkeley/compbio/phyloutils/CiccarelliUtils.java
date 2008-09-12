@@ -41,7 +41,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-
+/**
+ * Reads a Newick tree file containing the Tree of Life (Ciccarelli 2006, http://itol.embl.de) and provides it as a
+ * RootedPhylogeny.  Also provides convenience methods for a few common operations such as computing the tree distance
+ * between two species.
+ */
 public class CiccarelliUtils
 	{
 	private static final Logger logger = Logger.getLogger(CiccarelliUtils.class);
