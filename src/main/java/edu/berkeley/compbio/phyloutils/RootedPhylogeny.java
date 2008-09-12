@@ -232,4 +232,6 @@ public interface RootedPhylogeny<T>
 	 * @param ids the Multiset providing counts for each leaf ID.
 	 */
 	void setLeafWeights(Multiset<T> ids);
+
+	void setAllBranchLengthsToNull();
 	}

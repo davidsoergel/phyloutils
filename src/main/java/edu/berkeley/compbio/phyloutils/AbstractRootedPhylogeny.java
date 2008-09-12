@@ -371,6 +371,18 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
+	public void setAllBranchLengthsToNull()
+		{
+		double result = 0;
+		for (PhylogenyNode<T> node : getNodes())
+			{
+			node.setLength(null);
+			}
+		}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void randomizeLeafWeights(
 			ContinuousDistribution1D speciesAbundanceDistribution)//throws DistributionException
 		{

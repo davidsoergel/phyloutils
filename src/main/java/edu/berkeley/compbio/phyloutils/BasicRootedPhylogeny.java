@@ -353,6 +353,14 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
+	public Double getCurrentWeight()
+		{
+		return 1.;
+		}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setWeight(Double v)
 		{
 		if (v != 1.)

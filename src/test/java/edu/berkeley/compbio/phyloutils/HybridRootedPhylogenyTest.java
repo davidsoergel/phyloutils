@@ -32,73 +32,54 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.tree.HierarchyNode;
+import com.davidsoergel.dsutils.ContractTestAware;
+import com.davidsoergel.dsutils.TestInstanceFactory;
+import org.testng.annotations.Factory;
+
+import java.util.Arrays;
+import java.util.Queue;
 
 
 /**
- * A node of a tree with an associated branch length and weight.
- *
  * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
- * @version $Id$
- * @JavadocOK
+ * @version $Id: HybridRootedPhylogenyTest.java 47 2008-09-12 02:25:46Z soergel $
  */
-public interface LengthWeightHierarchyNode<T, I extends LengthWeightHierarchyNode<T, I>> extends HierarchyNode<T, I>
-		//public interface LengthWeightHierarchyNode<T> extends HierarchyNode<T, LengthWeightHierarchyNode<T>>
+
+public class HybridRootedPhylogenyTest extends ContractTestAware<HybridRootedPhylogeny>
+		implements TestInstanceFactory<HybridRootedPhylogeny>
 	{
+	//private static final NcbiTaxonomyService ncbiTaxonomyService = NcbiTaxonomyService.getInstance();
+	//private static final CiccarelliUtils ciccarelli = CiccarelliUtils.getInstance();
 
-	/**
-	 * Returns the length
-	 *
-	 * @return the length
-	 */
-	Double getLength();
+	//	private HybridRootedPhylogeny<Integer> hybridTree;
 
-	/**
-	 * Sets the length
-	 *
-	 * @param d the length
-	 */
-	void setLength(Double d);
+	/*@Test
+	public void nearestKnownAncestorWorks() throws PhyloUtilsException
+		{
+		hybridTree = new HybridRootedPhylogeny(ciccarelli.getTree(), ncbiTaxonomyService);
+		assert hybridTree.nearestKnownAncestor("Vibrio cholerae O1 biovar eltor str. N16961") == 666; //243277)
+		}*/
 
-	/**
-	 * Returns the weight, recomputing it if necessary
-	 *
-	 * @return the weight
-	 */
-	Double getWeight();
+	public HybridRootedPhylogeny createInstance() throws Exception
+		{
+		RootedPhylogeny leafPhylogeny = new BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles()
+				.rootPhylogeny;
 
-	/**
-	 * Sets the weight
-	 *
-	 * @param d the weight
-	 */
-	void setWeight(Double d);
+		RootedPhylogeny rootPhylogeny = leafPhylogeny.extractTreeWithLeafIDs(Arrays.asList("aa", "baa", "c"));
 
-	/**
-	 * Returns the largest tree distance between any pair of leaves descending from this node.
-	 *
-	 * @return
-	 */
-	Double getLargestLengthSpan();
+		leafPhylogeny.setAllBranchLengthsToNull();
 
+		return new HybridRootedPhylogeny(rootPhylogeny, leafPhylogeny);
+		}
 
-	/**
-	 * Returns the total branch length between the root and this node.
-	 *
-	 * @return the sum of the branch lengths associated with all the nodes on the ancestor path from this node to the root,
-	 *         inclusive.
-	 */
-	double distanceToRoot();
+	public void addContractTestsToQueue(Queue theContractTests)
+		{
+		theContractTests.add(new TaxonMergingPhylogenyInterfaceTest<HybridRootedPhylogeny>(this));
+		}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	//	@NotNull
-	//	LengthWeightHierarchyNode<T> getChild(T id);
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	//	Collection<? extends LengthWeightHierarchyNode<T>> getChildren();
+	@Factory
+	public Object[] instantiateAllContractTests()
+		{
+		return super.instantiateAllContractTestsWithName(HybridRootedPhylogeny.class.getCanonicalName());
+		}
 	}

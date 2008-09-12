@@ -204,6 +204,13 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<
 		return weight;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public Double getCurrentWeight()
+		{
+		return weight;
+		}
 
 	/**
 	 * {@inheritDoc}

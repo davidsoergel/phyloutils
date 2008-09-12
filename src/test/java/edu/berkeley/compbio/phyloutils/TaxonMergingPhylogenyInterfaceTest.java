@@ -70,12 +70,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 	public void extractsTreeCorrectlyGivenBaseLeaves() throws Exception
 		{
 		TaxonMergingPhylogeny<Object> tmp = tif.createInstance();
-		Collection leafIDs = Arrays.asList(new Object[]{
-				"baa",
-				"bbba",
-				"ca",
-				"cb"
-		});
+		Collection leafIDs = Arrays.asList("baa", "bbba", "ca", "cb");
 
 		RootedPhylogeny<Object> result = tmp.extractTreeWithLeafIDs(leafIDs);
 

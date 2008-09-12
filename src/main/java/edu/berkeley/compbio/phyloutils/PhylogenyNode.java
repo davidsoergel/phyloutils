@@ -88,4 +88,11 @@ public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T
 	 * {@inheritDoc}
 	 */
 	PhylogenyNode<T> clone();
+
+	/**
+	 * Returns the current weight without recomputing, even if it is null
+	 *
+	 * @return the weight
+	 */
+	Double getCurrentWeight();
 	}
