@@ -319,7 +319,11 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return theSeparatedSets.values();
 		}
 
-
+	/**
+	 * Gets the root node of the tree
+	 *
+	 * @return
+	 */
 	public abstract PhylogenyNode<T> getRoot();
 
 	/**
