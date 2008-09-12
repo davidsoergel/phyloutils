@@ -46,6 +46,14 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 
+/**
+ * A basic implementation of the PhylogenyNode interface, where the generic type indicates the type of node IDs that are
+ * used (typically Strings or Integers).
+ *
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Id$
+ */
+
 public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<T, BasicPhylogenyNode<T>>
 	{
 	private static final Logger logger = Logger.getLogger(BasicPhylogenyNode.class);
@@ -264,6 +272,9 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<
 		}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setParent(PhylogenyNode<T> parent)//BasicPhylogenyNode parent)
 		{
 
@@ -520,6 +531,9 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<
 		return result;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public BasicPhylogenyNode<T> getSelfNode()
 		{
 		return this;

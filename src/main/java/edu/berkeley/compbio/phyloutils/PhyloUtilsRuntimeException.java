@@ -37,8 +37,10 @@ import com.davidsoergel.dsutils.ChainedRuntimeException;
 import org.apache.log4j.Logger;
 
 /**
- * @author lorax
- * @version 1.0
+ * This exception is thrown when something goes wrong in the phyloutils package.
+ *
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Id$
  */
 public class PhyloUtilsRuntimeException extends ChainedRuntimeException
 	{

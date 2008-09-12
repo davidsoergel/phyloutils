@@ -46,6 +46,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Reads an environment file in the UniFrac format (http://bmf2.colorado.edu/unifrac/tutorial.psp), matching the taxon
+ * names against nodes in the given tree, and provides the resulting communities as weighted RootedPhylogenies.
+ *
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */

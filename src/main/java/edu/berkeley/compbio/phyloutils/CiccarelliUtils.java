@@ -46,7 +46,8 @@ import java.util.Set;
  * RootedPhylogeny.  Also provides convenience methods for a few common operations such as computing the tree distance
  * between two species.
  *
- * @version $Rev$
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Id$
  */
 public class CiccarelliUtils
 	{

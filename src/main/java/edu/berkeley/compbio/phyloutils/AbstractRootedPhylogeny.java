@@ -46,6 +46,14 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 
+/**
+ * Abstract implementation of the RootedPhylogeny interface, providing all required functionality that is not
+ * implementation-specific.
+ *
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Id$
+ */
+
 public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	{
 	private static final Logger logger = Logger.getLogger(AbstractRootedPhylogeny.class);
