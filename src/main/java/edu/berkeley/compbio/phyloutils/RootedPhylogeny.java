@@ -222,7 +222,6 @@ public interface RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	RootedPhylogeny<T> clone();
 
 	/**
