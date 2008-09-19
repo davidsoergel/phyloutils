@@ -519,23 +519,36 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<
 	@Override
 	public BasicPhylogenyNode<T> clone()
 		{
-		BasicPhylogenyNode<T> result = new BasicPhylogenyNode<T>();
-
-		result.setLength(length);
-		result.setValue(value);//** value.clone() ??
-		result.setBootstrap(bootstrap);
-
-		for (BasicPhylogenyNode<T> child : children)
+		BasicPhylogenyNode<T> result = null;// new BasicPhylogenyNode<T>();
+		try
 			{
-			result.addChild((BasicPhylogenyNode<T>) child.clone());
+			result = (BasicPhylogenyNode<T>) super.clone();
+
+
+			parent = null;
+			children = new HashSet<BasicPhylogenyNode<T>>();
+			// note the value is shallow-copied, not cloned
+
+			//result.setValue(value);//** value.clone() ??
+
+			for (BasicPhylogenyNode<T> child : children)
+				{
+				result.addChild((BasicPhylogenyNode<T>) child.clone());
+				}
+
+			// reset weight after children, since it got wiped
+			result.setWeight(weight);
+
+			// we don't set the parent here; addChild takes care of that, except for the root, where the parent is null anyway
+
+			return result;
 			}
-
-		// set weight after children, since it would get wiped
-		result.setWeight(weight);
-
-		// we don't set the parent here; addChild takes care of that, except for the root, where the parent is null anyway
-
-		return result;
+		catch (CloneNotSupportedException e)
+			{
+			logger.debug(e);
+			e.printStackTrace();
+			throw new Error("cloneability required");
+			}
 		}
 
 	/**

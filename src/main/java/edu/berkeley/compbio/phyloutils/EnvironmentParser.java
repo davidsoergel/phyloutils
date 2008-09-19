@@ -77,9 +77,10 @@ public class EnvironmentParser
 
 
 		Set<RootedPhylogeny<String>> result = new HashSet<RootedPhylogeny<String>>();
-		for (String name : environmentCounts.keySet())
+		for (Map.Entry<String, Multiset<String>> entry : environmentCounts.entrySet())
 			{
-			Multiset<String> ids = environmentCounts.get(name);
+			String name = entry.getKey();
+			Multiset<String> ids = entry.getValue();
 			RootedPhylogeny<String> subtree = tree.extractTreeWithLeafIDs(ids);
 			subtree.setValue(name);
 			subtree.setLeafWeights(ids);

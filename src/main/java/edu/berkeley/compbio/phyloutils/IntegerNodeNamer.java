@@ -44,14 +44,14 @@ public class IntegerNodeNamer implements NodeNamer<Integer>
 	{
 	// ------------------------------ FIELDS ------------------------------
 
-	private int unknownBasis;
+	//private int unknownBasis;
 	private int currentId;
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
 	public IntegerNodeNamer(int unknownBasis)
 		{
-		this.unknownBasis = unknownBasis;
+		//	this.unknownBasis = unknownBasis;
 		this.currentId = unknownBasis;
 		}
 
