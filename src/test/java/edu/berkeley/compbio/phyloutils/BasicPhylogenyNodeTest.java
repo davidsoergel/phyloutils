@@ -48,6 +48,11 @@ import java.util.Queue;
 import java.util.Set;
 
 
+/**
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Id$
+ */
+
 public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode>
 		implements TestInstanceFactory<BasicPhylogenyNode>
 	{
@@ -59,6 +64,7 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 		return new BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles().root;
 		}
 
+	@Override
 	public void addContractTestsToQueue(Queue<ContractTest> theContractTests)
 		{
 		theContractTests.add(new PhylogenyNodeInterfaceTest(this));

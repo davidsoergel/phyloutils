@@ -20,6 +20,7 @@ public class AbstractRootedPhylogenyAbstractTest<T extends AbstractRootedPhyloge
 		this.tif = tif;
 		}
 
+	@Override
 	public void addContractTestsToQueue(Queue theContractTests)
 		{
 		theContractTests.add(new RootedPhylogenyInterfaceTest<T>(tif));

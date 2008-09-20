@@ -56,6 +56,7 @@ public class LengthWeightHierarchyNodeInterfaceTest<T extends LengthWeightHierar
 		this.tif = tif;
 		}
 
+	@Override
 	public void addContractTestsToQueue(Queue theContractTests)
 		{
 		theContractTests.add(new HierarchyNodeInterfaceTest<T>(tif)

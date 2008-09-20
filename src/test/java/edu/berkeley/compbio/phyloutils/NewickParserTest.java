@@ -40,6 +40,11 @@ import java.io.IOException;
 import java.net.URL;
 
 
+/**
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Id$
+ */
+
 public class NewickParserTest
 	{
 	private static final Logger logger = Logger.getLogger(NewickParserTest.class);

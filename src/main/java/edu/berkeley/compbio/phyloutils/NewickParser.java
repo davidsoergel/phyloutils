@@ -49,6 +49,8 @@ import java.net.URLClassLoader;
  * Parser for New Hampshire (aka Newick) tree files.  Does not yet handle quoted labels or NHX extensions.  Simple state
  * machine implementation.
  *
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Id$
  * @Author David Soergel
  * @Version 1.0
  */

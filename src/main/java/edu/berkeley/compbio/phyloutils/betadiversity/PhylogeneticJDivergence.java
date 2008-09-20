@@ -41,6 +41,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 
+/**
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Id$
+ */
+
 //@PropertyConsumer
 public class PhylogeneticJDivergence<T> implements DistanceMeasure<RootedPhylogeny<T>>
 	{

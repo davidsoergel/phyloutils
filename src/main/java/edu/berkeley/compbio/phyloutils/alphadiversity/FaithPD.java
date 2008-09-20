@@ -36,6 +36,11 @@ import com.davidsoergel.stats.Statistic;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 
 
+/**
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Id$
+ */
+
 public class FaithPD<T> implements Statistic<RootedPhylogeny<T>>
 	{
 	/**

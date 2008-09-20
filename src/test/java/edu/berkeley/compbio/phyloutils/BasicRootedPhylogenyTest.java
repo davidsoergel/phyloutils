@@ -22,6 +22,7 @@ public class BasicRootedPhylogenyTest extends ContractTestAware<BasicRootedPhylo
 		return new BasicRootedPhylogenyWithSpecificNodeHandles().rootPhylogeny;
 		}
 
+	@Override
 	public void addContractTestsToQueue(Queue theContractTests)
 		{
 		theContractTests.add(new AbstractRootedPhylogenyAbstractTest<BasicRootedPhylogeny>(this));

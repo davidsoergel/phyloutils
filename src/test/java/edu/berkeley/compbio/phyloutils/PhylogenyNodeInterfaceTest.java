@@ -25,6 +25,7 @@ public class PhylogenyNodeInterfaceTest<T extends PhylogenyNode>
 		this.tif = tif;
 		}
 
+	@Override
 	public void addContractTestsToQueue(Queue theContractTests)
 		{
 		theContractTests.add(new LengthWeightHierarchyNodeInterfaceTest<T>(tif));

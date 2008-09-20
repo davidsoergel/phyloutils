@@ -25,6 +25,7 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
+	@Override
 	public void addContractTestsToQueue(Queue theContractTests)
 		{
 		theContractTests.add(new PhylogenyNodeInterfaceTest<T>(tif));

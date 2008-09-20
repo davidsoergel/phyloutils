@@ -72,6 +72,7 @@ public class HybridRootedPhylogenyTest extends ContractTestAware<HybridRootedPhy
 		return new HybridRootedPhylogeny(rootPhylogeny, leafPhylogeny);
 		}
 
+	@Override
 	public void addContractTestsToQueue(Queue theContractTests)
 		{
 		theContractTests.add(new TaxonMergingPhylogenyInterfaceTest<HybridRootedPhylogeny>(this));

@@ -39,6 +39,11 @@ import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 import org.apache.log4j.Logger;
 
 
+/**
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Id$
+ */
+
 public class PhylogeneticShannon<T> implements Statistic<RootedPhylogeny<T>>
 	{
 	private static final Logger logger = Logger.getLogger(PhylogeneticShannon.class);

@@ -43,6 +43,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 
+/**
+ * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @version $Id$
+ */
+
 public class KullbackLeibler<T> implements DistanceMeasure<RootedPhylogeny<T>>
 	{
 	private static final Logger logger = Logger.getLogger(WeightedUniFrac.class);
