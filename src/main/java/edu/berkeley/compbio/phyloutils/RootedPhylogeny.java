@@ -43,9 +43,9 @@ import java.util.Set;
 
 /**
  * A rooted phylogeny with branch lengths and weights.  The generic parameter T specifies the type of the node IDs to be
- * used (typiclly String or Integer); these IDs should be unique.
+ * used (typically String or Integer); these IDs should be unique.
  *
- * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  * @JavadocOK
  */

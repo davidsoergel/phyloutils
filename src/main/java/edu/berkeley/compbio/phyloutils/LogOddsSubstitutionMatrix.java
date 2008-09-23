@@ -12,7 +12,7 @@ import java.io.StreamTokenizer;
 /**
  * A substitution matrix with integer scores (in log probability units), such as a PAM or BLOSUM matrix.
  *
- * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
 public class LogOddsSubstitutionMatrix

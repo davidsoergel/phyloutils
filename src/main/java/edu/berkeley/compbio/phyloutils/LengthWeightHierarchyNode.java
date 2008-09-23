@@ -38,7 +38,7 @@ import com.davidsoergel.dsutils.tree.HierarchyNode;
 /**
  * A node of a tree with an associated branch length and weight.
  *
- * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  * @JavadocOK
  */

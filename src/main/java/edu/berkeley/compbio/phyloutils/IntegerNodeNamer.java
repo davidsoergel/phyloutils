@@ -36,7 +36,7 @@ package edu.berkeley.compbio.phyloutils;
 /**
  * A factory for Integers to be used for naming unnamed internal nodes in a phylogeny.
  *
- * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
 

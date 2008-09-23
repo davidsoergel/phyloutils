@@ -41,7 +41,7 @@ import java.util.Queue;
 
 
 /**
- * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id: HybridRootedPhylogenyTest.java 47 2008-09-12 02:25:46Z soergel $
  */
 

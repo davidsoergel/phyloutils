@@ -37,7 +37,7 @@ package edu.berkeley.compbio.phyloutils;
  * A factory for names to be applied to phylogeny nodes.  Generally used to add incrementing IDs to internal nodes of a
  * tree for which only the leaves have known names.
  *
- * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  * @JavadocOK
  */

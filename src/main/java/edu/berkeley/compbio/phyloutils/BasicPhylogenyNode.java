@@ -50,7 +50,7 @@ import java.util.Set;
  * A basic implementation of the PhylogenyNode interface, where the generic type indicates the type of node IDs that are
  * used (typically Strings or Integers).
  *
- * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
 

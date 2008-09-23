@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * A node of a weighted phylogenetic tree.
  *
- * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  * @JavadocOK
  */

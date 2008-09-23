@@ -46,7 +46,7 @@ import java.util.Set;
  * Groups closely related leaves on a tree into larger taxa.  Useful in cases where the available tree has finer
  * phylogenetic resolution than is applicable to the question at hand.
  *
- * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
 public class TaxonMerger

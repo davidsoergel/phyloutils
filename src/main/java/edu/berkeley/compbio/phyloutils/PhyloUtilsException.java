@@ -39,7 +39,7 @@ import org.apache.log4j.Logger;
 /**
  * This exception is thrown when something goes wrong in the phyloutils package.
  *
- * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
 public class PhyloUtilsException extends ChainedException

@@ -50,7 +50,7 @@ import java.util.Set;
  * Abstract implementation of the RootedPhylogeny interface, providing all required functionality that is not
  * implementation-specific.
  *
- * @author <a href="mailto:dev.davidsoergel.com">David Soergel</a>
+ * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
 

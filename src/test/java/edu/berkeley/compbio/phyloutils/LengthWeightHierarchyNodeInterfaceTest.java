@@ -35,7 +35,6 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.ContractTestAwareContractTest;
 import com.davidsoergel.dsutils.TestInstanceFactory;
 import com.davidsoergel.dsutils.tree.HierarchyNodeInterfaceTest;
-import org.testng.ITest;
 import org.testng.annotations.Test;
 
 import java.util.Queue;
@@ -45,7 +44,7 @@ import java.util.Queue;
  * @version $Id$
  */
 public class LengthWeightHierarchyNodeInterfaceTest<T extends LengthWeightHierarchyNode>
-		extends ContractTestAwareContractTest<LengthWeightHierarchyNode> implements ITest
+		extends ContractTestAwareContractTest<LengthWeightHierarchyNode>
 	{
 	protected TestInstanceFactory<T> tif;
 
