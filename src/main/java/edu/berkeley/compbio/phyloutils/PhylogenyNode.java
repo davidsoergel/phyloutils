@@ -87,7 +87,6 @@ public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	PhylogenyNode<T> clone();
 
 	/**
