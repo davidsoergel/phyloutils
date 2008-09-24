@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author lorax
  * @version 1.0
  */
 @Deprecated

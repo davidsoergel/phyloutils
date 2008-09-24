@@ -8,7 +8,6 @@ import java.util.Arrays;
  * A binary tree.  Nodes are numbered with integers.  The root is node 0, but aside from that all bets are off as to the
  * numbering.
  *
- * @author lorax
  * @version 1.0
  */
 @Deprecated

@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 /**
  * A Tree on which some number of independent characters are evolving in parallel.
  *
- * @author lorax
  * @version 1.0
  */
 @Deprecated

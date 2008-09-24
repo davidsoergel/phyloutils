@@ -39,7 +39,6 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 
 /**
- * @author lorax
  * @version 1.0
  */
 public class BinaryTreeTest

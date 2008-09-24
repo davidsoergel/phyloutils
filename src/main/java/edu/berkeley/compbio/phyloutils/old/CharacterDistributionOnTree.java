@@ -11,7 +11,6 @@ import java.util.Arrays;
  * The distribution of character values per node for a single character on a Tree. If the value is fixed at a node,
  * that's just a distribution with all the weight in one bin.
  *
- * @author lorax
  * @version 1.0
  */
 @Deprecated
