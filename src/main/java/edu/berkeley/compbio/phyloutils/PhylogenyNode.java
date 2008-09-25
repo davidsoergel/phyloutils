@@ -32,6 +32,8 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -57,9 +59,10 @@ public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T
 	/**
 	 * {@inheritDoc}
 	 */
+	@Nullable
 	PhylogenyNode getParent();
 
-	public void setParent(PhylogenyNode<T> parent);
+	void setParent(PhylogenyNode<T> parent);
 
 	boolean hasValue();
 
@@ -95,4 +98,6 @@ public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T
 	 * @return the weight
 	 */
 	Double getCurrentWeight();
+
+	void appendSubtree(StringBuffer sb, String indent);
 	}

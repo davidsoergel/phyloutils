@@ -36,6 +36,7 @@ import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -169,6 +170,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Nullable
 	public PhylogenyNode getParent()
 		{
 		return null;
@@ -246,9 +248,17 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addChild(PhylogenyNode<T> a)
+	public void registerChild(PhylogenyNode<T> a)
 		{
-		root.addChild(a);
+		root.registerChild(a);
+		}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void unregisterChild(PhylogenyNode<T> a)
+		{
+		root.unregisterChild(a);
 		}
 
 
@@ -288,7 +298,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 			while (rootPhylogeny.getNode(n.getValue()) == null)
 				{
 				n = n.getParent();
-				if (n.getParent() == null)
+				if (n == null)
 					{
 					// arrived at root, too bad
 					throw new PhyloUtilsException("Taxon " + leafId + " not found in tree.");
@@ -317,7 +327,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		while (n.getLength() == null)
 			{
 			n = n.getParent();
-			if (n.getParent() == null)
+			if (n == null)
 				{
 				// arrived at root, too bad
 				throw new PhyloUtilsException("No ancestor of " + leafId + " has a branch length.");
@@ -468,6 +478,11 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 	public BasicPhylogenyNode<T> getSelfNode()
 		{
 		return root;
+		}
+
+	public void appendSubtree(StringBuffer sb, String indent)
+		{
+		root.appendSubtree(sb, indent);
 		}
 	}
 

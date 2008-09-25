@@ -36,6 +36,7 @@ import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.stats.ContinuousDistribution1D;
 import com.google.common.collect.Multiset;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -57,11 +58,12 @@ import java.util.Set;
 public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	{
 	private static final Logger logger = Logger.getLogger(AbstractRootedPhylogeny.class);
-	private RootedPhylogeny<T> basePhylogeny = this;
+	private RootedPhylogeny<T> basePhylogeny = null;
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Nullable
 	public T commonAncestor(Set<T> knownMergeIds)
 		{
 		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
@@ -87,6 +89,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
+	@Nullable
 	public T commonAncestor(T nameA, T nameB)
 		{
 		PhylogenyNode<T> a = getNode(nameA);
@@ -183,7 +186,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		if (commonAncestor.getValue() != this.getValue())
 			{
 			// add a single branch descending from the root to the common ancestor
-			newTree.getRoot().addChild(commonAncestor);
+			commonAncestor.setParent(newTree.getRoot());
 			//newRoot = new BasicPhylogenyNode<T>(newRoot, commonAncestor.getValue(), commonAncestor.getLength());
 			}
 		else
@@ -515,8 +518,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			throw new PhyloUtilsException("Mixing proportion must be between 0 and 1");
 			}
 
-		RootedPhylogeny<T> theBasePhylogeny = getBasePhylogeny();
-		if (theBasePhylogeny != otherTree.getBasePhylogeny())
+		//RootedPhylogeny<T> theBasePhylogeny = getBasePhylogeny();
+		if (basePhylogeny == null || basePhylogeny != otherTree.getBasePhylogeny())
 			{
 			throw new PhyloUtilsException(
 					"Phylogeny mixtures can be computed only between trees extracted from the same underlying tree");
@@ -526,7 +529,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		unionLeaves.addAll(getLeafValues());
 		unionLeaves.addAll(otherTree.getLeafValues());
 
-		RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves);
+		RootedPhylogeny<T> unionTree = basePhylogeny.extractTreeWithLeafIDs(unionLeaves);
 
 		for (PhylogenyNode<T> node : getLeaves())
 			{
@@ -575,4 +578,17 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	 */
 	@Override
 	public abstract RootedPhylogeny<T> clone();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString()
+
+		{
+		StringBuffer sb = new StringBuffer("\n");
+
+		appendSubtree(sb, "");
+		return sb.toString();
+		}
 	}

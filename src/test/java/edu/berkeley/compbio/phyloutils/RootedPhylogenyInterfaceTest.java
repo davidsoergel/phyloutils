@@ -174,13 +174,27 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 		}
 
 	@Test(expectedExceptions = PhyloUtilsException.class)
-	public void weightMixingRequiresSameBaseTree() throws Exception
+	public void weightMixingRequiresBaseTree() throws Exception
 		{
 		RootedPhylogeny<Object> tree1 = tif.createInstance();
 		tree1.randomizeLeafWeights(new UniformDistribution(0, 1));
 
 		RootedPhylogeny<Object> tree2 = tif.createInstance();
 		tree2.randomizeLeafWeights(new UniformDistribution(0, 1));
+
+		RootedPhylogeny<Object> tree3 = tree1.mixWith(tree2, 0.1);
+		}
+
+	@Test(expectedExceptions = PhyloUtilsException.class)
+	public void weightMixingRequiresSameBaseTree() throws Exception
+		{
+		RootedPhylogeny<Object> tree1 = tif.createInstance();
+		tree1.randomizeLeafWeights(new UniformDistribution(0, 1));
+		tree1 = tree1.extractTreeWithLeafIDs(tree1.getLeafValues());
+
+		RootedPhylogeny<Object> tree2 = tif.createInstance();
+		tree2.randomizeLeafWeights(new UniformDistribution(0, 1));
+		tree2 = tree1.extractTreeWithLeafIDs(tree2.getLeafValues());
 
 		RootedPhylogeny<Object> tree3 = tree1.mixWith(tree2, 0.1);
 		}

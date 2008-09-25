@@ -65,7 +65,8 @@ public class HybridRootedPhylogenyTest extends ContractTestAware<HybridRootedPhy
 		RootedPhylogeny leafPhylogeny = new BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles()
 				.rootPhylogeny;
 
-		RootedPhylogeny rootPhylogeny = leafPhylogeny.extractTreeWithLeafIDs(Arrays.asList("aa", "baa", "c"));
+		RootedPhylogeny rootPhylogeny = leafPhylogeny
+				.extractTreeWithLeafIDs(Arrays.asList("a", "aa", "bb", "bbba", "ba", "baa", "c", "ca", "cb"));
 
 		leafPhylogeny.setAllBranchLengthsToNull();
 

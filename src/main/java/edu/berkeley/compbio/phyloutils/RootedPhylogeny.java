@@ -35,6 +35,7 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.stats.ContinuousDistribution1D;
 import com.google.common.collect.Multiset;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -58,6 +59,7 @@ public interface RootedPhylogeny<T>
 	 * @param descendantIds the Set<T> of id of descendant nodes
 	 * @return the T id of the most recent common ancestor
 	 */
+	@Nullable
 	T commonAncestor(Set<T> descendantIds);
 
 	/**
@@ -67,6 +69,7 @@ public interface RootedPhylogeny<T>
 	 * @param nameB the T id of another descendant node
 	 * @return the T id of the most recent common ancestor
 	 */
+	@Nullable
 	T commonAncestor(T nameA, T nameB);
 
 	/**
@@ -163,9 +166,10 @@ public interface RootedPhylogeny<T>
 	 * Returns the phylogeny on which this one was immediately based, if any.
 	 *
 	 * @return the RootedPhylogeny<T> phylogeny on which this one was immediately based, if this tree was derived or
-	 *         extracted somehow from another; returns this tree otherwise
+	 *         extracted somehow from another; returns null otherwise
 	 */
-	@NotNull
+	//@NotNull
+	@Nullable
 	RootedPhylogeny<T> getBasePhylogeny();
 
 	/**

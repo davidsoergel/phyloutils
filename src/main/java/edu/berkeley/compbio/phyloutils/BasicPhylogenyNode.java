@@ -82,10 +82,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<
 	public BasicPhylogenyNode(BasicPhylogenyNode<T> parent)
 		{
 		this();
-		if (parent != null)
-			{
-			parent.addChild(this);// automatically sets this.parent as well
-			}
+		setParent(parent);
 		}
 
 	public BasicPhylogenyNode(BasicPhylogenyNode<T> parent, double length)
@@ -274,7 +271,8 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<
 	public BasicPhylogenyNode<T> newChild()
 		{
 		BasicPhylogenyNode<T> child = new BasicPhylogenyNode<T>();
-		addChild(child);
+		child.setParent(this);
+		//addChild(child);
 		return child;
 		}
 
@@ -282,13 +280,16 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setParent(PhylogenyNode<T> parent)//BasicPhylogenyNode parent)
+	public final void setParent(PhylogenyNode<T> parent)//BasicPhylogenyNode parent)
 		{
-
-		this.parent = (BasicPhylogenyNode<T>) parent;// may produce ClassCastException
-		if (parent != null)
+		if (this.parent != null)
 			{
-			this.parent.invalidateAggregatedChildInfo();
+			this.parent.unregisterChild(this);
+			}
+		this.parent = (BasicPhylogenyNode<T>) parent;// may produce ClassCastException
+		if (this.parent != null)
+			{
+			this.parent.registerChild(this);
 			}
 		}
 
@@ -482,10 +483,20 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addChild(PhylogenyNode<T> child)
+	public void registerChild(PhylogenyNode<T> child)
 		{
 		children.add((BasicPhylogenyNode<T>) child);
-		((BasicPhylogenyNode<T>) child).setParent(this);
+		//((BasicPhylogenyNode<T>) child).setParent(this);
+		invalidateAggregatedChildInfo();
+		}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void unregisterChild(PhylogenyNode<T> child)
+		{
+		children.remove((BasicPhylogenyNode<T>) child);
+		//((BasicPhylogenyNode<T>) child).setParent(this);
 		invalidateAggregatedChildInfo();
 		}
 
@@ -533,7 +544,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<
 
 			for (BasicPhylogenyNode<T> child : children)
 				{
-				result.addChild((BasicPhylogenyNode<T>) child.clone());
+				child.clone().setParent(result);
 				}
 
 			// reset weight after children, since it got wiped
@@ -557,5 +568,19 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<
 	public BasicPhylogenyNode<T> getSelfNode()
 		{
 		return this;
+		}
+
+
+	public void appendSubtree(StringBuffer sb, String indent)
+		{
+
+
+		sb.append(indent + "\n");
+		sb.append(indent + "---" + weight + " " + length + "     " + value + "\n");
+		indent += "   |";
+		for (PhylogenyNode n : getChildren())
+			{
+			n.appendSubtree(sb, indent);
+			}
 		}
 	}

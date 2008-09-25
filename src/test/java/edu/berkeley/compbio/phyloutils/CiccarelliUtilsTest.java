@@ -58,4 +58,10 @@ public class CiccarelliUtilsTest
 		//logger.warn(d);
 		assert MathUtils.equalWithinFPError(d, 1.47741);
 		}
+
+	@Test
+	public void ciccarelliTreePrettyPrint()
+		{
+		System.out.println(ciccarelli.getTree().toString());
+		}
 	}

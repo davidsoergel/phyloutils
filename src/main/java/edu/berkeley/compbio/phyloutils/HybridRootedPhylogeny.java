@@ -92,4 +92,9 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		// this is sort of a hack... extracting a tree where some leaves are in the leaf phylogeny only is not allowed, and will throw an exception
 		return rootPhylogeny.extractTreeWithLeafIDs(integers, ignoreAbsentNodes);
 		}
+
+	public RootedPhylogeny<T> getRootPhylogeny()
+		{
+		return rootPhylogeny;
+		}
 	}
