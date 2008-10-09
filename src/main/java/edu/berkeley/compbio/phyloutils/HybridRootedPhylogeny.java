@@ -97,4 +97,10 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		{
 		return rootPhylogeny;
 		}
+
+	public boolean isDescendant(T ancestor, T descendant) throws PhyloUtilsException
+		{
+		T nearestDescendant = nearestKnownAncestor(descendant);
+		return rootPhylogeny.commonAncestor(ancestor, nearestDescendant) == ancestor;
+		}
 	}
