@@ -103,4 +103,9 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		T nearestDescendant = nearestKnownAncestor(descendant);
 		return rootPhylogeny.commonAncestor(ancestor, nearestDescendant) == ancestor;
 		}
+
+	public void saveState()
+		{
+		leafPhylogeny.saveState();
+		}
 	}

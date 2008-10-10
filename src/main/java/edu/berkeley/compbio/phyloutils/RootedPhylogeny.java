@@ -238,4 +238,6 @@ public interface RootedPhylogeny<T>
 	void setLeafWeights(Multiset<T> ids);
 
 	void setAllBranchLengthsToNull();
+
+	void saveState();
 	}
