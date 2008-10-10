@@ -137,6 +137,13 @@ public class TaxonMerger
 				Set<T> subIds = theTaxonsetsByTaxid.remove(id);
 				if (subIds != null)
 					{
+					// this happens when some of the input leaves connect up to the known-distance tree at a high node.
+					// In this case the node has a known span greater than the threshold, but the leaves that hooked up
+					// to it cannot be more finely assorted into known-distance nodes.
+					// Thus it is not possible to group them at the appropriate level: if we merge them all together, the
+					// resulting clade will be too big; if we don't, neighboring strains may be considered separately.
+					// So for now we just drop them entirely.
+
 					logger.warn("Dropping " + subIds.size() + " taxa at node " + id + " with span " + span + " > "
 							+ ciccarelliMergeThreshold + " (i.e., our base tree is not detailed enough)");
 					}
