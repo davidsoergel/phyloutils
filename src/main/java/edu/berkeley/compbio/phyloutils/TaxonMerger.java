@@ -101,6 +101,8 @@ public class TaxonMerger
 		// for sanity checking only
 		Set<T> allMergedTaxa = new HashSet<T>();
 
+		int dropped = 0;
+
 		while (it.hasNext())
 			{
 			PhylogenyNode<T> node = it.next();
@@ -144,6 +146,8 @@ public class TaxonMerger
 					// resulting clade will be too big; if we don't, neighboring strains may be considered separately.
 					// So for now we just drop them entirely.
 
+					dropped += subIds.size();
+
 					logger.warn("Dropping " + subIds.size() + " taxa at node " + id + " with span " + span + " > "
 							+ ciccarelliMergeThreshold + " (i.e., our base tree is not detailed enough)");
 					}
@@ -153,7 +157,8 @@ public class TaxonMerger
 		assert theTaxonsetsByTaxid.isEmpty();
 		//assert allMergedTaxa.containsAll(leafIds);
 
-		logger.info("Merged " + leafIds.size() + " taxa into " + theMergedTaxa.size() + " groups.");
+		logger.info("Merged " + (leafIds.size() - dropped) + " taxa into " + theMergedTaxa.size() + " groups; dropped "
+				+ dropped);
 		return theMergedTaxa;
 		}
 	}
