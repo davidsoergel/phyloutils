@@ -78,7 +78,7 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 	 */
 	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers) throws PhyloUtilsException
 		{
-		// this is sort of a hack... extracting a tree where some leaves are in the leaf phylogeny only is not allowed, and will throw an exception
+		// ** this is sort of a hack... extracting a tree where some leaves are in the leaf phylogeny only is not allowed, and will throw an exception
 		return rootPhylogeny.extractTreeWithLeafIDs(integers);
 		}
 
@@ -98,10 +98,30 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		return rootPhylogeny;
 		}
 
+
 	public boolean isDescendant(T ancestor, T descendant) throws PhyloUtilsException
 		{
 		T nearestDescendant = nearestKnownAncestor(descendant);
-		return rootPhylogeny.commonAncestor(ancestor, nearestDescendant) == ancestor;
+
+		// if the ancestor is in the root phylogeny, then check that the descendant is below it
+
+		if (rootPhylogeny.getNode(ancestor) != null)
+			{
+			return rootPhylogeny.commonAncestor(ancestor, nearestDescendant) == ancestor;
+			}
+
+		// otherwise the ancestor is in the leaf phylogeny.
+		// It's not good enough to check ancestry in the leaf phylogeny alone, since the root phylogeny may disagree.
+
+		T nearestAncestor = nearestKnownAncestor(ancestor);
+		if (nearestAncestor != nearestDescendant)
+			{
+			return false;
+			}
+
+		// OK, both ancestor and descendant exist only in the leaf phylogeny, and they're in the same clade wrt the root phylogeny.
+
+		return leafPhylogeny.commonAncestor(ancestor, descendant) == ancestor;
 		}
 
 	public void saveState()
