@@ -195,6 +195,8 @@ public class NewickParser<T>
 						break;
 
 					case StreamTokenizer.TT_WORD:
+					case '<':
+					case '>':
 						if (state == State.NEWNODE || state == State.NAME)
 							{
 							currentNode.appendToValue(st.sval.replace('_', ' '), namer);
