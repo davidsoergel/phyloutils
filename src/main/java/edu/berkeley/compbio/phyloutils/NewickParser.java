@@ -195,8 +195,6 @@ public class NewickParser<T>
 						break;
 
 					case StreamTokenizer.TT_WORD:
-					case '<':
-					case '>':
 						if (state == State.NEWNODE || state == State.NAME)
 							{
 							currentNode.appendToValue(st.sval.replace('_', ' '), namer);
@@ -215,6 +213,49 @@ public class NewickParser<T>
 							{
 							throw new PhyloUtilsException(
 									"String " + st.sval + " in an unexpected place at line " + st.lineno());
+							}
+						break;
+
+					case '<':
+						if (state == State.NEWNODE || state == State.NAME)
+							{
+							currentNode.appendToValue("<", namer);
+							state = State.NAME;
+							}
+						else if (state == State.POST_CHILDREN)
+							{
+							currentNode.appendToValue("<", namer);
+							state = State.POST_CHILDREN;
+							}
+						else if (state == State.COMMENT)
+							{
+							// ignore
+							}
+						else
+							{
+							throw new PhyloUtilsException("String < in an unexpected place at line " + st.lineno());
+							}
+						break;
+
+
+					case '>':
+						if (state == State.NEWNODE || state == State.NAME)
+							{
+							currentNode.appendToValue(">", namer);
+							state = State.NAME;
+							}
+						else if (state == State.POST_CHILDREN)
+							{
+							currentNode.appendToValue(">", namer);
+							state = State.POST_CHILDREN;
+							}
+						else if (state == State.COMMENT)
+							{
+							// ignore
+							}
+						else
+							{
+							throw new PhyloUtilsException("String > in an unexpected place at line " + st.lineno());
 							}
 						break;
 

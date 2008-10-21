@@ -27,3 +27,12 @@ insert into names (tax_id, name_txt, name_class) values(183190,'Xylella fastidio
 insert into names (tax_id, name_txt, name_class) values(216466,'Streptococcus agalactiae V', 'synonym');
 insert into names (tax_id, name_txt, name_class) values(107806,'Buchnera aphidicola APS', 'synonym');
 insert into names (tax_id, name_txt, name_class) values(224915,'Buchnera aphidicola Bp', 'synonym');
+
+# October 21, 2008
+# a few more
+
+insert into names (tax_id, name_txt, name_class) values(158878,'Staphylococcus aureus Mu50', 'synonym');
+insert into names (tax_id, name_txt, name_class) values(198804,'Buchnera aphidicola Sg', 'synonym');
+insert into names (tax_id, name_txt, name_class) values(196620,'Staphylococcus aureus MW2', 'synonym');
+insert into names (tax_id, name_txt, name_class) values(158879,'Staphylococcus aureus N315', 'synonym');
+insert into names (tax_id, name_txt, name_class) values(198215,'Shigella flexneri 2a 2457T', 'synonym');
