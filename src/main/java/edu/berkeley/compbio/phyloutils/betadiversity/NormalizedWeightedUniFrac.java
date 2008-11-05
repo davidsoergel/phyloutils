@@ -32,7 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
-import com.davidsoergel.stats.DistanceMeasure;
+import com.davidsoergel.stats.DissimilarityMeasure;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
@@ -47,7 +47,7 @@ import java.util.Set;
  * @version $Id$
  */
 
-public class NormalizedWeightedUniFrac<T> implements DistanceMeasure<RootedPhylogeny<T>>
+public class NormalizedWeightedUniFrac<T> implements DissimilarityMeasure<RootedPhylogeny<T>>
 	{
 	private static final Logger logger = Logger.getLogger(WeightedUniFrac.class);
 

@@ -32,7 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
-import com.davidsoergel.stats.DistanceMeasure;
+import com.davidsoergel.stats.DissimilarityMeasure;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 import org.apache.log4j.Logger;
@@ -47,7 +47,7 @@ import java.util.Set;
  */
 
 //@PropertyConsumer
-public class JDivergence<T> implements DistanceMeasure<RootedPhylogeny<T>>
+public class JDivergence<T> implements DissimilarityMeasure<RootedPhylogeny<T>>
 	{
 	private static final Logger logger = Logger.getLogger(WeightedUniFrac.class);
 
