@@ -60,7 +60,7 @@ public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T
 	 * {@inheritDoc}
 	 */
 	@Nullable
-	PhylogenyNode getParent();
+	PhylogenyNode<T> getParent();
 
 	void setParent(PhylogenyNode<T> parent);
 

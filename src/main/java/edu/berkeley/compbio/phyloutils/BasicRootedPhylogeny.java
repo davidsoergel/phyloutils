@@ -78,6 +78,17 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
 		}
 
 	/**
+	 * Make a complete copy of the provided phylogeny using BasicPhylogenyNodes.  It's probably better to use clone() when
+	 * possible, but this copy constructor allows translating from phylogenies with different node types.
+	 *
+	 * @param original
+	 */
+	/*	public BasicRootedPhylogeny(HybridRootedPhylogeny<T> original)
+	   {
+root = new BasicPhylogenyNode<T>(original.);
+	   }*/
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public PhylogenyNode<T> getNode(T name)

@@ -42,7 +42,7 @@ import java.util.Collection;
  * @version $Id$
  * @JavadocOK
  */
-public interface TaxonMergingPhylogeny<T>
+public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
 	{
 	/**
 	 * Locate the node with the given id, and navigate up the tree if necessary) until a node is found that has a branch
@@ -74,7 +74,8 @@ public interface TaxonMergingPhylogeny<T>
 	 *
 	 * @param ids               the Collection<T> of leaves desired for the extracted tree
 	 * @param ignoreAbsentNodes silently ignore requests for leaves that are not present in the tree, simply returning the
-	 *                          extracted tree with those leaves that are found.
+	 *                          extracted tree with those leaves that are found.  I.e., intersect the requested leaf id
+	 *                          list with the available leaf ids before constructing the result tree.
 	 * @return the extracted RootedPhylogeny<T>
 	 * @throws PhyloUtilsException when the given collection contains a node id that is not found in the tree and
 	 *                             ignoreAbsentNodes is false

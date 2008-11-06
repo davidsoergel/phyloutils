@@ -33,6 +33,8 @@
 package edu.berkeley.compbio.phyloutils;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -78,8 +80,7 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 	 */
 	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers) throws PhyloUtilsException
 		{
-		// ** this is sort of a hack... extracting a tree where some leaves are in the leaf phylogeny only is not allowed, and will throw an exception
-		return rootPhylogeny.extractTreeWithLeafIDs(integers);
+		return extractTreeWithLeafIDs(integers, false);
 		}
 
 
@@ -89,8 +90,56 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers, boolean ignoreAbsentNodes)
 			throws PhyloUtilsException
 		{
-		// this is sort of a hack... extracting a tree where some leaves are in the leaf phylogeny only is not allowed, and will throw an exception
-		return rootPhylogeny.extractTreeWithLeafIDs(integers, ignoreAbsentNodes);
+		// this ought to work even if some of the requested ids are in the root tree rather than the leaf tree,
+		// as long as the leaf tree also has a node with the same ID (even with the wrong topology)
+
+		RootedPhylogeny<T> basicLeaf = leafPhylogeny.extractTreeWithLeafIDs(integers, ignoreAbsentNodes);
+		HybridRootedPhylogeny<T> extractedHybrid = new HybridRootedPhylogeny<T>(rootPhylogeny, basicLeaf);
+		return extractedHybrid.convertToBasic();
+		}
+
+	private RootedPhylogeny<T> convertToBasic() throws PhyloUtilsException
+		{
+		reconciledLeafNodes = new HashSet<PhylogenyNode<T>>();
+		for (T leafId : leafPhylogeny.getLeafValues())
+			{
+			T joinId = nearestKnownAncestor(leafId);
+
+			PhylogenyNode<T> leafJoinNode = leafPhylogeny.getNode(joinId);
+			PhylogenyNode<T> rootJoinNode = rootPhylogeny.getNode(joinId);
+			reconcileLeafPhylogenyAt(leafJoinNode, rootJoinNode);
+			}
+		return leafPhylogeny;
+		}
+
+	private Set<PhylogenyNode<T>> reconciledLeafNodes;
+
+	private void reconcileLeafPhylogenyAt(PhylogenyNode<T> leafJoinNode, PhylogenyNode<T> rootJoinNode)
+		{
+		if (reconciledLeafNodes.contains(leafJoinNode))
+			{
+			return;
+			}
+
+		leafJoinNode.setLength(rootJoinNode.getLength());
+		leafJoinNode.setWeight(rootJoinNode.getWeight());
+
+		PhylogenyNode<T> rootParent = rootJoinNode.getParent();
+
+		T parentId = rootParent.getValue();
+		PhylogenyNode<T> leafParent = leafPhylogeny.getNode(parentId);
+
+		if (leafParent == null)
+			{
+			leafParent = new BasicPhylogenyNode<T>();
+			leafParent.setValue(parentId);
+			}
+
+		leafJoinNode.setParent(leafParent);
+
+		reconcileLeafPhylogenyAt(leafParent, rootParent);
+
+		reconciledLeafNodes.add(leafJoinNode);
 		}
 
 	public RootedPhylogeny<T> getRootPhylogeny()
