@@ -36,6 +36,7 @@ import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIteratorImpl;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -188,13 +189,15 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<
 	/**
 	 * {@inheritDoc}
 	 */
+	@Nullable
 	public Double getWeight()
 		{
 		if (weight == null)
 			{
 			if (isLeaf())
 				{
-				throw new PhyloUtilsRuntimeException("Node has undefined weight: " + getValue());
+				return null;
+				//throw new PhyloUtilsRuntimeException("Node has undefined weight: " + getValue());
 				}
 			propagateWeightFromBelow();
 			}
@@ -228,7 +231,14 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<
 			for (BasicPhylogenyNode<T> child : children)
 				{
 				//child.propagateWeightFromBelow();
-				incrementWeightBy(child.getWeight());
+				Double w = child.getWeight();
+				if (w == null)
+					{
+					// undefined
+					weight = null;
+					return;
+					}
+				incrementWeightBy(w);
 				}
 			}
 		}
@@ -254,6 +264,10 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>//, HierarchyNode<
 	 */
 	public void setValue(T value)
 		{
+		if (value != null && value.equals(new Integer(-1)))
+			{
+			logger.error("wtf");
+			}
 		this.value = value;
 		}
 

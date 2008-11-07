@@ -38,6 +38,7 @@ import com.google.common.collect.Multiset;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -129,7 +130,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			throws PhyloUtilsException
 
 		{
-		Set<PhylogenyNode<T>> theLeaves = new HashSet<PhylogenyNode<T>>();
+		// don't use HashSet, to avoid calling hashcode since that requires a transaction
+		//Set<PhylogenyNode<T>> theLeaves = new HashSet<PhylogenyNode<T>>();
+		List<PhylogenyNode<T>> theLeaves = new ArrayList<PhylogenyNode<T>>();
 		for (T id : ids)
 			{
 			PhylogenyNode<T> n = getNode(id);

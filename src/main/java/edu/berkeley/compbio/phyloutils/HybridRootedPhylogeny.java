@@ -87,20 +87,30 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 	/**
 	 * {@inheritDoc}
 	 */
-	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers, boolean ignoreAbsentNodes)
+	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes)
 			throws PhyloUtilsException
 		{
 		// this ought to work even if some of the requested ids are in the root tree rather than the leaf tree,
 		// as long as the leaf tree also has a node with the same ID (even with the wrong topology)
 
-		RootedPhylogeny<T> basicLeaf = leafPhylogeny.extractTreeWithLeafIDs(integers, ignoreAbsentNodes);
+		RootedPhylogeny<T> basicLeaf = leafPhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes);
 		HybridRootedPhylogeny<T> extractedHybrid = new HybridRootedPhylogeny<T>(rootPhylogeny, basicLeaf);
-		return extractedHybrid.convertToBasic();
+		RootedPhylogeny<T> result = extractedHybrid.convertToBasic();
+
+		// now result has all the requested leaves, and the rootwards topology has been adjusted to match the root tree.
+		// however, there may be stranded branches, i.e. former ancestors of the leaves (according to the leaf tree) that
+		// are no longer ancestors of anything in the hybrid tree.  So, we need to remove those.
+
+		return result.extractTreeWithLeafIDs(ids);
 		}
 
 	private RootedPhylogeny<T> convertToBasic() throws PhyloUtilsException
 		{
 		reconciledLeafNodes = new HashSet<PhylogenyNode<T>>();
+
+		// make sure the root ID matches
+		//	leafPhylogeny.setValue(rootPhylogeny.getValue());
+
 		for (T leafId : leafPhylogeny.getLeafValues())
 			{
 			T joinId = nearestKnownAncestor(leafId);
@@ -126,19 +136,30 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 
 		PhylogenyNode<T> rootParent = rootJoinNode.getParent();
 
-		T parentId = rootParent.getValue();
-		PhylogenyNode<T> leafParent = leafPhylogeny.getNode(parentId);
-
-		if (leafParent == null)
+		if (rootParent != null)
 			{
-			leafParent = new BasicPhylogenyNode<T>();
-			leafParent.setValue(parentId);
+			T parentId = rootParent.getValue();
+			PhylogenyNode<T> leafParent = leafPhylogeny.getNode(parentId);
+
+			if (leafParent == null)
+				{
+				leafParent = new BasicPhylogenyNode<T>();
+				leafParent.setValue(parentId);
+				}
+
+			//PhylogenyNode<T> obsoleteLeafParent = leafJoinNode.getParent();
+			leafJoinNode.setParent(leafParent);
+
+			reconcileLeafPhylogenyAt(leafParent, rootParent);
+
+			//leafPhylogeny.removeNode(obsoleteLeafParent);
 			}
+		/*		else
+		   {
+		   // if the root parent is null at this node, then the leaf node must also be the root.
 
-		leafJoinNode.setParent(leafParent);
-
-		reconcileLeafPhylogenyAt(leafParent, rootParent);
-
+		   leafJoinNode.setValue(rootJoinNode.getValue());
+		   }*/
 		reconciledLeafNodes.add(leafJoinNode);
 		}
 

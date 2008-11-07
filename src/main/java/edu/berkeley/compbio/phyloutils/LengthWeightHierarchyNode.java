@@ -33,6 +33,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.tree.HierarchyNode;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -51,6 +52,7 @@ public interface LengthWeightHierarchyNode<T, I extends LengthWeightHierarchyNod
 	 *
 	 * @return the length
 	 */
+	@Nullable
 	Double getLength();
 
 	/**
@@ -65,6 +67,7 @@ public interface LengthWeightHierarchyNode<T, I extends LengthWeightHierarchyNod
 	 *
 	 * @return the weight
 	 */
+	@Nullable
 	Double getWeight();
 
 	/**
@@ -79,6 +82,7 @@ public interface LengthWeightHierarchyNode<T, I extends LengthWeightHierarchyNod
 	 *
 	 * @return
 	 */
+	@Nullable
 	Double getLargestLengthSpan();
 
 
