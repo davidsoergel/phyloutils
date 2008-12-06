@@ -177,21 +177,21 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 
 		if (rootPhylogeny.getNode(ancestor) != null)
 			{
-			return rootPhylogeny.commonAncestor(ancestor, nearestDescendant) == ancestor;
+			return ancestor.equals(rootPhylogeny.commonAncestor(ancestor, nearestDescendant));
 			}
 
 		// otherwise the ancestor is in the leaf phylogeny.
 		// It's not good enough to check ancestry in the leaf phylogeny alone, since the root phylogeny may disagree.
 
 		T nearestAncestor = nearestKnownAncestor(ancestor);
-		if (nearestAncestor != nearestDescendant)
+		if (!nearestAncestor.equals(nearestDescendant))
 			{
 			return false;
 			}
 
 		// OK, both ancestor and descendant exist only in the leaf phylogeny, and they're in the same clade wrt the root phylogeny.
 
-		return leafPhylogeny.commonAncestor(ancestor, descendant) == ancestor;
+		return ancestor.equals(leafPhylogeny.commonAncestor(ancestor, descendant));
 		}
 
 	public void saveState()

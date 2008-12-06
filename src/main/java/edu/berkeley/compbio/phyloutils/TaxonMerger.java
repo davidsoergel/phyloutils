@@ -32,6 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
 import com.davidsoergel.dsutils.tree.TreeException;
 import org.apache.log4j.Logger;
@@ -107,8 +108,6 @@ public class TaxonMerger
 			{
 			PhylogenyNode<T> node = it.next();
 
-			// the iterator is depth-first by default
-
 			double span = node.getLargestLengthSpan();
 			if (span < ciccarelliMergeThreshold)
 				{
@@ -156,6 +155,24 @@ public class TaxonMerger
 
 		assert theTaxonsetsByTaxid.isEmpty();
 		//assert allMergedTaxa.containsAll(leafIds);
+
+		// make sure the sets are really disjoint
+		final Set<T> distinctTaxonHeads = theMergedTaxa.keySet();
+		for (Map.Entry<T, Set<T>> entry : theMergedTaxa.entrySet())
+			{
+			final Set<T> taxonMembers = entry.getValue();
+			Collection<T> intersection = DSCollectionUtils.intersection(distinctTaxonHeads, taxonMembers);
+			assert intersection.size() == 1; // the key itself
+			assert intersection.iterator().next().equals(entry.getKey());
+
+			for (Map.Entry<T, Set<T>> entry2 : theMergedTaxa.entrySet())
+				{
+				if (entry2.getKey() != entry.getKey())
+					{
+					assert DSCollectionUtils.intersection(taxonMembers, entry2.getValue()).size() == 0;
+					}
+				}
+			}
 
 		logger.info("Merged " + (leafIds.size() - dropped) + " taxa into " + theMergedTaxa.size() + " groups; dropped "
 				+ dropped);
