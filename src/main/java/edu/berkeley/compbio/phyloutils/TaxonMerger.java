@@ -160,16 +160,29 @@ public class TaxonMerger
 		final Set<T> distinctTaxonHeads = theMergedTaxa.keySet();
 		for (Map.Entry<T, Set<T>> entry : theMergedTaxa.entrySet())
 			{
+			// each set of merged taxa should contain exactly one entry of the head set, corresponding to the subtree root
+			T headId = entry.getKey();
 			final Set<T> taxonMembers = entry.getValue();
 			Collection<T> intersection = DSCollectionUtils.intersection(distinctTaxonHeads, taxonMembers);
 			assert intersection.size() == 1; // the key itself
-			assert intersection.iterator().next().equals(entry.getKey());
+			assert intersection.iterator().next().equals(headId);
 
+			// this subtree should have no nodes in common with any other subtree
 			for (Map.Entry<T, Set<T>> entry2 : theMergedTaxa.entrySet())
 				{
-				if (entry2.getKey() != entry.getKey())
+				if (entry2.getKey() != headId)
 					{
 					assert DSCollectionUtils.intersection(taxonMembers, entry2.getValue()).size() == 0;
+					}
+				}
+
+			// more to the point, this subtree should have no nodes that descend from the root of any other subtree
+			for (T t : entry.getValue())
+				{
+				for (PhylogenyNode<T> ancestor : theTree.getNode(t).getAncestorPath())
+					{
+					T ancestorId = ancestor.getValue();
+					assert ancestorId.equals(headId) || !distinctTaxonHeads.contains(ancestorId);
 					}
 				}
 			}
