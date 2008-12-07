@@ -82,12 +82,14 @@ public class TaxonMerger
 			currentTaxonset.add(id);
 			}
 
+		// can't do this, because we may still need to drop nodes below
+		/*
 		if (ciccarelliMergeThreshold == 0)
 			{
 			//logger.info("No merging, using " + leafIds.size() + " taxa.");
 			return theTaxonsetsByTaxid;
 			}
-
+*/
 		// now iterate over the tree, merging subtrees that meet the criterion
 
 		Map<T, Set<T>> theMergedTaxa = new HashMap<T, Set<T>>();
@@ -109,7 +111,7 @@ public class TaxonMerger
 			PhylogenyNode<T> node = it.next();
 
 			double span = node.getLargestLengthSpan();
-			if (span < ciccarelliMergeThreshold)
+			if (span <= ciccarelliMergeThreshold)
 				{
 				Set<T> mergeTaxa = new HashSet<T>();
 				for (PhylogenyNode<T> descendant : node)
@@ -176,14 +178,13 @@ public class TaxonMerger
 					}
 				}
 
-			// more to the point, this subtree should have no nodes that descend from the root of any other subtree
-			for (T t : entry.getValue())
+			// more to the point, this subtree should not descend from the root of any other subtree
+
+			PhylogenyNode<T> node = theTree.getNode(headId);
+			for (PhylogenyNode<T> ancestor : node.getAncestorPath())
 				{
-				for (PhylogenyNode<T> ancestor : theTree.getNode(t).getAncestorPath())
-					{
-					T ancestorId = ancestor.getValue();
-					assert ancestorId.equals(headId) || !distinctTaxonHeads.contains(ancestorId);
-					}
+				T ancestorId = ancestor.getValue();
+				assert ancestorId.equals(headId) || !distinctTaxonHeads.contains(ancestorId);
 				}
 			}
 
