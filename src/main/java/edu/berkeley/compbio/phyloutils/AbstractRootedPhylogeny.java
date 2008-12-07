@@ -59,7 +59,7 @@ import java.util.Set;
 public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	{
 	private static final Logger logger = Logger.getLogger(AbstractRootedPhylogeny.class);
-	private RootedPhylogeny<T> basePhylogeny = null;
+	private transient RootedPhylogeny<T> basePhylogeny = null;
 
 	/**
 	 * {@inheritDoc}

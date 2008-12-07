@@ -51,7 +51,7 @@ public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T
 	/**
 	 * {@inheritDoc}
 	 */
-	Collection<? extends PhylogenyNode<T>> getChildren();
+	Collection<? extends PhylogenyNode<T>> getChildren(); //
 
 	// the "name" of this PhylogenyNode is the same as the "value" of the hierarchynode
 	//T getName();

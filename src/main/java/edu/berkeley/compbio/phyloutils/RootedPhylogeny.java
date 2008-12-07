@@ -95,7 +95,7 @@ public interface RootedPhylogeny<T>
 	 *
 	 * @return all the nodes in the tree, both internal nodes and leaf nodes.
 	 */
-	Collection<PhylogenyNode<T>> getNodes();
+	Collection<? extends PhylogenyNode<T>> getNodes();
 
 	/**
 	 * Returns all the leaf nodes of the tree.

@@ -38,6 +38,10 @@ import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectStreamException;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,12 +61,12 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T>
+public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T> implements Serializable
 	{
 	private static final Logger logger = Logger.getLogger(BasicRootedPhylogeny.class);
 	// ------------------------------ FIELDS ------------------------------
 
-	private Map<T, PhylogenyNode<T>> nodes;
+	transient private Map<T, BasicPhylogenyNode<T>> nodes;
 	BasicPhylogenyNode<T> root;
 
 	// -------------------------- OTHER METHODS --------------------------
@@ -99,7 +103,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<PhylogenyNode<T>> getNodes()
+	public Collection<BasicPhylogenyNode<T>> getNodes()
 		{
 		return nodes.values();
 		}
@@ -148,7 +152,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	// we can't do this while building, since the names might change
 	public void updateNodes(NodeNamer<T> namer) throws PhyloUtilsException
 		{
-		nodes = new HashMap<T, PhylogenyNode<T>>();
+		nodes = new HashMap<T, BasicPhylogenyNode<T>>();
 		root.addSubtreeToMap(nodes, namer);
 		}
 
@@ -494,6 +498,44 @@ root = new BasicPhylogenyNode<T>(original.);
 	public void appendSubtree(StringBuffer sb, String indent)
 		{
 		root.appendSubtree(sb, indent);
+		}
+
+	private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException
+		{
+		root = (BasicPhylogenyNode<T>) stream.readObject();
+
+		nodes = new HashMap<T, BasicPhylogenyNode<T>>();
+
+		try
+			{
+			// populate the nodes map
+			updateNodes(null);  // all the nodes should have names already, don't need a namer
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.debug(e);
+			e.printStackTrace();
+			throw new NotSerializableException("PhyloUtilsException: " + e);
+			}
+
+
+		for (BasicPhylogenyNode<T> p : nodes.values())
+			{
+			for (BasicPhylogenyNode<T> c : p.getChildren())
+				{
+				c.parent = p;
+				}
+			}
+		}
+
+	private void writeObject(java.io.ObjectOutputStream stream) throws IOException
+		{
+		stream.writeObject(root);
+		}
+
+	private void readObjectNoData() throws ObjectStreamException
+		{
+		throw new NotSerializableException();
 		}
 	}
 
