@@ -105,4 +105,7 @@ public interface LengthWeightHierarchyNode<T, I extends LengthWeightHierarchyNod
 	 * {@inheritDoc}
 	 */
 	//	Collection<? extends LengthWeightHierarchyNode<T>> getChildren();
+
+
+	void toNewick(StringBuffer sb, int minClusterSize, double minLabelProb);
 	}

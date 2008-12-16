@@ -70,8 +70,34 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 	protected Double weight = null;// distinguish null from zero
 	protected double bootstrap;
 
+	public void toNewick(StringBuffer sb, int minClusterSize, double minLabelProb)
+		{
+		// (children)name:length
 
-	// --------------------------- CONSTRUCTORS ---------------------------
+		if (!children.isEmpty())
+			{
+			sb.append("(");
+			Iterator<BasicPhylogenyNode<T>> i = children.iterator();
+			while (i.hasNext())
+				{
+				sb.append(i.next());
+				if (i.hasNext())
+					{
+					sb.append(",");
+					}
+				}
+			sb.append(")");
+			}
+
+		sb.append(value.toString());
+
+		if (bootstrap != 0)
+			{
+			sb.append(":").append(bootstrap);
+			}
+		}
+
+// --------------------------- CONSTRUCTORS ---------------------------
 
 	public BasicPhylogenyNode()
 		{
