@@ -599,8 +599,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			}
 		catch (CloneNotSupportedException e)
 			{
-			logger.debug(e);
-			e.printStackTrace();
+			logger.error(e);
 			throw new Error("cloneability required");
 			}
 		}

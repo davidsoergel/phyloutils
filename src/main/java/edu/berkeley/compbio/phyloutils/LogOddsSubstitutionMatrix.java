@@ -35,7 +35,6 @@ public class LogOddsSubstitutionMatrix
 		catch (Exception e)
 			{
 			//  logger.error(e);
-			//  e.printStackTrace();
 			r = new FileReader(filename);
 			}
 		readFromReader(r);
@@ -66,7 +65,7 @@ public class LogOddsSubstitutionMatrix
 				input.nextToken();
 				}
 
-			logger.debug("input1 = " + input);
+			logger.trace("input1 = " + input);
 
 			while (input.ttype != StreamTokenizer.TT_EOL)
 				{
@@ -74,12 +73,12 @@ public class LogOddsSubstitutionMatrix
 
 				input.nextToken();
 
-				logger.debug("input2 = " + input);
+				logger.trace("input2 = " + input);
 				}
 			residues = buffer.toString();
 			numResidues = residues.length();
 
-			logger.debug("residues = " + residues + "\nnumResidues = " + numResidues);
+			logger.trace("residues = " + residues + "\nnumResidues = " + numResidues);
 
 			// Create appropriately-sized matrix
 
@@ -92,7 +91,7 @@ public class LogOddsSubstitutionMatrix
 				input.nextToken();
 				}
 
-			logger.debug("input3 = " + input);
+			logger.trace("input3 = " + input);
 
 			// Read in substitution matrix values
 
@@ -100,7 +99,7 @@ public class LogOddsSubstitutionMatrix
 				{
 				buffer.append(input.sval.charAt(0));
 
-				logger.debug("input4 = " + input);
+				logger.trace("input4 = " + input);
 
 				input.nextToken();
 
@@ -111,7 +110,7 @@ public class LogOddsSubstitutionMatrix
 					SubstitutionMatrix[i][j] = (int) input.nval;// - 10;
 					input.nextToken();
 
-					logger.debug("input5 = " + input);
+					logger.trace("input5 = " + input);
 					}
 				input.nextToken();
 				}
@@ -123,8 +122,7 @@ public class LogOddsSubstitutionMatrix
 			}
 		catch (IOException e)
 			{
-			e.printStackTrace();
-			logger.debug(e);
+			logger.error(e);
 			}
 		}
 

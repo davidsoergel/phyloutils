@@ -82,8 +82,7 @@ public class PhylogeneticKullbackLeibler<T> implements DissimilarityMeasure<Root
 			}
 		catch (PhyloUtilsException e)
 			{
-			logger.debug(e);
-			e.printStackTrace();
+			logger.error(e);
 			throw new Error(e);
 			}
 		}

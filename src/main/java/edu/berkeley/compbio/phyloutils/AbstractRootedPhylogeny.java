@@ -178,8 +178,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			}
 		catch (PhyloUtilsException e)
 			{
-			logger.debug(e);
-			e.printStackTrace();
+			logger.error(e);
 			throw new Error(e);
 			}
 

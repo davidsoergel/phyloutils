@@ -77,7 +77,7 @@ public class LengthWeightHierarchyNodeInterfaceTest<T extends LengthWeightHierar
 			 }
 		 catch (Exception e)
 			 {
-			 e.printStackTrace();
+			logger.error(e);
 			 result = getClass().getSimpleName();
 			 }
 		 return result;

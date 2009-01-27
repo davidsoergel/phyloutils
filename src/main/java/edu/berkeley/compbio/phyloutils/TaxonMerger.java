@@ -188,7 +188,7 @@ public class TaxonMerger
 				}
 			}
 
-		logger.info("Merged " + (leafIds.size() - dropped) + " taxa into " + theMergedTaxa.size() + " groups; dropped "
+		logger.debug("Merged " + (leafIds.size() - dropped) + " taxa into " + theMergedTaxa.size() + " groups; dropped "
 				+ dropped);
 		return theMergedTaxa;
 		}

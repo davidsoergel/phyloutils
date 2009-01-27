@@ -103,7 +103,7 @@ public class BinaryTreeTest
 			}
 		catch (TreeException e)
 			{
-			logger.debug(e);
+			logger.error(e);
 			}
 		}
 

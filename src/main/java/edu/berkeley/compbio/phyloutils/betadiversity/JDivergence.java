@@ -84,8 +84,7 @@ public class JDivergence<T> implements DissimilarityMeasure<RootedPhylogeny<T>>
 			}
 		catch (PhyloUtilsException e)
 			{
-			logger.debug(e);
-			e.printStackTrace();
+			logger.error(e);
 			throw new Error(e);
 			}
 		}

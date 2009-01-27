@@ -90,7 +90,6 @@ public class BasicRootedPhylogenyTest extends ContractTestAware<BasicRootedPhylo
 				{
 				// impossible
 				logger.error(e);
-				e.printStackTrace();
 				throw new Error(e);
 				}
 			}

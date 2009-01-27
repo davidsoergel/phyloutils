@@ -101,12 +101,10 @@ public class CiccarelliUtils
 			}
 		catch (IOException e)
 			{
-			e.printStackTrace();//To change body of catch statement use File | Settings | File Templates.
 			logger.error(e);
 			}
 		catch (PhyloUtilsException e)
 			{
-			e.printStackTrace();//To change body of catch statement use File | Settings | File Templates.
 			logger.error(e);
 			}
 		}

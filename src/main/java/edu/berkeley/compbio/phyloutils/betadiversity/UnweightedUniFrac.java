@@ -91,8 +91,7 @@ public class UnweightedUniFrac<T> implements DissimilarityMeasure<RootedPhylogen
 			}
 		catch (PhyloUtilsException e)
 			{
-			logger.debug(e);
-			e.printStackTrace();
+			logger.error(e);
 			throw new Error(e);
 			}
 		}

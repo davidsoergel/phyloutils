@@ -103,13 +103,13 @@ public class BinaryTree
 		breadthFirst = new int[parent.length];
 		breadthFirst[0] = 0;// root is always 0;
 		int pos = 1;// the next position to fill
-		logger.debug("parents: " + Arrays.toString(parent));
-		logger.debug("child1: " + Arrays.toString(child1));
-		logger.debug("child2: " + Arrays.toString(child2));
+		logger.trace("parents: " + Arrays.toString(parent));
+		logger.trace("child1: " + Arrays.toString(child1));
+		logger.trace("child2: " + Arrays.toString(child2));
 
 		for (int i = 0; pos < parent.length; i++)
 			{
-			logger.debug("[" + i + "] breadthFirst: " + Arrays.toString(breadthFirst));
+			logger.trace("[" + i + "] breadthFirst: " + Arrays.toString(breadthFirst));
 			int c1 = child1[breadthFirst[i]];
 			int c2 = child2[breadthFirst[i]];
 			if (c1 != NONE)
@@ -125,10 +125,10 @@ public class BinaryTree
 				pos++;
 				}
 			}
-		logger.debug("parents: " + Arrays.toString(parent));
-		logger.debug("child1: " + Arrays.toString(child1));
-		logger.debug("child2: " + Arrays.toString(child2));
-		logger.debug("breadthFirst: " + Arrays.toString(breadthFirst));
+		logger.trace("parents: " + Arrays.toString(parent));
+		logger.trace("child1: " + Arrays.toString(child1));
+		logger.trace("child2: " + Arrays.toString(child2));
+		logger.trace("breadthFirst: " + Arrays.toString(breadthFirst));
 
 		return breadthFirst;
 		}

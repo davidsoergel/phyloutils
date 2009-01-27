@@ -44,7 +44,6 @@ public class LogTransitionMatrix//extends TransitionMatrix
 		catch (Exception e)
 			{
 			//  logger.error(e);
-			//  e.printStackTrace();
 			r = new FileReader(filename);
 			}
 		readFromReader(r);
@@ -71,7 +70,7 @@ public class LogTransitionMatrix//extends TransitionMatrix
 				input.nextToken();
 				}
 
-			logger.debug("input1 = " + input);
+			logger.trace("input1 = " + input);
 
 			while (input.ttype != StreamTokenizer.TT_EOL)
 				{
@@ -79,11 +78,11 @@ public class LogTransitionMatrix//extends TransitionMatrix
 
 				input.nextToken();
 
-				logger.debug("input2 = " + input);
+				logger.trace("input2 = " + input);
 				numStates++;
 				}
 
-			logger.debug("numStates = " + numStates);
+			logger.trace("numStates = " + numStates);
 
 			// Create appropriately-sized matrix
 
@@ -95,7 +94,7 @@ public class LogTransitionMatrix//extends TransitionMatrix
 				input.nextToken();
 				}
 
-			logger.debug("input3 = " + input);
+			logger.trace("input3 = " + input);
 
 			// Read in substitution matrix values
 
@@ -113,15 +112,14 @@ public class LogTransitionMatrix//extends TransitionMatrix
 					logTransitions[i][j] = input.nval;
 					input.nextToken();
 
-					logger.debug("input5 = " + input);
+					logger.trace("input5 = " + input);
 					}
 				input.nextToken();
 				}
 			}
 		catch (IOException e)
 			{
-			e.printStackTrace();
-			logger.debug(e);
+			logger.error(e);
 			}
 		}
 

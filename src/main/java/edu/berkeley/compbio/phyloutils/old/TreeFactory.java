@@ -41,7 +41,7 @@ public class TreeFactory
 			}
 		catch (TreeException e)
 			{
-			logger.debug(e);
+			logger.error(e);
 			}
 		return t;
 		}
@@ -102,7 +102,7 @@ public class TreeFactory
 		/*	}
 		catch (DistributionException e)
 			{
-			logger.debug(e);
+			logger.error(e);
 			}*/
 		}
 
