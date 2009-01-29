@@ -57,7 +57,7 @@ import java.util.Set;
  */
 
 public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, HierarchyNode<T, BasicPhylogenyNode<T>>
-// really T should extend Serializable here but let's see if we can get away without it
+		// really T should extend Serializable here but let's see if we can get away without it
 	{
 	private static final Logger logger = Logger.getLogger(BasicPhylogenyNode.class);
 	// ------------------------------ FIELDS ------------------------------
@@ -97,7 +97,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			}
 		}
 
-// --------------------------- CONSTRUCTORS ---------------------------
+	// --------------------------- CONSTRUCTORS ---------------------------
 
 	public BasicPhylogenyNode()
 		{
@@ -599,7 +599,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			}
 		catch (CloneNotSupportedException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			throw new Error("cloneability required");
 			}
 		}

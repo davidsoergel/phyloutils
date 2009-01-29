@@ -101,11 +101,11 @@ public class CiccarelliUtils
 			}
 		catch (IOException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			}
 		catch (PhyloUtilsException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			}
 		}
 

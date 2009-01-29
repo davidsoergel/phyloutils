@@ -41,7 +41,7 @@ public class TreeFactory
 			}
 		catch (TreeException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			}
 		return t;
 		}

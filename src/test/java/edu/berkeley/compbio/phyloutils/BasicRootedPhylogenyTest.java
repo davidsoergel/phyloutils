@@ -89,7 +89,7 @@ public class BasicRootedPhylogenyTest extends ContractTestAware<BasicRootedPhylo
 			catch (PhyloUtilsException e)
 				{
 				// impossible
-				logger.error(e);
+				logger.error("Error", e);
 				throw new Error(e);
 				}
 			}

@@ -457,7 +457,7 @@ root = new BasicPhylogenyNode<T>(original.);
 			}
 		catch (PhyloUtilsException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			throw new Error(e);
 			}
 		}
@@ -518,7 +518,7 @@ root = new BasicPhylogenyNode<T>(original.);
 			}
 		catch (PhyloUtilsException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			throw new NotSerializableException("PhyloUtilsException: " + e);
 			}
 

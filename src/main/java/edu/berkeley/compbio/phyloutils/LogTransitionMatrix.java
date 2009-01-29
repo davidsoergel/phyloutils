@@ -119,7 +119,7 @@ public class LogTransitionMatrix//extends TransitionMatrix
 			}
 		catch (IOException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			}
 		}
 

@@ -122,7 +122,7 @@ public class LogOddsSubstitutionMatrix
 			}
 		catch (IOException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			}
 		}
 

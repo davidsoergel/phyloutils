@@ -93,7 +93,7 @@ public class NormalizedWeightedUniFrac<T> implements DissimilarityMeasure<Rooted
 			}
 		catch (PhyloUtilsException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			throw new Error(e);
 			}
 		}

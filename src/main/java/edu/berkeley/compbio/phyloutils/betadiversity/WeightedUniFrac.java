@@ -87,7 +87,7 @@ public class WeightedUniFrac<T> implements DissimilarityMeasure<RootedPhylogeny<
 			}
 		catch (PhyloUtilsException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			throw new Error(e);
 			}
 		}

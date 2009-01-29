@@ -85,7 +85,7 @@ public class PhylogeneticJDivergence<T> implements DissimilarityMeasure<RootedPh
 			}
 		catch (PhyloUtilsException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			throw new Error(e);
 			}
 		}

@@ -121,11 +121,11 @@ public class TransitionMatrix
 			}
 		catch (IOException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			}
 		catch (DistributionException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			}
 		}
 
