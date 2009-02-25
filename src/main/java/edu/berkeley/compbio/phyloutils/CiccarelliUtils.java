@@ -119,6 +119,11 @@ public class CiccarelliUtils
 		return ciccarelliTree.distanceBetween(a, b);
 		}
 
+	public double greatestDepth(String a)
+		{
+		return ciccarelliTree.getNode(a).getLargestLengthSpan();
+		}
+
 	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids) throws PhyloUtilsException
 		{
 		return ciccarelliTree.extractTreeWithLeafIDs(ids);

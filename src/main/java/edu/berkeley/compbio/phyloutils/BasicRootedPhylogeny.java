@@ -269,6 +269,14 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
+	public Double getGreatestDepth()
+		{
+		return root.getGreatestDepth();
+		}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void registerChild(PhylogenyNode<T> a)
 		{
 		root.registerChild(a);

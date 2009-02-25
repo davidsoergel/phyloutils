@@ -85,6 +85,14 @@ public interface LengthWeightHierarchyNode<T, I extends LengthWeightHierarchyNod
 	@Nullable
 	Double getLargestLengthSpan();
 
+	/**
+	 * Returns the largest tree distance from this node to any descendant.
+	 *
+	 * @return
+	 */
+	@Nullable
+	Double getGreatestDepth();
+
 
 	/**
 	 * Returns the total branch length between the root and this node.

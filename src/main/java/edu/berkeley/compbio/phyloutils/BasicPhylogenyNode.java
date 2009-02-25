@@ -457,6 +457,15 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 		return largestLengthSpan;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public Double getGreatestDepth()
+		{
+		computeDepthsIfNeeded();
+		return greatestDepth;
+		}
+
 	private void computeDepthsIfNeeded()
 		{
 		if (greatestDepth == null)
