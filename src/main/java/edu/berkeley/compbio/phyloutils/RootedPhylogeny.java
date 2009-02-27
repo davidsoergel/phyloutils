@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -235,6 +236,14 @@ public interface RootedPhylogeny<T>
 	 * @param ids the Multiset providing counts for each leaf ID.
 	 */
 	void setLeafWeights(Multiset<T> ids);
+
+	/**
+	 * Sets the leaf weights based on the counts of the node IDs in the provided Multiset.  Normalizes and propagates the
+	 * weights up the tree.
+	 *
+	 * @param ids the Multiset providing counts for each leaf ID.
+	 */
+	void setLeafWeights(Map<T, Double> ids);
 
 	void setAllBranchLengthsToNull();
 

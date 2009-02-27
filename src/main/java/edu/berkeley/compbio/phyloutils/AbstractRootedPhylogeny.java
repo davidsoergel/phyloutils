@@ -432,6 +432,19 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
+	public void setLeafWeights(Map<T, Double> leafWeights)
+		{
+		for (PhylogenyNode<T> leaf : getLeaves())
+			{
+			leaf.setWeight(new Double(leafWeights.get(leaf.getValue())));
+			}
+
+		normalizeWeights();
+		}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void normalizeWeights()
 		{
 		// first normalize at the leaves
