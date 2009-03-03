@@ -59,7 +59,7 @@ import java.util.Set;
 public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	{
 	private static final Logger logger = Logger.getLogger(AbstractRootedPhylogeny.class);
-	private transient RootedPhylogeny<T> basePhylogeny = null;
+	protected transient RootedPhylogeny<T> basePhylogeny = null;
 
 	/**
 	 * {@inheritDoc}
@@ -114,6 +114,11 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return commonAncestor.getValue();
 		}
 
+
+	public boolean isDescendant(T ancestor, T descendant) throws PhyloUtilsException
+		{
+		return ancestor.equals(commonAncestor(ancestor, descendant));
+		}
 
 	/**
 	 * {@inheritDoc}
@@ -201,7 +206,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		//deepCopy(commonAncestor, newRoot);
 
-		newTree.updateNodes(null);
+		newTree.assignUniqueIds(null);
 		newTree.setBasePhylogeny(this);
 
 		//		assert newTree.getNodes().containsAll(leaves);
@@ -367,7 +372,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	public double getTotalBranchLength()
 		{
 		double result = 0;
-		for (PhylogenyNode<T> node : getNodes())
+		for (PhylogenyNode<T> node : getUniqueIdToNodeMap())
 			{
 			if (node.getLength() != null)// count null length as zero
 				{
@@ -383,7 +388,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	public void setAllBranchLengthsToNull()
 		{
 		double result = 0;
-		for (PhylogenyNode<T> node : getNodes())
+		for (PhylogenyNode<T> node : getUniqueIdToNodeMap())
 			{
 			node.setLength(null);
 			}
@@ -609,5 +614,84 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 	public void saveState()
 		{
+		}
+
+
+	/**
+	 * Maps String names in the given tree to their corresponding taxids, and returns a tree with Integer ids
+	 *
+	 * @param stringTree
+	 * @return
+	 */
+	public RootedPhylogeny<T> convertToIDTree(RootedPhylogeny<String> stringTree, NodeNamer<T> namer,
+	                                          TaxonomyService<T> taxonomyService)
+		//    ,Multimap<String, T> nameToIdMap)
+		//	throws NcbiTaxonomyException
+		{
+		if (stringTree.getBasePhylogeny() != null)
+			{
+			logger.warn("Converting an extracted subtree from String IDs to Integer IDs; base phylogeny gets lost");
+			}
+
+		if (stringTree.getParent() != null)
+			{
+			logger.warn(
+					"Rooted phylogeny shouldn't have a parent; dropping it in conversion from String IDs to Integer IDs");
+			}
+
+		// this duplicates convertToIntegerIDNode just so we operate on a BasicRootedPhylogeny instead of a PhylogenyNode
+
+		BasicRootedPhylogeny<T> result = new BasicRootedPhylogeny<T>();
+		copyValuesToNode(stringTree, result.getSelfNode(), taxonomyService); //, nameToIdMap
+		//NodeNamer<T> namer = new IntegerNodeNamer(10000000);
+		try
+			{
+			// name the nodes with null ids.  Note these don't get added to the nameToIdMap,
+			result.assignUniqueIds(namer);
+			}
+		catch (PhyloUtilsException e)
+			{
+			// impossible
+			logger.error("Error", e);
+			throw new Error(e);
+			}
+		return result;
+		}
+
+	private PhylogenyNode<T> convertToIDNode(PhylogenyNode<String> stringNode,
+	                                         TaxonomyService<T> taxonomyService)//, Multimap<String, T> nameToIdMap)//throws NcbiTaxonomyException
+		{
+		PhylogenyNode<T> result = new BasicPhylogenyNode<T>();
+		copyValuesToNode(stringNode, result, taxonomyService);//,nameToIdMap);
+		return result;
+		}
+
+	private void copyValuesToNode(PhylogenyNode<String> stringNode, PhylogenyNode<T> result,
+	                              TaxonomyService<T> taxonomyService)
+		//, Multimap<String, T> nameToIdMap)
+		{
+		result.setLength(stringNode.getLength());
+
+		result.setWeight(stringNode.getCurrentWeight());
+
+
+		T id = null;
+		try
+			{
+			id = taxonomyService.findTaxidByName(stringNode.getValue());
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.debug("Integer ID not found for name: " + stringNode.getValue());
+			//id = namer.generate(); //nameInternal(unknownCount)
+			}
+		result.setValue(id);
+		//nameToIdMap.put(stringNode.getValue(), id);
+
+		for (PhylogenyNode<String> node : stringNode.getChildren())
+			{
+			//result.addChild(convertToIntegerIDNode(node));
+			convertToIDNode(node, taxonomyService).setParent(result);  //,nameToIdMap
+			}
 		}
 	}

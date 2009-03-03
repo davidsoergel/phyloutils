@@ -32,36 +32,37 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.math.MathUtils;
-import org.testng.annotations.Test;
-
+import org.apache.log4j.Logger;
 
 /**
+ * Reads a Newick tree file containing the Tree of Life (Ciccarelli 2006, http://itol.embl.de) and provides it as a
+ * RootedPhylogeny.  Also provides convenience methods for a few common operations such as computing the tree distance
+ * between two species.
+ *
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
-
-public class CiccarelliUtilsTest
+public class CiccarelliTaxonomyService extends NewickTaxonomyService //<String>
 	{
+	private static final Logger logger = Logger.getLogger(CiccarelliTaxonomyService.class);
 
+	//private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
+	private static final String ciccarelliFilename = "itol080605_newick.txt";
 
-	private static final CiccarelliTaxonomyService ciccarelli = CiccarelliTaxonomyService.getInstance();
+	private static CiccarelliTaxonomyService instance;// = new CiccarelliUtils();
 
-	@Test
-	public void ciccarelliExactDistancesAreComputedCorrectly() throws PhyloUtilsException
+	public static CiccarelliTaxonomyService getInstance()
 		{
-		double d = ciccarelli.exactDistanceBetween("Escherichia coli O6", "Escherichia coli K12");//(217992, 562);
-		assert d == 0.00022;
-
-		d = ciccarelli.exactDistanceBetween("Escherichia coli O6",
-		                                    "Prochlorococcus marinus CCMP1378");//sp. MED4");//(217992, 59919);
-		//logger.warn(d);
-		assert MathUtils.equalWithinFPError(d, 1.47741);
+		if (instance == null)
+			{
+			instance = new CiccarelliTaxonomyService();
+			}
+		return instance;
 		}
 
-	@Test
-	public void ciccarelliTreePrettyPrint()
+
+	public CiccarelliTaxonomyService()// throws PhyloUtilsException
 		{
-		System.out.println(ciccarelli.getTree().toString());
+		super(ciccarelliFilename);
 		}
 	}

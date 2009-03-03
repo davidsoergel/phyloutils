@@ -61,6 +61,20 @@ public class NewickParser<T>
 
 	public static RootedPhylogeny<String> readWithStringIds(String filename) throws PhyloUtilsException, IOException
 		{
+		InputStream is = getInputStream(filename);
+
+		return new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED NODE "));
+		}
+
+	public static RootedPhylogeny<Integer> readWithIntegerIds(String filename) throws PhyloUtilsException, IOException
+		{
+		InputStream is = getInputStream(filename);
+
+		return new NewickParser<Integer>().read(is, new IntegerNodeNamer(10000000));
+		}
+
+	private static InputStream getInputStream(String filename) throws PhyloUtilsException, IOException
+		{
 		//ClassLoader classClassLoader = new NewickParser().getClass().getClassLoader();
 		ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
 		//ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
@@ -99,7 +113,7 @@ public class NewickParser<T>
 					 {
 					 is = new FileInputStream(filename);
 					 }*/
-		return new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED NODE "));
+		return is;
 		}
 
 	public RootedPhylogeny<T> read(InputStream is, NodeNamer<T> namer) throws PhyloUtilsException
@@ -172,26 +186,25 @@ public class NewickParser<T>
 							}
 						else if (state == State.NEWNODE || state == State.NAME)
 							{
-							currentNode
-									.appendToValue((int) st.nval,
-									               namer);// handle labels with integers in them, but not doubles
+							currentNode.appendToValue((int) st.nval,
+							                          namer);// handle labels with integers in them, but not doubles
 							state = State.NAME;
 							}
 						else if (state == State.POST_CHILDREN)
-							{
-							currentNode.setBootstrap(st.nval);
-							state = State.POST_CHILDREN;// unchanged
-							}
-						else if (state == State.COMMENT)
-							{
-							// ignore
-							//currentNode.setBootstrap(st.nval);
-							}
-						else
-							{
-							throw new PhyloUtilsException(
-									"Number " + st.nval + " in an unexpected place at line " + st.lineno());
-							}
+								{
+								currentNode.setBootstrap(st.nval);
+								state = State.POST_CHILDREN;// unchanged
+								}
+							else if (state == State.COMMENT)
+									{
+									// ignore
+									//currentNode.setBootstrap(st.nval);
+									}
+								else
+									{
+									throw new PhyloUtilsException(
+											"Number " + st.nval + " in an unexpected place at line " + st.lineno());
+									}
 						break;
 
 					case StreamTokenizer.TT_WORD:
@@ -206,14 +219,14 @@ public class NewickParser<T>
 							state = State.POST_CHILDREN;
 							}
 						else if (state == State.COMMENT)
-							{
-							// ignore
-							}
-						else
-							{
-							throw new PhyloUtilsException(
-									"String " + st.sval + " in an unexpected place at line " + st.lineno());
-							}
+								{
+								// ignore
+								}
+							else
+								{
+								throw new PhyloUtilsException(
+										"String " + st.sval + " in an unexpected place at line " + st.lineno());
+								}
 						break;
 
 					case '<':
@@ -228,13 +241,13 @@ public class NewickParser<T>
 							state = State.POST_CHILDREN;
 							}
 						else if (state == State.COMMENT)
-							{
-							// ignore
-							}
-						else
-							{
-							throw new PhyloUtilsException("String < in an unexpected place at line " + st.lineno());
-							}
+								{
+								// ignore
+								}
+							else
+								{
+								throw new PhyloUtilsException("String < in an unexpected place at line " + st.lineno());
+								}
 						break;
 
 
@@ -250,13 +263,13 @@ public class NewickParser<T>
 							state = State.POST_CHILDREN;
 							}
 						else if (state == State.COMMENT)
-							{
-							// ignore
-							}
-						else
-							{
-							throw new PhyloUtilsException("String > in an unexpected place at line " + st.lineno());
-							}
+								{
+								// ignore
+								}
+							else
+								{
+								throw new PhyloUtilsException("String > in an unexpected place at line " + st.lineno());
+								}
 						break;
 
 					case '(':
@@ -351,7 +364,7 @@ public class NewickParser<T>
 			throw new PhyloUtilsException(e, "Could not read Newick tree at line " + st.lineno());
 			}
 
-		theTree.updateNodes(namer);
+		theTree.assignUniqueIds(namer);
 		return theTree;
 		}
 

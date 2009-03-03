@@ -65,7 +65,7 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 	public void returnsAllNodes() throws Exception
 		{
 		T tmp = tif.createInstance();
-		assert tmp.getNodes().size() == 17;
+		assert tmp.getUniqueIdToNodeMap().size() == 17;
 		}
 
 	@Test
@@ -121,7 +121,7 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 		rootPhylogeny.newChild().setValue("a");
 		rootPhylogeny.newChild().setValue("b");
 		rootPhylogeny.newChild().setValue("c");
-		rootPhylogeny.updateNodes(new StringNodeNamer("bogus"));
+		rootPhylogeny.assignUniqueIds(new StringNodeNamer("bogus"));
 
 		Object found = mainTree.nearestKnownAncestor(rootPhylogeny, "bbba");
 
@@ -133,11 +133,11 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 		{
 		T mainTree = tif.createInstance();
 
-		RootedPhylogeny extractedTree = mainTree.extractIntersectionTree(
-				DSCollectionUtils.setOf("aaaa", "baa", "bba", "bbba"),
-				DSCollectionUtils.setOf("bab", "bba", "bbba", "ca", "cb"));
+		RootedPhylogeny extractedTree =
+				mainTree.extractIntersectionTree(DSCollectionUtils.setOf("aaaa", "baa", "bba", "bbba"),
+				                                 DSCollectionUtils.setOf("bab", "bba", "bbba", "ca", "cb"));
 
-		assert extractedTree.getNodes().size() == 6;
+		assert extractedTree.getUniqueIdToNodeMap().size() == 6;
 		assert extractedTree.getLeaves().size() == 3;
 		assert CollectionUtils
 				.isEqualCollection(extractedTree.getLeafValues(), DSCollectionUtils.setOf("ba", "bba", "bbba"));
@@ -160,17 +160,14 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 
 		RootedPhylogeny<String> tree3 = tree1.mixWith(tree2, 0.1);
 
-		assert MathUtils
-				.equalWithinFPError(tree3.getNode("a").getWeight(), tree1.getNode("a").getWeight() * 0.1 + tree2
-						.getNode("a").getWeight() * 0.9);
+		assert MathUtils.equalWithinFPError(tree3.getNode("a").getWeight(), tree1.getNode("a").getWeight() * 0.1
+				+ tree2.getNode("a").getWeight() * 0.9);
 
-		assert MathUtils
-				.equalWithinFPError(tree3.getNode("bb").getWeight(), tree1.getNode("bb").getWeight() * 0.1 + tree2
-						.getNode("bb").getWeight() * 0.9);
+		assert MathUtils.equalWithinFPError(tree3.getNode("bb").getWeight(), tree1.getNode("bb").getWeight() * 0.1
+				+ tree2.getNode("bb").getWeight() * 0.9);
 
-		assert MathUtils
-				.equalWithinFPError(tree3.getNode("ca").getWeight(), tree1.getNode("ca").getWeight() * 0.1 + tree2
-						.getNode("ca").getWeight() * 0.9);
+		assert MathUtils.equalWithinFPError(tree3.getNode("ca").getWeight(), tree1.getNode("ca").getWeight() * 0.1
+				+ tree2.getNode("ca").getWeight() * 0.9);
 		}
 
 	@Test(expectedExceptions = PhyloUtilsException.class)
@@ -220,16 +217,11 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 
 		tree2.smoothWeightsFrom(mainTree, .01);
 
-		assert MathUtils
-				.equalWithinFPError(tree2.getNode("a").getWeight(), (0.2 + 0.02) / 1.08);
-		assert MathUtils
-				.equalWithinFPError(tree2.getNode("b").getWeight(), (0.38 + 0.04) / 1.08);
-		assert MathUtils
-				.equalWithinFPError(tree2.getNode("bab").getWeight(), (0.0 + 0.01) / 1.08);
-		assert MathUtils
-				.equalWithinFPError(tree2.getNode("c").getWeight(), (0.42 + 0.02) / 1.08);
-		assert MathUtils
-				.equalWithinFPError(tree2.getNode("cb").getWeight(), (0.0 + 0.01) / 1.08);
+		assert MathUtils.equalWithinFPError(tree2.getNode("a").getWeight(), (0.2 + 0.02) / 1.08);
+		assert MathUtils.equalWithinFPError(tree2.getNode("b").getWeight(), (0.38 + 0.04) / 1.08);
+		assert MathUtils.equalWithinFPError(tree2.getNode("bab").getWeight(), (0.0 + 0.01) / 1.08);
+		assert MathUtils.equalWithinFPError(tree2.getNode("c").getWeight(), (0.42 + 0.02) / 1.08);
+		assert MathUtils.equalWithinFPError(tree2.getNode("cb").getWeight(), (0.0 + 0.01) / 1.08);
 		}
 
 	@Test

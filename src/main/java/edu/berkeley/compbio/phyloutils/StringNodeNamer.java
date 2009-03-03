@@ -32,6 +32,9 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * A factory for Strings to be used for naming unnamed internal nodes in a phylogeny.
@@ -113,5 +116,19 @@ public class StringNodeNamer implements NodeNamer<String>
 	public String generate()
 		{
 		return unknownBasis + currentId++;
+		}
+
+	Map<String, Integer> uniqueIndexes = new HashMap<String, Integer>();
+
+	public String uniqueify(String value)
+		{
+		Integer inc = uniqueIndexes.get(value);
+		if (inc == null)
+			{
+			inc = 0;
+			}
+		inc++;
+		uniqueIndexes.put(value, inc);
+		return value + " [" + inc + "]";
 		}
 	}

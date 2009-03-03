@@ -90,4 +90,6 @@ public interface NodeNamer<T>
 	 * @throws PhyloUtilsException when the input Integer cannot be appended to the desired type
 	 */
 	T merge(T name, Integer s) throws PhyloUtilsException;
+
+	T uniqueify(T value);
 	}

@@ -66,7 +66,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T> implemen
 	private static final Logger logger = Logger.getLogger(BasicRootedPhylogeny.class);
 	// ------------------------------ FIELDS ------------------------------
 
-	transient private Map<T, BasicPhylogenyNode<T>> nodes;
+	transient private Map<T, BasicPhylogenyNode<T>> uniqueIdToNodeMap;
 	BasicPhylogenyNode<T> root;
 
 	// -------------------------- OTHER METHODS --------------------------
@@ -103,15 +103,15 @@ root = new BasicPhylogenyNode<T>(original.);
 	 */
 	public PhylogenyNode<T> getNode(T name)
 		{
-		return nodes.get(name);
+		return uniqueIdToNodeMap.get(name);
 		}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<BasicPhylogenyNode<T>> getNodes()
+	public Collection<BasicPhylogenyNode<T>> getUniqueIdToNodeMap()
 		{
-		return nodes.values();
+		return uniqueIdToNodeMap.values();
 		}
 
 	/**
@@ -120,9 +120,9 @@ root = new BasicPhylogenyNode<T>(original.);
 	public Collection<PhylogenyNode<T>> getLeaves()
 		{
 		Set<PhylogenyNode<T>> result = new HashSet<PhylogenyNode<T>>();
-		for (T t : nodes.keySet())
+		for (T t : uniqueIdToNodeMap.keySet())
 			{
-			PhylogenyNode<T> node = nodes.get(t);
+			PhylogenyNode<T> node = uniqueIdToNodeMap.get(t);
 			if (node.isLeaf())
 				{
 				result.add(node);
@@ -137,9 +137,9 @@ root = new BasicPhylogenyNode<T>(original.);
 	public Collection<T> getLeafValues()
 		{
 		Set<T> result = new HashSet<T>();
-		for (T t : nodes.keySet())
+		for (T t : uniqueIdToNodeMap.keySet())
 			{
-			if (nodes.get(t).isLeaf())
+			if (uniqueIdToNodeMap.get(t).isLeaf())
 				{
 				result.add(t);
 				}
@@ -152,14 +152,19 @@ root = new BasicPhylogenyNode<T>(original.);
 	 */
 	public Collection<T> getNodeValues()
 		{
-		return nodes.keySet();
+		return uniqueIdToNodeMap.keySet();
 		}
 
-	// we can't do this while building, since the names might change
-	public void updateNodes(NodeNamer<T> namer) throws PhyloUtilsException
+	/**
+	 * Insure that every node has a unique ID.  We can't do this while building, since the names might change
+	 *
+	 * @param namer
+	 * @throws PhyloUtilsException
+	 */
+	public void assignUniqueIds(NodeNamer<T> namer) throws PhyloUtilsException
 		{
-		nodes = new HashMap<T, BasicPhylogenyNode<T>>();
-		root.addSubtreeToMap(nodes, namer);
+		uniqueIdToNodeMap = new HashMap<T, BasicPhylogenyNode<T>>();
+		root.addSubtreeToMap(uniqueIdToNodeMap, namer);
 		}
 
 
@@ -460,7 +465,7 @@ root = new BasicPhylogenyNode<T>(original.);
 			BasicRootedPhylogeny<T> result = new BasicRootedPhylogeny<T>();
 			result.setRoot(root.clone());
 			result.setBasePhylogeny(getBasePhylogeny());
-			result.updateNodes(null);
+			result.assignUniqueIds(null);
 			return result;
 			}
 		catch (PhyloUtilsException e)
@@ -517,12 +522,12 @@ root = new BasicPhylogenyNode<T>(original.);
 		{
 		root = (BasicPhylogenyNode<T>) stream.readObject();
 
-		nodes = new HashMap<T, BasicPhylogenyNode<T>>();
+		uniqueIdToNodeMap = new HashMap<T, BasicPhylogenyNode<T>>();
 
 		try
 			{
 			// populate the nodes map
-			updateNodes(null);  // all the nodes should have names already, don't need a namer
+			assignUniqueIds(null);  // all the nodes should have ids already, don't need a namer
 			}
 		catch (PhyloUtilsException e)
 			{
@@ -531,7 +536,7 @@ root = new BasicPhylogenyNode<T>(original.);
 			}
 
 
-		for (BasicPhylogenyNode<T> p : nodes.values())
+		for (BasicPhylogenyNode<T> p : uniqueIdToNodeMap.values())
 			{
 			for (BasicPhylogenyNode<T> c : p.getChildren())
 				{

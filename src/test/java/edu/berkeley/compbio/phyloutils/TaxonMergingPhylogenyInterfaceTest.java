@@ -74,7 +74,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 
 		RootedPhylogeny<Object> result = tmp.extractTreeWithLeafIDs(leafIDs);
 
-		assert result.getNodes().size() == 7;
+		assert result.getUniqueIdToNodeMap().size() == 7;
 
 		Collection<String> okNodes = Arrays.asList("baa", "bbba", "b", "ca", "cb", "c", "root");
 
@@ -98,7 +98,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 
 		RootedPhylogeny<String> result = tmp.extractTreeWithLeafIDs(leafIDs);
 
-		assert result.getNodes().size() == 6;
+		assert result.getUniqueIdToNodeMap().size() == 6;
 
 		Collection<String> okNodes = Arrays.asList("ba", "bb", "b", "c", "a", "root");
 

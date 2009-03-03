@@ -62,7 +62,7 @@ public class NewickParserTest
 		//	logger.warn("Got file: " + url);
 		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));
 		//	logger.warn("Parsed tree with " + p.getNodes().size() + " nodes.");
-		assert p.getNodes().size() == 14;
+		assert p.getUniqueIdToNodeMap().size() == 14;
 		//	logger.warn("all done");
 		}
 
@@ -78,7 +78,7 @@ public class NewickParserTest
 		//	logger.warn("Got file: " + url);
 		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));
 		//	logger.warn("Parsed tree with " + p.getNodes().size() + " nodes.");
-		assert p.getNodes().size() == 14;
+		assert p.getUniqueIdToNodeMap().size() == 14;
 		//	logger.warn("all done");
 		}
 
