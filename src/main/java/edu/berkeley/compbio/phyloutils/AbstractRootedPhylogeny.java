@@ -95,7 +95,15 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		{
 		PhylogenyNode<T> a = getNode(nameA);
 		PhylogenyNode<T> b = getNode(nameB);
+		return commonAncestor(a, b).getValue();
+		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Nullable
+	public PhylogenyNode<T> commonAncestor(PhylogenyNode<T> a, PhylogenyNode<T> b)
+		{
 		List<PhylogenyNode<T>> ancestorsA = a.getAncestorPath();
 		List<PhylogenyNode<T>> ancestorsB = b.getAncestorPath();
 
@@ -111,11 +119,16 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			return null;
 			}
 
-		return commonAncestor.getValue();
+		return commonAncestor;
 		}
 
 
 	public boolean isDescendant(T ancestor, T descendant) throws PhyloUtilsException
+		{
+		return ancestor.equals(commonAncestor(ancestor, descendant));
+		}
+
+	public boolean isDescendant(PhylogenyNode<T> ancestor, PhylogenyNode<T> descendant) throws PhyloUtilsException
 		{
 		return ancestor.equals(commonAncestor(ancestor, descendant));
 		}
@@ -343,9 +356,16 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		{
 		PhylogenyNode a = getNode(nameA);
 		PhylogenyNode b = getNode(nameB);
+		return distanceBetween(a, b);
+		}
 
-		List<BasicPhylogenyNode> ancestorsA = a.getAncestorPath();
-		List<BasicPhylogenyNode> ancestorsB = b.getAncestorPath();
+	/**
+	 * {@inheritDoc}
+	 */
+	public double distanceBetween(PhylogenyNode<T> a, PhylogenyNode<T> b)
+		{
+		List<PhylogenyNode<T>> ancestorsA = a.getAncestorPath();
+		List<PhylogenyNode<T>> ancestorsB = b.getAncestorPath();
 
 		while (ancestorsA.size() > 0 && ancestorsB.size() > 0 && ancestorsA.get(0) == ancestorsB.get(0))
 			{
@@ -354,11 +374,11 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			}
 
 		double dist = 0;
-		for (BasicPhylogenyNode n : ancestorsA)
+		for (PhylogenyNode<T> n : ancestorsA)
 			{
 			dist += n.getLength();
 			}
-		for (BasicPhylogenyNode n : ancestorsB)
+		for (PhylogenyNode<T> n : ancestorsB)
 			{
 			dist += n.getLength();
 			}
@@ -372,7 +392,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	public double getTotalBranchLength()
 		{
 		double result = 0;
-		for (PhylogenyNode<T> node : getUniqueIdToNodeMap())
+		for (PhylogenyNode<T> node : getUniqueIdToNodeMap().values())
 			{
 			if (node.getLength() != null)// count null length as zero
 				{
@@ -388,7 +408,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	public void setAllBranchLengthsToNull()
 		{
 		double result = 0;
-		for (PhylogenyNode<T> node : getUniqueIdToNodeMap())
+		for (PhylogenyNode<T> node : getUniqueIdToNodeMap().values())
 			{
 			node.setLength(null);
 			}
@@ -621,6 +641,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	 * Maps String names in the given tree to their corresponding taxids, and returns a tree with Integer ids
 	 *
 	 * @param stringTree
+	 * @param namer           a NodeNamer with which to generate IDs for nodes that don't have them
+	 * @param taxonomyService guarantee that the IDs are consistent with those provided by taxonomyService.getTaxidByName
 	 * @return
 	 */
 	public RootedPhylogeny<T> convertToIDTree(RootedPhylogeny<String> stringTree, NodeNamer<T> namer,

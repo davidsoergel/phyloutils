@@ -100,4 +100,7 @@ public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T
 	Double getCurrentWeight();
 
 	void appendSubtree(StringBuffer sb, String indent);
+
+
+	PhylogenyNode<T> nearestAncestorWithBranchLength() throws PhyloUtilsException;
 	}

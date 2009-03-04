@@ -51,6 +51,7 @@ public class CiccarelliTaxonomyService extends NewickTaxonomyService //<String>
 
 	private static CiccarelliTaxonomyService instance;// = new CiccarelliUtils();
 
+
 	public static CiccarelliTaxonomyService getInstance()
 		{
 		if (instance == null)

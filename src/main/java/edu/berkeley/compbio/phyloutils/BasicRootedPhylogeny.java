@@ -109,9 +109,9 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<BasicPhylogenyNode<T>> getUniqueIdToNodeMap()
+	public Map<T, ? extends PhylogenyNode<T>> getUniqueIdToNodeMap()
 		{
-		return uniqueIdToNodeMap.values();
+		return uniqueIdToNodeMap;//.values();
 		}
 
 	/**
@@ -352,24 +352,13 @@ root = new BasicPhylogenyNode<T>(original.);
 	public T nearestAncestorWithBranchLength(T leafId) throws PhyloUtilsException
 		{
 		PhylogenyNode<T> n = getNode(leafId);
-
 		if (n == null)
 			{
 			throw new PhyloUtilsException("Leaf phylogeny does not contain node " + leafId + ".");
 			}
-
-		while (n.getLength() == null)
-			{
-			n = n.getParent();
-			if (n == null)
-				{
-				// arrived at root, too bad
-				throw new PhyloUtilsException("No ancestor of " + leafId + " has a branch length.");
-				}
-			}
-
-		return n.getValue();
+		return n.nearestAncestorWithBranchLength().getValue();
 		}
+
 
 	/**
 	 * {@inheritDoc}
@@ -553,6 +542,11 @@ root = new BasicPhylogenyNode<T>(original.);
 	private void readObjectNoData() throws ObjectStreamException
 		{
 		throw new NotSerializableException();
+		}
+
+	public PhylogenyNode<T> nearestAncestorWithBranchLength() throws PhyloUtilsException
+		{
+		throw new PhyloUtilsException("Root doesn't have a branch length.");
 		}
 	}
 

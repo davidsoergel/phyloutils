@@ -75,6 +75,11 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		return rootPhylogeny.nearestAncestorWithBranchLength(rootId);
 		}
 
+/*	public PhylogenyNode<T> nearestAncestorWithBranchLength(PhylogenyNode<T> id) throws PhyloUtilsException
+		{
+		return rootPhylogeny.nearestAncestorWithBranchLength(id);
+		}*/
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -83,7 +88,22 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		return extractTreeWithLeafIDs(integers, false);
 		}
 
+	/*	public RootedPhylogeny<T> extractTreeWithLeaves(Collection<PhylogenyNode<T>> ids) throws PhyloUtilsException
+		 {
+		 // this ought to work even if some of the requested ids are in the root tree rather than the leaf tree,
+		 // as long as the leaf tree also has a node with the same ID (even with the wrong topology)
 
+		 RootedPhylogeny<T> basicLeaf = leafPhylogeny.extractTreeWithLeaves(ids);
+		 HybridRootedPhylogeny<T> extractedHybrid = new HybridRootedPhylogeny<T>(rootPhylogeny, basicLeaf);
+		 RootedPhylogeny<T> result = extractedHybrid.convertToBasic();
+
+		 // now result has all the requested leaves, and the rootwards topology has been adjusted to match the root tree.
+		 // however, there may be stranded branches, i.e. former ancestors of the leaves (according to the leaf tree) that
+		 // are no longer ancestors of anything in the hybrid tree.  So, we need to remove those.
+
+		 return result.extractTreeWithLeaves(ids);
+		 }
+ */
 	/**
 	 * {@inheritDoc}
 	 */

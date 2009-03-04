@@ -71,6 +71,12 @@ public class NewickTaxonomyService implements TaxonomyService<String>  // extend
 		return basePhylogeny.distanceBetween(a, b);
 		}
 
+
+	public double exactDistanceBetween(PhylogenyNode<String> a, PhylogenyNode<String> b)
+		{
+		return basePhylogeny.distanceBetween(a, b);
+		}
+
 	public double greatestDepth(String a)
 		{
 		return basePhylogeny.getNode(a).getLargestLengthSpan();
@@ -79,6 +85,11 @@ public class NewickTaxonomyService implements TaxonomyService<String>  // extend
 	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids) throws PhyloUtilsException
 		{
 		return basePhylogeny.extractTreeWithLeafIDs(ids);
+		}
+
+	public PhylogenyNode<String> getRoot()
+		{
+		return basePhylogeny;
 		}
 
 	public RootedPhylogeny<String> getTree()
@@ -128,9 +139,27 @@ public class NewickTaxonomyService implements TaxonomyService<String>  // extend
 		return basePhylogeny.nearestAncestorWithBranchLength(id);
 		}
 
+/*	public RootedPhylogeny<String> extractTreeWithLeaves(Collection<PhylogenyNode<String>> ids)
+			throws PhyloUtilsException
+		{
+		return basePhylogeny.extractTreeWithLeaves(ids);
+		}*/
+
 	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids, boolean ignoreAbsentNodes)
 			throws PhyloUtilsException
 		{
 		return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes);
+		}
+
+	public boolean isDescendant(PhylogenyNode<String> ancestor, PhylogenyNode<String> descendant)
+			throws PhyloUtilsException
+		{
+		return basePhylogeny.isDescendant(ancestor, descendant);
+		}
+
+	public Double minDistanceBetween(PhylogenyNode<String> node1, PhylogenyNode<String> node2)
+			throws PhyloUtilsException
+		{
+		return exactDistanceBetween(node1, node2);
 		}
 	}

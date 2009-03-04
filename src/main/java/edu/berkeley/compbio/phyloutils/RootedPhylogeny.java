@@ -83,6 +83,15 @@ public interface RootedPhylogeny<T>
 	boolean isDescendant(T ancestor, T descendant) throws PhyloUtilsException;
 
 	/**
+	 * Tells whether one node is a descendant of another
+	 *
+	 * @param ancestor   the T id of the ancestor node
+	 * @param descendant the T id of the query descendant node
+	 * @return true if the second id descends from the first
+	 */
+	boolean isDescendant(PhylogenyNode<T> ancestor, PhylogenyNode<T> descendant) throws PhyloUtilsException;
+
+	/**
 	 * Computes the sum of the branch lengths along the path between two nodes
 	 *
 	 * @param nameA the T id of one node
@@ -90,6 +99,15 @@ public interface RootedPhylogeny<T>
 	 * @return the double sum of the branch lengths along the path between two nodes
 	 */
 	double distanceBetween(T nameA, T nameB);
+
+	/**
+	 * Computes the sum of the branch lengths along the path between two nodes
+	 *
+	 * @param nodeA one node
+	 * @param nodeB another node
+	 * @return the double sum of the branch lengths along the path between two nodes
+	 */
+	double distanceBetween(PhylogenyNode<T> nodeA, PhylogenyNode<T> nodeB);
 
 	/**
 	 * Returns the tree node with the given id.
@@ -105,7 +123,7 @@ public interface RootedPhylogeny<T>
 	 *
 	 * @return all the nodes in the tree, both internal nodes and leaf nodes.
 	 */
-	Collection<? extends PhylogenyNode<T>> getUniqueIdToNodeMap();
+	Map<T, ? extends PhylogenyNode<T>> getUniqueIdToNodeMap();
 
 	/**
 	 * Returns all the leaf nodes of the tree.

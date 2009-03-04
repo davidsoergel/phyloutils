@@ -120,4 +120,9 @@ public class IntegerNodeNamer implements NodeNamer<Integer>
 		{
 		return currentId++;
 		}
+
+	public Integer uniqueify(Integer value)
+		{
+		return generate();
+		}
 	}
