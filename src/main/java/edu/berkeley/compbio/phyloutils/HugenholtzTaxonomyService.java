@@ -1,22 +1,24 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.DSStringUtils;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Provides a view onto the Hugenholtz taxonomy using Integer IDs.  The Hugenholtz taxonomy has integer ids
@@ -34,27 +36,31 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	//private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
 	private static final String hugenholtzFilename = "greengenes.all.tree";
+	private static final String bigGreenGenesFilename = "greengenes16SrRNAgenes.txt";
 
 	private static HugenholtzTaxonomyService instance;// = new CiccarelliUtils();
 
-	public static HugenholtzTaxonomyService getInstance()
+	public static HugenholtzTaxonomyService getInjectedInstance()
 		{
-		if (instance == null)
-			{
-			instance = new HugenholtzTaxonomyService();
-			}
 		return instance;
 		}
 
+	public static void setInjectedInstance(HugenholtzTaxonomyService instance)
+		{
+		HugenholtzTaxonomyService.instance = instance;
+		}
 
-	BiMap<Integer, PhylogenyNode<String>> intToNodeMap = new HashBiMap<Integer, PhylogenyNode<String>>();
-	Multimap<String, PhylogenyNode<String>> nameToNodeMap = new HashMultimap<String, PhylogenyNode<String>>();
 
-	NewickTaxonomyService stringTaxonomyService;// = new NewickTaxonomyService(hugenholtzFilename);
+	private RootedPhylogeny<Integer> theIntegerTree;
+	Multimap<String, Integer> nameToIdMap;// = new HashMap<String, Integer>();
+
+//	BiMap<Integer, PhylogenyNode<String>> intToNodeMap = new HashBiMap<Integer, PhylogenyNode<String>>();
+//	Multimap<String, PhylogenyNode<String>> nameToNodeMap = new HashMultimap<String, PhylogenyNode<String>>();
+
+//	NewickTaxonomyService stringTaxonomyService;// = new NewickTaxonomyService(hugenholtzFilename);
 
 	public HugenholtzTaxonomyService() //throws PhyloUtilsException
 		{
-
 		if (!readStateIfAvailable())
 			{
 			reloadFromNewick();
@@ -62,9 +68,158 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}
 		}
 
+
 	private void reloadFromNewick()
 		{
-		stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename);
+		nameToIdMap = new HashMultimap<String, Integer>();
+
+		NewickTaxonomyService stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename);
+
+		RootedPhylogeny<String> theStringTree = stringTaxonomyService.getTree();
+		theIntegerTree = PhylogenyTypeConverter
+				.convertToIDTree(theStringTree, new IntegerNodeNamer(10000000), new TaxonStringIdMapper<Integer>()
+				{
+				public Integer findTaxidByName(String name) throws PhyloUtilsException
+					{
+					try
+						{
+						return new Integer(name);
+						}
+					catch (NumberFormatException e)
+						{
+						throw new PhyloUtilsException("Can't convert node name to integer ID: " + name);
+						}
+					}
+				}, nameToIdMap);
+
+		addStrainNamesToMap();
+		}
+
+	private static InputStream getInputStream(String filename) throws PhyloUtilsException, IOException
+		{
+		//ClassLoader classClassLoader = new NewickParser().getClass().getClassLoader();
+		ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
+		//ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+
+		//URL res1 = classClassLoader.getResource(filename);
+		URL res = threadClassLoader.getResource(filename);
+		//URL res3 = systemClassLoader.getResource(filename);
+
+		if (res == null)
+			{
+			File f = new File(filename);
+			if (f.exists())
+				{
+				res = new URL("file://" + filename);
+				}
+			}
+
+		if (res == null)
+			{
+			logger.error("file not found: " + filename);
+			//Get the System Classloader
+			//ClassLoader.getSystemClassLoader();
+
+			//Get the URLs
+			URL[] urls = ((URLClassLoader) threadClassLoader).getURLs();
+
+			for (int i = 0; i < urls.length; i++)
+				{
+				logger.warn(urls[i].getFile());
+				}
+
+			throw new PhyloUtilsException("file not found: " + filename);
+			}
+		InputStream is = res.openStream();
+		/*if (is == null)
+					 {
+					 is = new FileInputStream(filename);
+					 }*/
+		return is;
+		}
+
+	/**
+	 *
+	 */
+	private void addStrainNamesToMap()
+		{
+		// there are much cleaner ways to do this, I know.  I'm in a freaking hurry.
+
+		String organism = null;
+		String prokMSAname = null;
+		String source = null;
+		Integer prokMSA_id = null;
+		//	Integer replaced_by = null;
+
+		// for now we ignore replaced_by and put all the IDs (old and new) in the map.
+		// the only consequence AFAIK is that the old IDs won't be in the current tree;
+		// the benefit is that if an old ID turns up for some reason we can still map it.
+
+		try
+			{
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(getInputStream(bigGreenGenesFilename)));
+			String line;
+			while ((line = in.readLine()) != null)
+				{
+				line.trim();
+				if (line.equals("END"))
+					{
+					if (organism != null)
+						{
+						nameToIdMap.put(organism, prokMSA_id);
+						}
+					if (prokMSAname != null)
+						{
+						nameToIdMap.put(prokMSAname, prokMSA_id);
+						}
+					if (source != null)
+						{
+						nameToIdMap.put(source, prokMSA_id);
+						}
+
+					organism = null;
+					prokMSAname = null;
+					source = null;
+					prokMSA_id = null;
+					}
+				else
+					{
+					String[] sa = line.split("=");
+					if (sa[0].equals("organism"))
+						{
+						organism = sa[1];
+						}
+					else if (sa[0].equals("source"))
+						{
+						source = sa[1];
+						}
+					else if (sa[0].equals("prokMSA_id"))
+							{
+							prokMSA_id = new Integer(sa[1]);
+							}
+						else if (sa[0].equals("organism"))
+								{
+								organism = sa[1];
+								}
+					//	else if (sa[0].equals("replaced_by"))
+					//			{
+					//			replaced_by = sa[1];
+					//			}
+					// else ignore
+					}
+				}
+			}
+		catch (IOException e)
+			{
+			logger.error("Error", e);
+			throw new PhyloUtilsRuntimeException(e);
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.error("Error", e);
+			throw new PhyloUtilsRuntimeException(e);
+			}
 
 		//try
 		//	{
@@ -79,7 +234,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 		// assume that all prokMSA_IDs are less than 10000000, so just start the generated IDs from there
 
-		int idGenerator = 10000000;
+
+/*		int idGenerator = 10000000;
 
 		for (PhylogenyNode<String> node : stringTaxonomyService.getRoot())
 			{
@@ -87,14 +243,14 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			Integer id;
 			try
 				{
-				/*
-				if (stringName == null)
-					{
-					throw new NumberFormatException("");
-					}
-
-				stringName = stringName.trim();
-				*/
+//
+//				if (stringName == null)
+//					{
+//					throw new NumberFormatException("");
+//					}
+//
+//				stringName = stringName.trim();
+//
 
 				id = new Integer(stringName);
 				if (intToNodeMap.containsKey(id))
@@ -116,7 +272,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				}
 
 			intToNodeMap.put(id, node);
-			}
+			}*/
 		}
 
 
@@ -126,9 +282,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			{
 			FileOutputStream fout = new FileOutputStream("/tmp/edu.berkeley.compbio.phyloutils.hugenholtz.cache");
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
-			oos.writeObject(stringTaxonomyService);
-			oos.writeObject(intToNodeMap);
-			oos.writeObject(nameToNodeMap);
+//			oos.writeObject(stringTaxonomyService);
+//			oos.writeObject(intToNodeMap);
+//			oos.writeObject(nameToNodeMap);
+			oos.writeObject(theIntegerTree);
+			oos.writeObject(nameToIdMap);
 			oos.close();
 			}
 		catch (Exception e)
@@ -143,9 +301,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			{
 			FileInputStream fin = new FileInputStream("/tmp/edu.berkeley.compbio.phyloutils.hugenholtz.cache");
 			ObjectInputStream ois = new ObjectInputStream(fin);
-			stringTaxonomyService = (NewickTaxonomyService) ois.readObject();
-			intToNodeMap = (BiMap<Integer, PhylogenyNode<String>>) ois.readObject();
-			nameToNodeMap = (Multimap<String, PhylogenyNode<String>>) ois.readObject();
+//			stringTaxonomyService = (NewickTaxonomyService) ois.readObject();
+//			intToNodeMap = (BiMap<Integer, PhylogenyNode<String>>) ois.readObject();
+//			nameToNodeMap = (Multimap<String, PhylogenyNode<String>>) ois.readObject();
+			theIntegerTree = (RootedPhylogeny<Integer>) ois.readObject();
+			nameToIdMap = (Multimap<String, Integer>) ois.readObject();
 			ois.close();
 			return true;
 			}
@@ -159,21 +319,25 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return false;
 		}
 
-
 	public Integer findTaxidByName(String name) throws PhyloUtilsException
 		{
-		//Integer result = null; // could have secondary cache // getUniqueNodeForName(name); //nameToIdMap.get(name);
-		//if (result == null)
+		//Integer result = null;
+		// could have secondary cache
+		// getUniqueNodeForName(name);
+		// nameToIdMap.get(name);
+		// if (result == null)
 		//	{
 		try
 			{
 			Integer id = new Integer(name);
-			if (intToNodeMap.containsKey(id))
-				{
-				return id;
-				}
+			theIntegerTree.getNode(id);   // throws exception if not present // intToNodeMap.containsKey(id))
+			return id;
 			}
 		catch (NumberFormatException e)
+			{
+			// ok, try the next thing
+			}
+		catch (NoSuchElementException e)
 			{
 			// ok, try the next thing
 			}
@@ -188,24 +352,30 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		//return result;
 		}
 
+/*	private Integer getUniqueNodeForMultilevelName(String[] taxa) throws PhyloUtilsException
+		{
+
+		}
+*/
+
 	private Integer getUniqueNodeForMultilevelName(String[] taxa) throws PhyloUtilsException
 		{
-		List<Integer> intTaxa = new ArrayList<Integer>(taxa.length);
-		PhylogenyNode<String> trav = stringTaxonomyService.getRoot();
+		//List<Integer> intTaxa = new ArrayList<Integer>(taxa.length);
+		Integer trav = theIntegerTree.getRoot().getValue();
 		for (String s : taxa)
 			{
-			Collection<PhylogenyNode<String>> matchingNodes = nameToNodeMap.get(s);
+			Collection<Integer> matchingNodes = nameToIdMap.get(s);
 
 			if (matchingNodes.isEmpty())
 				{
 				throw new PhyloUtilsException("Node " + s + " not found in " + DSStringUtils.join(taxa, "; "));
 				}
 
-			for (Iterator<PhylogenyNode<String>> iter = matchingNodes.iterator(); iter.hasNext();)
+			for (Iterator<Integer> iter = matchingNodes.iterator(); iter.hasNext();)
 				{
-				PhylogenyNode<String> node = iter.next();
+				Integer node = iter.next();
 
-				if (!stringTaxonomyService.isDescendant(trav, node))
+				if (!theIntegerTree.isDescendant(trav, node))
 					{
 					iter.remove();
 					}
@@ -223,13 +393,13 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				}
 			else
 				{
-				for (PhylogenyNode<String> ancestor : matchingNodes)
+				for (Integer ancestor : matchingNodes)
 					{
-					for (Iterator<PhylogenyNode<String>> iter = matchingNodes.iterator(); iter.hasNext();)
+					for (Iterator<Integer> iter = matchingNodes.iterator(); iter.hasNext();)
 						{
-						PhylogenyNode<String> descendant = iter.next();
+						Integer descendant = iter.next();
 
-						if (stringTaxonomyService.isDescendant(ancestor, descendant))
+						if (theIntegerTree.isDescendant(ancestor, descendant))
 							{
 							iter.remove();
 							}
@@ -247,27 +417,28 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				}
 			}
 
-		return intToNodeMap.inverse().get(trav);
+		return trav; //intToNodeMap.inverse().get(trav);
 		}
-
 
 	public Integer getUniqueNodeForName(String name) throws PhyloUtilsException
 		{
-		Collection<PhylogenyNode<String>> matchingNodes = nameToNodeMap.get(name);
-		if (matchingNodes.isEmpty())
+		Collection<Integer> matchingIds = nameToIdMap.get(name);
+		if (matchingIds.isEmpty())
 			{
 			return null;
 			}
-		if (matchingNodes.size() > 1)
+		if (matchingIds.size() > 1)
 			{
-			throw new PhyloUtilsException("Name not unique: " + name);
+			return theIntegerTree.commonAncestor(matchingIds);
+			//throw new PhyloUtilsException("Name not unique: " + name);
 			}
-		return intToNodeMap.inverse().get(matchingNodes.iterator().next());
+		return matchingIds.iterator().next();
 		}
 
 	public boolean isDescendant(Integer ancestor, Integer descendant) throws PhyloUtilsException
 		{
-		return stringTaxonomyService.isDescendant(intToNodeMap.get(ancestor), intToNodeMap.get(descendant));
+		return theIntegerTree.isDescendant(ancestor, descendant);
+//		return stringTaxonomyService.isDescendant(intToNodeMap.get(ancestor), intToNodeMap.get(descendant));
 		}
 
 
@@ -278,14 +449,16 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 */
 	public Double minDistanceBetween(Integer a, Integer b) throws PhyloUtilsException
 		{
-		return stringTaxonomyService.minDistanceBetween(intToNodeMap.get(a), intToNodeMap.get(b));
+		return theIntegerTree.distanceBetween(a, b);
+		//return stringTaxonomyService.minDistanceBetween(intToNodeMap.get(a), intToNodeMap.get(b));
 		//	return exactDistanceBetween(name1, name2);
 		}
 
 
 	public Integer nearestAncestorWithBranchLength(Integer id) throws PhyloUtilsException
 		{
-		return intToNodeMap.inverse().get(intToNodeMap.get(id).nearestAncestorWithBranchLength());
+		return theIntegerTree.nearestAncestorWithBranchLength(id);
+//		return intToNodeMap.inverse().get(intToNodeMap.get(id).nearestAncestorWithBranchLength());
 		}
 
 	/*
@@ -302,42 +475,44 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 */
 
-	public boolean isDescendant(PhylogenyNode<Integer> ancestor, PhylogenyNode<Integer> descendant)
-			throws PhyloUtilsException
-		{
-		throw new NotImplementedException();
-		}
+	/*	public boolean isDescendant(PhylogenyNode<Integer> ancestor, PhylogenyNode<Integer> descendant)
+			 throws PhyloUtilsException
+		 {
+		 throw new NotImplementedException();
+		 }
 
-	public Double minDistanceBetween(PhylogenyNode<Integer> node1, PhylogenyNode<Integer> node2)
-			throws PhyloUtilsException
-		{
-		throw new NotImplementedException();
-		}
+	 public Double minDistanceBetween(PhylogenyNode<Integer> node1, PhylogenyNode<Integer> node2)
+			 throws PhyloUtilsException
+		 {
+		 throw new NotImplementedException();
+		 }
 
-	public PhylogenyNode<Integer> getRoot()
-		{
-		throw new NotImplementedException();
-		}
+	 public PhylogenyNode<Integer> getRoot()
+		 {
+		 throw new NotImplementedException();
+		 }
 
-	public PhylogenyNode<Integer> nearestAncestorWithBranchLength(PhylogenyNode<Integer> id) throws PhyloUtilsException
-		{
-		throw new NotImplementedException();
-		}
+	 public PhylogenyNode<Integer> nearestAncestorWithBranchLength(PhylogenyNode<Integer> id) throws PhyloUtilsException
+		 {
+		 throw new NotImplementedException();
+		 }
+ */
 
 	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids) throws PhyloUtilsException
 		{
-		throw new NotImplementedException();
+		return extractTreeWithLeafIDs(ids, false);
 		}
 
-	public RootedPhylogeny<Integer> extractTreeWithLeaves(Collection<PhylogenyNode<Integer>> ids)
-			throws PhyloUtilsException
-		{
-		throw new NotImplementedException();
-		}
-
+	/*
+	 public RootedPhylogeny<Integer> extractTreeWithLeaves(Collection<PhylogenyNode<Integer>> ids)
+			 throws PhyloUtilsException
+		 {
+		 throw new NotImplementedException();
+		 }
+ */
 	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids, boolean ignoreAbsentNodes)
 			throws PhyloUtilsException
 		{
-		throw new NotImplementedException();
+		return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes);
 		}
 	}

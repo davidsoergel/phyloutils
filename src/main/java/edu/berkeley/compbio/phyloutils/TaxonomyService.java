@@ -8,10 +8,8 @@ package edu.berkeley.compbio.phyloutils;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
-public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>
+public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStringIdMapper<T>
 	{
-	T findTaxidByName(String name) throws PhyloUtilsException;
-
 	boolean isDescendant(T ancestor, T descendant) throws PhyloUtilsException;
 
 	//boolean isDescendant(PhylogenyNode<T> ancestor, PhylogenyNode<T> descendant) throws PhyloUtilsException;

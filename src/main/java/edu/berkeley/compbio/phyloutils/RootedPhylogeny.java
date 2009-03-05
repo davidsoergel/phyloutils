@@ -40,7 +40,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 
 /**
@@ -61,7 +60,7 @@ public interface RootedPhylogeny<T>
 	 * @return the T id of the most recent common ancestor
 	 */
 	@Nullable
-	T commonAncestor(Set<T> descendantIds);
+	T commonAncestor(Collection<T> descendantIds);
 
 	/**
 	 * Finds the most recent common ancestor of two nodes.
@@ -117,6 +116,13 @@ public interface RootedPhylogeny<T>
 	 * @throws NoSuchElementException when no node has the requested id
 	 */
 	PhylogenyNode<T> getNode(T name) throws NoSuchElementException;
+
+	/**
+	 * Gets the root node of the tree
+	 *
+	 * @return
+	 */
+	PhylogenyNode<T> getRoot();
 
 	/**
 	 * Returns all the nodes in the tree, both internal nodes and leaf nodes.
@@ -276,6 +282,6 @@ public interface RootedPhylogeny<T>
 
 	void saveState();
 
-	public RootedPhylogeny<T> convertToIDTree(RootedPhylogeny<String> stringTree, NodeNamer<T> namer,
-	                                          TaxonomyService<T> taxonomyService);
+	//public RootedPhylogeny<T> convertToIDTree(RootedPhylogeny<String> stringTree, NodeNamer<T> namer,
+	//                                        TaxonStringIdMapper<T> taxonomyService);
 	}

@@ -366,7 +366,6 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public BasicPhylogenyNode<T> getRoot()
 		{
 		return root;
