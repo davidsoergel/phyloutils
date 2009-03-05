@@ -350,9 +350,15 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			{
 			if (namer == null)
 				{
+				// just leave it
 				throw new PhyloUtilsException("Need to name a node, but no namer was provided");
 				}
+			//else
+			//	{
+
 			value = namer.generate();//nameInternal(nodes.size());
+
+			//	}
 			}
 
 		else if (nodes.get(value) != null)

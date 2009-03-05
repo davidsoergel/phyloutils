@@ -5,6 +5,7 @@ import com.davidsoergel.dsutils.tree.TreeException;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -14,11 +15,13 @@ import java.util.Set;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
-public class NewickTaxonomyService implements TaxonomyService<String>  // extends AbstractRootedPhylogeny<String>
+public class NewickTaxonomyService
+		implements TaxonomyService<String>, Serializable  // extends AbstractRootedPhylogeny<String>
 	{
-	private static final Logger logger = Logger.getLogger(CiccarelliTaxonomyService.class);
+	private static final Logger logger = Logger.getLogger(NewickTaxonomyService.class);
 
 	protected RootedPhylogeny<String> basePhylogeny;
+	private String filename;  // only for toString
 
 	/*	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
 		 {
@@ -26,8 +29,9 @@ public class NewickTaxonomyService implements TaxonomyService<String>  // extend
 		 }
  */
 
-	protected NewickTaxonomyService(String filename)
+	protected NewickTaxonomyService(String filename)// throws  PhyloUtilsException
 		{
+		this.filename = filename;
 		try
 			{
 			/*		URL res = ClassLoader.getSystemResource(ciccarelliFilename);
@@ -58,10 +62,12 @@ public class NewickTaxonomyService implements TaxonomyService<String>  // extend
 		catch (IOException e)
 			{
 			logger.error("Error", e);
+			throw new PhyloUtilsRuntimeException(e);
 			}
 		catch (PhyloUtilsException e)
 			{
 			logger.error("Error", e);
+			throw new PhyloUtilsRuntimeException(e);
 			}
 		}
 
@@ -161,5 +167,11 @@ public class NewickTaxonomyService implements TaxonomyService<String>  // extend
 			throws PhyloUtilsException
 		{
 		return exactDistanceBetween(node1, node2);
+		}
+
+	@Override
+	public String toString()
+		{
+		return "NewickTaxonomyService{" + filename + '}';
 		}
 	}

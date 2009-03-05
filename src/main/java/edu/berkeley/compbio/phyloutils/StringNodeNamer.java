@@ -115,6 +115,10 @@ public class StringNodeNamer implements NodeNamer<String>
 	 */
 	public String generate()
 		{
+		if (unknownBasis == null)
+			{
+			return null;
+			}
 		return unknownBasis + currentId++;
 		}
 

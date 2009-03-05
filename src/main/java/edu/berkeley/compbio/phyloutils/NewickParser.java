@@ -63,7 +63,7 @@ public class NewickParser<T>
 		{
 		InputStream is = getInputStream(filename);
 
-		return new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED NODE "));
+		return new NewickParser<String>().read(is, new StringNodeNamer(null)); //"UNNAMED NODE "));
 		}
 
 	public static RootedPhylogeny<Integer> readWithIntegerIds(String filename) throws PhyloUtilsException, IOException
@@ -352,6 +352,9 @@ public class NewickParser<T>
 						// ignore double quotes entirely
 						break;
 
+					case '*':
+						// ignore asterisks entirely
+						break;
 
 					default:
 						throw new PhyloUtilsException(

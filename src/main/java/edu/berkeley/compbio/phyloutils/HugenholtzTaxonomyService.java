@@ -8,6 +8,11 @@ import com.google.common.collect.Multimap;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -45,10 +50,29 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	BiMap<Integer, PhylogenyNode<String>> intToNodeMap = new HashBiMap<Integer, PhylogenyNode<String>>();
 	Multimap<String, PhylogenyNode<String>> nameToNodeMap = new HashMultimap<String, PhylogenyNode<String>>();
 
-	NewickTaxonomyService stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename);
+	NewickTaxonomyService stringTaxonomyService;// = new NewickTaxonomyService(hugenholtzFilename);
 
 	public HugenholtzTaxonomyService() //throws PhyloUtilsException
 		{
+
+		if (!readStateIfAvailable())
+			{
+			reloadFromNewick();
+			saveState();
+			}
+		}
+
+	private void reloadFromNewick()
+		{
+		stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename);
+
+		//try
+		//	{
+		//	}
+		//catch (PhyloUtilsException e)
+		//	{
+//throw new
+		//	}
 		//super(hugenholtzFilename);
 
 		// walk the entire tree, making an int->node map and a string->int multimap along the way
@@ -82,17 +106,57 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				{
 				// ok, generate an ID instead
 				id = idGenerator++;
+
+				if (stringName != null && !stringName.trim().equals(""))
+					{
+					nameToNodeMap.put(stringName.trim(), node);
+					}
+
+				// note we don't put the string representation of the integer id in the string map
 				}
 
 			intToNodeMap.put(id, node);
-
-			if (stringName != null && stringName.trim().equals(""))
-				{
-				nameToNodeMap.put(stringName.trim(), node);
-				}
-
-			// note we don't put the string representation of the integer id in the string map
 			}
+		}
+
+
+	public void saveState()
+		{
+		try
+			{
+			FileOutputStream fout = new FileOutputStream("/tmp/edu.berkeley.compbio.phyloutils.hugenholtz.cache");
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(stringTaxonomyService);
+			oos.writeObject(intToNodeMap);
+			oos.writeObject(nameToNodeMap);
+			oos.close();
+			}
+		catch (Exception e)
+			{
+			logger.error("Error", e);
+			}
+		}
+
+	private boolean readStateIfAvailable()
+		{
+		try
+			{
+			FileInputStream fin = new FileInputStream("/tmp/edu.berkeley.compbio.phyloutils.hugenholtz.cache");
+			ObjectInputStream ois = new ObjectInputStream(fin);
+			stringTaxonomyService = (NewickTaxonomyService) ois.readObject();
+			intToNodeMap = (BiMap<Integer, PhylogenyNode<String>>) ois.readObject();
+			nameToNodeMap = (Multimap<String, PhylogenyNode<String>>) ois.readObject();
+			ois.close();
+			return true;
+			}
+		catch (IOException e)
+			{// no problem
+			}
+		catch (ClassNotFoundException e)
+			{// no problem
+
+			}
+		return false;
 		}
 
 
@@ -206,9 +270,6 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return stringTaxonomyService.isDescendant(intToNodeMap.get(ancestor), intToNodeMap.get(descendant));
 		}
 
-	public void saveState()
-		{
-		}
 
 	/*public double exactDistanceBetween(Integer a, Integer b)
 		{

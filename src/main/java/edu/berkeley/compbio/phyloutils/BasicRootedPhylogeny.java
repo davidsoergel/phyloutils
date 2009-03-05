@@ -86,8 +86,11 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T> implemen
 		root.toNewick(sb, minClusterSize, minLabelProb);
 		}
 
-
-	/**
+	@Override
+	public String toString()
+		{
+		return "BasicRootedPhylogeny{" + root + '}';
+		} /**
 	 * Make a complete copy of the provided phylogeny using BasicPhylogenyNodes.  It's probably better to use clone() when
 	 * possible, but this copy constructor allows translating from phylogenies with different node types.
 	 *
