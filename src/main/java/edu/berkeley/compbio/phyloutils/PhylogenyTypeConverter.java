@@ -15,9 +15,9 @@ public class PhylogenyTypeConverter
 	 * @param idMapper   guarantee that the IDs are consistent with those provided by taxonomyService.getTaxidByName
 	 * @return
 	 */
-	public static <T> RootedPhylogeny<T> convertToIDTree(RootedPhylogeny<String> stringTree, NodeNamer<T> namer,
-	                                                     TaxonStringIdMapper<T> idMapper,
-	                                                     Multimap<String, T> nameToIdMap)
+	public static <T> BasicRootedPhylogeny<T> convertToIDTree(RootedPhylogeny<String> stringTree, NodeNamer<T> namer,
+	                                                          TaxonStringIdMapper<T> idMapper,
+	                                                          Multimap<String, T> nameToIdMap)
 		//    ,Multimap<String, T> nameToIdMap)
 		//	throws NcbiTaxonomyException
 		{
@@ -35,11 +35,11 @@ public class PhylogenyTypeConverter
 		// this duplicates convertToIntegerIDNode just so we operate on a BasicRootedPhylogeny instead of a PhylogenyNode
 
 		BasicRootedPhylogeny<T> result = new BasicRootedPhylogeny<T>();
-		copyValuesToNode(stringTree, result.getSelfNode(), idMapper, nameToIdMap); //, nameToIdMap
+		copyValuesToNode(stringTree, result.getSelfNode(), idMapper, nameToIdMap, namer); //, nameToIdMap
 		//NodeNamer<T> namer = new IntegerNodeNamer(10000000);
 		try
 			{
-			// name the nodes with null ids.  Note these don't get added to the nameToIdMap,
+			// name the nodes with null ids.  Note these don't get added to the nameToIdMap.
 			result.assignUniqueIds(namer);
 			}
 		catch (PhyloUtilsException e)
@@ -53,15 +53,17 @@ public class PhylogenyTypeConverter
 
 	private static <T> PhylogenyNode<T> convertToIDNode(PhylogenyNode<String> stringNode,
 	                                                    TaxonStringIdMapper<T> idMapper,
-	                                                    Multimap<String, T> nameToIdMap)//, Multimap<String, T> nameToIdMap)//throws NcbiTaxonomyException
+	                                                    Multimap<String, T> nameToIdMap,
+	                                                    NodeNamer<T> namer)//, Multimap<String, T> nameToIdMap)//throws NcbiTaxonomyException
 		{
 		PhylogenyNode<T> result = new BasicPhylogenyNode<T>();
-		copyValuesToNode(stringNode, result, idMapper, nameToIdMap);//,nameToIdMap);
+		copyValuesToNode(stringNode, result, idMapper, nameToIdMap, namer);//,nameToIdMap);
 		return result;
 		}
 
 	private static <T> void copyValuesToNode(PhylogenyNode<String> stringNode, PhylogenyNode<T> result,
-	                                         TaxonStringIdMapper<T> idMapper, Multimap<String, T> nameToIdMap)
+	                                         TaxonStringIdMapper<T> idMapper, Multimap<String, T> nameToIdMap,
+	                                         NodeNamer<T> namer)
 		//, Multimap<String, T> nameToIdMap)
 		{
 		result.setLength(stringNode.getLength());
@@ -70,16 +72,21 @@ public class PhylogenyTypeConverter
 
 
 		T id = null;
+		String name = stringNode.getValue();
 		try
 			{
-			String name = stringNode.getValue();
 			id = idMapper.findTaxidByName(name);
-			nameToIdMap.put(name, id);
 			}
 		catch (PhyloUtilsException e)
 			{
-			logger.debug("Integer ID not found for name: " + stringNode.getValue());
-			//id = namer.generate(); //nameInternal(unknownCount)
+			//logger.debug("Integer ID not found for name: " + stringNode.getValue());
+
+			// previously I thought unique ID generation had to happen at the end, I don't know why...
+			id = namer.generate(); //nameInternal(unknownCount)
+			}
+		if (name != null)
+			{
+			nameToIdMap.put(name, id);
 			}
 		result.setValue(id);
 		//nameToIdMap.put(stringNode.getValue(), id);
@@ -87,7 +94,7 @@ public class PhylogenyTypeConverter
 		for (PhylogenyNode<String> node : stringNode.getChildren())
 			{
 			//result.addChild(convertToIntegerIDNode(node));
-			convertToIDNode(node, idMapper, nameToIdMap).setParent(result);  //,nameToIdMap
+			convertToIDNode(node, idMapper, nameToIdMap, namer).setParent(result);  //,nameToIdMap
 			}
 		}
 	}

@@ -115,6 +115,7 @@ public interface RootedPhylogeny<T>
 	 * @return the PhylogenyNode<T> with that id
 	 * @throws NoSuchElementException when no node has the requested id
 	 */
+	@NotNull
 	PhylogenyNode<T> getNode(T name) throws NoSuchElementException;
 
 	/**

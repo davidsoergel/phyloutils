@@ -43,6 +43,7 @@ import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.zip.GZIPInputStream;
 
 
 /**
@@ -109,6 +110,8 @@ public class NewickParser<T>
 			throw new PhyloUtilsException("tree not found: " + filename);
 			}
 		InputStream is = res.openStream();
+
+		is = filename.endsWith(".gz") ? new GZIPInputStream(is) : is;
 		/*if (is == null)
 					 {
 					 is = new FileInputStream(filename);

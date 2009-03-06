@@ -371,9 +371,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 // 	throw new PhyloUtilsException("Node names must be unique");
 			}
 
-
 		nodes.put(value, this);
-
 
 		for (BasicPhylogenyNode<T> n : children)
 			{

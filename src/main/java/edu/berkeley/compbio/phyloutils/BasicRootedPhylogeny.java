@@ -49,6 +49,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 
@@ -104,9 +105,15 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public PhylogenyNode<T> getNode(T name)
+	@NotNull
+	public PhylogenyNode<T> getNode(T name) throws NoSuchElementException
 		{
-		return uniqueIdToNodeMap.get(name);
+		BasicPhylogenyNode<T> result = uniqueIdToNodeMap.get(name);
+		if (result == null)
+			{
+			throw new NoSuchElementException("Node not found: " + name);
+			}
+		return result;
 		}
 
 	/**

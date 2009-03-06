@@ -2,7 +2,6 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.DSStringUtils;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -19,6 +18,7 @@ import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Provides a view onto the Hugenholtz taxonomy using Integer IDs.  The Hugenholtz taxonomy has integer ids
@@ -35,8 +35,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	private static final Logger logger = Logger.getLogger(CiccarelliTaxonomyService.class);
 
 	//private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
-	private static final String hugenholtzFilename = "greengenes.all.tree";
-	private static final String bigGreenGenesFilename = "greengenes16SrRNAgenes.txt";
+	private static final String hugenholtzFilename = "greengenes.all.tree.gz";
+	private static final String bigGreenGenesFilename = "greengenes16SrRNAgenes.txt.gz";
 
 	private static HugenholtzTaxonomyService instance;// = new CiccarelliUtils();
 
@@ -51,8 +51,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 
 
-	private RootedPhylogeny<Integer> theIntegerTree;
-	Multimap<String, Integer> nameToIdMap;// = new HashMap<String, Integer>();
+	private BasicRootedPhylogeny<Integer> theIntegerTree;
+	HashMultimap<String, Integer> nameToIdMap;// = new HashMap<String, Integer>();
 
 //	BiMap<Integer, PhylogenyNode<String>> intToNodeMap = new HashBiMap<Integer, PhylogenyNode<String>>();
 //	Multimap<String, PhylogenyNode<String>> nameToNodeMap = new HashMultimap<String, PhylogenyNode<String>>();
@@ -130,7 +130,10 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 			throw new PhyloUtilsException("file not found: " + filename);
 			}
+
+
 		InputStream is = res.openStream();
+		is = filename.endsWith(".gz") ? new GZIPInputStream(is) : is;
 		/*if (is == null)
 					 {
 					 is = new FileInputStream(filename);
@@ -145,9 +148,9 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		// there are much cleaner ways to do this, I know.  I'm in a freaking hurry.
 
-		String organism = null;
+		//String organism = null;
 		String prokMSAname = null;
-		String source = null;
+		//String source = null;
 		Integer prokMSA_id = null;
 		//	Integer replaced_by = null;
 
@@ -162,46 +165,47 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			String line;
 			while ((line = in.readLine()) != null)
 				{
-				line.trim();
+				line = line.trim();
 				if (line.equals("END"))
 					{
-					if (organism != null)
-						{
-						nameToIdMap.put(organism, prokMSA_id);
-						}
+					//	if (organism != null)
+					//		{
+					//		nameToIdMap.put(organism, prokMSA_id);
+					//		}
 					if (prokMSAname != null)
 						{
 						nameToIdMap.put(prokMSAname, prokMSA_id);
 						}
-					if (source != null)
-						{
-						nameToIdMap.put(source, prokMSA_id);
-						}
+					//	if (source != null)
+					//		{
+					//		nameToIdMap.put(source, prokMSA_id);
+					//		}
 
-					organism = null;
+					//	organism = null;
 					prokMSAname = null;
-					source = null;
+					//	source = null;
 					prokMSA_id = null;
 					}
 				else
 					{
 					String[] sa = line.split("=");
-					if (sa[0].equals("organism"))
+					//	if (sa[0].equals("organism"))
+					//		{
+					//		organism = sa[1];
+					//		}
+					//	else if (sa[0].equals("source"))
+					//		{
+					//		source = sa[1];
+					//		}
+					//	else
+					if (sa[0].equals("prokMSA_id"))
 						{
-						organism = sa[1];
+						prokMSA_id = new Integer(sa[1]);
 						}
-					else if (sa[0].equals("source"))
+					else if (sa[0].equals("prokMSAname"))
 						{
-						source = sa[1];
+						prokMSAname = sa[1];
 						}
-					else if (sa[0].equals("prokMSA_id"))
-							{
-							prokMSA_id = new Integer(sa[1]);
-							}
-						else if (sa[0].equals("organism"))
-								{
-								organism = sa[1];
-								}
 					//	else if (sa[0].equals("replaced_by"))
 					//			{
 					//			replaced_by = sa[1];
@@ -304,17 +308,18 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 //			stringTaxonomyService = (NewickTaxonomyService) ois.readObject();
 //			intToNodeMap = (BiMap<Integer, PhylogenyNode<String>>) ois.readObject();
 //			nameToNodeMap = (Multimap<String, PhylogenyNode<String>>) ois.readObject();
-			theIntegerTree = (RootedPhylogeny<Integer>) ois.readObject();
-			nameToIdMap = (Multimap<String, Integer>) ois.readObject();
+			theIntegerTree = (BasicRootedPhylogeny<Integer>) ois.readObject();
+			nameToIdMap = (HashMultimap<String, Integer>) ois.readObject();
 			ois.close();
 			return true;
 			}
 		catch (IOException e)
 			{// no problem
+			logger.warn("Could not read Hugenholtz cache", e);
 			}
 		catch (ClassNotFoundException e)
 			{// no problem
-
+			logger.warn("Could not read Hugenholtz cache", e);
 			}
 		return false;
 		}
@@ -347,7 +352,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			return getUniqueNodeForName(name);
 			}
 
-		return getUniqueNodeForMultilevelName(name.split("; "));
+		return getUniqueNodeForMultilevelName(name.split("[; ]+"));
 		//	}
 		//return result;
 		}
@@ -375,7 +380,14 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				{
 				Integer node = iter.next();
 
-				if (!theIntegerTree.isDescendant(trav, node))
+				try
+					{
+					if (!theIntegerTree.isDescendant(trav, node))
+						{
+						iter.remove();
+						}
+					}
+				catch (NoSuchElementException e)  // probably the requested node is not in the tree (i.e., it's unclassified, but had an organism name associated anyway)
 					{
 					iter.remove();
 					}
@@ -393,27 +405,32 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				}
 			else
 				{
-				for (Integer ancestor : matchingNodes)
-					{
-					for (Iterator<Integer> iter = matchingNodes.iterator(); iter.hasNext();)
-						{
-						Integer descendant = iter.next();
+				// check descendants pairwise
 
-						if (theIntegerTree.isDescendant(ancestor, descendant))
+				for (Iterator<Integer> iter = matchingNodes.iterator(); iter.hasNext();)
+					{
+					Integer descendant = iter.next();
+					for (Integer ancestor : matchingNodes)
+						{
+						if (ancestor != descendant && theIntegerTree.isDescendant(ancestor, descendant))
 							{
 							iter.remove();
+							break;
 							}
 						}
 					}
-				}
-			if (matchingNodes.size() == 1)
-				{
-				trav = matchingNodes.iterator().next();
-				}
-			else
-				{
-				throw new PhyloUtilsException(
-						"Node " + s + " not unique at " + trav + " in " + DSStringUtils.join(taxa, "; "));
+				if (matchingNodes.size() == 1)
+					{
+					trav = matchingNodes.iterator().next();
+					}
+				else
+					{
+					// sadly this is too strict; there are 7 distinct "Bacteria" clades!
+					// OK, don't parse the "organism" field, use "prokMSAname" instead.
+
+					throw new PhyloUtilsException(
+							"Node " + s + " not unique at " + trav + " in " + DSStringUtils.join(taxa, "; "));
+					}
 				}
 			}
 

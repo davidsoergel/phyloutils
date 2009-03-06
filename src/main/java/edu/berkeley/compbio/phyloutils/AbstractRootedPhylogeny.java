@@ -36,6 +36,7 @@ import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.stats.ContinuousDistribution1D;
 import com.google.common.collect.Multiset;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	 * {@inheritDoc}
 	 */
 	@Nullable
-	public PhylogenyNode<T> commonAncestor(PhylogenyNode<T> a, PhylogenyNode<T> b)
+	public PhylogenyNode<T> commonAncestor(@NotNull PhylogenyNode<T> a, @NotNull PhylogenyNode<T> b)
 		{
 		List<PhylogenyNode<T>> ancestorsA = a.getAncestorPath();
 		List<PhylogenyNode<T>> ancestorsB = b.getAncestorPath();
