@@ -18,6 +18,7 @@ import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -150,7 +151,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 		//String organism = null;
 		String prokMSAname = null;
-		//String source = null;
+		String source = null;
 		Integer prokMSA_id = null;
 		//	Integer replaced_by = null;
 
@@ -163,6 +164,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(getInputStream(bigGreenGenesFilename)));
 			String line;
+			Pattern strainPattern = Pattern.compile(" (str.?)|(strain) ");
+
 			while ((line = in.readLine()) != null)
 				{
 				line = line.trim();
@@ -175,15 +178,25 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 					if (prokMSAname != null)
 						{
 						nameToIdMap.put(prokMSAname, prokMSA_id);
+						String cleanProkMSAname = strainPattern.matcher(prokMSAname).replaceAll("");
+						if (!cleanProkMSAname.equals(source))
+							{
+							nameToIdMap.put(cleanProkMSAname, prokMSA_id);
+							}
 						}
-					//	if (source != null)
-					//		{
-					//		nameToIdMap.put(source, prokMSA_id);
-					//		}
+					if (source != null)
+						{
+						nameToIdMap.put(source, prokMSA_id);
+						String cleanSource = strainPattern.matcher(source).replaceAll("");
+						if (!cleanSource.equals(source))
+							{
+							nameToIdMap.put(cleanSource, prokMSA_id);
+							}
+						}
 
 					//	organism = null;
 					prokMSAname = null;
-					//	source = null;
+					source = null;
 					prokMSA_id = null;
 					}
 				else
@@ -193,19 +206,19 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 					//		{
 					//		organism = sa[1];
 					//		}
-					//	else if (sa[0].equals("source"))
-					//		{
-					//		source = sa[1];
-					//		}
 					//	else
-					if (sa[0].equals("prokMSA_id"))
+					if (sa[0].equals("source"))
+						{
+						source = sa[1];
+						}
+					else if (sa[0].equals("prokMSA_id"))
 						{
 						prokMSA_id = new Integer(sa[1]);
 						}
 					else if (sa[0].equals("prokMSAname"))
-						{
-						prokMSAname = sa[1];
-						}
+							{
+							prokMSAname = sa[1];
+							}
 					//	else if (sa[0].equals("replaced_by"))
 					//			{
 					//			replaced_by = sa[1];
