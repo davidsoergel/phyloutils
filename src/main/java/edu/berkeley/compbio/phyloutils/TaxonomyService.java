@@ -21,4 +21,6 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 	//Double minDistanceBetween(PhylogenyNode<T> node1, PhylogenyNode<T> node2) throws PhyloUtilsException;
 
 	//PhylogenyNode<T> getRoot();
+
+	void setSynonymService(TaxonomySynonymService taxonomySynonymService);
 	}

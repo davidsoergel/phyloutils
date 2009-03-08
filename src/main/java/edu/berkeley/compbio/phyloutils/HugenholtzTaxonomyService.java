@@ -16,6 +16,7 @@ import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
@@ -33,13 +34,15 @@ import java.util.zip.GZIPInputStream;
  */
 public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, TaxonomyService<String>
 	{
-	private static final Logger logger = Logger.getLogger(CiccarelliTaxonomyService.class);
+	private static final Logger logger = Logger.getLogger(HugenholtzTaxonomyService.class);
 
 	//private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
 	private static final String hugenholtzFilename = "greengenes.all.tree.gz";
 	private static final String bigGreenGenesFilename = "greengenes16SrRNAgenes.txt.gz";
 
 	private static HugenholtzTaxonomyService instance;// = new CiccarelliUtils();
+
+	TaxonomySynonymService synonymService;
 
 	public static HugenholtzTaxonomyService getInjectedInstance()
 		{
@@ -51,6 +54,10 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		HugenholtzTaxonomyService.instance = instance;
 		}
 
+	public void setSynonymService(TaxonomySynonymService synonymService)
+		{
+		this.synonymService = synonymService;
+		}
 
 	private BasicRootedPhylogeny<Integer> theIntegerTree;
 	HashMultimap<String, Integer> nameToIdMap;// = new HashMap<String, Integer>();
@@ -149,7 +156,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		// there are much cleaner ways to do this, I know.  I'm in a freaking hurry.
 
-		//String organism = null;
+		String organism = null;
 		String prokMSAname = null;
 		String source = null;
 		Integer prokMSA_id = null;
@@ -171,10 +178,15 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				line = line.trim();
 				if (line.equals("END"))
 					{
-					//	if (organism != null)
-					//		{
-					//		nameToIdMap.put(organism, prokMSA_id);
-					//		}
+					if (organism != null)
+						{
+						nameToIdMap.put(organism, prokMSA_id);
+						String cleanOrganism = strainPattern.matcher(organism).replaceAll("");
+						if (!cleanOrganism.equals(source))
+							{
+							nameToIdMap.put(cleanOrganism, prokMSA_id);
+							}
+						}
 					if (prokMSAname != null)
 						{
 						nameToIdMap.put(prokMSAname, prokMSA_id);
@@ -194,7 +206,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 							}
 						}
 
-					//	organism = null;
+					organism = null;
 					prokMSAname = null;
 					source = null;
 					prokMSA_id = null;
@@ -202,23 +214,22 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				else
 					{
 					String[] sa = line.split("=");
-					//	if (sa[0].equals("organism"))
-					//		{
-					//		organism = sa[1];
-					//		}
-					//	else
-					if (sa[0].equals("source"))
+					if (sa[0].equals("organism"))
+						{
+						organism = sa[1];
+						}
+					else if (sa[0].equals("source"))
 						{
 						source = sa[1];
 						}
 					else if (sa[0].equals("prokMSA_id"))
-						{
-						prokMSA_id = new Integer(sa[1]);
-						}
-					else if (sa[0].equals("prokMSAname"))
 							{
-							prokMSAname = sa[1];
+							prokMSA_id = new Integer(sa[1]);
 							}
+						else if (sa[0].equals("prokMSAname"))
+								{
+								prokMSAname = sa[1];
+								}
 					//	else if (sa[0].equals("replaced_by"))
 					//			{
 					//			replaced_by = sa[1];
@@ -328,11 +339,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}
 		catch (IOException e)
 			{// no problem
-			logger.warn("Could not read Hugenholtz cache", e);
+			logger.warn("Could not read Hugenholtz cache; rereading source files");
 			}
 		catch (ClassNotFoundException e)
 			{// no problem
-			logger.warn("Could not read Hugenholtz cache", e);
+			logger.warn("Could not read Hugenholtz cache; rereading source files");
 			}
 		return false;
 		}
@@ -453,6 +464,22 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	public Integer getUniqueNodeForName(String name) throws PhyloUtilsException
 		{
 		Collection<Integer> matchingIds = nameToIdMap.get(name);
+		if (matchingIds.isEmpty())
+			{
+			matchingIds = new HashSet<Integer>();
+			for (String syn : synonymService.synonymsOf(name))
+				{
+				matchingIds.addAll(nameToIdMap.get(syn));
+				}
+			}
+		if (matchingIds.isEmpty())
+			{
+			matchingIds = new HashSet<Integer>();
+			for (String syn : synonymService.synonymsOfParent(name))
+				{
+				matchingIds.addAll(nameToIdMap.get(syn));
+				}
+			}
 		if (matchingIds.isEmpty())
 			{
 			return null;

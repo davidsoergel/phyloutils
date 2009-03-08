@@ -2,6 +2,7 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.dsutils.tree.TreeException;
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -173,5 +174,12 @@ public class NewickTaxonomyService
 	public String toString()
 		{
 		return "NewickTaxonomyService{" + filename + '}';
+		}
+
+
+	public void setSynonymService(TaxonomySynonymService taxonomySynonymService)
+		{
+		throw new NotImplementedException(
+				"Newick taxonomy doesn't currently use other synonym services for any purpose");
 		}
 	}

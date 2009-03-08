@@ -71,14 +71,14 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
 		for (T id : knownMergeIds)
 			{
-			PhylogenyNode<T> node = getNode(id);
-			if (node == null)
+			try
+				{
+				PhylogenyNode<T> node = getNode(id);
+				theAncestorLists.add(node.getAncestorPath());
+				}
+			catch (NoSuchElementException e)
 				{
 				logger.debug("Node not found with id " + id + " when looking for common ancestor; ignoring");
-				}
-			else
-				{
-				theAncestorLists.add(node.getAncestorPath());
 				}
 			}
 		PhylogenyNode<T> commonAncestor = null;
