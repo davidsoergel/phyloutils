@@ -88,6 +88,17 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		return extractTreeWithLeafIDs(integers, false);
 		}
 
+
+	/**
+	 * Returns the IDs of all the leaf nodes of the tree.
+	 *
+	 * @return the IDs of all the leaf nodes of the tree.
+	 */
+	public Collection<T> getLeafValues()
+		{
+		return leafPhylogeny.getLeafValues();
+		}
+
 	/*	public RootedPhylogeny<T> extractTreeWithLeaves(Collection<PhylogenyNode<T>> ids) throws PhyloUtilsException
 		 {
 		 // this ought to work even if some of the requested ids are in the root tree rather than the leaf tree,

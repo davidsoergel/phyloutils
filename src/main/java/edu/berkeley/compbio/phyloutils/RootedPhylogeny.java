@@ -279,6 +279,8 @@ public interface RootedPhylogeny<T>
 	 */
 	void setLeafWeights(Map<T, Double> ids);
 
+	Map<T, Double> getLeafWeights();
+
 	void setAllBranchLengthsToNull();
 
 	void saveState();

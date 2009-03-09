@@ -1,7 +1,9 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.DSStringUtils;
+import com.davidsoergel.dsutils.tree.TreeException;
 import com.google.common.collect.HashMultimap;
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -79,6 +81,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}
 		}
 
+	public RootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double mergeThreshold)
+			throws PhyloUtilsException, TreeException
+		{
+		throw new NotImplementedException();
+		}
 
 	private void reloadFromNewick()
 		{
@@ -175,7 +182,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			BufferedReader in = new BufferedReader(new InputStreamReader(getInputStream(bigGreenGenesFilename)));
 			String line;
 			Pattern strainPattern = Pattern.compile(" (str.?)|(strain) ");
-
+			int skipped = 0;
+			int found = 0;
 			while ((line = in.readLine()) != null)
 				{
 				line = line.trim();
@@ -187,11 +195,16 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 						}
 					catch (NoSuchElementException e)
 						{
-						logger.warn("prokMSA_id " + prokMSA_id + " not in tree; " + organism + " " + prokMSAname + " "
-								+ source);
+						if (logger.isTraceEnabled())
+							{
+							logger.trace(
+									"prokMSA_id " + prokMSA_id + " not in tree; " + organism + " " + prokMSAname + " "
+											+ source);
+							}
+						skipped++;
 						continue;
 						}
-
+					found++;
 					if (organism != null)
 						{
 						nameToIdMap.put(organism, prokMSA_id);
@@ -251,6 +264,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 					// else ignore
 					}
 				}
+			logger.info("Found " + found + " taxa in tree, skipped " + skipped);
 			}
 		catch (IOException e)
 			{
@@ -562,9 +576,9 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				}
 			}
 		String shortName = name;
-		while (matchingIds.isEmpty())
+		while (matchingIds.isEmpty() && shortName.contains(" "))
 			{
-			shortName = spaceSuffixPattern.matcher(name).replaceFirst("");
+			shortName = spaceSuffixPattern.matcher(shortName).replaceFirst("");
 			shortName = strainSuffixPattern.matcher(shortName).replaceAll("");
 			matchingIds = new HashSet<Integer>();
 			for (String syn : synonymService.synonymsOfRelaxed(shortName))

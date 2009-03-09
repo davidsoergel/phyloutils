@@ -1,5 +1,7 @@
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.tree.TreeException;
+
 /**
  * Provides a simplified interface for taxonomy sources (e.g., NCBI, or a Newick file) that doesn't provide all the
  * services of a full RootedTree.  In particular none of the API involves PhylogenyNodes; everything is done by ID (of
@@ -23,4 +25,7 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 	//PhylogenyNode<T> getRoot();
 
 	void setSynonymService(TaxonomySynonymService taxonomySynonymService);
+
+
+	RootedPhylogeny<T> getRandomSubtree(int numTaxa, Double mergeThreshold) throws PhyloUtilsException, TreeException;
 	}

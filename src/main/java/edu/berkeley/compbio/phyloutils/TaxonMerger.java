@@ -64,7 +64,7 @@ public class TaxonMerger
 	//@Transactional
 	//(propagation = Propagation.MANDATORY)
 	public static <T> Map<T, Set<T>> merge(Collection<T> leafIds, TaxonMergingPhylogeny<T> basePhylogeny,
-	                                       double ciccarelliMergeThreshold) throws TreeException, PhyloUtilsException
+	                                       double branchSpanMergeThreshold) throws TreeException, PhyloUtilsException
 		{
 		Map<T, Set<T>> theTaxonsetsByTaxid = new HashMap<T, Set<T>>();
 
@@ -111,7 +111,7 @@ public class TaxonMerger
 			PhylogenyNode<T> node = it.next();
 
 			double span = node.getLargestLengthSpan();
-			if (span <= ciccarelliMergeThreshold)
+			if (span <= branchSpanMergeThreshold)
 				{
 				Set<T> mergeTaxa = new HashSet<T>();
 				for (PhylogenyNode<T> descendant : node)
@@ -150,7 +150,7 @@ public class TaxonMerger
 					dropped += subIds.size();
 
 					logger.warn("Dropping " + subIds.size() + " taxa at node " + id + " with span " + span + " > "
-							+ ciccarelliMergeThreshold + " (i.e., our base tree is not detailed enough)");
+							+ branchSpanMergeThreshold + " (i.e., our base tree is not detailed enough)");
 					}
 				}
 			}
