@@ -15,4 +15,6 @@ public interface TaxonomySynonymService
 	Collection<String> synonymsOf(String name) throws PhyloUtilsException;
 
 	Collection<String> synonymsOfParent(String name) throws PhyloUtilsException;
+
+	Collection<String> synonymsOfRelaxed(String name) throws PhyloUtilsException;
 	}

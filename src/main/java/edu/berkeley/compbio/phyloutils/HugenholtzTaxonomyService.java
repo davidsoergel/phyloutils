@@ -15,10 +15,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
@@ -178,6 +181,17 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				line = line.trim();
 				if (line.equals("END"))
 					{
+					try
+						{
+						theIntegerTree.getNode(prokMSA_id);
+						}
+					catch (NoSuchElementException e)
+						{
+						logger.warn("prokMSA_id " + prokMSA_id + " not in tree; " + organism + " " + prokMSAname + " "
+								+ source);
+						continue;
+						}
+
 					if (organism != null)
 						{
 						nameToIdMap.put(organism, prokMSA_id);
@@ -387,12 +401,24 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 */
 
+	// bottom-up search
+
 	private Integer getUniqueNodeForMultilevelName(String[] taxa) throws PhyloUtilsException
 		{
-		//List<Integer> intTaxa = new ArrayList<Integer>(taxa.length);
-		Integer trav = theIntegerTree.getRoot().getValue();
-		for (String s : taxa)
+		List<String> reverseTaxa = Arrays.asList(taxa.clone());
+		Collections.reverse(reverseTaxa);
+
+		final String firstS = reverseTaxa.remove(0);
+		Collection<Integer> trav = nameToIdMap.get(firstS);
+
+		if (trav.isEmpty())
 			{
+			throw new PhyloUtilsException("Node " + firstS + " not found in " + DSStringUtils.join(taxa, "; "));
+			}
+
+		for (String s : reverseTaxa)
+			{
+			Set<Integer> nextTrav = new HashSet<Integer>();
 			Collection<Integer> matchingNodes = nameToIdMap.get(s);
 
 			if (matchingNodes.isEmpty())
@@ -400,84 +426,154 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				throw new PhyloUtilsException("Node " + s + " not found in " + DSStringUtils.join(taxa, "; "));
 				}
 
-			for (Iterator<Integer> iter = matchingNodes.iterator(); iter.hasNext();)
+			for (Integer descendant : trav)
 				{
-				Integer node = iter.next();
-
-				try
+				for (Integer ancestor : matchingNodes)
 					{
-					if (!theIntegerTree.isDescendant(trav, node))
+					if (theIntegerTree.isDescendant(ancestor, descendant))
 						{
-						iter.remove();
+						nextTrav.add(ancestor);
 						}
 					}
-				catch (NoSuchElementException e)  // probably the requested node is not in the tree (i.e., it's unclassified, but had an organism name associated anyway)
-					{
-					iter.remove();
-					}
 				}
-
-			if (matchingNodes.isEmpty())
+			trav = nextTrav;
+			if (trav.isEmpty())
 				{
 				throw new PhyloUtilsException(
 						"Requested classification path does not match tree: " + DSStringUtils.join(taxa, "; "));
 				}
-
-			if (matchingNodes.size() == 1)
-				{
-				trav = matchingNodes.iterator().next();
-				}
-			else
-				{
-				// check descendants pairwise
-
-				for (Iterator<Integer> iter = matchingNodes.iterator(); iter.hasNext();)
-					{
-					Integer descendant = iter.next();
-					for (Integer ancestor : matchingNodes)
-						{
-						if (ancestor != descendant && theIntegerTree.isDescendant(ancestor, descendant))
-							{
-							iter.remove();
-							break;
-							}
-						}
-					}
-				if (matchingNodes.size() == 1)
-					{
-					trav = matchingNodes.iterator().next();
-					}
-				else
-					{
-					// sadly this is too strict; there are 7 distinct "Bacteria" clades!
-					// OK, don't parse the "organism" field, use "prokMSAname" instead.
-
-					throw new PhyloUtilsException(
-							"Node " + s + " not unique at " + trav + " in " + DSStringUtils.join(taxa, "; "));
-					}
-				}
 			}
 
-		return trav; //intToNodeMap.inverse().get(trav);
+		if (trav.size() == 1)
+			{
+			return trav.iterator().next();
+			}
+		else
+			{
+			throw new PhyloUtilsException("Taxonomy path not unique : " + DSStringUtils.join(taxa, "; "));
+			}
 		}
+
+	// top-down search
+	/*	private Integer getUniqueNodeForMultilevelName(String[] taxa) throws PhyloUtilsException
+			 {
+			 //List<Integer> intTaxa = new ArrayList<Integer>(taxa.length);
+			 Integer trav = theIntegerTree.getRoot().getValue();
+			 for (String s : taxa)
+				 {
+				 Collection<Integer> matchingNodes = nameToIdMap.get(s);
+
+				 if (matchingNodes.isEmpty())
+					 {
+					 throw new PhyloUtilsException("Node " + s + " not found in " + DSStringUtils.join(taxa, "; "));
+					 }
+
+				 for (Iterator<Integer> iter = matchingNodes.iterator(); iter.hasNext();)
+					 {
+					 Integer node = iter.next();
+
+					 try
+						 {
+						 if (!theIntegerTree.isDescendant(trav, node))
+							 {
+							 iter.remove();
+							 }
+						 }
+					 catch (NoSuchElementException e)  // probably the requested node is not in the tree (i.e., it's unclassified, but had an organism name associated anyway)
+						 {
+						 iter.remove();
+						 }
+					 }
+
+				 if (matchingNodes.isEmpty())
+					 {
+					 throw new PhyloUtilsException(
+							 "Requested classification path does not match tree: " + DSStringUtils.join(taxa, "; "));
+					 }
+
+				 if (matchingNodes.size() == 1)
+					 {
+					 trav = matchingNodes.iterator().next();
+					 }
+				 else
+					 {
+					 // check descendants pairwise
+
+					 for (Iterator<Integer> iter = matchingNodes.iterator(); iter.hasNext();)
+						 {
+						 Integer descendant = iter.next();
+						 for (Integer ancestor : matchingNodes)
+							 {
+							 if (ancestor != descendant && theIntegerTree.isDescendant(ancestor, descendant))
+								 {
+								 iter.remove();
+								 break;
+								 }
+							 }
+						 }
+					 if (matchingNodes.size() == 1)
+						 {
+						 trav = matchingNodes.iterator().next();
+						 }
+					 else
+						 {
+						 // sadly this is too strict; there are 7 distinct "Bacteria" clades!
+						 // OK, don't parse the "organism" field, use "prokMSAname" instead.
+
+						 throw new PhyloUtilsException(
+								 "Node " + s + " not unique at " + trav + " in " + DSStringUtils.join(taxa, "; "));
+						 }
+					 }
+				 }
+
+			 return trav; //intToNodeMap.inverse().get(trav);
+			 }
+	 */
+
+
+	Pattern spaceSuffixPattern = Pattern.compile(" \\S*$");
+	Pattern strainSuffixPattern = Pattern.compile("((sp.?)|(str.?)|(strain)).*$");
 
 	public Integer getUniqueNodeForName(String name) throws PhyloUtilsException
 		{
 		Collection<Integer> matchingIds = nameToIdMap.get(name);
+		/*	if (matchingIds.isEmpty())
+		   {
+		   matchingIds = new HashSet<Integer>();
+		   for (String syn : synonymService.synonymsOf(name))
+			   {
+			   matchingIds.addAll(nameToIdMap.get(syn));
+			   }
+		   }
+	   if (matchingIds.isEmpty())
+		   {
+		   matchingIds = new HashSet<Integer>();
+		   for (String syn : synonymService.synonymsOfParent(name))
+			   {
+			   matchingIds.addAll(nameToIdMap.get(syn));
+			   }
+		   }*/
 		if (matchingIds.isEmpty())
 			{
 			matchingIds = new HashSet<Integer>();
-			for (String syn : synonymService.synonymsOf(name))
+			for (String syn : synonymService.synonymsOfRelaxed(name))
 				{
 				matchingIds.addAll(nameToIdMap.get(syn));
 				}
 			}
-		if (matchingIds.isEmpty())
+		String shortName = name;
+		while (matchingIds.isEmpty())
 			{
+			shortName = spaceSuffixPattern.matcher(name).replaceFirst("");
+			shortName = strainSuffixPattern.matcher(shortName).replaceAll("");
 			matchingIds = new HashSet<Integer>();
-			for (String syn : synonymService.synonymsOfParent(name))
+			for (String syn : synonymService.synonymsOfRelaxed(shortName))
 				{
 				matchingIds.addAll(nameToIdMap.get(syn));
+				}
+			if (!matchingIds.isEmpty())
+				{
+				logger.warn("Relaxed name " + name + " to " + shortName);
 				}
 			}
 		if (matchingIds.isEmpty())
