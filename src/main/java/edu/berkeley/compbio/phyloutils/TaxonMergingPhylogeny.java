@@ -32,6 +32,8 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
+
 import java.util.Collection;
 
 
@@ -51,10 +53,10 @@ public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
 	 * @param id the T identifying the starting node
 	 * @return the T identifying the most recent ancestor of the given node with a nonzero branch length (perhaps the node
 	 *         itself)
-	 * @throws PhyloUtilsException when the target node is not found in the tree, or when no node with a branch length is
+	 * @throws NoSuchNodeException when the target node is not found in the tree, or when no node with a branch length is
 	 *                             found
 	 */
-	T nearestAncestorWithBranchLength(T id) throws PhyloUtilsException;
+	T nearestAncestorWithBranchLength(T id) throws NoSuchNodeException;
 
 	/**
 	 * Starting from the given node, navigate up the tree if necessary) until a node is found that has a branch
@@ -76,9 +78,9 @@ public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
 	 *
 	 * @param ids the Collection<T> of leaves desired for the extracted tree
 	 * @return the extracted RootedPhylogeny<T>
-	 * @throws PhyloUtilsException when the given collection contains a node id that is not found in the tree
+	 * @throws NoSuchNodeException when the given collection contains a node id that is not found in the tree
 	 */
-	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids) throws PhyloUtilsException;
+	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids) throws NoSuchNodeException; //, PhyloUtilsException;
 
 	/**
 	 * Extract a tree which contains exactly those leaves that are requested.  I.e., prunes any branches not leading to
@@ -90,7 +92,7 @@ public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
 	 * @return the extracted RootedPhylogeny<T>
 	 * @throws PhyloUtilsException when the given collection contains a node id that is not found in the tree
 	 */
-//	RootedPhylogeny<T> extractTreeWithLeaves(Collection<PhylogenyNode<T>> ids) throws PhyloUtilsException; 
+//	RootedPhylogeny<T> extractTreeWithLeaves(Collection<PhylogenyNode<T>> ids) throws PhyloUtilsException;
 
 	/**
 	 * Extract a tree which contains exactly those leaves that are requested.  I.e., prunes any branches not leading to
@@ -103,8 +105,8 @@ public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
 	 *                          extracted tree with those leaves that are found.  I.e., intersect the requested leaf id
 	 *                          list with the available leaf ids before constructing the result tree.
 	 * @return the extracted RootedPhylogeny<T>
-	 * @throws PhyloUtilsException when the given collection contains a node id that is not found in the tree and
+	 * @throws NoSuchNodeException when the given collection contains a node id that is not found in the tree and
 	 *                             ignoreAbsentNodes is false
 	 */
-	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes) throws PhyloUtilsException;
+	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes) throws NoSuchNodeException;
 	}

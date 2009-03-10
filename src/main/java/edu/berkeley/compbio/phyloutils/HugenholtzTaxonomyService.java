@@ -1,7 +1,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.DSStringUtils;
-import com.davidsoergel.dsutils.tree.TreeException;
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.google.common.collect.HashMultimap;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
@@ -26,7 +26,6 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
@@ -80,13 +79,14 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		if (!readStateIfAvailable())
 			{
+
 			reloadFromNewick();
+
 			saveState();
 			}
 		}
 
 	public RootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double mergeThreshold)
-			throws PhyloUtilsException, TreeException
 		{
 		throw new NotImplementedException();
 		}
@@ -98,10 +98,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		NewickTaxonomyService stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename);
 
 		RootedPhylogeny<String> theStringTree = stringTaxonomyService.getTree();
+
 		theIntegerTree = PhylogenyTypeConverter
 				.convertToIDTree(theStringTree, new IntegerNodeNamer(10000000), new TaxonStringIdMapper<Integer>()
 				{
-				public Integer findTaxidByName(String name) throws PhyloUtilsException
+				public Integer findTaxidByName(String name) throws NoSuchNodeException
 					{
 					try
 						{
@@ -109,10 +110,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 						}
 					catch (NumberFormatException e)
 						{
-						throw new PhyloUtilsException("Can't convert node name to integer ID: " + name);
+						throw new NoSuchNodeException("Can't convert node name to integer ID: " + name);
 						}
 					}
 				}, nameToIdMap);
+
 
 		addStrainNamesToMap();
 		}
@@ -197,7 +199,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 						{
 						theIntegerTree.getNode(prokMSA_id);
 						}
-					catch (NoSuchElementException e)
+					catch (NoSuchNodeException e)
 						{
 						if (logger.isTraceEnabled())
 							{
@@ -280,6 +282,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			logger.error("Error", e);
 			throw new PhyloUtilsRuntimeException(e);
 			}
+
 
 		//try
 		//	{
@@ -381,7 +384,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 
 	@NotNull
-	public Integer findTaxidByName(String name) throws PhyloUtilsException
+	public Integer findTaxidByName(String name) throws NoSuchNodeException
 		{
 		//Integer result = null;
 		// could have secondary cache
@@ -399,7 +402,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			{
 			// ok, try the next thing
 			}
-		catch (NoSuchElementException e)
+		catch (NoSuchNodeException e)
 			{
 			// ok, try the next thing
 			}
@@ -424,7 +427,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	// bottom-up search
 
 	@NotNull
-	private Integer getUniqueNodeForMultilevelName(String[] taxa) throws PhyloUtilsException
+	private Integer getUniqueNodeForMultilevelName(String[] taxa) throws NoSuchNodeException
 		{
 		List<String> reverseTaxa = new ArrayList(Arrays.asList(taxa.clone()));
 		Collections.reverse(reverseTaxa);
@@ -483,7 +486,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				//trav = nextTrav;
 				if (paths.isEmpty())
 					{
-					throw new PhyloUtilsException(
+					throw new NoSuchNodeException(
 							"Requested classification path does not match tree: " + DSStringUtils.join(taxa, "; "));
 					}
 				}
@@ -496,7 +499,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}
 		else
 			{
-			throw new PhyloUtilsException("Taxonomy path not unique : " + DSStringUtils.join(taxa, "; "));
+			throw new PhyloUtilsRuntimeException("Taxonomy path not unique : " + DSStringUtils.join(taxa, "; "));
 			}
 		}
 
@@ -581,7 +584,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	Pattern strainSuffixPattern = Pattern.compile("((sp.?)|(str.?)|(strain)).*$");
 
 	@NotNull
-	public Integer getUniqueNodeForName(String name) throws PhyloUtilsException
+	public Integer getUniqueNodeForName(String name) throws NoSuchNodeException
 		{
 		Collection<Integer> matchingIds = nameToIdMap.get(name);
 		/*	if (matchingIds.isEmpty())
@@ -625,7 +628,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}
 		if (matchingIds.isEmpty())
 			{
-			throw new NoSuchElementException("Node not found: " + name);
+			throw new NoSuchNodeException("Node not found: " + name);
 			}
 		if (matchingIds.size() > 1)
 			{
@@ -635,7 +638,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return matchingIds.iterator().next();
 		}
 
-	public boolean isDescendant(Integer ancestor, Integer descendant) throws PhyloUtilsException
+	public boolean isDescendant(Integer ancestor, Integer descendant) throws NoSuchNodeException
 		{
 		return theIntegerTree.isDescendant(ancestor, descendant);
 //		return stringTaxonomyService.isDescendant(intToNodeMap.get(ancestor), intToNodeMap.get(descendant));
@@ -647,7 +650,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return stringTaxonomyService.distanceBetween(intToNodeMap(a), intToNodeMap(b));
 		}
 */
-	public Double minDistanceBetween(Integer a, Integer b) throws PhyloUtilsException
+	public Double minDistanceBetween(Integer a, Integer b) throws NoSuchNodeException
 		{
 		return theIntegerTree.distanceBetween(a, b);
 		//return stringTaxonomyService.minDistanceBetween(intToNodeMap.get(a), intToNodeMap.get(b));
@@ -655,7 +658,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 
 
-	public Integer nearestAncestorWithBranchLength(Integer id) throws PhyloUtilsException
+	public Integer nearestAncestorWithBranchLength(Integer id) throws NoSuchNodeException
 		{
 		return theIntegerTree.nearestAncestorWithBranchLength(id);
 //		return intToNodeMap.inverse().get(intToNodeMap.get(id).nearestAncestorWithBranchLength());
@@ -698,7 +701,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 }
  */
 
-	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids) throws PhyloUtilsException
+	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids) throws NoSuchNodeException
 		{
 		return extractTreeWithLeafIDs(ids, false);
 		}
@@ -711,7 +714,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 }
  */
 	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids, boolean ignoreAbsentNodes)
-			throws PhyloUtilsException
+			throws NoSuchNodeException
 		{
 		return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes);
 		}

@@ -32,6 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.DissimilarityMeasure;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;
@@ -86,6 +87,11 @@ public class WeightedUniFrac<T> implements DissimilarityMeasure<RootedPhylogeny<
 			return u;
 			}
 		catch (PhyloUtilsException e)
+			{
+			logger.error("Error", e);
+			throw new Error(e);
+			}
+		catch (NoSuchNodeException e)
 			{
 			logger.error("Error", e);
 			throw new Error(e);

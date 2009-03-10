@@ -33,6 +33,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.math.MathUtils;
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.apache.log4j.Logger;
 import org.testng.annotations.Test;
 
@@ -90,7 +91,7 @@ public class NewickParserTest
 		}
 
 	@Test
-	public void phylogenyDistancesAreCorrect() throws PhyloUtilsException, IOException
+	public void phylogenyDistancesAreCorrect() throws PhyloUtilsException, IOException, NoSuchNodeException
 		{
 		URL url = ClassLoader.getSystemResource("goodNewickTree.nh");
 		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_"));

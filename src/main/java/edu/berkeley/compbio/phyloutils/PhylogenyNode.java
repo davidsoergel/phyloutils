@@ -32,6 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -51,7 +52,7 @@ public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T
 	/**
 	 * {@inheritDoc}
 	 */
-	Collection<? extends PhylogenyNode<T>> getChildren(); //
+	Collection<? extends PhylogenyNode<T>> getChildren(); // throws NoSuchNodeException; //
 
 	// the "name" of this PhylogenyNode is the same as the "value" of the hierarchynode
 	//T getName();
@@ -102,5 +103,5 @@ public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T
 	void appendSubtree(StringBuffer sb, String indent);
 
 
-	PhylogenyNode<T> nearestAncestorWithBranchLength() throws PhyloUtilsException;
+	PhylogenyNode<T> nearestAncestorWithBranchLength() throws NoSuchNodeException;
 	}

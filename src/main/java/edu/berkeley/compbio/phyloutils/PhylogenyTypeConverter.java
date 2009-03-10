@@ -1,5 +1,6 @@
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.google.common.collect.Multimap;
 import org.apache.log4j.Logger;
 
@@ -17,7 +18,7 @@ public class PhylogenyTypeConverter
 	 */
 	public static <T> BasicRootedPhylogeny<T> convertToIDTree(RootedPhylogeny<String> stringTree, NodeNamer<T> namer,
 	                                                          TaxonStringIdMapper<T> idMapper,
-	                                                          Multimap<String, T> nameToIdMap)
+	                                                          Multimap<String, T> nameToIdMap) //throws PhyloUtilsException
 		//    ,Multimap<String, T> nameToIdMap)
 		//	throws NcbiTaxonomyException
 		{
@@ -37,24 +38,17 @@ public class PhylogenyTypeConverter
 		BasicRootedPhylogeny<T> result = new BasicRootedPhylogeny<T>();
 		copyValuesToNode(stringTree, result.getSelfNode(), idMapper, nameToIdMap, namer); //, nameToIdMap
 		//NodeNamer<T> namer = new IntegerNodeNamer(10000000);
-		try
-			{
-			// name the nodes with null ids.  Note these don't get added to the nameToIdMap.
-			result.assignUniqueIds(namer);
-			}
-		catch (PhyloUtilsException e)
-			{
-			// impossible
-			logger.error("Error", e);
-			throw new Error(e);
-			}
+
+		// name the nodes with null ids.  Note these don't get added to the nameToIdMap.
+		result.assignUniqueIds(namer);
+
 		return result;
 		}
 
 	private static <T> PhylogenyNode<T> convertToIDNode(PhylogenyNode<String> stringNode,
 	                                                    TaxonStringIdMapper<T> idMapper,
 	                                                    Multimap<String, T> nameToIdMap,
-	                                                    NodeNamer<T> namer)//, Multimap<String, T> nameToIdMap)//throws NcbiTaxonomyException
+	                                                    NodeNamer<T> namer) //throws PhyloUtilsException//, Multimap<String, T> nameToIdMap)//throws NcbiTaxonomyException
 		{
 		PhylogenyNode<T> result = new BasicPhylogenyNode<T>();
 		copyValuesToNode(stringNode, result, idMapper, nameToIdMap, namer);//,nameToIdMap);
@@ -63,7 +57,7 @@ public class PhylogenyTypeConverter
 
 	private static <T> void copyValuesToNode(PhylogenyNode<String> stringNode, PhylogenyNode<T> result,
 	                                         TaxonStringIdMapper<T> idMapper, Multimap<String, T> nameToIdMap,
-	                                         NodeNamer<T> namer)
+	                                         NodeNamer<T> namer) //throws PhyloUtilsException
 		//, Multimap<String, T> nameToIdMap)
 		{
 		result.setLength(stringNode.getLength());
@@ -77,7 +71,7 @@ public class PhylogenyTypeConverter
 			{
 			id = idMapper.findTaxidByName(name);
 			}
-		catch (PhyloUtilsException e)
+		catch (NoSuchNodeException e)
 			{
 			//logger.debug("Integer ID not found for name: " + stringNode.getValue());
 

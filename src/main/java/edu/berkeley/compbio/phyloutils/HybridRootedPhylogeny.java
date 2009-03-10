@@ -32,6 +32,8 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -61,7 +63,7 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		this.leafPhylogeny = leafPhylogeny;
 		}
 
-	public T nearestKnownAncestor(T leafId) throws PhyloUtilsException
+	public T nearestKnownAncestor(T leafId) throws NoSuchNodeException
 		{
 		return leafPhylogeny.nearestKnownAncestor(rootPhylogeny, leafId);
 		}
@@ -69,7 +71,7 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 	/**
 	 * {@inheritDoc}
 	 */
-	public T nearestAncestorWithBranchLength(T id) throws PhyloUtilsException
+	public T nearestAncestorWithBranchLength(T id) throws NoSuchNodeException
 		{
 		T rootId = nearestKnownAncestor(id);
 		return rootPhylogeny.nearestAncestorWithBranchLength(rootId);
@@ -83,7 +85,7 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 	/**
 	 * {@inheritDoc}
 	 */
-	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers) throws PhyloUtilsException
+	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers) throws NoSuchNodeException
 		{
 		return extractTreeWithLeafIDs(integers, false);
 		}
@@ -119,7 +121,7 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 	 * {@inheritDoc}
 	 */
 	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes)
-			throws PhyloUtilsException
+			throws NoSuchNodeException
 		{
 		// this ought to work even if some of the requested ids are in the root tree rather than the leaf tree,
 		// as long as the leaf tree also has a node with the same ID (even with the wrong topology)
@@ -135,7 +137,7 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		return result.extractTreeWithLeafIDs(ids);
 		}
 
-	private RootedPhylogeny<T> convertToBasic() throws PhyloUtilsException
+	private RootedPhylogeny<T> convertToBasic() throws NoSuchNodeException
 		{
 		reconciledLeafNodes = new HashSet<PhylogenyNode<T>>();
 
@@ -170,9 +172,12 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		if (rootParent != null)
 			{
 			T parentId = rootParent.getValue();
-			PhylogenyNode<T> leafParent = leafPhylogeny.getNode(parentId);
-
-			if (leafParent == null)
+			PhylogenyNode<T> leafParent;
+			try
+				{
+				leafParent = leafPhylogeny.getNode(parentId);
+				}
+			catch (NoSuchNodeException e)
 				{
 				leafParent = new BasicPhylogenyNode<T>();
 				leafParent.setValue(parentId);
@@ -200,7 +205,7 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		}
 
 
-	public boolean isDescendant(T ancestor, T descendant) throws PhyloUtilsException
+	public boolean isDescendant(T ancestor, T descendant) throws NoSuchNodeException
 		{
 		T nearestDescendant = nearestKnownAncestor(descendant);
 

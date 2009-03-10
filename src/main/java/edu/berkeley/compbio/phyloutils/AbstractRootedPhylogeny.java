@@ -33,11 +33,11 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.ContinuousDistribution1D;
 import com.google.common.collect.Multiset;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,7 +66,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	 * {@inheritDoc}
 	 */
 	@NotNull
-	public T commonAncestor(Collection<T> knownMergeIds)
+	public T commonAncestor(Collection<T> knownMergeIds) throws NoSuchNodeException
 		{
 		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
 		for (T id : knownMergeIds)
@@ -90,7 +90,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		if (commonAncestor == null)
 			{
-			throw new NoSuchElementException("Nodes have no common ancestor");
+			throw new NoSuchNodeException("Nodes have no common ancestor");
 			//return null;
 			}
 
@@ -100,8 +100,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	@Nullable
-	public T commonAncestor(T nameA, T nameB)
+	@NotNull
+	public T commonAncestor(T nameA, T nameB) throws NoSuchNodeException
 		{
 		PhylogenyNode<T> a = getNode(nameA);
 		PhylogenyNode<T> b = getNode(nameB);
@@ -111,8 +111,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	@Nullable
+	@NotNull
 	public PhylogenyNode<T> commonAncestor(@NotNull PhylogenyNode<T> a, @NotNull PhylogenyNode<T> b)
+			throws NoSuchNodeException
 		{
 		List<PhylogenyNode<T>> ancestorsA = a.getAncestorPath();
 		List<PhylogenyNode<T>> ancestorsB = b.getAncestorPath();
@@ -126,28 +127,42 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		if (commonAncestor == null)
 			{
-			return null;
+			throw new NoSuchNodeException("Nodes have no common ancestor");
 			}
 
 		return commonAncestor;
 		}
 
 
-	public boolean isDescendant(T ancestor, T descendant) throws PhyloUtilsException
+	public boolean isDescendant(T ancestor, T descendant)
 		{
-		final T commonAncestor = commonAncestor(ancestor, descendant);
-		return ancestor.equals(commonAncestor);
+		try
+			{
+			return ancestor.equals(commonAncestor(ancestor, descendant));
+			}
+		catch (NoSuchNodeException e)
+			{
+			return false;
+			}
 		}
 
-	public boolean isDescendant(PhylogenyNode<T> ancestor, PhylogenyNode<T> descendant) throws PhyloUtilsException
+	public boolean isDescendant(PhylogenyNode<T> ancestor, PhylogenyNode<T> descendant)
 		{
-		return ancestor.equals(commonAncestor(ancestor, descendant));
+		try
+			{
+			return ancestor.equals(commonAncestor(ancestor, descendant));
+			}
+		catch (NoSuchNodeException e)
+			{
+			return false;
+			}
 		}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids) throws PhyloUtilsException
+	@NotNull
+	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids) throws NoSuchNodeException
 		{
 		return extractTreeWithLeafIDs(ids, false);
 		}
@@ -155,8 +170,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
+	@NotNull
 	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes)
-			throws PhyloUtilsException
+			throws NoSuchNodeException
 
 		{
 		// don't use HashSet, to avoid calling hashcode since that requires a transaction
@@ -169,7 +185,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 				{
 				if (!ignoreAbsentNodes)
 					{
-					throw new NoSuchElementException("Can't extract tree; requested node " + id + " not found");
+					throw new NoSuchNodeException("Can't extract tree; requested node " + id + " not found");
 					}
 				}
 			else
@@ -191,8 +207,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return result;
 		}
 
-
-	public RootedPhylogeny<T> extractTreeWithLeaves(Collection<PhylogenyNode<T>> leaves) throws PhyloUtilsException
+	@NotNull
+	public RootedPhylogeny<T> extractTreeWithLeaves(Collection<PhylogenyNode<T>> leaves)
 		{
 		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
 		for (PhylogenyNode<T> leaf : leaves)
@@ -205,10 +221,10 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			{
 			commonAncestor = extractTreeWithLeafPaths(theAncestorLists);
 			}
-		catch (PhyloUtilsException e)
+		catch (NoSuchNodeException e)
 			{
 			logger.error("Error", e);
-			throw new Error(e);
+			throw new PhyloUtilsRuntimeException(e);
 			}
 
 		// always use the same root, even if it has only one child
@@ -259,8 +275,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	 * @return
 	 * @throws PhyloUtilsException
 	 */
+	@NotNull
 	protected BasicPhylogenyNode<T> extractTreeWithLeafPaths(Set<List<PhylogenyNode<T>>> theAncestorLists)
-			throws PhyloUtilsException
+			throws NoSuchNodeException
 		{
 		double accumulatedLength = 0;
 
@@ -291,9 +308,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			  }
   */
 
-		if (commonAncestor == null)
+		if (commonAncestor == null)  // only possible if allFirstElementsEqual == false on the first attempt
 			{
-			throw new PhyloUtilsException("Provided ancestor lists do not have a common root");
+			throw new NoSuchNodeException("Provided ancestor lists do not have a common root");
 			}
 
 		BasicPhylogenyNode<T> node = new BasicPhylogenyNode<T>();
@@ -357,7 +374,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public double distanceBetween(T nameA, T nameB)
+	public double distanceBetween(T nameA, T nameB) throws NoSuchNodeException
 		{
 		PhylogenyNode a = getNode(nameA);
 		PhylogenyNode b = getNode(nameB);
@@ -367,15 +384,23 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public double distanceBetween(PhylogenyNode<T> a, PhylogenyNode<T> b)
+	public double distanceBetween(PhylogenyNode<T> a, PhylogenyNode<T> b) throws NoSuchNodeException
 		{
 		List<PhylogenyNode<T>> ancestorsA = a.getAncestorPath();
 		List<PhylogenyNode<T>> ancestorsB = b.getAncestorPath();
+
+		int commonAncestors = 0;
 
 		while (ancestorsA.size() > 0 && ancestorsB.size() > 0 && ancestorsA.get(0) == ancestorsB.get(0))
 			{
 			ancestorsA.remove(0);
 			ancestorsB.remove(0);
+			commonAncestors++;
+			}
+
+		if (commonAncestors == 0)
+			{
+			throw new NoSuchNodeException("Can't compute distance between nodes with no common ancestor");
 			}
 
 		double dist = 0;
@@ -535,7 +560,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	 * {@inheritDoc}
 	 */
 	public RootedPhylogeny<T> extractIntersectionTree(Collection<T> leafIdsA, Collection<T> leafIdsB)
-			throws PhyloUtilsException
+			throws NoSuchNodeException, PhyloUtilsException
 		{
 		Set<PhylogenyNode<T>> allTreeNodesA = new HashSet<PhylogenyNode<T>>();
 		for (T id : leafIdsA)
@@ -567,6 +592,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	 * {@inheritDoc}
 	 */
 	public RootedPhylogeny<T> mixWith(RootedPhylogeny<T> otherTree, double mixingProportion) throws PhyloUtilsException
+		//NoSuchNodeException
 		{
 		if (mixingProportion < 0 || mixingProportion > 1)
 			{
@@ -580,31 +606,38 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 					"Phylogeny mixtures can be computed only between trees extracted from the same underlying tree");
 			}
 
-		Set<T> unionLeaves = new HashSet<T>();
-		unionLeaves.addAll(getLeafValues());
-		unionLeaves.addAll(otherTree.getLeafValues());
-
-		RootedPhylogeny<T> unionTree = basePhylogeny.extractTreeWithLeafIDs(unionLeaves);
-
-		for (PhylogenyNode<T> node : getLeaves())
+		try
 			{
-			unionTree.getNode(node.getValue()).setWeight(node.getWeight() * mixingProportion);
-			}
+			Set<T> unionLeaves = new HashSet<T>();
+			unionLeaves.addAll(getLeafValues());
+			unionLeaves.addAll(otherTree.getLeafValues());
 
-		for (PhylogenyNode<T> node : otherTree.getLeaves())
+
+			RootedPhylogeny<T> unionTree = basePhylogeny.extractTreeWithLeafIDs(unionLeaves);
+			for (PhylogenyNode<T> node : getLeaves())
+				{
+				unionTree.getNode(node.getValue()).setWeight(node.getWeight() * mixingProportion);
+				}
+
+			for (PhylogenyNode<T> node : otherTree.getLeaves())
+				{
+				unionTree.getNode(node.getValue()).incrementWeightBy(node.getWeight() * (1. - mixingProportion));
+				}
+			unionTree.normalizeWeights();
+			return unionTree;
+			}
+		catch (NoSuchNodeException e)
 			{
-			unionTree.getNode(node.getValue()).incrementWeightBy(node.getWeight() * (1. - mixingProportion));
+			logger.error("Error", e);
+			throw new PhyloUtilsRuntimeException(e);
 			}
-
-		unionTree.normalizeWeights();
-		return unionTree;
 		}
 
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor)//throws PhyloUtilsException
+	public void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor) //throws PhyloUtilsException
 		{
 		/*RootedPhylogeny<T> theBasePhylogeny = getBasePhylogeny();
 		if (theBasePhylogeny != otherTree.getBasePhylogeny())
@@ -617,12 +650,28 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		//** if the otherTree has leaves that are not present in this tree, we'll ignore them and never know.
 		// That circumstance should probably throw an exception, but it's a bit of a drag to test for it.
 
-
-		for (PhylogenyNode<T> leaf : getLeaves())//theBasePhylogeny.getLeaves())
+		try
 			{
-			T leafId = leaf.getValue();
-			PhylogenyNode<T> otherLeaf = otherTree.getNode(leafId);
-			getNode(leafId).setWeight((otherLeaf == null ? 0 : otherLeaf.getWeight()) + smoothingFactor);
+			for (PhylogenyNode<T> leaf : getLeaves())//theBasePhylogeny.getLeaves())
+				{
+				T leafId = leaf.getValue();
+				PhylogenyNode<T> otherLeaf = null;
+				final PhylogenyNode<T> node = getNode(leafId);
+				try
+					{
+					otherLeaf = otherTree.getNode(leafId);
+					node.setWeight(otherLeaf.getWeight() + smoothingFactor);
+					}
+				catch (NoSuchNodeException e)
+					{
+					node.setWeight(smoothingFactor);
+					}
+				}
+			}
+		catch (NoSuchNodeException e)
+			{
+			logger.error("Error", e);
+			throw new PhyloUtilsRuntimeException(e);
 			}
 
 		normalizeWeights();

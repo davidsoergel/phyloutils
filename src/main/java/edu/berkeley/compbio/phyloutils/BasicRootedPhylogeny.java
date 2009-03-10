@@ -33,6 +33,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +50,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 
@@ -106,12 +106,12 @@ root = new BasicPhylogenyNode<T>(original.);
 	 * {@inheritDoc}
 	 */
 	@NotNull
-	public PhylogenyNode<T> getNode(T name) throws NoSuchElementException
+	public PhylogenyNode<T> getNode(T name) throws NoSuchNodeException
 		{
 		BasicPhylogenyNode<T> result = uniqueIdToNodeMap.get(name);
 		if (result == null)
 			{
-			throw new NoSuchElementException("Node not found: " + name);
+			throw new NoSuchNodeException("Node not found: " + name);
 			}
 		return result;
 		}
@@ -171,7 +171,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	 * @param namer
 	 * @throws PhyloUtilsException
 	 */
-	public void assignUniqueIds(NodeNamer<T> namer) throws PhyloUtilsException
+	public void assignUniqueIds(NodeNamer<T> namer) //throws PhyloUtilsException
 		{
 		uniqueIdToNodeMap = new HashMap<T, BasicPhylogenyNode<T>>();
 		root.addSubtreeToMap(uniqueIdToNodeMap, namer);
@@ -190,7 +190,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	 * {@inheritDoc}
 	 */
 	@NotNull
-	public PhylogenyNode<T> getChild(T id)
+	public PhylogenyNode<T> getChild(T id) throws NoSuchNodeException
 		{
 		return root.getChild(id);
 		}
@@ -327,27 +327,38 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public T nearestKnownAncestor(RootedPhylogeny<T> rootPhylogeny, T leafId) throws PhyloUtilsException
+	public T nearestKnownAncestor(RootedPhylogeny<T> rootPhylogeny, T leafId) throws NoSuchNodeException
 		{
 		T result = null;//nearestKnownAncestorCache.get(leafId);
 		if (result == null)
 			{
 			PhylogenyNode<T> n = getNode(leafId);
 
-			if (n == null)
+			/*if (n == null)
 				{
-				throw new PhyloUtilsException("Leaf phylogeny does not contain node " + leafId + ".");
-				}
+				throw new NoSuchNodeException("Leaf phylogeny does not contain node " + leafId + ".");
+				}*/
 
-			while (rootPhylogeny.getNode(n.getValue()) == null)
+			//while (rootPhylogeny.getNode(n.getValue()) == null)
+			while (true)
 				{
-				n = n.getParent();
-				if (n == null)
+				try
 					{
-					// arrived at root, too bad
-					throw new PhyloUtilsException("Taxon " + leafId + " not found in tree.");
+					rootPhylogeny.getNode(n.getValue());
+
+					// if we got here then we found a node
+					break;
 					}
-				//ncbiDb.getEntityManager().refresh(n);
+				catch (NoSuchNodeException e)
+					{
+					n = n.getParent();
+					if (n == null)
+						{
+						// arrived at root, too bad
+						throw new NoSuchNodeException("Taxon " + leafId + " not found in tree.");
+						}
+					//ncbiDb.getEntityManager().refresh(n);
+					}
 				}
 			result = n.getValue();
 			//	nearestKnownAncestorCache.put(leafId, result);
@@ -359,12 +370,12 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public T nearestAncestorWithBranchLength(T leafId) throws PhyloUtilsException
+	public T nearestAncestorWithBranchLength(T leafId) throws NoSuchNodeException //throws PhyloUtilsException
 		{
 		PhylogenyNode<T> n = getNode(leafId);
 		if (n == null)
 			{
-			throw new PhyloUtilsException("Leaf phylogeny does not contain node " + leafId + ".");
+			throw new NoSuchNodeException("Leaf phylogeny does not contain node " + leafId + ".");
 			}
 		return n.nearestAncestorWithBranchLength().getValue();
 		}
@@ -458,19 +469,12 @@ root = new BasicPhylogenyNode<T>(original.);
 	@Override
 	public RootedPhylogeny<T> clone()
 		{
-		try
-			{
-			BasicRootedPhylogeny<T> result = new BasicRootedPhylogeny<T>();
-			result.setRoot(root.clone());
-			result.setBasePhylogeny(getBasePhylogeny());
-			result.assignUniqueIds(null);
-			return result;
-			}
-		catch (PhyloUtilsException e)
-			{
-			logger.error("Error", e);
-			throw new Error(e);
-			}
+
+		BasicRootedPhylogeny<T> result = new BasicRootedPhylogeny<T>();
+		result.setRoot(root.clone());
+		result.setBasePhylogeny(getBasePhylogeny());
+		result.assignUniqueIds(null);
+		return result;
 		}
 
 	/**
@@ -522,16 +526,9 @@ root = new BasicPhylogenyNode<T>(original.);
 
 		uniqueIdToNodeMap = new HashMap<T, BasicPhylogenyNode<T>>();
 
-		try
-			{
-			// populate the nodes map
-			assignUniqueIds(null);  // all the nodes should have ids already, don't need a namer
-			}
-		catch (PhyloUtilsException e)
-			{
-			logger.error("Error", e);
-			throw new NotSerializableException("PhyloUtilsException: " + e);
-			}
+
+		// populate the nodes map
+		assignUniqueIds(null);  // all the nodes should have ids already, don't need a namer
 
 
 		for (BasicPhylogenyNode<T> p : uniqueIdToNodeMap.values())
@@ -553,9 +550,9 @@ root = new BasicPhylogenyNode<T>(original.);
 		throw new NotSerializableException();
 		}
 
-	public PhylogenyNode<T> nearestAncestorWithBranchLength() throws PhyloUtilsException
+	public PhylogenyNode<T> nearestAncestorWithBranchLength() throws NoSuchNodeException
 		{
-		throw new PhyloUtilsException("Root doesn't have a branch length.");
+		throw new NoSuchNodeException("Root doesn't have a branch length.");
 		}
 	}
 

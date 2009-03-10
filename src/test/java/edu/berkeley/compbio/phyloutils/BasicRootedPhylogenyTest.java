@@ -81,17 +81,9 @@ public class BasicRootedPhylogenyTest extends ContractTestAware<BasicRootedPhylo
 
 		public BasicRootedPhylogenyWithSpecificNodeHandles()
 			{
-			try
-				{
-				rootPhylogeny.assignUniqueIds(namer);
-				rootPhylogeny.uniformizeLeafWeights();
-				}
-			catch (PhyloUtilsException e)
-				{
-				// impossible
-				logger.error("Error", e);
-				throw new Error(e);
-				}
+
+			rootPhylogeny.assignUniqueIds(namer);
+			rootPhylogeny.uniformizeLeafWeights();
 			}
 		}
 	}

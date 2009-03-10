@@ -32,6 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.ContinuousDistribution1D;
 import com.google.common.collect.Multiset;
 import org.jetbrains.annotations.NotNull;
@@ -60,7 +61,7 @@ public interface RootedPhylogeny<T>
 	 * @return the T id of the most recent common ancestor
 	 */
 	@Nullable
-	T commonAncestor(Collection<T> descendantIds);
+	T commonAncestor(Collection<T> descendantIds) throws NoSuchNodeException;
 
 	/**
 	 * Finds the most recent common ancestor of two nodes.
@@ -70,7 +71,7 @@ public interface RootedPhylogeny<T>
 	 * @return the T id of the most recent common ancestor
 	 */
 	@Nullable
-	T commonAncestor(T nameA, T nameB);
+	T commonAncestor(T nameA, T nameB) throws NoSuchNodeException;
 
 	/**
 	 * Tells whether one node is a descendant of another
@@ -79,7 +80,7 @@ public interface RootedPhylogeny<T>
 	 * @param descendant the T id of the query descendant node
 	 * @return true if the second id descends from the first
 	 */
-	boolean isDescendant(T ancestor, T descendant) throws PhyloUtilsException;
+	boolean isDescendant(T ancestor, T descendant);
 
 	/**
 	 * Tells whether one node is a descendant of another
@@ -88,7 +89,7 @@ public interface RootedPhylogeny<T>
 	 * @param descendant the T id of the query descendant node
 	 * @return true if the second id descends from the first
 	 */
-	boolean isDescendant(PhylogenyNode<T> ancestor, PhylogenyNode<T> descendant) throws PhyloUtilsException;
+	boolean isDescendant(PhylogenyNode<T> ancestor, PhylogenyNode<T> descendant);
 
 	/**
 	 * Computes the sum of the branch lengths along the path between two nodes
@@ -97,7 +98,7 @@ public interface RootedPhylogeny<T>
 	 * @param nameB the T id of another node
 	 * @return the double sum of the branch lengths along the path between two nodes
 	 */
-	double distanceBetween(T nameA, T nameB);
+	double distanceBetween(T nameA, T nameB) throws NoSuchNodeException;
 
 	/**
 	 * Computes the sum of the branch lengths along the path between two nodes
@@ -106,7 +107,7 @@ public interface RootedPhylogeny<T>
 	 * @param nodeB another node
 	 * @return the double sum of the branch lengths along the path between two nodes
 	 */
-	double distanceBetween(PhylogenyNode<T> nodeA, PhylogenyNode<T> nodeB);
+	double distanceBetween(PhylogenyNode<T> nodeA, PhylogenyNode<T> nodeB) throws NoSuchNodeException;
 
 	/**
 	 * Returns the tree node with the given id.
@@ -116,7 +117,7 @@ public interface RootedPhylogeny<T>
 	 * @throws NoSuchElementException when no node has the requested id
 	 */
 	@NotNull
-	PhylogenyNode<T> getNode(T name) throws NoSuchElementException;
+	PhylogenyNode<T> getNode(T name) throws NoSuchNodeException;
 
 	/**
 	 * Gets the root node of the tree
@@ -154,7 +155,7 @@ public interface RootedPhylogeny<T>
 	 * @throws PhyloUtilsException when the requested leafId is not present in this tree, or if none of its ancestors are
 	 *                             present in the rootPhylogeny.
 	 */
-	T nearestKnownAncestor(RootedPhylogeny<T> rootPhylogeny, T leafId) throws PhyloUtilsException;
+	T nearestKnownAncestor(RootedPhylogeny<T> rootPhylogeny, T leafId) throws NoSuchNodeException;
 
 	//T nearestAncestorWithBranchLength(T leafId) throws PhyloUtilsException;
 
@@ -228,7 +229,7 @@ public interface RootedPhylogeny<T>
 	 * @throws PhyloUtilsException when anything goes wrong
 	 */
 	RootedPhylogeny<T> extractIntersectionTree(Collection<T> leafValues, Collection<T> leafValues1)
-			throws PhyloUtilsException;
+			throws PhyloUtilsException, NoSuchNodeException;
 
 	/**
 	 * Builds a new phylogeny by mixing this tree with another one.  This is useful when the trees represent communities,
@@ -256,7 +257,8 @@ public interface RootedPhylogeny<T>
 	 * @param otherTree       the RootedPhylogeny<T> from which to copy weights
 	 * @param smoothingFactor the double pseudocount to add to all leaf weights
 	 */
-	void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor);// throws PhyloUtilsException;
+	void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor)
+			throws NoSuchNodeException;// throws PhyloUtilsException;
 
 	/**
 	 * {@inheritDoc}

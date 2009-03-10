@@ -32,6 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.DissimilarityMeasure;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
@@ -84,6 +85,11 @@ public class PhylogeneticJDivergence<T> implements DissimilarityMeasure<RootedPh
 					.klDivergenceBelow(unionTree, bTreeSmoothed, aTreeSmoothed));
 			}
 		catch (PhyloUtilsException e)
+			{
+			logger.error("Error", e);
+			throw new Error(e);
+			}
+		catch (NoSuchNodeException e)
 			{
 			logger.error("Error", e);
 			throw new Error(e);

@@ -36,6 +36,7 @@ import com.davidsoergel.dsutils.ContractTest;
 import com.davidsoergel.dsutils.ContractTestAware;
 import com.davidsoergel.dsutils.TestInstanceFactory;
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.dsutils.tree.TreeException;
 import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeMethod;
@@ -170,8 +171,7 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 				// OK, continue to the children
 				}
 			else if (topLevelNode == testInstance.a || topLevelNode == testInstance.ba
-					|| topLevelNode == testInstance.bb || topLevelNode == testInstance
-					.c)
+					|| topLevelNode == testInstance.bb || topLevelNode == testInstance.c)
 				{
 				i++;
 				it.skipAllDescendants(topLevelNode);
@@ -212,14 +212,14 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 				assert i == 8;
 				}
 			else if (topLevelNode == testInstance.c)
-				{
-				assert i == 3;
-				}
+					{
+					assert i == 3;
+					}
 			}
 		}
 
 	@Test
-	public void extractTreeWithPathsRemovesInternalNodes() throws PhyloUtilsException
+	public void extractTreeWithPathsRemovesInternalNodes() throws PhyloUtilsException, NoSuchNodeException
 		{
 		Set<List<PhylogenyNode<String>>> theAncestorLists = new HashSet<List<PhylogenyNode<String>>>();
 
@@ -241,22 +241,22 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 				assert node.getLength() == 3.2;
 				}
 			else if (node.getValue().equals("b"))
-				{
-				assert node.getLength() == 4;
-				}
-			else if (node.getValue().equals("bbba"))
-				{
-				assert node.getLength() == 8.5;
-				}
-			else if (node.getValue().equals("ca"))
-				{
-				assert node.getLength() == 3;
-				}
-			else
-				{
-				logger.error("Got wrong node: " + node.getValue());
-				assert false;
-				}
+					{
+					assert node.getLength() == 4;
+					}
+				else if (node.getValue().equals("bbba"))
+						{
+						assert node.getLength() == 8.5;
+						}
+					else if (node.getValue().equals("ca"))
+							{
+							assert node.getLength() == 3;
+							}
+						else
+							{
+							logger.error("Got wrong node: " + node.getValue());
+							assert false;
+							}
 			}
 		}
 	}

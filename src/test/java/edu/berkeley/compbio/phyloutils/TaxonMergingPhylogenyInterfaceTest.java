@@ -34,11 +34,11 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.AtomicContractTest;
 import com.davidsoergel.dsutils.TestInstanceFactory;
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.NoSuchElementException;
 
 /**
  * Tests instances of TaxonMergingPhylogeny.  The instances created by the provided factory must have certain properties
@@ -109,7 +109,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 			}
 		}
 
-	@Test(expectedExceptions = NoSuchElementException.class)
+	@Test(expectedExceptions = NoSuchNodeException.class)
 	public void treeExtractionThrowsExceptionOnLeafNotFound() throws Exception
 		{
 		TaxonMergingPhylogeny tmp = tif.createInstance();

@@ -1,5 +1,7 @@
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
+
 import java.util.Collection;
 
 /**
@@ -12,11 +14,11 @@ import java.util.Collection;
  */
 public interface TaxonomySynonymService
 	{
-	Collection<String> synonymsOf(String name) throws PhyloUtilsException;
+	Collection<String> synonymsOf(String name) throws NoSuchNodeException;
 
-	Collection<String> synonymsOfParent(String name) throws PhyloUtilsException;
+	Collection<String> synonymsOfParent(String name) throws NoSuchNodeException;
 
-	Collection<String> synonymsOfRelaxed(String name) throws PhyloUtilsException;
+	Collection<String> synonymsOfRelaxed(String name) throws NoSuchNodeException;
 
 	void saveState();
 	}

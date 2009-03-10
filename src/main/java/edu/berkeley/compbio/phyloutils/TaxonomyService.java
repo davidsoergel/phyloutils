@@ -1,5 +1,6 @@
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.dsutils.tree.TreeException;
 
 /**
@@ -12,13 +13,13 @@ import com.davidsoergel.dsutils.tree.TreeException;
  */
 public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStringIdMapper<T>
 	{
-	boolean isDescendant(T ancestor, T descendant) throws PhyloUtilsException;
+	boolean isDescendant(T ancestor, T descendant) throws NoSuchNodeException;
 
 	//boolean isDescendant(PhylogenyNode<T> ancestor, PhylogenyNode<T> descendant) throws PhyloUtilsException;
 
 	void saveState();
 
-	Double minDistanceBetween(T name1, T name2) throws PhyloUtilsException;
+	Double minDistanceBetween(T name1, T name2) throws NoSuchNodeException;
 
 	//Double minDistanceBetween(PhylogenyNode<T> node1, PhylogenyNode<T> node2) throws PhyloUtilsException;
 
@@ -27,5 +28,5 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 	void setSynonymService(TaxonomySynonymService taxonomySynonymService);
 
 
-	RootedPhylogeny<T> getRandomSubtree(int numTaxa, Double mergeThreshold) throws PhyloUtilsException, TreeException;
+	RootedPhylogeny<T> getRandomSubtree(int numTaxa, Double mergeThreshold) throws NoSuchNodeException, TreeException;
 	}

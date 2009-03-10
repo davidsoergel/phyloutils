@@ -32,6 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 
@@ -56,7 +57,7 @@ public class EnvironmentParser
 	{
 
 	public static Collection<RootedPhylogeny<String>> read(InputStream is, RootedPhylogeny<String> tree)
-			throws PhyloUtilsException, IOException
+			throws IOException, PhyloUtilsException, NoSuchNodeException
 		{
 		BufferedReader r = new BufferedReader(new InputStreamReader(is));
 

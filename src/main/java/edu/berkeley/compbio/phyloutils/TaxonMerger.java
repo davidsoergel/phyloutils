@@ -34,6 +34,7 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.dsutils.tree.TreeException;
 import org.apache.log4j.Logger;
 
@@ -67,7 +68,8 @@ public class TaxonMerger
 	//(propagation = Propagation.MANDATORY)
 	public static <T> Map<T, Set<T>> merge(Collection<T> leafIds, TaxonomyService<T> basePhylogeny,
 	                                       // TaxonMergingPhylogeny
-	                                       double branchSpanMergeThreshold) throws TreeException, PhyloUtilsException
+	                                       double branchSpanMergeThreshold)
+			throws TreeException, NoSuchNodeException// , PhyloUtilsException
 		{
 		Map<T, Set<T>> theTaxonsetsByTaxid = new HashMap<T, Set<T>>();
 

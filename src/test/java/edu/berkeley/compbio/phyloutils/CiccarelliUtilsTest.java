@@ -33,6 +33,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.math.MathUtils;
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.testng.annotations.Test;
 
 
@@ -48,7 +49,7 @@ public class CiccarelliUtilsTest
 	private static final CiccarelliTaxonomyService ciccarelli = CiccarelliTaxonomyService.getInstance();
 
 	@Test
-	public void ciccarelliExactDistancesAreComputedCorrectly() throws PhyloUtilsException
+	public void ciccarelliExactDistancesAreComputedCorrectly() throws PhyloUtilsException, NoSuchNodeException
 		{
 		double d = ciccarelli.exactDistanceBetween("Escherichia coli O6", "Escherichia coli K12");//(217992, 562);
 		assert d == 0.00022;

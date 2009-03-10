@@ -33,6 +33,7 @@
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
 import com.davidsoergel.dsutils.math.MathUtils;
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.DissimilarityMeasure;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;
@@ -85,10 +86,15 @@ public class PhylogeneticKullbackLeibler<T> implements DissimilarityMeasure<Root
 			logger.error("Error", e);
 			throw new Error(e);
 			}
+		catch (NoSuchNodeException e)
+			{
+			logger.error("Error", e);
+			throw new Error(e);
+			}
 		}
 
 	protected double klDivergenceBelow(PhylogenyNode<T> u, PhylogenyNode<T> a, PhylogenyNode<T> b)
-			throws PhyloUtilsException
+			throws NoSuchNodeException
 		{
 		double divergence = 0;
 		for (PhylogenyNode<T> node : u.getChildren())

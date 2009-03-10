@@ -1,6 +1,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.dsutils.tree.TreeException;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
@@ -9,7 +10,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -73,23 +73,23 @@ public class NewickTaxonomyService
 		}
 
 
-	public double exactDistanceBetween(String a, String b)
+	public double exactDistanceBetween(String a, String b) throws NoSuchNodeException
 		{
 		return basePhylogeny.distanceBetween(a, b);
 		}
 
 
-	public double exactDistanceBetween(PhylogenyNode<String> a, PhylogenyNode<String> b)
+	public double exactDistanceBetween(PhylogenyNode<String> a, PhylogenyNode<String> b) throws NoSuchNodeException
 		{
 		return basePhylogeny.distanceBetween(a, b);
 		}
 
-	public double greatestDepth(String a)
+	public double greatestDepth(String a) throws NoSuchNodeException
 		{
 		return basePhylogeny.getNode(a).getLargestLengthSpan();
 		}
 
-	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids) throws PhyloUtilsException
+	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids) throws NoSuchNodeException
 		{
 		return basePhylogeny.extractTreeWithLeafIDs(ids);
 		}
@@ -105,7 +105,7 @@ public class NewickTaxonomyService
 		}
 
 	public RootedPhylogeny<String> getRandomSubtree(int numTaxa, Double mergeThreshold)
-			throws PhyloUtilsException, TreeException
+			throws TreeException, NoSuchNodeException
 		{
 		Map<String, Set<String>> mergeIdSets = TaxonMerger.merge(basePhylogeny.getLeafValues(), this, mergeThreshold);
 		Set<String> mergedIds = mergeIdSets.keySet();
@@ -113,19 +113,13 @@ public class NewickTaxonomyService
 		return basePhylogeny.extractTreeWithLeafIDs(mergedIds);
 		}
 
-	public String findTaxidByName(String name) throws PhyloUtilsException
+	public String findTaxidByName(String name) throws NoSuchNodeException
 		{
-		try
-			{
-			return basePhylogeny.getNode(name).getValue();
-			}
-		catch (NoSuchElementException e)
-			{
-			throw new PhyloUtilsException(e);
-			}
+
+		return basePhylogeny.getNode(name).getValue();
 		}
 
-	public boolean isDescendant(String ancestor, String descendant) throws PhyloUtilsException
+	public boolean isDescendant(String ancestor, String descendant) throws NoSuchNodeException
 		{
 		return basePhylogeny.isDescendant(ancestor, descendant);
 		}
@@ -135,12 +129,12 @@ public class NewickTaxonomyService
 		basePhylogeny.saveState();
 		}
 
-	public Double minDistanceBetween(String name1, String name2) throws PhyloUtilsException
+	public Double minDistanceBetween(String name1, String name2) throws NoSuchNodeException //throws PhyloUtilsException
 		{
 		return exactDistanceBetween(name1, name2);
 		}
 
-	public String nearestAncestorWithBranchLength(String id) throws PhyloUtilsException
+	public String nearestAncestorWithBranchLength(String id) throws NoSuchNodeException
 		{
 		return basePhylogeny.nearestAncestorWithBranchLength(id);
 		}
@@ -152,7 +146,7 @@ public class NewickTaxonomyService
 		}*/
 
 	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids, boolean ignoreAbsentNodes)
-			throws PhyloUtilsException
+			throws NoSuchNodeException
 		{
 		return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes);
 		}
@@ -164,7 +158,7 @@ public class NewickTaxonomyService
 		}
 
 	public Double minDistanceBetween(PhylogenyNode<String> node1, PhylogenyNode<String> node2)
-			throws PhyloUtilsException
+			throws PhyloUtilsException, NoSuchNodeException
 		{
 		return exactDistanceBetween(node1, node2);
 		}

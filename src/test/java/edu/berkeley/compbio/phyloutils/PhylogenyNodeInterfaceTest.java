@@ -3,9 +3,9 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.ContractTestAwareContractTest;
 import com.davidsoergel.dsutils.TestInstanceFactory;
 import com.davidsoergel.dsutils.math.MathUtils;
+import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.testng.annotations.Test;
 
-import java.util.NoSuchElementException;
 import java.util.Queue;
 
 /**
@@ -39,7 +39,7 @@ public class PhylogenyNodeInterfaceTest<T extends PhylogenyNode>
 		}
 
 
-	@Test(expectedExceptions = NoSuchElementException.class)
+	@Test(expectedExceptions = NoSuchNodeException.class)
 	public void getChildThrowsExceptionIfChildIsAbsent() throws Exception
 		{
 		PhylogenyNode tmp = tif.createInstance();
