@@ -37,9 +37,11 @@ import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
 import com.davidsoergel.dsutils.tree.TreeException;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -63,7 +65,8 @@ public class TaxonMerger
 	 */
 	//@Transactional
 	//(propagation = Propagation.MANDATORY)
-	public static <T> Map<T, Set<T>> merge(Collection<T> leafIds, TaxonMergingPhylogeny<T> basePhylogeny,
+	public static <T> Map<T, Set<T>> merge(Collection<T> leafIds, TaxonomyService<T> basePhylogeny,
+	                                       // TaxonMergingPhylogeny
 	                                       double branchSpanMergeThreshold) throws TreeException, PhyloUtilsException
 		{
 		Map<T, Set<T>> theTaxonsetsByTaxid = new HashMap<T, Set<T>>();
@@ -102,7 +105,7 @@ public class TaxonMerger
 		DepthFirstTreeIterator<T, PhylogenyNode<T>> it = theTree.depthFirstIterator();
 
 		// for sanity checking only
-		Set<T> allMergedTaxa = new HashSet<T>();
+		List<T> allMergedTaxa = new ArrayList<T>();
 
 		int dropped = 0;
 
@@ -172,8 +175,12 @@ public class TaxonMerger
 			// this subtree should have no nodes in common with any other subtree
 			for (Map.Entry<T, Set<T>> entry2 : theMergedTaxa.entrySet())
 				{
-				if (entry2.getKey() != headId)
+				final T headId2 = entry2.getKey();
+
+				if (headId2 != headId)
 					{
+					assert !basePhylogeny.isDescendant(headId, headId2);
+					assert !basePhylogeny.isDescendant(headId2, headId);
 					assert DSCollectionUtils.intersection(taxonMembers, entry2.getValue()).size() == 0;
 					}
 				}
@@ -188,8 +195,13 @@ public class TaxonMerger
 				}
 			}
 
-		logger.debug("Merged " + (leafIds.size() - dropped) + " taxa into " + theMergedTaxa.size() + " groups; dropped "
-				+ dropped);
+		final int includedTaxa = leafIds.size() - dropped;
+
+		// the merged taxa are disjoint and unique
+		assert new HashSet<T>(allMergedTaxa).size() == allMergedTaxa.size();
+
+		assert allMergedTaxa.size() == includedTaxa;
+		logger.info("Merged " + includedTaxa + " taxa into " + theMergedTaxa.size() + " groups; dropped " + dropped);
 		return theMergedTaxa;
 		}
 	}

@@ -107,8 +107,7 @@ public class NewickTaxonomyService
 	public RootedPhylogeny<String> getRandomSubtree(int numTaxa, Double mergeThreshold)
 			throws PhyloUtilsException, TreeException
 		{
-		Map<String, Set<String>> mergeIdSets =
-				TaxonMerger.merge(basePhylogeny.getLeafValues(), basePhylogeny, mergeThreshold);
+		Map<String, Set<String>> mergeIdSets = TaxonMerger.merge(basePhylogeny.getLeafValues(), this, mergeThreshold);
 		Set<String> mergedIds = mergeIdSets.keySet();
 		DSCollectionUtils.retainRandom(mergedIds, numTaxa);
 		return basePhylogeny.extractTreeWithLeafIDs(mergedIds);

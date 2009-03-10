@@ -65,7 +65,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	@Nullable
+	@NotNull
 	public T commonAncestor(Collection<T> knownMergeIds)
 		{
 		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
@@ -90,7 +90,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		if (commonAncestor == null)
 			{
-			return null;
+			throw new NoSuchElementException("Nodes have no common ancestor");
+			//return null;
 			}
 
 		return commonAncestor.getValue();
@@ -134,7 +135,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 	public boolean isDescendant(T ancestor, T descendant) throws PhyloUtilsException
 		{
-		return ancestor.equals(commonAncestor(ancestor, descendant));
+		final T commonAncestor = commonAncestor(ancestor, descendant);
+		return ancestor.equals(commonAncestor);
 		}
 
 	public boolean isDescendant(PhylogenyNode<T> ancestor, PhylogenyNode<T> descendant) throws PhyloUtilsException

@@ -5,6 +5,7 @@ import com.davidsoergel.dsutils.tree.TreeException;
 import com.google.common.collect.HashMultimap;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,10 +18,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -376,6 +380,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return false;
 		}
 
+	@NotNull
 	public Integer findTaxidByName(String name) throws PhyloUtilsException
 		{
 		//Integer result = null;
@@ -404,6 +409,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			return getUniqueNodeForName(name);
 			}
 
+
 		return getUniqueNodeForMultilevelName(name.split("[; ]+"));
 		//	}
 		//return result;
@@ -417,50 +423,76 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	// bottom-up search
 
+	@NotNull
 	private Integer getUniqueNodeForMultilevelName(String[] taxa) throws PhyloUtilsException
 		{
-		List<String> reverseTaxa = Arrays.asList(taxa.clone());
+		List<String> reverseTaxa = new ArrayList(Arrays.asList(taxa.clone()));
 		Collections.reverse(reverseTaxa);
 
-		final String firstS = reverseTaxa.remove(0);
-		Collection<Integer> trav = nameToIdMap.get(firstS);
+		//final String firstS = reverseTaxa.remove(0);
+		//Collection<Integer> trav = null; // = nameToIdMap.get(firstS);
 
-		if (trav.isEmpty())
+		/*while (trav.isEmpty())
 			{
-			throw new PhyloUtilsException("Node " + firstS + " not found in " + DSStringUtils.join(taxa, "; "));
+			logger.warn("IGNORING Node " + s + " not found in " + DSStringUtils.join(taxa, "; "));
+			continue;
 			}
+*/
+
+		Set<Deque<Integer>> paths = null;
 
 		for (String s : reverseTaxa)
 			{
-			Set<Integer> nextTrav = new HashSet<Integer>();
 			Collection<Integer> matchingNodes = nameToIdMap.get(s);
 
 			if (matchingNodes.isEmpty())
 				{
-				throw new PhyloUtilsException("Node " + s + " not found in " + DSStringUtils.join(taxa, "; "));
+				logger.debug("IGNORING Node " + s + " not found in " + DSStringUtils.join(taxa, "; "));
 				}
-
-			for (Integer descendant : trav)
+			else
 				{
-				for (Integer ancestor : matchingNodes)
+				//	Set<Integer> nextTrav = new HashSet<Integer>();
+				if (paths == null)
 					{
-					if (theIntegerTree.isDescendant(ancestor, descendant))
+					paths = new HashSet<Deque<Integer>>(matchingNodes.size());
+					//nextTrav.addAll(matchingNodes);
+					for (Integer node : matchingNodes)
 						{
-						nextTrav.add(ancestor);
+						Deque<Integer> l = new LinkedList<Integer>();
+						l.add(node);
+						paths.add(l);
 						}
 					}
-				}
-			trav = nextTrav;
-			if (trav.isEmpty())
-				{
-				throw new PhyloUtilsException(
-						"Requested classification path does not match tree: " + DSStringUtils.join(taxa, "; "));
+				else
+					{
+					Set<Deque<Integer>> okPaths = new HashSet<Deque<Integer>>();
+					for (Deque<Integer> path : paths)
+						{
+						Integer descendant = path.peek();
+						for (Integer ancestor : matchingNodes)
+							{
+							if (theIntegerTree.isDescendant(ancestor, descendant))
+								{
+								path.addFirst(ancestor);
+								okPaths.add(path);
+								}
+							}
+						}
+					paths = okPaths;  // ditch any paths that didn't have an ancestor added this round
+					}
+				//trav = nextTrav;
+				if (paths.isEmpty())
+					{
+					throw new PhyloUtilsException(
+							"Requested classification path does not match tree: " + DSStringUtils.join(taxa, "; "));
+					}
 				}
 			}
 
-		if (trav.size() == 1)
+		if (paths.size() == 1)
 			{
-			return trav.iterator().next();
+			final Deque<Integer> path = paths.iterator().next();
+			return path.getLast();
 			}
 		else
 			{
@@ -548,6 +580,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	Pattern spaceSuffixPattern = Pattern.compile(" \\S*$");
 	Pattern strainSuffixPattern = Pattern.compile("((sp.?)|(str.?)|(strain)).*$");
 
+	@NotNull
 	public Integer getUniqueNodeForName(String name) throws PhyloUtilsException
 		{
 		Collection<Integer> matchingIds = nameToIdMap.get(name);
@@ -587,12 +620,12 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				}
 			if (!matchingIds.isEmpty())
 				{
-				logger.warn("Relaxed name " + name + " to " + shortName);
+				logger.debug("Relaxed name " + name + " to " + shortName);
 				}
 			}
 		if (matchingIds.isEmpty())
 			{
-			return null;
+			throw new NoSuchElementException("Node not found: " + name);
 			}
 		if (matchingIds.size() > 1)
 			{
