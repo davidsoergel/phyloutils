@@ -29,4 +29,6 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 
 
 	RootedPhylogeny<T> getRandomSubtree(int numTaxa, Double mergeThreshold) throws NoSuchNodeException, TreeException;
+
+	boolean isLeaf(T leafId) throws NoSuchNodeException;
 	}

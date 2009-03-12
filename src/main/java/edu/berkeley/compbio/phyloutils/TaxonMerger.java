@@ -202,8 +202,11 @@ public class TaxonMerger
 		// the merged taxa are disjoint and unique
 		assert new HashSet<T>(allMergedTaxa).size() == allMergedTaxa.size();
 
-		assert allMergedTaxa.size() == includedTaxa;
+		// this is not true because allMergedTaxa includes intermediate nodes
+		//assert allMergedTaxa.size() == includedTaxa;
+
 		logger.info("Merged " + includedTaxa + " taxa into " + theMergedTaxa.size() + " groups; dropped " + dropped);
+
 		return theMergedTaxa;
 		}
 	}

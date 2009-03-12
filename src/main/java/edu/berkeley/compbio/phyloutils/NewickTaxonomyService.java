@@ -99,6 +99,11 @@ public class NewickTaxonomyService
 		return basePhylogeny;
 		}
 
+	public boolean isLeaf(String leafId) throws NoSuchNodeException
+		{
+		return basePhylogeny.getNode(leafId).isLeaf();
+		}
+
 	public RootedPhylogeny<String> getTree()
 		{
 		return basePhylogeny;

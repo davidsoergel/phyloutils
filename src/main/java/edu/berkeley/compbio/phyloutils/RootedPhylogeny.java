@@ -64,6 +64,15 @@ public interface RootedPhylogeny<T>
 	T commonAncestor(Collection<T> descendantIds) throws NoSuchNodeException;
 
 	/**
+	 * Finds the most recent common ancestor of a set of nodes, requiring only a certain proportion of the nodes to agree.
+	 *
+	 * @param descendantIds the Set<T> of id of descendant nodes
+	 * @return the T id of the most recent common ancestor
+	 */
+	@Nullable
+	T commonAncestor(Collection<T> descendantIds, double proportion) throws NoSuchNodeException;
+
+	/**
 	 * Finds the most recent common ancestor of two nodes.
 	 *
 	 * @param nameA the T id of one descendant node

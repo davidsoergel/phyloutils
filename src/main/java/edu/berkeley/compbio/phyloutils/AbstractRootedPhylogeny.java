@@ -68,6 +68,15 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	@NotNull
 	public T commonAncestor(Collection<T> knownMergeIds) throws NoSuchNodeException
 		{
+		return commonAncestor(knownMergeIds, 1.0);
+		}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@NotNull
+	public T commonAncestor(Collection<T> knownMergeIds, double proportion) throws NoSuchNodeException
+		{
 		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
 		for (T id : knownMergeIds)
 			{
@@ -76,17 +85,37 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 				PhylogenyNode<T> node = getNode(id);
 				theAncestorLists.add(node.getAncestorPath());
 				}
-			catch (NoSuchElementException e)
+			catch (NoSuchNodeException e)
 				{
 				logger.debug("Node not found with id " + id + " when looking for common ancestor; ignoring");
 				}
 			}
+
+		int numberThatMustAgree = (int) Math.ceil(theAncestorLists.size() * proportion);
+
 		PhylogenyNode<T> commonAncestor = null;
 
+		try
+			{
+			while (true)
+				{
+				commonAncestor = DSCollectionUtils.getDominantFirstElement(theAncestorLists,
+				                                                           numberThatMustAgree);  // throws NoSuchElementException
+				theAncestorLists = DSCollectionUtils.filterByAndRemoveFirstElement(theAncestorLists, commonAncestor);
+				}
+			}
+		catch (NoSuchElementException e)
+			{
+			// good, broke the loop, leaving commonAncestor and theAncestorLists in the most recent valid state
+			}
+
+
+		/*
 		while (DSCollectionUtils.allFirstElementsEqual(theAncestorLists))
 			{
 			commonAncestor = DSCollectionUtils.removeAllFirstElements(theAncestorLists);
 			}
+*/
 
 		if (commonAncestor == null)
 			{
