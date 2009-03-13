@@ -696,6 +696,12 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		//	return exactDistanceBetween(name1, name2);
 		}
 
+	public Double getDepth(Integer b) throws NoSuchNodeException
+		{
+		return theIntegerTree.distanceBetween(theIntegerTree.getRoot().getValue(), b);
+		//return stringTaxonomyService.minDistanceBetween(intToNodeMap.get(a), intToNodeMap.get(b));
+		//	return exactDistanceBetween(name1, name2);
+		}
 
 	public Integer nearestAncestorWithBranchLength(Integer id) throws NoSuchNodeException
 		{

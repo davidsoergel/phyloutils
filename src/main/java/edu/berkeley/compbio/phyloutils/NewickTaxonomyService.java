@@ -139,6 +139,13 @@ public class NewickTaxonomyService
 		return exactDistanceBetween(name1, name2);
 		}
 
+	public Double getDepth(String b) throws NoSuchNodeException
+		{
+		return exactDistanceBetween(getRoot().getValue(), b);
+		//return stringTaxonomyService.minDistanceBetween(intToNodeMap.get(a), intToNodeMap.get(b));
+		//	return exactDistanceBetween(name1, name2);
+		}
+
 	public String nearestAncestorWithBranchLength(String id) throws NoSuchNodeException
 		{
 		return basePhylogeny.nearestAncestorWithBranchLength(id);
