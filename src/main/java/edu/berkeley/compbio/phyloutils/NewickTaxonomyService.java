@@ -120,7 +120,11 @@ public class NewickTaxonomyService
 
 	public String findTaxidByName(String name) throws NoSuchNodeException
 		{
+		return basePhylogeny.getNode(name).getValue();
+		}
 
+	public String findTaxidByNameRelaxed(String name) throws NoSuchNodeException
+		{
 		return basePhylogeny.getNode(name).getValue();
 		}
 

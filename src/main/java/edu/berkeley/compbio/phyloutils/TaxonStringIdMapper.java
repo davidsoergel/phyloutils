@@ -9,4 +9,6 @@ import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 public interface TaxonStringIdMapper<T>
 	{
 	T findTaxidByName(String name) throws NoSuchNodeException; //, PhyloUtilsException;
+
+	T findTaxidByNameRelaxed(String name) throws NoSuchNodeException;
 	}
