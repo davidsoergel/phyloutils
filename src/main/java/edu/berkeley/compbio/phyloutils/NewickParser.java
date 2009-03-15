@@ -210,17 +210,18 @@ public class NewickParser<T>
 									}
 						break;
 
+					//** note underscore vs space issues here... elsewhere, space is a legitimate character, different from _
+					// but in the ITOL newick files at least, all underscores are really spaces
+
 					case StreamTokenizer.TT_WORD:
 						if (state == State.NEWNODE || state == State.NAME)
 							{
-							currentNode.appendToValue(st.sval,
-							                          namer);  //** underscore vs space issues... ?  st.sval.replace('_', ' ')
+							currentNode.appendToValue(st.sval.replace('_', ' '), namer);
 							state = State.NAME;
 							}
 						else if (state == State.POST_CHILDREN)
 							{
-							currentNode.appendToValue(st.sval,
-							                          namer); //** underscore vs space issues... ?  st.sval.replace('_', ' ')
+							currentNode.appendToValue(st.sval.replace('_', ' '), namer);
 							state = State.POST_CHILDREN;
 							}
 						else if (state == State.COMMENT)

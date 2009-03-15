@@ -91,6 +91,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		throw new NotImplementedException();
 		}
 
+	public RootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double mergeThreshold, Integer exceptDescendantsOf)
+		{
+		throw new NotImplementedException();
+		}
+
 	private void reloadFromNewick()
 		{
 		nameToIdsMap = new HashMultimap<String, Integer>();

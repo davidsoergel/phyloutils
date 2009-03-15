@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -110,10 +111,44 @@ public class NewickTaxonomyService
 		}
 
 	public RootedPhylogeny<String> getRandomSubtree(int numTaxa, Double mergeThreshold)
+			throws NoSuchNodeException, TreeException
+		{
+		return getRandomSubtree(numTaxa, mergeThreshold, null);
+		}
+
+	public RootedPhylogeny<String> getRandomSubtree(int numTaxa, String exceptDescendantsOf)
 			throws TreeException, NoSuchNodeException
 		{
-		Map<String, Set<String>> mergeIdSets = TaxonMerger.merge(basePhylogeny.getLeafValues(), this, mergeThreshold);
-		Set<String> mergedIds = mergeIdSets.keySet();
+		return getRandomSubtree(numTaxa, null, exceptDescendantsOf);
+		}
+
+	public RootedPhylogeny<String> getRandomSubtree(int numTaxa, Double mergeThreshold, String exceptDescendantsOf)
+			throws TreeException, NoSuchNodeException
+		{
+		Collection<String> mergedIds;
+		if (mergeThreshold != null)
+			{
+			Map<String, Set<String>> mergeIdSets =
+					TaxonMerger.merge(basePhylogeny.getLeafValues(), this, mergeThreshold);
+			mergedIds = mergeIdSets.keySet();
+			}
+		else
+			{
+			mergedIds = basePhylogeny.getLeafValues();
+			}
+
+		if (exceptDescendantsOf != null)
+			{
+			for (Iterator<String> iter = mergedIds.iterator(); iter.hasNext();)
+				{
+				String id = iter.next();
+				if (isDescendant(exceptDescendantsOf, id))
+					{
+					iter.remove();
+					}
+				}
+			}
+
 		DSCollectionUtils.retainRandom(mergedIds, numTaxa);
 		return basePhylogeny.extractTreeWithLeafIDs(mergedIds);
 		}

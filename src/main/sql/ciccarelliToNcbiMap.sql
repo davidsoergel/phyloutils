@@ -1,3 +1,5 @@
+# @Deprecated, found the exact mapping at http://itol.embl.de/taxIDs_SpeciesNames.txt
+
 # Species names from itol080605_newick.txt that are typographical variants of NCBI taxonomy names
 # David Soergel <soergel@compbio.berkeley.edu>
 # June 22, 2008
