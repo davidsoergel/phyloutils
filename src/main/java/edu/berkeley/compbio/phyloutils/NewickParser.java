@@ -213,12 +213,14 @@ public class NewickParser<T>
 					case StreamTokenizer.TT_WORD:
 						if (state == State.NEWNODE || state == State.NAME)
 							{
-							currentNode.appendToValue(st.sval.replace('_', ' '), namer);
+							currentNode.appendToValue(st.sval,
+							                          namer);  //** underscore vs space issues... ?  st.sval.replace('_', ' ')
 							state = State.NAME;
 							}
 						else if (state == State.POST_CHILDREN)
 							{
-							currentNode.appendToValue(st.sval.replace('_', ' '), namer);
+							currentNode.appendToValue(st.sval,
+							                          namer); //** underscore vs space issues... ?  st.sval.replace('_', ' ')
 							state = State.POST_CHILDREN;
 							}
 						else if (state == State.COMMENT)
