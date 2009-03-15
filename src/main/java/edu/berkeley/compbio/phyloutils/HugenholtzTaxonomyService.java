@@ -348,12 +348,15 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}*/
 		}
 
+	String cacheFilename = "/tmp/edu.berkeley.compbio/phyloutils.hugenholtz.cache";
 
 	public void saveState()
 		{
 		try
 			{
-			FileOutputStream fout = new FileOutputStream("/tmp/edu.berkeley.compbio.phyloutils.hugenholtz.cache");
+			File cacheFile = new File(cacheFilename);
+			cacheFile.getParentFile().mkdirs();
+			FileOutputStream fout = new FileOutputStream(cacheFile);
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
 //			oos.writeObject(stringTaxonomyService);
 //			oos.writeObject(intToNodeMap);
@@ -372,7 +375,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		try
 			{
-			FileInputStream fin = new FileInputStream("/tmp/edu.berkeley.compbio.phyloutils.hugenholtz.cache");
+			FileInputStream fin = new FileInputStream(cacheFilename);
 			ObjectInputStream ois = new ObjectInputStream(fin);
 //			stringTaxonomyService = (NewickTaxonomyService) ois.readObject();
 //			intToNodeMap = (BiMap<Integer, PhylogenyNode<String>>) ois.readObject();
