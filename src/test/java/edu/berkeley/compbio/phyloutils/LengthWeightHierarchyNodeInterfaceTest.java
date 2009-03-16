@@ -96,7 +96,7 @@ public class LengthWeightHierarchyNodeInterfaceTest<T extends LengthWeightHierar
 
 		for (LengthWeightHierarchyNode n : testInstance)
 			{
-			Double span = n.getLargestLengthSpan();
+			double span = n.getLargestLengthSpan();
 			LengthWeightHierarchyNode p = (LengthWeightHierarchyNode) n.getParent();
 			if (p != null)
 				{

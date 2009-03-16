@@ -19,14 +19,13 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 
 	void saveState();
 
-	Double minDistanceBetween(T name1, T name2) throws NoSuchNodeException;
+	double minDistanceBetween(T name1, T name2) throws NoSuchNodeException;
 
 	//Double minDistanceBetween(PhylogenyNode<T> node1, PhylogenyNode<T> node2) throws PhyloUtilsException;
 
 	//PhylogenyNode<T> getRoot();
 
 	void setSynonymService(TaxonomySynonymService taxonomySynonymService);
-
 
 	RootedPhylogeny<T> getRandomSubtree(int numTaxa, Double mergeThreshold) throws NoSuchNodeException, TreeException;
 
@@ -35,5 +34,7 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 
 	boolean isLeaf(T leafId) throws NoSuchNodeException;
 
-	Double getDepth(T taxid) throws NoSuchNodeException;
+	double getDepthFromRoot(T taxid) throws NoSuchNodeException;
+
+	double getGreatestDepthBelow(T taxid) throws NoSuchNodeException;
 	}

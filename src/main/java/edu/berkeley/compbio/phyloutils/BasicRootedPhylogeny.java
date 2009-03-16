@@ -276,7 +276,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public Double getLargestLengthSpan()
+	public double getLargestLengthSpan()
 		{
 		return root.getLargestLengthSpan();
 		}
@@ -284,9 +284,9 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public Double getGreatestDepth()
+	public double getGreatestDepthBelow()
 		{
-		return root.getGreatestDepth();
+		return root.getGreatestDepthBelow();
 		}
 
 	/**

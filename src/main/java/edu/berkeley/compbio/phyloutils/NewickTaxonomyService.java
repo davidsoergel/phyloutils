@@ -85,9 +85,9 @@ public class NewickTaxonomyService
 		return basePhylogeny.distanceBetween(a, b);
 		}
 
-	public double greatestDepth(String a) throws NoSuchNodeException
+	public double getGreatestDepthBelow(String a) throws NoSuchNodeException
 		{
-		return basePhylogeny.getNode(a).getLargestLengthSpan();
+		return basePhylogeny.getNode(a).getGreatestDepthBelow();
 		}
 
 	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids) throws NoSuchNodeException
@@ -173,12 +173,12 @@ public class NewickTaxonomyService
 		basePhylogeny.saveState();
 		}
 
-	public Double minDistanceBetween(String name1, String name2) throws NoSuchNodeException //throws PhyloUtilsException
+	public double minDistanceBetween(String name1, String name2) throws NoSuchNodeException //throws PhyloUtilsException
 		{
 		return exactDistanceBetween(name1, name2);
 		}
 
-	public Double getDepth(String b) throws NoSuchNodeException
+	public double getDepthFromRoot(String b) throws NoSuchNodeException
 		{
 		return exactDistanceBetween(getRoot().getValue(), b);
 		//return stringTaxonomyService.minDistanceBetween(intToNodeMap.get(a), intToNodeMap.get(b));

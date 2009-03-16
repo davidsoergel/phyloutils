@@ -33,6 +33,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.tree.HierarchyNode;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -82,16 +83,18 @@ public interface LengthWeightHierarchyNode<T, I extends LengthWeightHierarchyNod
 	 *
 	 * @return
 	 */
-	@Nullable
-	Double getLargestLengthSpan();
+	//@Nullable
+	@NotNull
+	double getLargestLengthSpan();
 
 	/**
 	 * Returns the largest tree distance from this node to any descendant.
 	 *
 	 * @return
 	 */
-	@Nullable
-	Double getGreatestDepth();
+	//@Nullable
+	@NotNull
+	double getGreatestDepthBelow();
 
 
 	/**
