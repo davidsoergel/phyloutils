@@ -728,6 +728,17 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return theIntegerTree.getNode(taxid).getGreatestDepthBelow();
 		}
 
+	private Double maxDistance = null;
+
+	public double maxDistance()
+		{
+		if (maxDistance == null)
+			{
+			maxDistance = 2.0 * theIntegerTree.getRoot().getGreatestDepthBelow();
+			}
+		return maxDistance;
+		}
+
 	public Integer nearestAncestorWithBranchLength(Integer id) throws NoSuchNodeException
 		{
 		return theIntegerTree.nearestAncestorWithBranchLength(id);

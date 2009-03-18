@@ -90,6 +90,17 @@ public class NewickTaxonomyService
 		return basePhylogeny.getNode(a).getGreatestDepthBelow();
 		}
 
+	private Double maxDistance = null;
+
+	public double maxDistance()
+		{
+		if (maxDistance == null)
+			{
+			maxDistance = 2.0 * getRoot().getGreatestDepthBelow();
+			}
+		return maxDistance;
+		}
+
 	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids) throws NoSuchNodeException
 		{
 		return basePhylogeny.extractTreeWithLeafIDs(ids);

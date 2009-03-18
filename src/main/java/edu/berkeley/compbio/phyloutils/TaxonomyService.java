@@ -37,4 +37,6 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 	double getDepthFromRoot(T taxid) throws NoSuchNodeException;
 
 	double getGreatestDepthBelow(T taxid) throws NoSuchNodeException;
+
+	double maxDistance();
 	}
