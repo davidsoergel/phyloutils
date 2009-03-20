@@ -66,4 +66,12 @@ public class CiccarelliTaxonomyService extends NewickTaxonomyService //<String>
 		{
 		super(ciccarelliFilename);
 		}
+
+	@Override
+	public String toString()
+		{
+		String shortname = getClass().getName();
+		shortname = shortname.substring(shortname.lastIndexOf(".") + 1);
+		return shortname;
+		}
 	}

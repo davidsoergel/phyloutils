@@ -799,4 +799,13 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes);
 		}
+
+
+	@Override
+	public String toString()
+		{
+		String shortname = getClass().getName();
+		shortname = shortname.substring(shortname.lastIndexOf(".") + 1);
+		return shortname;
+		}
 	}
