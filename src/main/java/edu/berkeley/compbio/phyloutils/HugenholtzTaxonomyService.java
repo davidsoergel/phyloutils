@@ -388,11 +388,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}
 		catch (IOException e)
 			{// no problem
-			logger.warn("Could not read Hugenholtz cache; rereading source files");
+			logger.warn("Could not read Hugenholtz cache; rereading source files", e);
 			}
 		catch (ClassNotFoundException e)
 			{// no problem
-			logger.warn("Could not read Hugenholtz cache; rereading source files");
+			logger.warn("Could not read Hugenholtz cache; rereading source files", e);
 			}
 		return false;
 		}
