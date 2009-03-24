@@ -83,6 +83,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		if (!readStateIfAvailable())
 			{
 			reloadFromNewick();
+			//invalidateDependentCaches();
 			saveState();
 			}
 		}
@@ -104,6 +105,9 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		NewickTaxonomyService stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename);
 
 		RootedPhylogeny<String> theStringTree = stringTaxonomyService.getTree();
+
+		//** because the node children are iterated in random order in the course of the depth-first copy,
+		// the random IDs won't be consistently assigned from one run to the next.
 
 		theIntegerTree = PhylogenyTypeConverter
 				.convertToIDTree(theStringTree, new IntegerNodeNamer(10000000), new TaxonStringIdMapper<Integer>()
