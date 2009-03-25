@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -59,6 +60,33 @@ public class NewickParser<T>
 	{
 	private static final Logger logger = Logger.getLogger(NewickParser.class);
 	// -------------------------- OTHER METHODS --------------------------
+
+	public static void main(String[] argv)
+		{
+		// add integer ids to unknown nodes
+
+		try
+			{
+			InputStream is = getInputStream(argv[0]);
+			RootedPhylogeny<String> theTree = new NewickParser<String>().read(is, new StringNodeNamer(""));
+
+			StringBuffer sb = new StringBuffer();
+			theTree.toNewick(sb, 0, 0);
+
+			//FileOutputStream foo = new FileOutputStream(argv[2]);
+			FileWriter fw = new FileWriter(argv[1]);
+			fw.write(sb.toString());
+			fw.close();
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.error("Error", e);
+			}
+		catch (IOException e)
+			{
+			logger.error("Error", e);
+			}
+		}
 
 	public static RootedPhylogeny<String> readWithStringIds(String filename) throws PhyloUtilsException, IOException
 		{
@@ -197,13 +225,14 @@ public class NewickParser<T>
 							}
 						else if (state == State.POST_CHILDREN)
 								{
-								currentNode.setBootstrap(st.nval);
+								//currentNode.setBootstrap(st.nval);
+								currentNode.appendToValue((int) st.nval, namer);
 								state = State.POST_CHILDREN;// unchanged
 								}
 							else if (state == State.COMMENT)
 									{
-									// ignore
-									//currentNode.setBootstrap(st.nval);
+									//** we ignored this previously...
+									currentNode.setBootstrap(st.nval);
 									}
 								else
 									{

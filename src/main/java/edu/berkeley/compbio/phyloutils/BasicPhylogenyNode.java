@@ -67,7 +67,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 	protected T value = null;
 	protected Double length = null;// distinguish null from zero
 	protected Double weight = null;// distinguish null from zero
-	protected double bootstrap;
+	protected Double bootstrap = null;
 
 	public void toNewick(StringBuffer sb, int minClusterSize, double minLabelProb)
 		{
@@ -79,7 +79,8 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			Iterator<BasicPhylogenyNode<T>> i = children.iterator();
 			while (i.hasNext())
 				{
-				sb.append(i.next());
+				i.next().toNewick(sb, minClusterSize, minLabelProb);
+				//sb.append(i.next());
 				if (i.hasNext())
 					{
 					sb.append(",");
@@ -87,12 +88,16 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 				}
 			sb.append(")");
 			}
-
-		sb.append(value.toString());
-
-		if (bootstrap != 0)
+		String n = value.toString();
+		n = n.replaceAll(" ", "_");
+		sb.append(n);
+		if (length != null && length != 0)
 			{
-			sb.append(":").append(bootstrap);
+			sb.append(":").append(length);
+			}
+		if (bootstrap != null && bootstrap != 0)
+			{
+			sb.append("[").append(bootstrap).append("]");
 			}
 		}
 
