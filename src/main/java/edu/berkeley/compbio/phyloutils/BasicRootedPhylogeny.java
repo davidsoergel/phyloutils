@@ -181,7 +181,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set<BasicPhylogenyNode<T>> getChildren()
+	public List<BasicPhylogenyNode<T>> getChildren()
 		{
 		return root.getChildren();
 		}

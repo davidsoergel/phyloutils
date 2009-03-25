@@ -17,7 +17,7 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 
 	//boolean isDescendant(PhylogenyNode<T> ancestor, PhylogenyNode<T> descendant) throws PhyloUtilsException;
 
-	void saveState();
+//	void saveState();
 
 	double minDistanceBetween(T name1, T name2) throws NoSuchNodeException;
 

@@ -179,11 +179,12 @@ public class NewickTaxonomyService
 		return basePhylogeny.isDescendant(ancestor, descendant);
 		}
 
-	public void saveState()
-		{
-		basePhylogeny.saveState();
-		}
-
+	/*
+	 public void saveState()
+		 {
+		 basePhylogeny.saveState();
+		 }
+ */
 	public double minDistanceBetween(String name1, String name2) throws NoSuchNodeException //throws PhyloUtilsException
 		{
 		return exactDistanceBetween(name1, name2);

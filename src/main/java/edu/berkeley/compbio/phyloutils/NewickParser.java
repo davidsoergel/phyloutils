@@ -67,11 +67,13 @@ public class NewickParser<T>
 		return new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED NODE "));
 		}
 
-	public static RootedPhylogeny<Integer> readWithIntegerIds(String filename) throws PhyloUtilsException, IOException
+	public static RootedPhylogeny<Integer> readWithIntegerIds(String filename, boolean generateIds)
+			throws PhyloUtilsException, IOException
 		{
 		InputStream is = getInputStream(filename);
 
-		return new NewickParser<Integer>().read(is, new IntegerNodeNamer(10000000));
+		NodeNamer<Integer> namer = generateIds ? new IntegerNodeNamer(10000000) : new RequireExistingIntegerNodeNamer();
+		return new NewickParser<Integer>().read(is, namer);
 		}
 
 	private static InputStream getInputStream(String filename) throws PhyloUtilsException, IOException

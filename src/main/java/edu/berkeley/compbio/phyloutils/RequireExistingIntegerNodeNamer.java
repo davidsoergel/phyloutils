@@ -32,75 +32,31 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.tree.NoSuchNodeException;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-
 
 /**
- * A node of a weighted phylogenetic tree.
+ * A factory for Integers to be used for naming unnamed internal nodes in a phylogeny.
  *
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
- * @JavadocOK
  */
-public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T, PhylogenyNode<T>>
-		//Iterable<PhylogenyNode<T>>,
+
+public class RequireExistingIntegerNodeNamer extends IntegerNodeNamer
 	{
-	/**
-	 * {@inheritDoc}
-	 */
-	List<? extends PhylogenyNode<T>> getChildren(); // throws NoSuchNodeException; //
+	// ------------------------------ FIELDS ------------------------------
 
-	// the "name" of this PhylogenyNode is the same as the "value" of the hierarchynode
-	//T getName();
+	// --------------------------- CONSTRUCTORS ---------------------------
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Nullable
-	PhylogenyNode<T> getParent();
+	public RequireExistingIntegerNodeNamer()
+		{
+		super(0);
+		}
 
-	void setParent(PhylogenyNode<T> parent);
-
-	boolean hasValue();
 
 	/**
 	 * {@inheritDoc}
 	 */
-	List<PhylogenyNode<T>> getAncestorPath();
-
-
-	/**
-	 * Recursively set the weight of this node, and the weights of all of its descendants, to the sum of the weights of the
-	 * descendant leaves below each node.
-	 */
-	//void propagateWeightFromBelow();
-
-
-	/**
-	 * Increment the weight of this node by the given amount.  This will cause the weights of the ancestor nodes to be
-	 * inconsistent, so it will likely be necessary to call propagateWeightFromBelow on theroot.
-	 *
-	 * @param v the double
-	 */
-	void incrementWeightBy(double v);
-
-	/**
-	 * {@inheritDoc}
-	 */
-	PhylogenyNode<T> clone();
-
-	/**
-	 * Returns the current weight without recomputing, even if it is null
-	 *
-	 * @return the weight
-	 */
-	Double getCurrentWeight();
-
-	void appendSubtree(StringBuffer sb, String indent);
-
-
-	PhylogenyNode<T> nearestAncestorWithBranchLength() throws NoSuchNodeException;
+	public Integer generate()
+		{
+		throw new PhyloUtilsRuntimeException("No ID found; new ID generation disallowed");
+		}
 	}

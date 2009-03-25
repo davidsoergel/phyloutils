@@ -1,7 +1,7 @@
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.CacheManager;
 import com.davidsoergel.dsutils.DSStringUtils;
-import com.davidsoergel.dsutils.EnvironmentUtils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.google.common.collect.HashMultimap;
 import org.apache.commons.lang.NotImplementedException;
@@ -10,13 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -53,7 +49,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	private static HugenholtzTaxonomyService instance;// = new CiccarelliUtils();
 
-	TaxonomySynonymService synonymService;
+	private TaxonomySynonymService synonymService;
 
 	public static HugenholtzTaxonomyService getInjectedInstance()
 		{
@@ -71,7 +67,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 
 	private BasicRootedPhylogeny<Integer> theIntegerTree;
-	HashMultimap<String, Integer> nameToIdsMap;// = new HashMap<String, Integer>();
+	private HashMultimap<String, Integer> nameToIdsMap;// = new HashMap<String, Integer>();
 
 //	BiMap<Integer, PhylogenyNode<String>> intToNodeMap = new HashBiMap<Integer, PhylogenyNode<String>>();
 //	Multimap<String, PhylogenyNode<String>> nameToNodeMap = new HashMultimap<String, PhylogenyNode<String>>();
@@ -80,12 +76,24 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public HugenholtzTaxonomyService() //throws PhyloUtilsException
 		{
-		if (!readStateIfAvailable())
+		theIntegerTree = (BasicRootedPhylogeny<Integer>) CacheManager.get(this, "theIntegerTree");
+		nameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, "nameToIdsMap");
+
+		if (theIntegerTree == null || nameToIdsMap == null)
+			{
+			reloadFromNewick();
+			// ** Note we don't invalidate downstream caches, e.g. for StrainDirectoryLabelChooser and so forth
+			// CacheManager.invalidate
+			CacheManager.put(this, "theIntegerTree", theIntegerTree);
+			CacheManager.put(this, "nameToIdsMap", nameToIdsMap);
+			}
+
+		/*if (!readStateIfAvailable())
 			{
 			reloadFromNewick();
 			//invalidateDependentCaches();
 			saveState();
-			}
+			}*/
 		}
 
 	public RootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double mergeThreshold)
@@ -109,26 +117,30 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		//** because the node children are iterated in random order in the course of the depth-first copy,
 		// the random IDs won't be consistently assigned from one run to the next.
 
-		theIntegerTree = PhylogenyTypeConverter
-				.convertToIDTree(theStringTree, new IntegerNodeNamer(10000000), new TaxonStringIdMapper<Integer>()
-				{
-				public Integer findTaxidByNameRelaxed(String name) throws NoSuchNodeException
-					{
-					return findTaxidByName(name);
-					}
+		theIntegerTree = PhylogenyTypeConverter.convertToIDTree(theStringTree, new RequireExistingIntegerNodeNamer(),
+		                                                        new TaxonStringIdMapper<Integer>()
+		                                                        {
+		                                                        public Integer findTaxidByNameRelaxed(String name)
+				                                                        throws NoSuchNodeException
+			                                                        {
+			                                                        return findTaxidByName(name);
+			                                                        }
 
-				public Integer findTaxidByName(String name) throws NoSuchNodeException
-					{
-					try
-						{
-						return new Integer(name);
-						}
-					catch (NumberFormatException e)
-						{
-						throw new NoSuchNodeException("Can't convert node name to integer ID: " + name);
-						}
-					}
-				}, nameToIdsMap);
+		                                                        public Integer findTaxidByName(String name)
+				                                                        throws NoSuchNodeException
+			                                                        {
+			                                                        try
+				                                                        {
+				                                                        return new Integer(name);
+				                                                        }
+			                                                        catch (NumberFormatException e)
+				                                                        {
+				                                                        throw new NoSuchNodeException(
+						                                                        "Can't convert node name to integer ID: "
+								                                                        + name);
+				                                                        }
+			                                                        }
+		                                                        }, nameToIdsMap);
 
 
 		addStrainNamesToMap();
@@ -353,54 +365,55 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}*/
 		}
 
-	String cacheFilename = "/phyloutils.hugenholtz.cache";
+	/*
+	 String cacheFilename = "/phyloutils.hugenholtz.cache";
 
-	public void saveState()
-		{
-		try
-			{
-			File cacheFile = new File(EnvironmentUtils.getCacheRoot() + cacheFilename);
-			cacheFile.getParentFile().mkdirs();
-			FileOutputStream fout = new FileOutputStream(cacheFile);
-			ObjectOutputStream oos = new ObjectOutputStream(fout);
-//			oos.writeObject(stringTaxonomyService);
-//			oos.writeObject(intToNodeMap);
-//			oos.writeObject(nameToNodeMap);
-			oos.writeObject(theIntegerTree);
-			oos.writeObject(nameToIdsMap);
-			oos.close();
-			}
-		catch (Exception e)
-			{
-			logger.error("Error", e);
-			}
-		}
+	 public void saveState()
+		 {
+		 try
+			 {
+			 File cacheFile = new File(EnvironmentUtils.getCacheRoot() + cacheFilename);
+			 cacheFile.getParentFile().mkdirs();
+			 FileOutputStream fout = new FileOutputStream(cacheFile);
+			 ObjectOutputStream oos = new ObjectOutputStream(fout);
+ //			oos.writeObject(stringTaxonomyService);
+ //			oos.writeObject(intToNodeMap);
+ //			oos.writeObject(nameToNodeMap);
+			 oos.writeObject(theIntegerTree);
+			 oos.writeObject(nameToIdsMap);
+			 oos.close();
+			 }
+		 catch (Exception e)
+			 {
+			 logger.error("Error", e);
+			 }
+		 }
 
-	private boolean readStateIfAvailable()
-		{
-		try
-			{
-			FileInputStream fin = new FileInputStream(EnvironmentUtils.getCacheRoot() + cacheFilename);
-			ObjectInputStream ois = new ObjectInputStream(fin);
-//			stringTaxonomyService = (NewickTaxonomyService) ois.readObject();
-//			intToNodeMap = (BiMap<Integer, PhylogenyNode<String>>) ois.readObject();
-//			nameToNodeMap = (Multimap<String, PhylogenyNode<String>>) ois.readObject();
-			theIntegerTree = (BasicRootedPhylogeny<Integer>) ois.readObject();
-			nameToIdsMap = (HashMultimap<String, Integer>) ois.readObject();
-			ois.close();
-			return true;
-			}
-		catch (IOException e)
-			{// no problem
-			logger.warn("Could not read Hugenholtz cache; rereading source files", e);
-			}
-		catch (ClassNotFoundException e)
-			{// no problem
-			logger.warn("Could not read Hugenholtz cache; rereading source files", e);
-			}
-		return false;
-		}
-
+	 private boolean readStateIfAvailable()
+		 {
+		 try
+			 {
+			 FileInputStream fin = new FileInputStream(EnvironmentUtils.getCacheRoot() + cacheFilename);
+			 ObjectInputStream ois = new ObjectInputStream(fin);
+ //			stringTaxonomyService = (NewickTaxonomyService) ois.readObject();
+ //			intToNodeMap = (BiMap<Integer, PhylogenyNode<String>>) ois.readObject();
+ //			nameToNodeMap = (Multimap<String, PhylogenyNode<String>>) ois.readObject();
+			 theIntegerTree = (BasicRootedPhylogeny<Integer>) ois.readObject();
+			 nameToIdsMap = (HashMultimap<String, Integer>) ois.readObject();
+			 ois.close();
+			 return true;
+			 }
+		 catch (IOException e)
+			 {// no problem
+			 logger.warn("Could not read Hugenholtz cache; rereading source files", e);
+			 }
+		 catch (ClassNotFoundException e)
+			 {// no problem
+			 logger.warn("Could not read Hugenholtz cache; rereading source files", e);
+			 }
+		 return false;
+		 }
+ */
 	public boolean isLeaf(Integer leafId) throws NoSuchNodeException
 		{
 		return theIntegerTree.getNode(leafId).isLeaf();

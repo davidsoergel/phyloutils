@@ -40,12 +40,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -64,7 +63,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 
 	protected transient BasicPhylogenyNode<T> parent;
 
-	protected Set<BasicPhylogenyNode<T>> children = new HashSet<BasicPhylogenyNode<T>>();
+	protected List<BasicPhylogenyNode<T>> children = new ArrayList<BasicPhylogenyNode<T>>();
 	protected T value = null;
 	protected Double length = null;// distinguish null from zero
 	protected Double weight = null;// distinguish null from zero
@@ -145,7 +144,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set<BasicPhylogenyNode<T>> getChildren()
+	public List<BasicPhylogenyNode<T>> getChildren()
 		{
 		return children;
 		}
@@ -598,7 +597,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 
 
 			parent = null;
-			children = new HashSet<BasicPhylogenyNode<T>>();
+			children = new ArrayList<BasicPhylogenyNode<T>>();
 			// note the value is shallow-copied, not cloned
 
 			//result.setValue(value);//** value.clone() ??

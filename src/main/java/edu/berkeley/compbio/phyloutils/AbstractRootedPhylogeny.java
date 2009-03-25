@@ -724,8 +724,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		appendSubtree(sb, "");
 		return sb.toString();
 		}
-
+/*
 	public void saveState()
 		{
 		}
+*/
 	}

@@ -229,9 +229,10 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 
 		return ancestor.equals(leafPhylogeny.commonAncestor(ancestor, descendant));
 		}
-
+/*
 	public void saveState()
 		{
 		leafPhylogeny.saveState();
 		}
+*/
 	}

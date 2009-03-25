@@ -85,6 +85,11 @@ public class PhylogenyTypeConverter
 		result.setValue(id);
 		//nameToIdMap.put(stringNode.getValue(), id);
 
+		// ensure that any generated IDs are added in deterministic order.
+		// SortedSet<PhylogenyNode<String>> sortedChildren = new TreeSet<PhylogenyNode<String>>(stringNode.getChildren());
+
+		// stringNode.getChildren() returns a List, so the generated IDs will be added in a deterministic order.
+
 		for (PhylogenyNode<String> node : stringNode.getChildren())
 			{
 			//result.addChild(convertToIntegerIDNode(node));

@@ -20,5 +20,5 @@ public interface TaxonomySynonymService
 
 	Collection<String> synonymsOfRelaxed(String name) throws NoSuchNodeException;
 
-	void saveState();
+//	void saveState();
 	}

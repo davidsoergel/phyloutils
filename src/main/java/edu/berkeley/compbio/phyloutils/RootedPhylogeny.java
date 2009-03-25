@@ -294,7 +294,7 @@ public interface RootedPhylogeny<T>
 
 	void setAllBranchLengthsToNull();
 
-	void saveState();
+	//void saveState();
 
 	//public RootedPhylogeny<T> convertToIDTree(RootedPhylogeny<String> stringTree, NodeNamer<T> namer,
 	//                                        TaxonStringIdMapper<T> taxonomyService);
