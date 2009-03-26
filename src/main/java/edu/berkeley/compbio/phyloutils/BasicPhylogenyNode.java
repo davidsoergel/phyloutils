@@ -58,6 +58,9 @@ import java.util.Map;
 public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, HierarchyNode<T, BasicPhylogenyNode<T>>
 		// really T should extend Serializable here but let's see if we can get away without it
 	{
+
+	private static final long serialVersionUID = 20090325L;
+
 	private static final Logger logger = Logger.getLogger(BasicPhylogenyNode.class);
 	// ------------------------------ FIELDS ------------------------------
 

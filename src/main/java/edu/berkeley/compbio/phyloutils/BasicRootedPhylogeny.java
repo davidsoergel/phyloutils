@@ -64,6 +64,8 @@ import java.util.Set;
  */
 public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T> implements Serializable
 	{
+	private static final long serialVersionUID = 20090325L;
+
 	private static final Logger logger = Logger.getLogger(BasicRootedPhylogeny.class);
 	// ------------------------------ FIELDS ------------------------------
 
