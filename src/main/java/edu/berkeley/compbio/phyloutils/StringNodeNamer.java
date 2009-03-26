@@ -58,6 +58,12 @@ public class StringNodeNamer implements NodeNamer<String>
 		this.unknownBasis = unknownBasis;
 		}
 
+	public StringNodeNamer(String unknownBasis, int startId)
+		{
+		this.unknownBasis = unknownBasis;
+		currentId = startId;
+		}
+
 	// ------------------------ INTERFACE METHODS ------------------------
 
 
@@ -133,6 +139,23 @@ public class StringNodeNamer implements NodeNamer<String>
 			}
 		inc++;
 		uniqueIndexes.put(value, inc);
-		return value + " [" + inc + "]";
+		return value + " " + inc; // + "]";
+		}
+
+	public boolean isAcceptable(String value)
+		{
+		return value != null;
+		}
+
+	public String makeAggregate(String newValue, String value)
+		{
+		if (value == null)
+			{
+			return newValue;
+			}
+		else
+			{
+			return newValue + "==" + value;
+			}
 		}
 	}

@@ -40,22 +40,51 @@ package edu.berkeley.compbio.phyloutils;
  * @version $Id$
  */
 
-public class RequireExistingIntegerNodeNamer extends IntegerNodeNamer
+public class RequireExistingNodeNamer<T> implements NodeNamer<T>
 	{
 	// ------------------------------ FIELDS ------------------------------
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
-	public RequireExistingIntegerNodeNamer()
+	public T create(Integer s)
 		{
-		super(0);
+		throw new PhyloUtilsRuntimeException("ID modification disallowed");
 		}
 
+	public T create(String s) throws PhyloUtilsException
+		{
+		throw new PhyloUtilsRuntimeException("ID modification disallowed");
+		}
+
+	public T merge(T name, String s) throws PhyloUtilsException
+		{
+		throw new PhyloUtilsRuntimeException("ID modification disallowed");
+		}
+
+	public T merge(T name, Integer s) throws PhyloUtilsException
+		{
+		throw new PhyloUtilsRuntimeException("ID modification disallowed");
+		}
+
+	public T uniqueify(T value)
+		{
+		throw new PhyloUtilsRuntimeException("ID modification disallowed");
+		}
+
+	public boolean isAcceptable(T value)
+		{
+		return value != null;
+		}
+
+	public T makeAggregate(T newValue, T value)
+		{
+		throw new PhyloUtilsRuntimeException("ID modification disallowed");
+		}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Integer generate()
+	public T generate()
 		{
 		throw new PhyloUtilsRuntimeException("No ID found; new ID generation disallowed");
 		}

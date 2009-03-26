@@ -275,7 +275,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		//deepCopy(commonAncestor, newRoot);
 
-		newTree.assignUniqueIds(null);
+		newTree.assignUniqueIds(new RequireExistingNodeNamer<T>());
 		newTree.setBasePhylogeny(this);
 
 		//		assert newTree.getNodes().containsAll(leaves);
@@ -353,7 +353,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		for (Set<List<PhylogenyNode<T>>> childAncestorList : childAncestorLists)
 			{
 			BasicPhylogenyNode<T> child = extractTreeWithLeafPaths(childAncestorList);
-			node.getChildren().add(child);
+			//node.getChildren().add(child);
 			child.setParent(node);
 			}
 

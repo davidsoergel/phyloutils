@@ -82,9 +82,10 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T> implemen
 		root = new BasicPhylogenyNode<T>(null, rootValue, 0);
 		}
 
-	public void toNewick(StringBuffer sb, int minClusterSize, double minLabelProb)
+	public void toNewick(StringBuffer sb, String prefix, String tab, int minClusterSize, double minLabelProb)
 		{
-		root.toNewick(sb, minClusterSize, minLabelProb);
+		root.toNewick(sb, prefix, tab, minClusterSize, minLabelProb);
+		sb.append(":0;");
 		}
 
 	@Override
@@ -166,7 +167,8 @@ root = new BasicPhylogenyNode<T>(original.);
 		}
 
 	/**
-	 * Insure that every node has a unique ID.  We can't do this while building, since the names might change
+	 * Insure that every node has a unique ID.  We can't do this while building, since the names might change.  Also,
+	 * establishes uniqueIdToNodeMap, which we need even if the nodes all already have names
 	 *
 	 * @param namer
 	 * @throws PhyloUtilsException
@@ -239,10 +241,10 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean hasValue()
+/*	public boolean hasValue()
 		{
 		return root.hasValue();
-		}
+		}*/
 
 	/**
 	 * {@inheritDoc}
@@ -528,7 +530,7 @@ root = new BasicPhylogenyNode<T>(original.);
 
 
 		// populate the nodes map
-		assignUniqueIds(null);  // all the nodes should have ids already, don't need a namer
+		assignUniqueIds(new RequireExistingNodeNamer<T>());  // all the nodes should have ids already
 
 
 		for (BasicPhylogenyNode<T> p : uniqueIdToNodeMap.values())

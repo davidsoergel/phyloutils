@@ -125,4 +125,14 @@ public class IntegerNodeNamer implements NodeNamer<Integer>
 		{
 		return generate();
 		}
+
+	public boolean isAcceptable(Integer value)
+		{
+		return value != null;
+		}
+
+	public Integer makeAggregate(Integer newValue, Integer value)
+		{
+		throw new PhyloUtilsRuntimeException("Can't aggregate Integer IDs");
+		}
 	}

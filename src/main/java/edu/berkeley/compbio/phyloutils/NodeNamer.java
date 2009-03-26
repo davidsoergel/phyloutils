@@ -92,4 +92,8 @@ public interface NodeNamer<T>
 	T merge(T name, Integer s) throws PhyloUtilsException;
 
 	T uniqueify(T value);
+
+	boolean isAcceptable(T value);
+
+	T makeAggregate(T newValue, T value);
 	}

@@ -44,7 +44,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	private static final Logger logger = Logger.getLogger(HugenholtzTaxonomyService.class);
 
 	//private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
-	private static final String hugenholtzFilename = "greengenes.all.tree.gz";
+	private static final String hugenholtzFilename = "greengenes.all.tree.allids.gz";
 	private static final String bigGreenGenesFilename = "greengenes16SrRNAgenes.txt.gz";
 
 	private static HugenholtzTaxonomyService instance;// = new CiccarelliUtils();
@@ -117,30 +117,26 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		//** because the node children are iterated in random order in the course of the depth-first copy,
 		// the random IDs won't be consistently assigned from one run to the next.
 
-		theIntegerTree = PhylogenyTypeConverter.convertToIDTree(theStringTree, new RequireExistingIntegerNodeNamer(),
-		                                                        new TaxonStringIdMapper<Integer>()
-		                                                        {
-		                                                        public Integer findTaxidByNameRelaxed(String name)
-				                                                        throws NoSuchNodeException
-			                                                        {
-			                                                        return findTaxidByName(name);
-			                                                        }
+		theIntegerTree = PhylogenyTypeConverter
+				.convertToIDTree(theStringTree, new RequireExistingNodeNamer(), new TaxonStringIdMapper<Integer>()
+				{
+				public Integer findTaxidByNameRelaxed(String name) throws NoSuchNodeException
+					{
+					return findTaxidByName(name);
+					}
 
-		                                                        public Integer findTaxidByName(String name)
-				                                                        throws NoSuchNodeException
-			                                                        {
-			                                                        try
-				                                                        {
-				                                                        return new Integer(name);
-				                                                        }
-			                                                        catch (NumberFormatException e)
-				                                                        {
-				                                                        throw new NoSuchNodeException(
-						                                                        "Can't convert node name to integer ID: "
-								                                                        + name);
-				                                                        }
-			                                                        }
-		                                                        }, nameToIdsMap);
+				public Integer findTaxidByName(String name) throws NoSuchNodeException
+					{
+					try
+						{
+						return new Integer(name);
+						}
+					catch (NumberFormatException e)
+						{
+						throw new NoSuchNodeException("Can't convert node name to integer ID: " + name);
+						}
+					}
+				}, nameToIdsMap);
 
 
 		addStrainNamesToMap();

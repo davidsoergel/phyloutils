@@ -118,5 +118,5 @@ public interface LengthWeightHierarchyNode<T, I extends LengthWeightHierarchyNod
 	//	Collection<? extends LengthWeightHierarchyNode<T>> getChildren();
 
 
-	void toNewick(StringBuffer sb, int minClusterSize, double minLabelProb);
+	void toNewick(StringBuffer sb, String prefix, String tab, int minClusterSize, double minLabelProb);
 	}

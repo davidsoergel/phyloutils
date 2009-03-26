@@ -66,22 +66,43 @@ public class PhylogenyTypeConverter
 
 
 		T id = null;
+		//Set<T> ids = new HashSet<T>();
+
 		String name = stringNode.getValue();
-		try
+		String[] names = null;
+
+		if (name != null)
 			{
-			id = idMapper.findTaxidByName(name);
+			names = name.split("==");
+			for (String s : names)
+				{
+				try
+					{
+					id = idMapper.findTaxidByName(s);
+					//ids.add(idMapper.findTaxidByName(s));
+					}
+				catch (NoSuchNodeException e)
+					{// too bad, try the next one
+					}
+				}
 			}
-		catch (NoSuchNodeException e)
+
+		if (id == null)
 			{
 			//logger.debug("Integer ID not found for name: " + stringNode.getValue());
 
 			// previously I thought unique ID generation had to happen at the end, I don't know why...
 			id = namer.generate(); //nameInternal(unknownCount)
 			}
-		if (name != null)
+
+		if (names != null)
 			{
-			nameToIdMap.put(name, id);
+			for (String s : names)
+				{
+				nameToIdMap.put(s, id);
+				}
 			}
+
 		result.setValue(id);
 		//nameToIdMap.put(stringNode.getValue(), id);
 

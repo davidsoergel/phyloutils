@@ -44,6 +44,7 @@ import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.regex.Matcher;
 import java.util.zip.GZIPInputStream;
 
 
@@ -68,13 +69,27 @@ public class NewickParser<T>
 		try
 			{
 			InputStream is = getInputStream(argv[0]);
-			RootedPhylogeny<String> theTree = new NewickParser<String>().read(is, new StringNodeNamer(""));
+			RootedPhylogeny<String> theTree =
+					new NewickParser<String>().read(is, new StringIntegerNodeNamer("", 10000000));
 
 			StringBuffer sb = new StringBuffer();
-			theTree.toNewick(sb, 0, 0);
+			String prefix = argv[1];
+			String tab = argv[2];
+			prefix = prefix.replaceAll(Matcher.quoteReplacement("\\n"), "\n");
+			prefix = prefix.replaceAll(Matcher.quoteReplacement("\\t"), "\t");
+			prefix = prefix.replaceAll("\"", "");
+			prefix = prefix.replaceAll("\'", "");
+			tab = tab.replaceAll(Matcher.quoteReplacement("\\n"), "\n");
+			tab = tab.replaceAll(Matcher.quoteReplacement("\\t"), "\t");
+			tab = tab.replaceAll("\"", "");
+			tab = tab.replaceAll("\'", "");
+
+			theTree.toNewick(sb, prefix, tab, 0, 0);
+
+			//	System.out.println(sb);
 
 			//FileOutputStream foo = new FileOutputStream(argv[2]);
-			FileWriter fw = new FileWriter(argv[1]);
+			FileWriter fw = new FileWriter(argv[3]);
 			fw.write(sb.toString());
 			fw.close();
 			}
@@ -100,7 +115,7 @@ public class NewickParser<T>
 		{
 		InputStream is = getInputStream(filename);
 
-		NodeNamer<Integer> namer = generateIds ? new IntegerNodeNamer(10000000) : new RequireExistingIntegerNodeNamer();
+		NodeNamer<Integer> namer = generateIds ? new IntegerNodeNamer(10000000) : new RequireExistingNodeNamer();
 		return new NewickParser<Integer>().read(is, namer);
 		}
 
@@ -162,6 +177,10 @@ public class NewickParser<T>
 		st.wordChars('-', '-');
 		st.wordChars('/', '/');
 
+
+		// allow = within node names for the sake of synonym1==synonym2
+		st.wordChars('=', '=');
+
 		BasicRootedPhylogeny<T> theTree = new BasicRootedPhylogeny<T>();
 		BasicPhylogenyNode<T> currentNode = theTree.getRoot();
 		//List<PhylogenyNode> path = new LinkedList<PhylogenyNode>();
@@ -173,6 +192,9 @@ public class NewickParser<T>
 		try
 			{
 			st.nextToken();
+
+			// allow whitespace before the tree
+			//while (((char) st.ttype == '['))
 
 			// allow comments before the tree
 			while (((char) st.ttype == '['))
@@ -187,7 +209,8 @@ public class NewickParser<T>
 
 			if (!((char) st.ttype == '('))
 				{
-				throw new PhyloUtilsException("Tree must begin with an open parenthesis");
+				throw new PhyloUtilsException(
+						"Tree must begin with an open parenthesis; found '" + (char) st.ttype + "''.");
 				}
 
 			currentNode = new BasicPhylogenyNode(currentNode);
@@ -243,6 +266,7 @@ public class NewickParser<T>
 
 					//** note underscore vs space issues here... elsewhere, space is a legitimate character, different from _
 					// but in the ITOL newick files at least, all underscores are really spaces
+
 
 					case StreamTokenizer.TT_WORD:
 						if (state == State.NEWNODE || state == State.NAME)
