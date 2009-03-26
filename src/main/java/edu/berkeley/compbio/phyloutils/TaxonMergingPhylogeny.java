@@ -97,8 +97,8 @@ public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
 	/**
 	 * Extract a tree which contains exactly those leaves that are requested.  I.e., prunes any branches not leading to
 	 * those leaves.  Aggregates chains of nodes with exactly one child each into a single branch of the appropriate
-	 * length.  Creates the extracted tree from newly instantiated nodes; does not reuse nodes from the base tree. Some of
-	 * the requested leaves my turn out to be internal nodes; that's OK.
+	 * length, if requested.  Creates the extracted tree from newly instantiated nodes; does not reuse nodes from the base
+	 * tree. Some of the requested leaves my turn out to be internal nodes; that's OK.
 	 *
 	 * @param ids               the Collection<T> of leaves desired for the extracted tree
 	 * @param ignoreAbsentNodes silently ignore requests for leaves that are not present in the tree, simply returning the
@@ -108,5 +108,6 @@ public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
 	 * @throws NoSuchNodeException when the given collection contains a node id that is not found in the tree and
 	 *                             ignoreAbsentNodes is false
 	 */
-	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes) throws NoSuchNodeException;
+	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes,
+	                                          boolean aggregateInternalBranches) throws NoSuchNodeException;
 	}

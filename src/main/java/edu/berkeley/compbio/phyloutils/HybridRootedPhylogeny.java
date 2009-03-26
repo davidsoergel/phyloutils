@@ -87,7 +87,7 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 	 */
 	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers) throws NoSuchNodeException
 		{
-		return extractTreeWithLeafIDs(integers, false);
+		return extractTreeWithLeafIDs(integers, false, false);
 		}
 
 
@@ -120,13 +120,13 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 	/**
 	 * {@inheritDoc}
 	 */
-	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes)
-			throws NoSuchNodeException
+	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes,
+	                                                 boolean includeInternalBranches) throws NoSuchNodeException
 		{
 		// this ought to work even if some of the requested ids are in the root tree rather than the leaf tree,
 		// as long as the leaf tree also has a node with the same ID (even with the wrong topology)
 
-		RootedPhylogeny<T> basicLeaf = leafPhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes);
+		RootedPhylogeny<T> basicLeaf = leafPhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, true);
 		HybridRootedPhylogeny<T> extractedHybrid = new HybridRootedPhylogeny<T>(rootPhylogeny, basicLeaf);
 		RootedPhylogeny<T> result = extractedHybrid.convertToBasic();
 
@@ -134,8 +134,11 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		// however, there may be stranded branches, i.e. former ancestors of the leaves (according to the leaf tree) that
 		// are no longer ancestors of anything in the hybrid tree.  So, we need to remove those.
 
-		return result.extractTreeWithLeafIDs(ids);
+		// also, we had to include internal branches so far, but now we can remove them
+
+		return result.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches);
 		}
+
 
 	private RootedPhylogeny<T> convertToBasic() throws NoSuchNodeException
 		{

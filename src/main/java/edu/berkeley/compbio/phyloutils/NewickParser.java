@@ -115,7 +115,7 @@ public class NewickParser<T>
 		{
 		InputStream is = getInputStream(filename);
 
-		NodeNamer<Integer> namer = generateIds ? new IntegerNodeNamer(10000000) : new RequireExistingNodeNamer();
+		NodeNamer<Integer> namer = generateIds ? new IntegerNodeNamer(10000000) : new RequireExistingNodeNamer(false);
 		return new NewickParser<Integer>().read(is, namer);
 		}
 

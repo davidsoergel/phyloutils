@@ -327,6 +327,18 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 		return parent;
 		}
 
+	public BasicPhylogenyNode<T> findRoot()
+		{
+		if (parent == null)
+			{
+			return this;
+			}
+		else
+			{
+			return parent.findRoot();
+			}
+		}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -342,6 +354,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 	/**
 	 * {@inheritDoc}
 	 */
+
 	public final void setParent(PhylogenyNode<T> parent)//BasicPhylogenyNode parent)
 		{
 		if (this.parent != null)

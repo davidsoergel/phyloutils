@@ -208,10 +208,10 @@ public class NewickTaxonomyService
 		return basePhylogeny.extractTreeWithLeaves(ids);
 		}*/
 
-	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids, boolean ignoreAbsentNodes)
-			throws NoSuchNodeException
+	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids, boolean ignoreAbsentNodes,
+	                                                      boolean includeInternalBranches) throws NoSuchNodeException
 		{
-		return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes);
+		return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches);
 		}
 
 	public boolean isDescendant(PhylogenyNode<String> ancestor, PhylogenyNode<String> descendant)

@@ -43,7 +43,12 @@ package edu.berkeley.compbio.phyloutils;
 public class RequireExistingNodeNamer<T> implements NodeNamer<T>
 	{
 	// ------------------------------ FIELDS ------------------------------
+	private boolean allowNull = false;
 
+	public RequireExistingNodeNamer(boolean allowNull)
+		{
+		this.allowNull = allowNull;
+		}
 	// --------------------------- CONSTRUCTORS ---------------------------
 
 	public T create(Integer s)
@@ -68,12 +73,16 @@ public class RequireExistingNodeNamer<T> implements NodeNamer<T>
 
 	public T uniqueify(T value)
 		{
+		if (value == null && allowNull)
+			{
+			return null;
+			}
 		throw new PhyloUtilsRuntimeException("ID modification disallowed");
 		}
 
 	public boolean isAcceptable(T value)
 		{
-		return value != null;
+		return allowNull || value != null;
 		}
 
 	public T makeAggregate(T newValue, T value)

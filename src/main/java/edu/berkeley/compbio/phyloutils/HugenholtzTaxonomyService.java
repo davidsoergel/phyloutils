@@ -118,7 +118,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		// the random IDs won't be consistently assigned from one run to the next.
 
 		theIntegerTree = PhylogenyTypeConverter
-				.convertToIDTree(theStringTree, new RequireExistingNodeNamer(), new TaxonStringIdMapper<Integer>()
+				.convertToIDTree(theStringTree, new RequireExistingNodeNamer(false), new TaxonStringIdMapper<Integer>()
 				{
 				public Integer findTaxidByNameRelaxed(String name) throws NoSuchNodeException
 					{
@@ -797,7 +797,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids) throws NoSuchNodeException
 		{
-		return extractTreeWithLeafIDs(ids, false);
+		return extractTreeWithLeafIDs(ids, false, false);
 		}
 
 	/*
@@ -807,10 +807,10 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 throw new NotImplementedException();
 		 }
  */
-	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids, boolean ignoreAbsentNodes)
-			throws NoSuchNodeException
+	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids, boolean ignoreAbsentNodes,
+	                                                       boolean includeInternalBranches) throws NoSuchNodeException
 		{
-		return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes);
+		return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches);
 		}
 
 

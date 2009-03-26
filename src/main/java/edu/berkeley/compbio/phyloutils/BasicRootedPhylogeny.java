@@ -173,7 +173,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	 * @param namer
 	 * @throws PhyloUtilsException
 	 */
-	public void assignUniqueIds(NodeNamer<T> namer) //throws PhyloUtilsException
+	public void assignUniqueIds(@NotNull NodeNamer<T> namer) //throws PhyloUtilsException
 		{
 		uniqueIdToNodeMap = new HashMap<T, BasicPhylogenyNode<T>>();
 		root.addSubtreeToMap(uniqueIdToNodeMap, namer);
@@ -391,6 +391,11 @@ root = new BasicPhylogenyNode<T>(original.);
 		return root;
 		}
 
+	public BasicPhylogenyNode<T> findRoot()
+		{
+		return root;
+		}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -530,7 +535,7 @@ root = new BasicPhylogenyNode<T>(original.);
 
 
 		// populate the nodes map
-		assignUniqueIds(new RequireExistingNodeNamer<T>());  // all the nodes should have ids already
+		assignUniqueIds(new RequireExistingNodeNamer<T>(false));  // all the nodes should have ids already
 
 
 		for (BasicPhylogenyNode<T> p : uniqueIdToNodeMap.values())
