@@ -99,11 +99,12 @@ public class TaxonMerger
 
 		Map<T, Set<T>> theMergedTaxa = new HashMap<T, Set<T>>();
 
-		RootedPhylogeny<T> theTree = basePhylogeny.extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet(), false, false);
+		RootedPhylogeny<T> theTree = basePhylogeny.extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet(), false, true);
 
 		assert theTaxonsetsByTaxid.keySet().containsAll(theTree.getLeafValues());
 
-		//** this may not be true unless we use extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet(), false, true); above
+		// this may not be true unless we use extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet(), false, true); above
+		// we do want to make sure all mergable taxa are included, whether or not they are leaves
 		assert theTree.getNodeValues().containsAll(theTaxonsetsByTaxid.keySet());
 
 		DepthFirstTreeIterator<T, PhylogenyNode<T>> it = theTree.depthFirstIterator();

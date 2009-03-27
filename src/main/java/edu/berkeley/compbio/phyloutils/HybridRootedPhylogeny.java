@@ -65,6 +65,10 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 
 	public T nearestKnownAncestor(T leafId) throws NoSuchNodeException
 		{
+		if (rootPhylogeny.getUniqueIdToNodeMap().containsKey(leafId))
+			{
+			return leafId;
+			}
 		return leafPhylogeny.nearestKnownAncestor(rootPhylogeny, leafId);
 		}
 
@@ -160,6 +164,13 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 
 	private Set<PhylogenyNode<T>> reconciledLeafNodes;
 
+	/**
+	 * reorganize the root-ward nodes of the leaf phylogeny so that it agrees with the root phylogeny, creating new nodes
+	 * as needed
+	 *
+	 * @param leafJoinNode
+	 * @param rootJoinNode
+	 */
 	private void reconcileLeafPhylogenyAt(PhylogenyNode<T> leafJoinNode, PhylogenyNode<T> rootJoinNode)
 		{
 		if (reconciledLeafNodes.contains(leafJoinNode))
@@ -184,6 +195,7 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 				{
 				leafParent = new BasicPhylogenyNode<T>();
 				leafParent.setValue(parentId);
+				leafPhylogeny.getUniqueIdToNodeMap().put(parentId, leafParent);
 				}
 
 			//PhylogenyNode<T> obsoleteLeafParent = leafJoinNode.getParent();

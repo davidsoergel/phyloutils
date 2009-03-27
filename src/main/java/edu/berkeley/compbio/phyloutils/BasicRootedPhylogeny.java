@@ -64,12 +64,12 @@ import java.util.Set;
  */
 public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T> implements Serializable
 	{
-	private static final long serialVersionUID = 20090325L;
+	private static final long serialVersionUID = 20090326L;
 
 	private static final Logger logger = Logger.getLogger(BasicRootedPhylogeny.class);
 	// ------------------------------ FIELDS ------------------------------
 
-	transient private Map<T, BasicPhylogenyNode<T>> uniqueIdToNodeMap;
+	transient private Map<T, PhylogenyNode<T>> uniqueIdToNodeMap;
 	BasicPhylogenyNode<T> root;
 
 	// -------------------------- OTHER METHODS --------------------------
@@ -111,7 +111,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	@NotNull
 	public PhylogenyNode<T> getNode(T name) throws NoSuchNodeException
 		{
-		BasicPhylogenyNode<T> result = uniqueIdToNodeMap.get(name);
+		PhylogenyNode<T> result = uniqueIdToNodeMap.get(name);
 		if (result == null)
 			{
 			throw new NoSuchNodeException("Node not found: " + name);
@@ -122,7 +122,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map<T, ? extends PhylogenyNode<T>> getUniqueIdToNodeMap()
+	public Map<T, PhylogenyNode<T>> getUniqueIdToNodeMap()
 		{
 		return uniqueIdToNodeMap;//.values();
 		}
@@ -177,7 +177,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	 */
 	public void assignUniqueIds(@NotNull NodeNamer<T> namer) //throws PhyloUtilsException
 		{
-		uniqueIdToNodeMap = new HashMap<T, BasicPhylogenyNode<T>>();
+		uniqueIdToNodeMap = new HashMap<T, PhylogenyNode<T>>();
 		root.addSubtreeToMap(uniqueIdToNodeMap, namer);
 		}
 
@@ -533,18 +533,18 @@ root = new BasicPhylogenyNode<T>(original.);
 		{
 		root = (BasicPhylogenyNode<T>) stream.readObject();
 
-		uniqueIdToNodeMap = new HashMap<T, BasicPhylogenyNode<T>>();
+		uniqueIdToNodeMap = new HashMap<T, PhylogenyNode<T>>();
 
 
 		// populate the nodes map
 		assignUniqueIds(new RequireExistingNodeNamer<T>(false));  // all the nodes should have ids already
 
 
-		for (BasicPhylogenyNode<T> p : uniqueIdToNodeMap.values())
+		for (PhylogenyNode<T> p : uniqueIdToNodeMap.values())
 			{
-			for (BasicPhylogenyNode<T> c : p.getChildren())
+			for (PhylogenyNode<T> c : p.getChildren())
 				{
-				c.parent = p;
+				c.setParent(p);//c.parent = p;
 				}
 			}
 		}

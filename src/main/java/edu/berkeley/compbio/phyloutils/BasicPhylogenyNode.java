@@ -59,14 +59,16 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 		// really T should extend Serializable here but let's see if we can get away without it
 	{
 
-	private static final long serialVersionUID = 20090325L;
+	private static final long serialVersionUID = 20090326L;
 
 	private static final Logger logger = Logger.getLogger(BasicPhylogenyNode.class);
 	// ------------------------------ FIELDS ------------------------------
 
 	protected transient BasicPhylogenyNode<T> parent;
 
+	// maintain a known order.  This was previously a Set; now we have to be careful not to add the same node twice, etc.
 	protected List<BasicPhylogenyNode<T>> children = new ArrayList<BasicPhylogenyNode<T>>();
+
 	protected T value = null;
 	protected Double length = null;// distinguish null from zero
 	protected Double weight = null;// distinguish null from zero
@@ -378,7 +380,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 
 	// -------------------------- OTHER METHODS --------------------------
 
-	protected void addSubtreeToMap(Map<T, BasicPhylogenyNode<T>> nodes,
+	protected void addSubtreeToMap(Map<T, PhylogenyNode<T>> nodes,
 	                               @NotNull NodeNamer<T> namer)// throws PhyloUtilsException
 		{
 		if (value != null)
@@ -585,9 +587,12 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 	 */
 	public void registerChild(PhylogenyNode<T> child)
 		{
-		children.add((BasicPhylogenyNode<T>) child);
-		//((BasicPhylogenyNode<T>) child).setParent(this);
-		invalidateAggregatedChildInfo();
+		if (!children.contains(child))
+			{
+			children.add((BasicPhylogenyNode<T>) child);
+			//((BasicPhylogenyNode<T>) child).setParent(this);
+			invalidateAggregatedChildInfo();
+			}
 		}
 
 	/**

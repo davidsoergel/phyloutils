@@ -140,7 +140,7 @@ public interface RootedPhylogeny<T>
 	 *
 	 * @return all the nodes in the tree, both internal nodes and leaf nodes.
 	 */
-	Map<T, ? extends PhylogenyNode<T>> getUniqueIdToNodeMap();
+	Map<T, PhylogenyNode<T>> getUniqueIdToNodeMap();  //** Map<T, ? extends PhylogenyNode<T>> ??
 
 	/**
 	 * Returns all the leaf nodes of the tree.
