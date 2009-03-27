@@ -70,7 +70,7 @@ public class NormalizedWeightedUniFrac<T> implements DissimilarityMeasure<Rooted
 			unionLeaves.addAll(a.getLeafValues());
 			unionLeaves.addAll(b.getLeafValues());
 
-			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves);
+			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves, false, false);
 
 			double u = 0;
 

@@ -190,11 +190,11 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	@NotNull
+/*	@NotNull
 	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids) throws NoSuchNodeException
 		{
 		return extractTreeWithLeafIDs(ids, false, false);
-		}
+		}*/
 
 
 	/**
@@ -231,19 +231,20 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		List<PhylogenyNode<T>> theLeaves = new ArrayList<PhylogenyNode<T>>();
 		for (T id : ids)
 			{
-			PhylogenyNode<T> n = getNode(id);
-			if (n == null)
+			try
+				{
+				PhylogenyNode<T> n = getNode(id);
+				theLeaves.add(n);
+				}
+			catch (NoSuchNodeException e)
 				{
 				if (!ignoreAbsentNodes)
 					{
 					throw new NoSuchNodeException("Can't extract tree; requested node " + id + " not found");
 					}
 				}
-			else
-				{
-				theLeaves.add(n);
-				}
 			}
+
 		return theLeaves;
 		}
 
@@ -297,17 +298,17 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return newTree;
 		}
 
-	/*
-	private void deepCopy(PhylogenyNode<T> from, BasicPhylogenyNode<T> to)
-		{
-		for (PhylogenyNode<T> fromChild : from.getChildren())
-			{
-			BasicPhylogenyNode<T> toChild = new BasicPhylogenyNode<T>(to, fromChild);// may produce ClassCastException
-			deepCopy(fromChild, toChild);
-			//child.setParent(newRoot);
-			}
-		}
-	*/
+/*
+   private void deepCopy(PhylogenyNode<T> from, BasicPhylogenyNode<T> to)
+	   {
+	   for (PhylogenyNode<T> fromChild : from.getChildren())
+		   {
+		   BasicPhylogenyNode<T> toChild = new BasicPhylogenyNode<T>(to, fromChild);// may produce ClassCastException
+		   deepCopy(fromChild, toChild);
+		   //child.setParent(newRoot);
+		   }
+	   }
+   */
 
 	/**
 	 * note this does not allow for the case where one path terminates at an internal node of another path.  Wait, yes it
@@ -340,35 +341,35 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 				// apparently HashSet.iterator.remove doesn't work
 				/*
-				for (Iterator<List<PhylogenyNode<T>>> i = theAncestorLists.iterator(); i.hasNext();)
-					{
-					List<PhylogenyNode<T>> list = i.next();
-					if (list.isEmpty())
-						{
-						i.remove();
-						}
-					}*/
+							  for (Iterator<List<PhylogenyNode<T>>> i = theAncestorLists.iterator(); i.hasNext();)
+								  {
+								  List<PhylogenyNode<T>> list = i.next();
+								  if (list.isEmpty())
+									  {
+									  i.remove();
+									  }
+								  }*/
 
 				// too bad we have to do this the slow way.  Gaah, this doesn't work either!!??
 				/*
-				for (List<PhylogenyNode<T>> list : new HashSet<List<PhylogenyNode<T>>>(theAncestorLists))
-					{
-					if (list.isEmpty())
-						{
-						theAncestorLists.remove(list);
-						assert !theAncestorLists.contains(list);
-						}
-					}
+							  for (List<PhylogenyNode<T>> list : new HashSet<List<PhylogenyNode<T>>>(theAncestorLists))
+								  {
+								  if (list.isEmpty())
+									  {
+									  theAncestorLists.remove(list);
+									  assert !theAncestorLists.contains(list);
+									  }
+								  }
 
-				for (List<PhylogenyNode<T>> list1 : new HashSet<List<PhylogenyNode<T>>>(theAncestorLists))
-					{
-					for (List<PhylogenyNode<T>> list2 : new HashSet<List<PhylogenyNode<T>>>(theAncestorLists))
-						{
-						logger.error(
-								"Argh: " + list1 + " " + list2 + " " + (list1 == list2) + " " + list1.equals(list2));
-						}
-					}
-					*/
+							  for (List<PhylogenyNode<T>> list1 : new HashSet<List<PhylogenyNode<T>>>(theAncestorLists))
+								  {
+								  for (List<PhylogenyNode<T>> list2 : new HashSet<List<PhylogenyNode<T>>>(theAncestorLists))
+									  {
+									  logger.error(
+											  "Argh: " + list1 + " " + list2 + " " + (list1 == list2) + " " + list1.equals(list2));
+									  }
+								  }
+								  */
 
 				//** this is completely insane; why doesn't HashSet.remove work!?
 
@@ -406,14 +407,14 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 				}
 			}
 		/*
-		  for(List<PhylogenyNode<T>> ancestorList : theAncestorLists)
-			  {
-			  if(ancestorList.isEmpty())
-				  {
-				  logger.warn("")
-				  }
-			  }
-  */
+					  for(List<PhylogenyNode<T>> ancestorList : theAncestorLists)
+						  {
+						  if(ancestorList.isEmpty())
+							  {
+							  logger.warn("")
+							  }
+						  }
+			  */
 
 		if (commonAncestor == null)  // only possible if allFirstElementsEqual == false on the first attempt
 			{
@@ -728,7 +729,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			unionLeaves.addAll(otherTree.getLeafValues());
 
 
-			RootedPhylogeny<T> unionTree = basePhylogeny.extractTreeWithLeafIDs(unionLeaves);
+			RootedPhylogeny<T> unionTree = basePhylogeny.extractTreeWithLeafIDs(unionLeaves, false, false);
 			for (PhylogenyNode<T> node : getLeaves())
 				{
 				unionTree.getNode(node.getValue()).setWeight(node.getWeight() * mixingProportion);
@@ -755,12 +756,12 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	public void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor) //throws PhyloUtilsException
 		{
 		/*RootedPhylogeny<T> theBasePhylogeny = getBasePhylogeny();
-		if (theBasePhylogeny != otherTree.getBasePhylogeny())
-			{
-			throw new PhyloUtilsException(
-					"Phylogeny mixtures can be computed only between trees extracted from the same underlying tree");
-			}
-*/
+				 if (theBasePhylogeny != otherTree.getBasePhylogeny())
+					 {
+					 throw new PhyloUtilsException(
+							 "Phylogeny mixtures can be computed only between trees extracted from the same underlying tree");
+					 }
+		 */
 
 		//** if the otherTree has leaves that are not present in this tree, we'll ignore them and never know.
 		// That circumstance should probably throw an exception, but it's a bit of a drag to test for it.

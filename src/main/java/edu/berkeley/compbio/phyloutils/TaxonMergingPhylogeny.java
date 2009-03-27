@@ -80,7 +80,7 @@ public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
 	 * @return the extracted RootedPhylogeny<T>
 	 * @throws NoSuchNodeException when the given collection contains a node id that is not found in the tree
 	 */
-	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids) throws NoSuchNodeException; //, PhyloUtilsException;
+//	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids) throws NoSuchNodeException; //, PhyloUtilsException;
 
 	/**
 	 * Extract a tree which contains exactly those leaves that are requested.  I.e., prunes any branches not leading to
@@ -109,5 +109,5 @@ public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
 	 *                             ignoreAbsentNodes is false
 	 */
 	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes,
-	                                          boolean aggregateInternalBranches) throws NoSuchNodeException;
+	                                          boolean includeInternalBranches) throws NoSuchNodeException;
 	}

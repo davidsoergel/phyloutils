@@ -100,11 +100,11 @@ public class NewickTaxonomyService
 			}
 		return maxDistance;
 		}
-
+/*
 	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids) throws NoSuchNodeException
 		{
 		return basePhylogeny.extractTreeWithLeafIDs(ids);
-		}
+		}*/
 
 	public PhylogenyNode<String> getRoot()
 		{
@@ -161,7 +161,7 @@ public class NewickTaxonomyService
 			}
 
 		DSCollectionUtils.retainRandom(mergedIds, numTaxa);
-		return basePhylogeny.extractTreeWithLeafIDs(mergedIds);
+		return basePhylogeny.extractTreeWithLeafIDs(mergedIds, false, false);
 		}
 
 	public String findTaxidByName(String name) throws NoSuchNodeException

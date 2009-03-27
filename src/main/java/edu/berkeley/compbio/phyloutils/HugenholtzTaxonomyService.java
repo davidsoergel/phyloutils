@@ -795,10 +795,10 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 }
  */
 
-	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids) throws NoSuchNodeException
+/*	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids) throws NoSuchNodeException
 		{
 		return extractTreeWithLeafIDs(ids, false, false);
-		}
+		}*/
 
 	/*
 	 public RootedPhylogeny<Integer> extractTreeWithLeaves(Collection<PhylogenyNode<Integer>> ids)
@@ -807,6 +807,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 throw new NotImplementedException();
 		 }
  */
+
 	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids, boolean ignoreAbsentNodes,
 	                                                       boolean includeInternalBranches) throws NoSuchNodeException
 		{

@@ -72,7 +72,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 		TaxonMergingPhylogeny<Object> tmp = tif.createInstance();
 		Collection leafIDs = Arrays.asList("baa", "bbba", "ca", "cb");
 
-		RootedPhylogeny<Object> result = tmp.extractTreeWithLeafIDs(leafIDs);
+		RootedPhylogeny<Object> result = tmp.extractTreeWithLeafIDs(leafIDs, false, false);
 
 		assert result.getUniqueIdToNodeMap().size() == 7;
 
@@ -96,7 +96,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 				"a"
 		});
 
-		RootedPhylogeny<String> result = tmp.extractTreeWithLeafIDs(leafIDs);
+		RootedPhylogeny<String> result = tmp.extractTreeWithLeafIDs(leafIDs, false, false);
 
 		assert result.getUniqueIdToNodeMap().size() == 6;
 
@@ -120,6 +120,6 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 				"a"
 		});
 
-		RootedPhylogeny result = tmp.extractTreeWithLeafIDs(leafIDs);
+		RootedPhylogeny result = tmp.extractTreeWithLeafIDs(leafIDs, false, false);
 		}
 	}

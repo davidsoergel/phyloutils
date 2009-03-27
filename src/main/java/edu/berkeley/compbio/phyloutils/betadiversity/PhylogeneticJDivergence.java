@@ -73,7 +73,7 @@ public class PhylogeneticJDivergence<T> implements DissimilarityMeasure<RootedPh
 			unionLeaves.addAll(a.getLeafValues());
 			unionLeaves.addAll(b.getLeafValues());
 
-			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves);
+			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves, false, false);
 
 			RootedPhylogeny<T> aTreeSmoothed = unionTree.clone();
 			aTreeSmoothed.smoothWeightsFrom(a, .000001);

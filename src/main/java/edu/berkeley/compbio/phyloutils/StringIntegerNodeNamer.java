@@ -6,21 +6,21 @@ package edu.berkeley.compbio.phyloutils;
  */
 public class StringIntegerNodeNamer extends StringNodeNamer
 	{
-	public StringIntegerNodeNamer(String unknownBasis)
+	public StringIntegerNodeNamer(String unknownBasis, boolean allowNull)
 		{
-		super(unknownBasis);
+		super(unknownBasis, allowNull);
 		}
 
-	public StringIntegerNodeNamer(String unknownBasis, int startId)
+	public StringIntegerNodeNamer(String unknownBasis, boolean allowNull, int startId)
 		{
-		super(unknownBasis, startId);
+		super(unknownBasis, allowNull, startId);
 		}
 
 	public boolean isAcceptable(String value)
 		{
 		if (value == null)
 			{
-			return false;
+			return allowNull;
 			}
 
 		try

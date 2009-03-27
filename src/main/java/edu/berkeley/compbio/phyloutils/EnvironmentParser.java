@@ -82,7 +82,7 @@ public class EnvironmentParser
 			{
 			String name = entry.getKey();
 			Multiset<String> ids = entry.getValue();
-			RootedPhylogeny<String> subtree = tree.extractTreeWithLeafIDs(ids);
+			RootedPhylogeny<String> subtree = tree.extractTreeWithLeafIDs(ids, false, false);
 			subtree.setValue(name);
 			subtree.setLeafWeights(ids);
 			result.add(subtree);

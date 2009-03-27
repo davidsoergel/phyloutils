@@ -77,7 +77,7 @@ public class BasicRootedPhylogenyTest extends ContractTestAware<BasicRootedPhylo
 		BasicPhylogenyNode<String> ca = new BasicPhylogenyNode<String>(c, "ca", 2);
 		BasicPhylogenyNode<String> cb = new BasicPhylogenyNode<String>(c, "cb", 3);
 
-		StringNodeNamer namer = new StringNodeNamer("UNKNOWN NODE");
+		StringNodeNamer namer = new StringNodeNamer("UNKNOWN NODE ", false);
 
 		public BasicRootedPhylogenyWithSpecificNodeHandles()
 			{

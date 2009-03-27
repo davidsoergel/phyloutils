@@ -62,11 +62,12 @@ public class HybridRootedPhylogenyTest extends ContractTestAware<HybridRootedPhy
 
 	public HybridRootedPhylogeny createInstance() throws Exception
 		{
-		RootedPhylogeny leafPhylogeny = new BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles()
-				.rootPhylogeny;
+		RootedPhylogeny leafPhylogeny =
+				new BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles().rootPhylogeny;
 
 		RootedPhylogeny rootPhylogeny = leafPhylogeny
-				.extractTreeWithLeafIDs(Arrays.asList("a", "aa", "bb", "bbba", "ba", "baa", "c", "ca", "cb"));
+				.extractTreeWithLeafIDs(Arrays.asList("a", "aa", "bb", "bbba", "ba", "baa", "c", "ca", "cb"), false,
+				                        false);
 
 		leafPhylogeny.setAllBranchLengthsToNull();
 

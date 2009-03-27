@@ -87,7 +87,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T> implemen
 	public void toNewick(StringBuffer sb, String prefix, String tab, int minClusterSize, double minLabelProb)
 		{
 		root.toNewick(sb, prefix, tab, minClusterSize, minLabelProb);
-		sb.append(":0;");
+		sb.append(";\n");
 		}
 
 	@Override

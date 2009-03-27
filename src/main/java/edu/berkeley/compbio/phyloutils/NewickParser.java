@@ -70,7 +70,7 @@ public class NewickParser<T>
 			{
 			InputStream is = getInputStream(argv[0]);
 			RootedPhylogeny<String> theTree =
-					new NewickParser<String>().read(is, new StringIntegerNodeNamer("", 10000000));
+					new NewickParser<String>().read(is, new StringIntegerNodeNamer("", false, 10000000));
 
 			StringBuffer sb = new StringBuffer();
 			String prefix = argv[1];
@@ -107,7 +107,7 @@ public class NewickParser<T>
 		{
 		InputStream is = getInputStream(filename);
 
-		return new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED NODE "));
+		return new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED ", false));
 		}
 
 	public static RootedPhylogeny<Integer> readWithIntegerIds(String filename, boolean generateIds)

@@ -47,7 +47,11 @@ public class CiccarelliTaxonomyService extends NewickTaxonomyService //<String>
 	private static final Logger logger = Logger.getLogger(CiccarelliTaxonomyService.class);
 
 	//private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
-	private static final String ciccarelliFilename = "itol090314_name.tree.allids";
+
+	// this tree has integer taxids and precomputed fake ids for unnamed internal nodes: "itol090314_name.tree.taxids"
+	// but we don't want that, we just want the names
+
+	private static final String ciccarelliFilename = "itol090314_name.tree";
 
 	private static CiccarelliTaxonomyService instance;// = new CiccarelliUtils();
 

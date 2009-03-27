@@ -85,10 +85,10 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 	/**
 	 * {@inheritDoc}
 	 */
-	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers) throws NoSuchNodeException
+/*	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> integers) throws NoSuchNodeException
 		{
 		return extractTreeWithLeafIDs(integers, false, false);
-		}
+		}*/
 
 
 	/**

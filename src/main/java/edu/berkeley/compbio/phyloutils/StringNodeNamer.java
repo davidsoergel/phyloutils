@@ -46,21 +46,23 @@ import java.util.Map;
 public class StringNodeNamer implements NodeNamer<String>
 	{
 	// ------------------------------ FIELDS ------------------------------
-
+	protected boolean allowNull = false;
 	private String unknownBasis;
 	private int currentId = 0;
 
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
-	public StringNodeNamer(String unknownBasis)
+	public StringNodeNamer(String unknownBasis, boolean allowNull)
 		{
 		this.unknownBasis = unknownBasis;
+		this.allowNull = allowNull;
 		}
 
-	public StringNodeNamer(String unknownBasis, int startId)
+	public StringNodeNamer(String unknownBasis, boolean allowNull, int startId)
 		{
 		this.unknownBasis = unknownBasis;
+		this.allowNull = allowNull;
 		currentId = startId;
 		}
 
@@ -132,6 +134,10 @@ public class StringNodeNamer implements NodeNamer<String>
 
 	public String uniqueify(String value)
 		{
+		if (value == null && allowNull)
+			{
+			return null;
+			}
 		Integer inc = uniqueIndexes.get(value);
 		if (inc == null)
 			{
@@ -144,7 +150,7 @@ public class StringNodeNamer implements NodeNamer<String>
 
 	public boolean isAcceptable(String value)
 		{
-		return value != null;
+		return allowNull || value != null;
 		}
 
 	public String makeAggregate(String newValue, String value)

@@ -71,7 +71,7 @@ public class WeightedUniFrac<T> implements DissimilarityMeasure<RootedPhylogeny<
 			unionLeaves.addAll(a.getLeafValues());
 			unionLeaves.addAll(b.getLeafValues());
 
-			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves);
+			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves, false, false);
 
 			double u = 0;
 			for (PhylogenyNode<T> node : unionTree)

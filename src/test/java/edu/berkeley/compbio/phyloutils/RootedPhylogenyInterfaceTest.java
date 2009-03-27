@@ -121,7 +121,7 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 		rootPhylogeny.newChild().setValue("a");
 		rootPhylogeny.newChild().setValue("b");
 		rootPhylogeny.newChild().setValue("c");
-		rootPhylogeny.assignUniqueIds(new StringNodeNamer("bogus"));
+		rootPhylogeny.assignUniqueIds(new StringNodeNamer("bogus", false));
 
 		Object found = mainTree.nearestKnownAncestor(rootPhylogeny, "bbba");
 
@@ -151,11 +151,11 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 		RootedPhylogeny<String> baseTree = tif.createInstance();
 
 		RootedPhylogeny<String> tree1 = baseTree.extractTreeWithLeafIDs(
-				DSCollectionUtils.setOf("aaaa", "ab", "baa", "bab", "bba", "bbba", "ca", "cb"));
+				DSCollectionUtils.setOf("aaaa", "ab", "baa", "bab", "bba", "bbba", "ca", "cb"), false, false);
 		tree1.randomizeLeafWeights(new UniformDistribution(0, 1));
 
 		RootedPhylogeny<String> tree2 = baseTree.extractTreeWithLeafIDs(
-				DSCollectionUtils.setOf("aaaa", "ab", "baa", "bab", "bba", "bbba", "ca", "cb"));
+				DSCollectionUtils.setOf("aaaa", "ab", "baa", "bab", "bba", "bbba", "ca", "cb"), false, false);
 		tree2.randomizeLeafWeights(new UniformDistribution(0, 1));
 
 		RootedPhylogeny<String> tree3 = tree1.mixWith(tree2, 0.1);
@@ -187,11 +187,11 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 		{
 		RootedPhylogeny<Object> tree1 = tif.createInstance();
 		tree1.randomizeLeafWeights(new UniformDistribution(0, 1));
-		tree1 = tree1.extractTreeWithLeafIDs(tree1.getLeafValues());
+		tree1 = tree1.extractTreeWithLeafIDs(tree1.getLeafValues(), false, false);
 
 		RootedPhylogeny<Object> tree2 = tif.createInstance();
 		tree2.randomizeLeafWeights(new UniformDistribution(0, 1));
-		tree2 = tree1.extractTreeWithLeafIDs(tree2.getLeafValues());
+		tree2 = tree1.extractTreeWithLeafIDs(tree2.getLeafValues(), false, false);
 
 		RootedPhylogeny<Object> tree3 = tree1.mixWith(tree2, 0.1);
 		}
