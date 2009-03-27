@@ -298,4 +298,6 @@ public interface RootedPhylogeny<T>
 
 	//public RootedPhylogeny<T> convertToIDTree(RootedPhylogeny<String> stringTree, NodeNamer<T> namer,
 	//                                        TaxonStringIdMapper<T> taxonomyService);
+
+	Map<T, Double> distributeInternalWeightsToLeaves(Map<T, Double> taxIdToWeightMap) throws NoSuchNodeException;
 	}

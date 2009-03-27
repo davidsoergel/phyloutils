@@ -33,6 +33,8 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
+import com.davidsoergel.dsutils.collections.HashWeightedSet;
+import com.davidsoergel.dsutils.collections.WeightedSet;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.ContinuousDistribution1D;
 import com.google.common.collect.Multiset;
@@ -585,6 +587,37 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			}
 
 		normalizeWeights();
+		}
+
+	public Map<T, Double> distributeInternalWeightsToLeaves(Map<T, Double> taxIdToWeightMap) throws NoSuchNodeException
+		{
+		WeightedSet<T> result = new HashWeightedSet<T>();
+		for (Map.Entry<T, Double> entry : taxIdToWeightMap.entrySet())
+			{
+			T id = entry.getKey();
+			Double weight = entry.getValue();
+			PhylogenyNode<T> n = getNode(id);
+			distributeWeight(n, weight, result);
+			}
+		return result.getItemNormalizedMap();
+		}
+
+	private void distributeWeight(PhylogenyNode<T> n, Double weight, WeightedSet<T> result) throws NoSuchNodeException
+		{
+		if (n.isLeaf())
+			{
+			result.add(n.getValue(), weight);
+			result.incrementItems();
+			}
+		else
+			{
+			List<? extends PhylogenyNode<T>> children = n.getChildren();
+			double childWeight = weight / children.size();
+			for (PhylogenyNode<T> child : children)
+				{
+				distributeWeight(child, childWeight, result);
+				}
+			}
 		}
 
 	/**
