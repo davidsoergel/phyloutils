@@ -418,6 +418,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			child.setParent(this);  // this should invalidate the parent weight?
 
 			// the name no longer refers to this node; it'll be assigned to the new child in the recursion below
+			setValue(null);
 			nodes.remove(value);
 
 			// now rename the current node
@@ -429,7 +430,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			//setWeight(0.0);
 			}
 
-		// do the children first so that we don't create a uniqueness problem if we push down the name below
+		// do the children first so that we don't create a uniqueness problem if we push down the name below //?
 		for (BasicPhylogenyNode<T> n : children)
 			{
 			n.addSubtreeToMap(nodes, namer);
