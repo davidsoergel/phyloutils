@@ -2,6 +2,9 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.CacheManager;
 import com.davidsoergel.dsutils.DSStringUtils;
+import com.davidsoergel.dsutils.collections.DSCollectionUtils;
+import com.davidsoergel.dsutils.collections.HashWeightedSet;
+import com.davidsoergel.dsutils.collections.WeightedSet;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.google.common.collect.HashMultimap;
 import org.apache.commons.lang.NotImplementedException;
@@ -50,6 +53,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	private static HugenholtzTaxonomyService instance;// = new CiccarelliUtils();
 
 	private TaxonomySynonymService synonymService;
+
 
 	public static HugenholtzTaxonomyService getInjectedInstance()
 		{
@@ -135,6 +139,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 						{
 						throw new NoSuchNodeException("Can't convert node name to integer ID: " + name);
 						}
+					}
+
+				public Set<String> getCachedNamesForId(Integer id)
+					{
+					return DSCollectionUtils.setOf("" + id);
 					}
 				}, nameToIdsMap);
 
@@ -423,6 +432,27 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return findTaxidByName(name);
 		}
 
+	public Set<String> getCachedNamesForId(Integer id)
+		{
+		//PERF, need a BiMultiMap or something
+		Set<String> result = new HashSet<String>();
+		for (Map.Entry<String, Integer> entry : findTaxidByNameCache.entrySet())
+			{
+			if (entry.getValue().equals(id))
+				{
+				result.add(entry.getKey());
+				}
+			}
+		for (Map.Entry<String, Integer> entry : nameToIdsMap.entries())
+			{
+			if (entry.getValue().equals(id))
+				{
+				result.add(entry.getKey());
+				}
+			}
+		return result;
+		}
+
 	@NotNull
 	public Integer findTaxidByName(String name) throws NoSuchNodeException
 		{
@@ -484,7 +514,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				{
 				leafIds.add(path.peekLast());
 				}
-			return theIntegerTree.commonAncestor(leafIds, 0.90);
+			return theIntegerTree.commonAncestor(leafIds, 0.75);
 			}
 		}
 
@@ -653,6 +683,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	@NotNull
 	public Integer getUniqueNodeForName(String name) throws NoSuchNodeException
 		{
+		Integer result;
 		Collection<Integer> matchingIds = nameToIdsMap.get(name);
 		/*	if (matchingIds.isEmpty())
 		   {
@@ -704,10 +735,37 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}
 		if (matchingIds.size() > 1)
 			{
-			return theIntegerTree.commonAncestor(matchingIds, 0.90);
+			result = theIntegerTree.commonAncestor(matchingIds, 0.75);
 			//throw new PhyloUtilsException("Name not unique: " + name);
 			}
-		return matchingIds.iterator().next();
+		else
+			{
+			result = matchingIds.iterator().next();
+			}
+
+		double depthBelow = theIntegerTree.getNode(result).getGreatestDepthBelow();
+
+		depthsBelow.add(name, depthBelow);
+		shortNames.put(name, shortName);
+
+		//logger.info("Node found for name " + name + " has depth below = " + depthBelow);
+
+		return result;
+		}
+
+	WeightedSet<String> depthsBelow = new HashWeightedSet<String>(); // for debugging
+
+	Map<String, String> shortNames = new HashMap<String, String>();
+
+	public void printDepthsBelow()
+		{
+		for (String name : depthsBelow.keysInDecreasingWeightOrder())
+			{
+			double depthBelow = depthsBelow.get(name);
+			String shortName = shortNames.get(name);
+
+			logger.info(String.format("Depth below = %.3f for %s relaxed from %s", depthBelow, shortName, name));
+			}
 		}
 
 	public boolean isDescendant(Integer ancestor, Integer descendant) throws NoSuchNodeException

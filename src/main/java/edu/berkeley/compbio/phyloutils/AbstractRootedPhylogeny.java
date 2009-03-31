@@ -211,18 +211,21 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		RootedPhylogeny<T> result = extractTreeWithLeaves(theLeaves, includeInternalBranches);
 		Collection<T> gotLeaves = result.getLeafValues();
-		Collection<T> gotNodes = result.getNodeValues();
+		//Collection<T> gotNodes = result.getNodeValues();
 
 		// all the leaves that were found were leaves that were requested
 		assert ids.containsAll(gotLeaves);
 
+		/*
 		if (includeInternalBranches)
 			{
 			// some requested leaves may turn out to be internal nodes, but at least they should all be accounted for
-			assert gotNodes.containsAll(ids);
+			//assert gotNodes.containsAll(ids);
 			}
+		*/
 
-		//assert gotLeaves.containsAll(ids);
+		// any requested leaves that turned out to be internal nodes should have had a phantom leaf added
+		assert gotLeaves.containsAll(ids);
 		return result;
 		}
 
@@ -380,7 +383,13 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 				for (List<PhylogenyNode<T>> list : oldAncestorLists)
 					{
-					if (!list.isEmpty())
+					if (list.isEmpty())
+						{
+						add a
+						phantom leaf
+						here
+						}
+					else
 						{
 						theAncestorLists.add(list);
 						}
@@ -509,7 +518,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		int commonAncestors = 0;
 
-		while (ancestorsA.size() > 0 && ancestorsB.size() > 0 && ancestorsA.get(0) == ancestorsB.get(0))
+		while (!ancestorsA.isEmpty() && !ancestorsB.isEmpty() && ancestorsA.get(0).equals(ancestorsB.get(0)))
 			{
 			ancestorsA.remove(0);
 			ancestorsB.remove(0);

@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -100,6 +101,10 @@ public class NewickTaxonomyService
 			}
 		return maxDistance;
 		}
+
+	public void printDepthsBelow()
+		{
+		}
 /*
 	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids) throws NoSuchNodeException
 		{
@@ -172,6 +177,21 @@ public class NewickTaxonomyService
 	public String findTaxidByNameRelaxed(String name) throws NoSuchNodeException
 		{
 		return basePhylogeny.getNode(name).getValue();
+		}
+
+	public Set<String> getCachedNamesForId(String id)
+		{
+		String s = null;
+		try
+			{
+			s = basePhylogeny.getNode(id).getValue();
+			}
+		catch (NoSuchNodeException e)
+			{
+			logger.error("Error", e);
+			return new HashSet<String>();
+			}
+		return DSCollectionUtils.setOf(s);
 		}
 
 	public boolean isDescendant(String ancestor, String descendant) throws NoSuchNodeException
