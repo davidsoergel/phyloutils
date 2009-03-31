@@ -32,7 +32,7 @@ public class NewickTaxonomyService
 		 }
  */
 
-	protected NewickTaxonomyService(String filename)// throws  PhyloUtilsException
+	protected NewickTaxonomyService(String filename, boolean namedNodesMustBeLeaves)// throws  PhyloUtilsException
 		{
 		this.filename = filename;
 		try
@@ -60,7 +60,7 @@ public class NewickTaxonomyService
 				is = new FileInputStream(filename);
 				}*/
 			//	ciccarelliTree = new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED NODE "));
-			basePhylogeny = NewickParser.readWithStringIds(filename);
+			basePhylogeny = NewickParser.readWithStringIds(filename, namedNodesMustBeLeaves);
 			}
 		catch (IOException e)
 			{
@@ -229,9 +229,10 @@ public class NewickTaxonomyService
 		}*/
 
 	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids, boolean ignoreAbsentNodes,
-	                                                      boolean includeInternalBranches) throws NoSuchNodeException
+	                                                      boolean includeInternalBranches)
+			throws NoSuchNodeException  //, NodeNamer<String> namer
 		{
-		return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches);
+		return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches); //, namer);
 		}
 
 	public boolean isDescendant(PhylogenyNode<String> ancestor, PhylogenyNode<String> descendant)

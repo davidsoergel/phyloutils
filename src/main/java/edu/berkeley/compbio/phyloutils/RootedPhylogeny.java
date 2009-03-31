@@ -237,7 +237,7 @@ public interface RootedPhylogeny<T>
 	 *         the two leaf sets
 	 * @throws PhyloUtilsException when anything goes wrong
 	 */
-	RootedPhylogeny<T> extractIntersectionTree(Collection<T> leafValues, Collection<T> leafValues1)
+	RootedPhylogeny<T> extractIntersectionTree(Collection<T> leafValues, Collection<T> leafValues1, NodeNamer<T> namer)
 			throws PhyloUtilsException, NoSuchNodeException;
 
 	/**

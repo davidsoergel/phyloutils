@@ -125,7 +125,8 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 	 * {@inheritDoc}
 	 */
 	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes,
-	                                                 boolean includeInternalBranches) throws NoSuchNodeException
+	                                                 boolean includeInternalBranches)
+			throws NoSuchNodeException //, NodeNamer<T> namer
 		{
 		// this ought to work even if some of the requested ids are in the root tree rather than the leaf tree,
 		// as long as the leaf tree also has a node with the same ID (even with the wrong topology)

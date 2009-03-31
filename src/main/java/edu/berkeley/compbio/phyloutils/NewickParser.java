@@ -69,8 +69,9 @@ public class NewickParser<T>
 		try
 			{
 			InputStream is = getInputStream(argv[0]);
-			RootedPhylogeny<String> theTree =
-					new NewickParser<String>().read(is, new StringIntegerNodeNamer("", false, 10000000));
+			boolean namedNodesMustBeLeaves = Boolean.parseBoolean(argv[1]);
+			RootedPhylogeny<String> theTree = new NewickParser<String>()
+					.read(is, new StringIntegerNodeNamer("", false, 10000000, namedNodesMustBeLeaves));
 
 			StringBuffer sb = new StringBuffer();
 			String prefix = argv[1];
@@ -103,19 +104,22 @@ public class NewickParser<T>
 			}
 		}
 
-	public static RootedPhylogeny<String> readWithStringIds(String filename) throws PhyloUtilsException, IOException
-		{
-		InputStream is = getInputStream(filename);
-
-		return new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED ", false));
-		}
-
-	public static RootedPhylogeny<Integer> readWithIntegerIds(String filename, boolean generateIds)
+	public static RootedPhylogeny<String> readWithStringIds(String filename, boolean namedNodesMustBeLeaves)
 			throws PhyloUtilsException, IOException
 		{
 		InputStream is = getInputStream(filename);
 
-		NodeNamer<Integer> namer = generateIds ? new IntegerNodeNamer(10000000) : new RequireExistingNodeNamer(false);
+		return new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED ", false, namedNodesMustBeLeaves));
+		}
+
+	public static RootedPhylogeny<Integer> readWithIntegerIds(String filename, boolean generateIds,
+	                                                          boolean namedNodesMustBeLeaves)
+			throws PhyloUtilsException, IOException
+		{
+		InputStream is = getInputStream(filename);
+
+		NodeNamer<Integer> namer = generateIds ? new IntegerNodeNamer(10000000, namedNodesMustBeLeaves) :
+				new RequireExistingNodeNamer(false);
 		return new NewickParser<Integer>().read(is, namer);
 		}
 

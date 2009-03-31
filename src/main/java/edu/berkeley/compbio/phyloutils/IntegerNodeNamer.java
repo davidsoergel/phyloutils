@@ -49,12 +49,19 @@ public class IntegerNodeNamer implements NodeNamer<Integer>
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
-	public IntegerNodeNamer(int unknownBasis)
+	public IntegerNodeNamer(int unknownBasis, boolean requireGeneratedNamesForInternalNodes)
 		{
 		//	this.unknownBasis = unknownBasis;
 		this.currentId = unknownBasis;
+		this.requireGeneratedNamesForInternalNodes = requireGeneratedNamesForInternalNodes;
 		}
 
+	boolean requireGeneratedNamesForInternalNodes = false;
+
+	public boolean requireGeneratedNamesForInternalNodes()
+		{
+		return requireGeneratedNamesForInternalNodes;
+		}
 	// ------------------------ INTERFACE METHODS ------------------------
 
 

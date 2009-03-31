@@ -68,7 +68,7 @@ public class CiccarelliTaxonomyService extends NewickTaxonomyService //<String>
 
 	public CiccarelliTaxonomyService()// throws PhyloUtilsException
 		{
-		super(ciccarelliFilename);
+		super(ciccarelliFilename, false);
 		}
 
 	@Override

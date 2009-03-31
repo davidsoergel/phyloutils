@@ -121,7 +121,7 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 		rootPhylogeny.newChild().setValue("a");
 		rootPhylogeny.newChild().setValue("b");
 		rootPhylogeny.newChild().setValue("c");
-		rootPhylogeny.assignUniqueIds(new StringNodeNamer("bogus", false));
+		rootPhylogeny.assignUniqueIds(new StringNodeNamer("bogus", false, false));
 
 		Object found = mainTree.nearestKnownAncestor(rootPhylogeny, "bbba");
 
@@ -135,7 +135,7 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 
 		RootedPhylogeny extractedTree =
 				mainTree.extractIntersectionTree(DSCollectionUtils.setOf("aaaa", "baa", "bba", "bbba"),
-				                                 DSCollectionUtils.setOf("bab", "bba", "bbba", "ca", "cb"));
+				                                 DSCollectionUtils.setOf("bab", "bba", "bbba", "ca", "cb"), null);
 
 		assert extractedTree.getUniqueIdToNodeMap().size() == 6;
 		assert extractedTree.getLeaves().size() == 3;

@@ -109,5 +109,6 @@ public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
 	 *                             ignoreAbsentNodes is false
 	 */
 	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes,
-	                                          boolean includeInternalBranches) throws NoSuchNodeException;
+	                                          boolean includeInternalBranches)
+			throws NoSuchNodeException; //, NodeNamer<T> namer
 	}

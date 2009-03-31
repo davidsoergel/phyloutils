@@ -96,4 +96,6 @@ public interface NodeNamer<T>
 	boolean isAcceptable(T value);
 
 	T makeAggregate(T newValue, T value);
+
+	boolean requireGeneratedNamesForInternalNodes();
 	}

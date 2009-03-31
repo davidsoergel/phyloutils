@@ -114,7 +114,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		nameToIdsMap = new HashMultimap<String, Integer>();
 
-		NewickTaxonomyService stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename);
+		NewickTaxonomyService stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename, true);
 
 		RootedPhylogeny<String> theStringTree = stringTaxonomyService.getTree();
 
@@ -479,7 +479,9 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				{
 				if (!name.contains(";"))
 					{
-					result = getUniqueNodeForName(name);
+					// REVIEW for our present purposes we always want the worst-case node; but in other contexts that may be the wrong thing to do
+					// result = getUniqueNodeForName(name);
+					result = getDeepestNodeForName(name);
 					}
 				else
 					{
@@ -684,6 +686,55 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	public Integer getUniqueNodeForName(String name) throws NoSuchNodeException
 		{
 		Integer result;
+		Collection<Integer> matchingIds = findMatchingIds(name);
+
+		if (matchingIds.size() > 1)
+			{
+			result = theIntegerTree.commonAncestor(matchingIds, 0.75);
+			//throw new PhyloUtilsException("Name not unique: " + name);
+			}
+		else
+			{
+			result = matchingIds.iterator().next();
+			}
+
+		double depthBelow = theIntegerTree.getNode(result).getGreatestDepthBelow();
+
+		depthsBelow.add(name, depthBelow);
+
+		//logger.info("Node found for name " + name + " has depth below = " + depthBelow);
+
+		return result;
+		}
+
+	@NotNull
+	public Integer getDeepestNodeForName(String name) throws NoSuchNodeException
+		{
+		///Integer result;
+		Collection<Integer> matchingIds = findMatchingIds(name);
+
+		//	PhylogenyNode<Integer> deepestNode;
+		Integer deepestId = null;
+		double deepestDepth = Double.MIN_VALUE;
+
+		for (Integer id : matchingIds)
+			{
+			//PhylogenyNode<Integer> n = theIntegerTree.getNode(id);
+			double depth = getDepthFromRoot(id);
+			if (depth > deepestDepth)
+				{
+				depth = deepestDepth;
+				deepestId = id;
+				}
+			}
+
+		//assert theIntegerTree.getNode(deepestId).isLeaf();
+
+		return deepestId;
+		}
+
+	private Collection<Integer> findMatchingIds(String name) throws NoSuchNodeException
+		{
 		Collection<Integer> matchingIds = nameToIdsMap.get(name);
 		/*	if (matchingIds.isEmpty())
 		   {
@@ -733,24 +784,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			{
 			throw new NoSuchNodeException("Node not found: " + name + "; no id found even for " + shortName);
 			}
-		if (matchingIds.size() > 1)
-			{
-			result = theIntegerTree.commonAncestor(matchingIds, 0.75);
-			//throw new PhyloUtilsException("Name not unique: " + name);
-			}
-		else
-			{
-			result = matchingIds.iterator().next();
-			}
-
-		double depthBelow = theIntegerTree.getNode(result).getGreatestDepthBelow();
-
-		depthsBelow.add(name, depthBelow);
 		shortNames.put(name, shortName);
-
-		//logger.info("Node found for name " + name + " has depth below = " + depthBelow);
-
-		return result;
+		return matchingIds;
 		}
 
 	WeightedSet<String> depthsBelow = new HashWeightedSet<String>(); // for debugging
@@ -867,9 +902,10 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
  */
 
 	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids, boolean ignoreAbsentNodes,
-	                                                       boolean includeInternalBranches) throws NoSuchNodeException
+	                                                       boolean includeInternalBranches)
+			throws NoSuchNodeException //, NodeNamer<Integer> namer
 		{
-		return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches);
+		return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches); //, namer);
 		}
 
 

@@ -83,7 +83,7 @@ public class UnweightedUniFrac<T> implements DissimilarityMeasure<RootedPhylogen
 
 			// we must do this starting from the union tree because there may be intermediate branch points that are collapsed in the individual trees
 			RootedPhylogeny<T> intersectionTree =
-					unionTree.extractIntersectionTree(a.getLeafValues(), b.getLeafValues());
+					unionTree.extractIntersectionTree(a.getLeafValues(), b.getLeafValues(), null);
 
 			double unionLength = unionTree.getTotalBranchLength();
 			double intersectionLength = intersectionTree.getTotalBranchLength();

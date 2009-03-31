@@ -6,14 +6,15 @@ package edu.berkeley.compbio.phyloutils;
  */
 public class StringIntegerNodeNamer extends StringNodeNamer
 	{
-	public StringIntegerNodeNamer(String unknownBasis, boolean allowNull)
+	public StringIntegerNodeNamer(String unknownBasis, boolean allowNull, boolean requireGeneratedNamesForInternalNodes)
 		{
-		super(unknownBasis, allowNull);
+		super(unknownBasis, allowNull, requireGeneratedNamesForInternalNodes);
 		}
 
-	public StringIntegerNodeNamer(String unknownBasis, boolean allowNull, int startId)
+	public StringIntegerNodeNamer(String unknownBasis, boolean allowNull, int startId,
+	                              boolean requireGeneratedNamesForInternalNodes)
 		{
-		super(unknownBasis, allowNull, startId);
+		super(unknownBasis, allowNull, requireGeneratedNamesForInternalNodes, startId);
 		}
 
 	public boolean isAcceptable(String value)

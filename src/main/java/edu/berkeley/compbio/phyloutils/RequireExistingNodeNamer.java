@@ -49,6 +49,12 @@ public class RequireExistingNodeNamer<T> implements NodeNamer<T>
 		{
 		this.allowNull = allowNull;
 		}
+
+
+	public boolean requireGeneratedNamesForInternalNodes()
+		{
+		return false;
+		}
 	// --------------------------- CONSTRUCTORS ---------------------------
 
 	public T create(Integer s)

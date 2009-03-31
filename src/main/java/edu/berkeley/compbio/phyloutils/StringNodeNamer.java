@@ -50,23 +50,29 @@ public class StringNodeNamer implements NodeNamer<String>
 	private String unknownBasis;
 	private int currentId = 0;
 
-
 	// --------------------------- CONSTRUCTORS ---------------------------
 
-	public StringNodeNamer(String unknownBasis, boolean allowNull)
+	public StringNodeNamer(String unknownBasis, boolean allowNull, boolean requireGeneratedNamesForInternalNodes)
 		{
 		this.unknownBasis = unknownBasis;
 		this.allowNull = allowNull;
+		this.requireGeneratedNamesForInternalNodes = requireGeneratedNamesForInternalNodes;
 		}
 
-	public StringNodeNamer(String unknownBasis, boolean allowNull, int startId)
+	public StringNodeNamer(String unknownBasis, boolean allowNull, boolean requireGeneratedNamesForInternalNodes,
+	                       int startId)
 		{
-		this.unknownBasis = unknownBasis;
-		this.allowNull = allowNull;
+		this(unknownBasis, allowNull, requireGeneratedNamesForInternalNodes);
 		currentId = startId;
 		}
 
-	// ------------------------ INTERFACE METHODS ------------------------
+	boolean requireGeneratedNamesForInternalNodes = false;
+
+	public boolean requireGeneratedNamesForInternalNodes()
+		{
+		return requireGeneratedNamesForInternalNodes;
+		}
+// ------------------------ INTERFACE METHODS ------------------------
 
 
 	// --------------------- Interface NodeNamer ---------------------

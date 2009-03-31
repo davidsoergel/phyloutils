@@ -61,7 +61,8 @@ public class NewickParserTest
 		//	logger.warn("file: " + getClass().getClassLoader().getResource("goodNewickTree.sh"));
 		//	URL url = getClass().getResource("goodNewickTree.sh");
 		//	logger.warn("Got file: " + url);
-		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_", false));
+		RootedPhylogeny p =
+				new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_", false, false));
 		//	logger.warn("Parsed tree with " + p.getNodes().size() + " nodes.");
 		assert p.getUniqueIdToNodeMap().size() == 14;
 		//	logger.warn("all done");
@@ -77,7 +78,8 @@ public class NewickParserTest
 		//	logger.warn("file: " + getClass().getClassLoader().getResource("goodNewickTree.sh"));
 		//	URL url = getClass().getResource("goodNewickTree.sh");
 		//	logger.warn("Got file: " + url);
-		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_", false));
+		RootedPhylogeny p =
+				new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_", false, false));
 		//	logger.warn("Parsed tree with " + p.getNodes().size() + " nodes.");
 		assert p.getUniqueIdToNodeMap().size() == 14;
 		//	logger.warn("all done");
@@ -87,14 +89,16 @@ public class NewickParserTest
 	public void newickParserThrowsExceptionOnPrematureTermination() throws PhyloUtilsException, IOException
 		{
 		URL url = ClassLoader.getSystemResource("badNewickTree1.nh");
-		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_", false));
+		RootedPhylogeny p =
+				new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_", false, false));
 		}
 
 	@Test
 	public void phylogenyDistancesAreCorrect() throws PhyloUtilsException, IOException, NoSuchNodeException
 		{
 		URL url = ClassLoader.getSystemResource("goodNewickTree.nh");
-		RootedPhylogeny p = new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_", false));
+		RootedPhylogeny p =
+				new NewickParser<String>().read(url.openStream(), new StringNodeNamer("NONAME_", false, false));
 
 		assert p.distanceBetween("raccoon", "bear") == 26;
 		assert p.distanceBetween("raccoon", "raccoon") == 0;

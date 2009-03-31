@@ -400,26 +400,55 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			nodes.put(value, this);
 			}
 
+
 		// if a node has no name, or the namer doesn't like it, we assign one
 		if (!namer.isAcceptable(value))
 			{
-			T newValue = namer.generate();
+			assignGeneratedName(nodes, namer);
+			}
+		else if (namer.requireGeneratedNamesForInternalNodes())
+			{
+			// if a node has a name but we insist on generating all internal node names, then create a new zero-length child to deal with that
+			BasicPhylogenyNode<T> child = new BasicPhylogenyNode<T>();
+			child.setValue(value);
+			child.setLength(0.0);
+			child.setWeight(weight);
 
-			if (nodes.get(newValue) != null)
-				{
-				throw new PhyloUtilsRuntimeException("Generated ID collided with a preexisting ID");
-				}
+			// set the parent last to avoid a long invalidateAggregatedChildInfo issue
+			child.setParent(this);  // this should invalidate the parent weight?
 
-			// store that too
-			nodes.put(newValue, this);
+			// the name no longer refers to this node; it'll be assigned to the new child in the recursion below
+			nodes.remove(value);
 
-			value = namer.makeAggregate(newValue, value);
+			// now rename the current node
+			assignGeneratedName(nodes, namer);
+
+			// the bootstrap should stay attached to the current node anyway
+
+			// the weight, if any, may now be inconsistent but should later be repropagated from the nodes
+			//setWeight(0.0);
 			}
 
+		// do the children first so that we don't create a uniqueness problem if we push down the name below
 		for (BasicPhylogenyNode<T> n : children)
 			{
 			n.addSubtreeToMap(nodes, namer);
 			}
+		}
+
+	private void assignGeneratedName(Map<T, PhylogenyNode<T>> nodes, NodeNamer<T> namer)
+		{
+		T newValue = namer.generate();
+
+		if (nodes.get(newValue) != null)
+			{
+			throw new PhyloUtilsRuntimeException("Generated ID collided with a preexisting ID");
+			}
+
+		// store that too
+		nodes.put(newValue, this);
+
+		value = namer.makeAggregate(newValue, value);
 		}
 
 	/**
