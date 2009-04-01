@@ -114,7 +114,10 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		nameToIdsMap = new HashMultimap<String, Integer>();
 
-		NewickTaxonomyService stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename, true);
+		//** here we assume that the tre has already been converted to have named nodes at leaves, using the NewickParser command-line tool
+		// else we'd need new NewickTaxonomyService(hugenholtzFilename, truel
+		// );
+		NewickTaxonomyService stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename, false);
 
 		RootedPhylogeny<String> theStringTree = stringTaxonomyService.getTree();
 

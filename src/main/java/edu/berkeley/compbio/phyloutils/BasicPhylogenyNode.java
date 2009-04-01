@@ -453,7 +453,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 		for (BasicPhylogenyNode<T> n : children)
 			{
 			//** temp test
-			assert nodes.get(n.getValue()) == null;
+			//assert nodes.get(n.getValue()) == null;
 			//int stackdepth = Thread.currentThread().getStackTrace().length;
 			if (stackDepth > 2000)
 				{
@@ -477,7 +477,9 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 		// store that too
 		nodes.put(newValue, this);
 
-		value = namer.makeAggregate(newValue, value);
+		// ** nope, just forget the old name
+		//	value = namer.makeAggregate(newValue, value);
+		value = newValue;
 		}
 
 	/**
