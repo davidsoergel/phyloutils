@@ -705,7 +705,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 		depthsBelow.add(name, depthBelow);
 
-		//logger.info("Node found for name " + name + " has depth below = " + depthBelow);
+		//logger.info("Node found for name " + name + " has depth below = " + jdepthBelow);
 
 		return result;
 		}
