@@ -698,7 +698,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			result = matchingIds.iterator().next();
 			}
 
-		double depthBelow = theIntegerTree.getNode(result).getGreatestDepthBelow();
+		double depthBelow = theIntegerTree.getNode(result).getGreatestBranchLengthDepthBelow();
 
 		depthsBelow.add(name, depthBelow);
 
@@ -831,7 +831,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public double getGreatestDepthBelow(Integer taxid) throws NoSuchNodeException
 		{
-		return theIntegerTree.getNode(taxid).getGreatestDepthBelow();
+		return theIntegerTree.getNode(taxid).getGreatestBranchLengthDepthBelow();
 		}
 
 	private Double maxDistance = null;
@@ -840,7 +840,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		if (maxDistance == null)
 			{
-			maxDistance = 2.0 * theIntegerTree.getRoot().getGreatestDepthBelow();
+			maxDistance = 2.0 * theIntegerTree.getRoot().getGreatestBranchLengthDepthBelow();
 			}
 		return maxDistance;
 		}

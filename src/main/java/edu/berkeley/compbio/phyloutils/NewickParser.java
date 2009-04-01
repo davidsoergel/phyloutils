@@ -432,6 +432,9 @@ public class NewickParser<T>
 			throw new PhyloUtilsException(e, "Could not read Newick tree at line " + st.lineno());
 			}
 
+		logger.info("read tree with maximum branch-length depth " + theTree.getGreatestBranchLengthDepthBelow()
+				+ " and maximum node depth " + theTree.getGreatestNodeDepthBelow());
+
 		theTree.assignUniqueIds(namer);
 		return theTree;
 		}

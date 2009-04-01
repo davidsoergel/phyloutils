@@ -94,7 +94,7 @@ public interface LengthWeightHierarchyNode<T, I extends LengthWeightHierarchyNod
 	 */
 	//@Nullable
 	@NotNull
-	double getGreatestDepthBelow();
+	double getGreatestBranchLengthDepthBelow();
 
 
 	/**

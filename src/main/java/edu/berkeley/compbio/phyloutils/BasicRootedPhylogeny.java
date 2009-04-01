@@ -178,7 +178,19 @@ root = new BasicPhylogenyNode<T>(original.);
 	public void assignUniqueIds(@NotNull NodeNamer<T> namer) //throws PhyloUtilsException
 		{
 		uniqueIdToNodeMap = new HashMap<T, PhylogenyNode<T>>();
-		root.addSubtreeToMap(uniqueIdToNodeMap, namer);
+
+		// this recursion produces stack depth problems
+		root.addSubtreeToMap(uniqueIdToNodeMap, namer, 1);
+
+		// but, so does this, with additional difficulties due to concurrent modification of the tree
+		/*
+		DepthFirstTreeIterator<T, PhylogenyNode<T>> iterator = depthFirstIterator();
+
+		while (iterator.hasNext())
+			{
+			PhylogenyNode<T> n = iterator.next();
+			n.addToMap(uniqueIdToNodeMap, namer);
+			}*/
 		}
 
 
@@ -288,9 +300,15 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public double getGreatestDepthBelow()
+	public double getGreatestBranchLengthDepthBelow()
 		{
-		return root.getGreatestDepthBelow();
+		return root.getGreatestBranchLengthDepthBelow();
+		}
+
+
+	public int getGreatestNodeDepthBelow()
+		{
+		return root.getGreatestNodeDepthBelow();
 		}
 
 	/**
@@ -528,6 +546,7 @@ root = new BasicPhylogenyNode<T>(original.);
 		{
 		root.appendSubtree(sb, indent);
 		}
+
 
 	private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException
 		{

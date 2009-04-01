@@ -380,8 +380,8 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 
 	// -------------------------- OTHER METHODS --------------------------
 
-	protected void addSubtreeToMap(Map<T, PhylogenyNode<T>> nodes,
-	                               @NotNull NodeNamer<T> namer)// throws PhyloUtilsException
+	public void addSubtreeToMap(Map<T, PhylogenyNode<T>> nodes, @NotNull NodeNamer<T> namer,
+	                            int stackDepth)// throws PhyloUtilsException
 		{
 		if (value != null)
 			{
@@ -415,11 +415,20 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			child.setWeight(weight);
 
 			// set the parent last to avoid a long invalidateAggregatedChildInfo issue
-			child.setParent(this);  // this should invalidate the parent weight?
+			//child.setParent(this);  // this should invalidate the parent weight?
 
-			// the name no longer refers to this node; it'll be assigned to the new child in the recursion below
-			setValue(null);
+			// no, set the parent manually to avoid invalidateAggregatedChildInfo
+			child.parent = this;
+			children.add(child);
+
+
+			// the name no longer refers to this node
+
 			nodes.remove(value);
+			assert nodes.get(value) == null;
+			setValue(null);
+
+			nodes.put(child.value, child);  // ** not sure if the depth-first iterator will catch this
 
 			// now rename the current node
 			assignGeneratedName(nodes, namer);
@@ -430,10 +439,21 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			//setWeight(0.0);
 			}
 
+		// this recursion produces stack depth problems
+
+
 		// do the children first so that we don't create a uniqueness problem if we push down the name below //?
 		for (BasicPhylogenyNode<T> n : children)
 			{
-			n.addSubtreeToMap(nodes, namer);
+			//** temp test
+			assert nodes.get(n.getValue()) == null;
+			//int stackdepth = Thread.currentThread().getStackTrace().length;
+			if (stackDepth > 1000)
+				{
+				logger.warn("Stack depth = " + stackDepth + " at node " + value);
+				}
+
+			n.addSubtreeToMap(nodes, namer, stackDepth + 1);
 			}
 		}
 
@@ -519,11 +539,12 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 	 */
 	public DepthFirstTreeIterator<T, PhylogenyNode<T>> depthFirstIterator()
 		{
-		return new DepthFirstTreeIteratorImpl(this);
+		return new DepthFirstTreeIteratorImpl<T, PhylogenyNode<T>>(this);
 		}
 
 
-	Double greatestDepth = null;
+	Double greatestBranchLengthDepth = null;
+	Integer greatestNodeDepth = null;
 	Double secondGreatestDepth = null;
 	Double largestLengthSpan = null;
 
@@ -540,19 +561,30 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 	/**
 	 * {@inheritDoc}
 	 */
-	public double getGreatestDepthBelow()
+	public double getGreatestBranchLengthDepthBelow()
 		{
 		computeDepthsIfNeeded();
-		return greatestDepth;
+		return greatestBranchLengthDepth;
+		}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getGreatestNodeDepthBelow()
+		{
+		computeDepthsIfNeeded();
+		return greatestNodeDepth;
 		}
 
 	private void computeDepthsIfNeeded()
 		{
-		if (greatestDepth == null)
+		if (greatestBranchLengthDepth == null)
 			{
-			greatestDepth = 0.;
+			greatestBranchLengthDepth = 0.;
 			secondGreatestDepth = 0.;
 			largestLengthSpan = 0.;
+			greatestNodeDepth = 0;
 
 			// if there are no children, then both depths and the span are just 0
 
@@ -562,23 +594,29 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 
 			for (BasicPhylogenyNode<T> child : children)
 				{
+				int nodesBelow = child.getGreatestNodeDepthBelow() + 1;
+				if (nodesBelow > greatestNodeDepth)
+					{
+					greatestNodeDepth = nodesBelow;
+					}
+
 				if (child.length != null)
 					{
 					child.computeDepthsIfNeeded();
 
 					// case 1: the child replaces the greatest depth
 
-					if (child.length + child.greatestDepth > greatestDepth)
+					if (child.length + child.greatestBranchLengthDepth > greatestBranchLengthDepth)
 						{
-						secondGreatestDepth = greatestDepth;// must be from a different child, or 0
-						greatestDepth = child.length + child.greatestDepth;
+						secondGreatestDepth = greatestBranchLengthDepth;// must be from a different child, or 0
+						greatestBranchLengthDepth = child.length + child.greatestBranchLengthDepth;
 						}
 
 					// case 2: the child replaces the second-greatest depth
 
-					else if (child.length + child.greatestDepth > secondGreatestDepth)
+					else if (child.length + child.greatestBranchLengthDepth > secondGreatestDepth)
 						{
-						secondGreatestDepth = child.length + child.greatestDepth;
+						secondGreatestDepth = child.length + child.greatestBranchLengthDepth;
 						}
 
 					// the child's second-greatest depth should never figure in to the second-greatest depth at this level,
@@ -587,7 +625,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 
 					// assume by default that the maximum span spans branches
 					// need to take the max in case it's already been overridden by the spanViaChild on a previous branch
-					largestLengthSpan = Math.max(largestLengthSpan, greatestDepth + secondGreatestDepth);
+					largestLengthSpan = Math.max(largestLengthSpan, greatestBranchLengthDepth + secondGreatestDepth);
 
 					// then check if this child overrides it, counting the common portion only once
 
@@ -637,7 +675,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 
 	private void invalidateAggregatedChildInfo()
 		{
-		greatestDepth = null;
+		greatestBranchLengthDepth = null;
 		secondGreatestDepth = null;
 		largestLengthSpan = null;
 		weight = null;
@@ -760,6 +798,17 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 
 		return n; //.getValue();
 		}
+/*
+	public void addSubtreeToMap(Map<T, PhylogenyNode<T>> uniqueIdToNodeMap, NodeNamer<T> namer)
+		{
+		DepthFirstTreeIterator<T, PhylogenyNode<T>> iterator = depthFirstIterator();
+
+		while (iterator.hasNext())
+			{
+			PhylogenyNode<T> n = iterator.next();
+			n.addToMap(uniqueIdToNodeMap, namer);
+			}
+		}*/
 	}
 
 

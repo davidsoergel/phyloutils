@@ -88,7 +88,7 @@ public class NewickTaxonomyService
 
 	public double getGreatestDepthBelow(String a) throws NoSuchNodeException
 		{
-		return basePhylogeny.getNode(a).getGreatestDepthBelow();
+		return basePhylogeny.getNode(a).getGreatestBranchLengthDepthBelow();
 		}
 
 	private Double maxDistance = null;
@@ -97,7 +97,7 @@ public class NewickTaxonomyService
 		{
 		if (maxDistance == null)
 			{
-			maxDistance = 2.0 * getRoot().getGreatestDepthBelow();
+			maxDistance = 2.0 * getRoot().getGreatestBranchLengthDepthBelow();
 			}
 		return maxDistance;
 		}
