@@ -166,7 +166,7 @@ public class NewickTaxonomyService
 			}
 
 		DSCollectionUtils.retainRandom(mergedIds, numTaxa);
-		return basePhylogeny.extractTreeWithLeafIDs(mergedIds, false, false);
+		return basePhylogeny.extractTreeWithLeafIDs(mergedIds, false, true);
 		}
 
 	public String findTaxidByName(String name) throws NoSuchNodeException
