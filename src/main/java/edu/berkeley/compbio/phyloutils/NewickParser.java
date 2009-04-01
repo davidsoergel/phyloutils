@@ -74,8 +74,8 @@ public class NewickParser<T>
 					.read(is, new StringIntegerNodeNamer("", false, 10000000, namedNodesMustBeLeaves));
 
 			StringBuffer sb = new StringBuffer();
-			String prefix = argv[1];
-			String tab = argv[2];
+			String prefix = argv[2];
+			String tab = argv[3];
 			prefix = prefix.replaceAll(Matcher.quoteReplacement("\\n"), "\n");
 			prefix = prefix.replaceAll(Matcher.quoteReplacement("\\t"), "\t");
 			prefix = prefix.replaceAll("\"", "");
@@ -90,7 +90,7 @@ public class NewickParser<T>
 			//	System.out.println(sb);
 
 			//FileOutputStream foo = new FileOutputStream(argv[2]);
-			FileWriter fw = new FileWriter(argv[3]);
+			FileWriter fw = new FileWriter(argv[4]);
 			fw.write(sb.toString());
 			fw.close();
 			}

@@ -380,9 +380,10 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 
 	// -------------------------- OTHER METHODS --------------------------
 
-	public void addSubtreeToMap(Map<T, PhylogenyNode<T>> nodes, @NotNull NodeNamer<T> namer,
-	                            int stackDepth)// throws PhyloUtilsException
+	public int addSubtreeToMap(Map<T, PhylogenyNode<T>> nodes, @NotNull NodeNamer<T> namer,
+	                           int stackDepth)// throws PhyloUtilsException
 		{
+		int addedInternalNodes = 0;
 		if (value != null)
 			{
 			// check if the node is uniquely named
@@ -406,8 +407,12 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			{
 			assignGeneratedName(nodes, namer);
 			}
-		else if (namer.requireGeneratedNamesForInternalNodes())
+		else if (children != null && !children.isEmpty() && namer.requireGeneratedNamesForInternalNodes())
 			{
+			addedInternalNodes++;
+
+			logger.info("Adding phantom leaf for " + value);
+
 			// if a node has a name but we insist on generating all internal node names, then create a new zero-length child to deal with that
 			BasicPhylogenyNode<T> child = new BasicPhylogenyNode<T>();
 			child.setValue(value);
@@ -428,7 +433,9 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			assert nodes.get(value) == null;
 			setValue(null);
 
-			nodes.put(child.value, child);  // ** not sure if the depth-first iterator will catch this
+			// the child recursion will add the child name to the map
+
+			//	nodes.put(child.value, child);  // ** not sure if the depth-first iterator will catch this
 
 			// now rename the current node
 			assignGeneratedName(nodes, namer);
@@ -448,13 +455,14 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			//** temp test
 			assert nodes.get(n.getValue()) == null;
 			//int stackdepth = Thread.currentThread().getStackTrace().length;
-			if (stackDepth > 1000)
+			if (stackDepth > 2000)
 				{
 				logger.warn("Stack depth = " + stackDepth + " at node " + value);
 				}
 
-			n.addSubtreeToMap(nodes, namer, stackDepth + 1);
+			addedInternalNodes += n.addSubtreeToMap(nodes, namer, stackDepth + 1);
 			}
+		return addedInternalNodes;
 		}
 
 	private void assignGeneratedName(Map<T, PhylogenyNode<T>> nodes, NodeNamer<T> namer)

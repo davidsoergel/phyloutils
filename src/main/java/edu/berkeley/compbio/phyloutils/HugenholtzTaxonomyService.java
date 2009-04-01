@@ -715,7 +715,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 		//	PhylogenyNode<Integer> deepestNode;
 		Integer deepestId = null;
-		double deepestDepth = Double.MIN_VALUE;
+		double deepestDepth = Double.NEGATIVE_INFINITY;
 
 		for (Integer id : matchingIds)
 			{
