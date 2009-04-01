@@ -500,12 +500,18 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 	private void checkNoInternalNodeRequested(Set<List<PhylogenyNode<T>>> theAncestorLists)
 		{
-		// check if we need a leaf node here
-		for (List<PhylogenyNode<T>> ancestorList : theAncestorLists)
+		// if there is only one list left, and it's empty, that's OK, we just finished a branch
+		// but if there's more than one, and one of them is empty, then we asked for a node as a leaf that turns out to be an ancestor of another leaf
+
+		// if we give the same path twice, that causes a failure here
+		if (theAncestorLists.size() > 1)
 			{
-			if (ancestorList.isEmpty())
+			for (List<PhylogenyNode<T>> ancestorList : theAncestorLists)
 				{
-				throw new PhyloUtilsRuntimeException("Requested extraction of an internal node as a leaf");
+				if (ancestorList.isEmpty())
+					{
+					throw new PhyloUtilsRuntimeException("Requested extraction of an internal node as a leaf");
+					}
 				}
 			}
 		}
