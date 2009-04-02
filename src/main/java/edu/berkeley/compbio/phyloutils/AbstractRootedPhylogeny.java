@@ -802,7 +802,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			}
 
 
-		return extractTreeWithLeaves(allTreeNodesA, false); //, namer);
+		return extractTreeWithLeaves(allTreeNodesA, true); //, namer);
 		}
 
 	/**

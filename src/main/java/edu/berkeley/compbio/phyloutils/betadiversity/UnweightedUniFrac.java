@@ -72,7 +72,7 @@ public class UnweightedUniFrac<T> implements DissimilarityMeasure<RootedPhylogen
 			unionLeafIDs.addAll(a.getLeafValues());
 			unionLeafIDs.addAll(b.getLeafValues());
 
-			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeafIDs, false, false);
+			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeafIDs, false, true);
 
 			// careful: the "intersection" tree needs to contain branches terminating at internal nodes that are common between the two trees,
 			// even if there are no leaves in common below that node.
