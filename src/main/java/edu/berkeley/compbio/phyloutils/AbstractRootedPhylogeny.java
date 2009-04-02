@@ -663,8 +663,16 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			{
 			T id = entry.getKey();
 			Double weight = entry.getValue();
-			PhylogenyNode<T> n = getNode(id);
-			distributeWeight(n, weight, result);
+			try
+				{
+				PhylogenyNode<T> n = getNode(id);
+				distributeWeight(n, weight, result);
+				}
+			catch (NoSuchNodeException e)
+				{
+				// this can only happen if we already issued a warning about "node not found"
+				logger.warn("Requested member weight dropped: " + id + " " + weight);
+				}
 			}
 		return result.getItemNormalizedMap();
 		}
