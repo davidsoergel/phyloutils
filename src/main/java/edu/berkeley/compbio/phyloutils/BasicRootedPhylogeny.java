@@ -182,7 +182,7 @@ root = new BasicPhylogenyNode<T>(original.);
 		// this recursion produces stack depth problems on some systems; try -Xss8m or larger
 		int addedInternalNodes = root.addSubtreeToMap(uniqueIdToNodeMap, namer, 1);
 
-		logger.info("Added " + addedInternalNodes + " internal nodes to satisfy namer requirement");
+		logger.debug("Added " + addedInternalNodes + " internal nodes to satisfy namer requirement");
 
 		// but, so does this, with additional difficulties due to concurrent modification of the tree
 		/*
