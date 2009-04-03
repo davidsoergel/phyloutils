@@ -946,10 +946,14 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 				{
 				//PhylogenyNode<Integer> n = theIntegerTree.getNode(id);
 				double depth = distanceBetween(getRoot(), n);
-				if (depth < shallowestDepth)
+				T nId = n.getValue();
+
+				// BAD if two depths are exactly equal, then the result is nondeterministic
+
+				if (depth < shallowestDepth) // || (depth == shallowestDepth && nId < shallowestId))
 					{
 					shallowestDepth = depth;
-					shallowestId = n.getValue();
+					shallowestId = nId;
 					}
 				}
 			return shallowestId;
