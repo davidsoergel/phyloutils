@@ -73,6 +73,11 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return commonAncestor(knownMergeIds, 1.0);
 		}
 
+	public RootedPhylogeny<T> asRootedPhylogeny()
+		{
+		return this;
+		}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -962,5 +967,15 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			{
 			throw new Error("Impossible");
 			}
+		}
+
+	public PhylogenyNode<T> getFirstBranchingNode()
+		{
+		PhylogenyNode<T> r = getRoot();
+		while (r.getChildren().size() == 1)
+			{
+			r = r.getChildren().iterator().next();
+			}
+		return r;
 		}
 	}

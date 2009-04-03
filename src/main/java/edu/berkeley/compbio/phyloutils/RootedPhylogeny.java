@@ -302,4 +302,6 @@ public interface RootedPhylogeny<T>
 	Map<T, Double> distributeInternalWeightsToLeaves(Map<T, Double> taxIdToWeightMap) throws NoSuchNodeException;
 
 	T getShallowestLeaf();
+
+	PhylogenyNode<T> getFirstBranchingNode();
 	}

@@ -259,4 +259,19 @@ public class NewickTaxonomyService
 		throw new NotImplementedException(
 				"Newick taxonomy doesn't currently use other synonym services for any purpose");
 		}
+
+	public RootedPhylogeny<Integer> findSubtreeByName(String name) throws NoSuchNodeException
+		{
+		throw new NotImplementedException();
+		}
+
+	public RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException
+		{
+		throw new NotImplementedException();
+		}
+
+	public String getRelaxedName(String name)
+		{
+		throw new NotImplementedException();
+		}
 	}

@@ -344,6 +344,11 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			}
 		}
 
+	public RootedPhylogeny<T> asRootedPhylogeny()
+		{
+		return new BasicRootedPhylogeny<T>(this);
+		}
+
 	/**
 	 * {@inheritDoc}
 	 */

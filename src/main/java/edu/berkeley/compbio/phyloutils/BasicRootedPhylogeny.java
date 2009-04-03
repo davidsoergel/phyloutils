@@ -84,6 +84,13 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T> implemen
 		root = new BasicPhylogenyNode<T>(null, rootValue, 0);
 		}
 
+	public BasicRootedPhylogeny(BasicPhylogenyNode<T> root)
+		{
+		this.root = root;
+		// ** the wrong place for this?
+		assignUniqueIds(new RequireExistingNodeNamer<T>(true));
+		}
+
 	public void toNewick(StringBuffer sb, String prefix, String tab, int minClusterSize, double minLabelProb)
 		{
 		root.toNewick(sb, prefix, tab, minClusterSize, minLabelProb);

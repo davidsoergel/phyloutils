@@ -107,4 +107,6 @@ public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T
 	PhylogenyNode<T> findRoot();
 
 //	void addSubtreeToMap(Map<T, PhylogenyNode<T>> uniqueIdToNodeMap, NodeNamer<T> namer);
+
+	RootedPhylogeny<T> asRootedPhylogeny();
 	}

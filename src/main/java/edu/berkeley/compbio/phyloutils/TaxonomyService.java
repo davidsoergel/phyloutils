@@ -40,5 +40,11 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 
 	double maxDistance();
 
-	void printDepthsBelow();
+//	void printDepthsBelow();
+
+	RootedPhylogeny<Integer> findSubtreeByName(String name) throws NoSuchNodeException;
+
+	RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException;
+
+	String getRelaxedName(String name);
 	}

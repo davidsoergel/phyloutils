@@ -3,8 +3,6 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.CacheManager;
 import com.davidsoergel.dsutils.DSStringUtils;
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
-import com.davidsoergel.dsutils.collections.HashWeightedSet;
-import com.davidsoergel.dsutils.collections.WeightedSet;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.google.common.collect.HashMultimap;
 import org.apache.commons.lang.NotImplementedException;
@@ -482,9 +480,15 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				{
 				if (!name.contains(";"))
 					{
+
+					RootedPhylogeny<Integer> bTree = findSubtreeByNameRelaxed(name);
+					result = bTree.getShallowestLeaf();
+
+					//result = getUniqueNodeForName(name);
+
 					// REVIEW for our present purposes we always want the worst-case node; but in other contexts that may be the wrong thing to do
-					// result = getUniqueNodeForName(name);
-					result = getDeepestNodeForName(name);
+
+					//	result = getDeepestNodeForName(name);
 					}
 				else
 					{
@@ -688,81 +692,129 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	@NotNull
 	public Integer getUniqueNodeForName(String name) throws NoSuchNodeException
 		{
-		Integer result;
+		return findSubtreeByName(name).getValue();
+		}
+
+	public RootedPhylogeny<Integer> findSubtreeByName(String name) throws NoSuchNodeException
+		{
 		Collection<Integer> matchingIds = findMatchingIds(name);
 
-		if (matchingIds.size() > 1)
+		if (matchingIds.size() == 0)
 			{
-			result = theIntegerTree.commonAncestor(matchingIds, 0.75);
-			//throw new PhyloUtilsException("Name not unique: " + name);
-			}
-		else
-			{
-			result = matchingIds.iterator().next();
+			throw new NoSuchNodeException();
 			}
 
-		double depthBelow = theIntegerTree.getNode(result).getGreatestBranchLengthDepthBelow();
+		return findSubtreeWithIds(matchingIds, name);
+		}
 
-		depthsBelow.add(name, depthBelow);
+	public RootedPhylogeny<Integer> findSubtreeWithIds(Collection<Integer> matchingIds, String name)
+			throws NoSuchNodeException
+		{
+		RootedPhylogeny<Integer> tree = extractTreeWithLeafIDs(matchingIds, true, true);
+		PhylogenyNode<Integer> result = tree.getFirstBranchingNode();
+
+		double span = result.getLargestLengthSpan();
+		if (span > 0.1)
+			{
+			logger.warn("Subtree for " + name + " has span = " + span + ", trying 75% solution");
+			Integer sub = tree.commonAncestor(matchingIds, 0.75);
+			result = tree.getNode(sub);
+			span = result.getLargestLengthSpan();
+			logger.warn("75% subtree for " + name + " has span = " + span);
+			}
+
+		result = result;
+
+		//result = tree.commonAncestor(matchingIds, 0.75);
+		//throw new PhyloUtilsException("Name not unique: " + name);
+
+
+		//double depthBelow = theIntegerTree.getNode(result).getGreatestBranchLengthDepthBelow();
+
+		//depthsBelow.add(name, depthBelow);
 
 		//logger.info("Node found for name " + name + " has depth below = " + jdepthBelow);
 
-		return result;
+		return result.asRootedPhylogeny();
 		}
 
-	@NotNull
-	public Integer getDeepestNodeForName(String name) throws NoSuchNodeException
+
+	public RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException
 		{
-		///Integer result;
-		Collection<Integer> matchingIds = findMatchingIds(name);
+		Collection<Integer> matchingIds = findMatchingIdsRelaxed(name);
 
-		//	PhylogenyNode<Integer> deepestNode;
-		Integer deepestId = null;
-		double deepestDepth = Double.NEGATIVE_INFINITY;
-
-		for (Integer id : matchingIds)
+		if (matchingIds.size() == 0)
 			{
-			//PhylogenyNode<Integer> n = theIntegerTree.getNode(id);
-			double depth = getDepthFromRoot(id);
-			if (depth > deepestDepth)
-				{
-				deepestDepth = depth;
-				deepestId = id;
-				}
+			throw new NoSuchNodeException();
 			}
 
-		//assert theIntegerTree.getNode(deepestId).isLeaf();
-
-		return deepestId;
+		return findSubtreeWithIds(matchingIds, name);
 		}
 
-	@NotNull
-	public Integer getShallowestNodeForName(String name) throws NoSuchNodeException
-		{
-		///Integer result;
-		Collection<Integer> matchingIds = findMatchingIds(name);
+	/*
+	 @NotNull
+	 public Integer getDeepestNodeForName(String name) throws NoSuchNodeException
+		 {
+		 ///Integer result;
+		 Collection<Integer> matchingIds = findMatchingIdsRelaxed(name);
 
-		//	PhylogenyNode<Integer> deepestNode;
-		Integer shallowestId = null;
-		double shallowestDepth = Double.POSITIVE_INFINITY;
+		 //	PhylogenyNode<Integer> deepestNode;
+		 Integer deepestId = null;
+		 double deepestDepth = Double.NEGATIVE_INFINITY;
 
-		for (Integer id : matchingIds)
-			{
-			//PhylogenyNode<Integer> n = theIntegerTree.getNode(id);
-			double depth = getDepthFromRoot(id);
-			if (depth < shallowestDepth)
-				{
-				shallowestDepth = depth;
-				shallowestId = id;
-				}
-			}
+		 for (Integer id : matchingIds)
+			 {
+			 //PhylogenyNode<Integer> n = theIntegerTree.getNode(id);
+			 double depth = getDepthFromRoot(id);
+			 if (depth > deepestDepth)
+				 {
+				 deepestDepth = depth;
+				 deepestId = id;
+				 }
+			 }
 
-		//assert theIntegerTree.getNode(deepestId).isLeaf();
+		 //assert theIntegerTree.getNode(deepestId).isLeaf();
 
-		return shallowestId;
-		}
+		 return deepestId;
+		 }
 
+	 @NotNull
+	 public Integer getShallowestNodeForName(String name) throws NoSuchNodeException
+		 {
+		 ///Integer result;
+		 Collection<Integer> matchingIds = findMatchingIdsRelaxed(name);
+
+		 //	PhylogenyNode<Integer> deepestNode;
+		 Integer shallowestId = null;
+		 double shallowestDepth = Double.POSITIVE_INFINITY;
+
+		 for (Integer id : matchingIds)
+			 {
+			 //PhylogenyNode<Integer> n = theIntegerTree.getNode(id);
+			 double depth = getDepthFromRoot(id);
+			 if (depth < shallowestDepth)
+				 {
+				 shallowestDepth = depth;
+				 shallowestId = id;
+				 }
+			 }
+
+		 //assert theIntegerTree.getNode(deepestId).isLeaf();
+
+		 return shallowestId;
+		 }
+ */
 	private Collection<Integer> findMatchingIds(String name) throws NoSuchNodeException
+		{
+		Collection<Integer> matchingIds = nameToIdsMap.get(name);
+		if (matchingIds.isEmpty())
+			{
+			throw new NoSuchNodeException("Node not found: " + name);
+			}
+		return matchingIds;
+		}
+
+	private Collection<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
 		{
 		Collection<Integer> matchingIds = nameToIdsMap.get(name);
 		/*	if (matchingIds.isEmpty())
@@ -806,7 +858,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				}
 			if (!matchingIds.isEmpty())
 				{
-				logger.debug("Relaxed name " + name + " to " + shortName);
+				logger.warn("Relaxed name " + name + " to " + shortName);
 				}
 			}
 		if (matchingIds.isEmpty())
@@ -817,11 +869,16 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return matchingIds;
 		}
 
-	WeightedSet<String> depthsBelow = new HashWeightedSet<String>(); // for debugging
+//	WeightedSet<String> depthsBelow = new HashWeightedSet<String>(); // for debugging
 
 	Map<String, String> shortNames = new HashMap<String, String>();
 
-	public void printDepthsBelow()
+	public String getRelaxedName(String name)
+		{
+		return shortNames.get(name);
+		}
+
+	/*	public void printDepthsBelow()
 		{
 		for (String name : depthsBelow.keysInDecreasingWeightOrder())
 			{
@@ -830,7 +887,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 			logger.info(String.format("Depth below = %.3f for %s relaxed from %s", depthBelow, shortName, name));
 			}
-		}
+		}*/
 
 	public boolean isDescendant(Integer ancestor, Integer descendant) throws NoSuchNodeException
 		{
