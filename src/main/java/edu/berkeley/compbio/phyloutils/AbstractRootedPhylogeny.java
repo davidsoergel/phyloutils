@@ -210,6 +210,11 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		{
 		List<PhylogenyNode<T>> theLeaves = idsToLeaves(ids, ignoreAbsentNodes);
 
+		if (theLeaves.isEmpty())
+			{
+			throw new NoSuchNodeException("No leaves found");
+			}
+
 		RootedPhylogeny<T> result = extractTreeWithLeaves(theLeaves, includeInternalBranches); //, namer);
 		Collection<T> gotLeaves = result.getLeafValues();
 		//Collection<T> gotNodes = result.getNodeValues();
@@ -225,8 +230,11 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			}
 		*/
 
-		// any requested leaves that turned out to be internal nodes should have had a phantom leaf added
-		assert gotLeaves.containsAll(ids);
+		if (!ignoreAbsentNodes)
+			{
+			// any requested leaves that turned out to be internal nodes should have had a phantom leaf added
+			assert gotLeaves.containsAll(ids);
+			}
 		return result;
 		}
 
@@ -925,4 +933,30 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		{
 		}
 */
+
+	@NotNull
+	public T getShallowestLeaf()
+		{
+		try
+			{
+			T shallowestId = null;
+			double shallowestDepth = Double.POSITIVE_INFINITY;
+
+			for (PhylogenyNode<T> n : getLeaves())
+				{
+				//PhylogenyNode<Integer> n = theIntegerTree.getNode(id);
+				double depth = distanceBetween(getRoot(), n);
+				if (depth < shallowestDepth)
+					{
+					shallowestDepth = depth;
+					shallowestId = n.getValue();
+					}
+				}
+			return shallowestId;
+			}
+		catch (NoSuchNodeException e)
+			{
+			throw new Error("Impossible");
+			}
+		}
 	}

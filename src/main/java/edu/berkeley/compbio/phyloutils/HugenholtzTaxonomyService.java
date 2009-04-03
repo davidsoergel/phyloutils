@@ -726,7 +726,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			double depth = getDepthFromRoot(id);
 			if (depth > deepestDepth)
 				{
-				depth = deepestDepth;
+				deepestDepth = depth;
 				deepestId = id;
 				}
 			}
@@ -734,6 +734,32 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		//assert theIntegerTree.getNode(deepestId).isLeaf();
 
 		return deepestId;
+		}
+
+	@NotNull
+	public Integer getShallowestNodeForName(String name) throws NoSuchNodeException
+		{
+		///Integer result;
+		Collection<Integer> matchingIds = findMatchingIds(name);
+
+		//	PhylogenyNode<Integer> deepestNode;
+		Integer shallowestId = null;
+		double shallowestDepth = Double.POSITIVE_INFINITY;
+
+		for (Integer id : matchingIds)
+			{
+			//PhylogenyNode<Integer> n = theIntegerTree.getNode(id);
+			double depth = getDepthFromRoot(id);
+			if (depth < shallowestDepth)
+				{
+				shallowestDepth = depth;
+				shallowestId = id;
+				}
+			}
+
+		//assert theIntegerTree.getNode(deepestId).isLeaf();
+
+		return shallowestId;
 		}
 
 	private Collection<Integer> findMatchingIds(String name) throws NoSuchNodeException
