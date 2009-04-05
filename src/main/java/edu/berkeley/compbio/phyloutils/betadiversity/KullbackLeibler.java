@@ -94,7 +94,7 @@ public class KullbackLeibler<T> implements DissimilarityMeasure<RootedPhylogeny<
 		}
 
 	protected double klDivergence(RootedPhylogeny<T> unionTree, RootedPhylogeny<T> a, RootedPhylogeny<T> b)
-			throws NoSuchNodeException
+			throws NoSuchNodeException, PhyloUtilsException
 		{
 		double divergence = 0;
 

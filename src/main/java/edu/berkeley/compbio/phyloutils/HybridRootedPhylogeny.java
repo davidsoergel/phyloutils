@@ -33,6 +33,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
+import org.apache.log4j.Logger;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -51,6 +52,7 @@ import java.util.Set;
  */
 public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//extends AbstractRootedPhylogeny<Integer>
 	{
+	private static final Logger logger = Logger.getLogger(HybridRootedPhylogeny.class);
 
 	RootedPhylogeny<T> rootPhylogeny;
 	RootedPhylogeny<T> leafPhylogeny;
@@ -180,7 +182,9 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 			}
 
 		leafJoinNode.setLength(rootJoinNode.getLength());
+
 		leafJoinNode.setWeight(rootJoinNode.getWeight());
+
 
 		PhylogenyNode<T> rootParent = rootJoinNode.getParent();
 

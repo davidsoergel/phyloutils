@@ -69,14 +69,14 @@ public interface LengthWeightHierarchyNode<T, I extends LengthWeightHierarchyNod
 	 * @return the weight
 	 */
 	@Nullable
-	Double getWeight();
+	Double getWeight(); //throws PhyloUtilsException;
 
 	/**
 	 * Sets the weight
 	 *
 	 * @param d the weight
 	 */
-	void setWeight(Double d);
+	void setWeight(@NotNull Double d);
 
 	/**
 	 * Returns the largest tree distance between any pair of leaves descending from this node.

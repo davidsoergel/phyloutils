@@ -243,14 +243,14 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 	 * {@inheritDoc}
 	 */
 	@Nullable
-	public Double getWeight()
+	public Double getWeight() //throws PhyloUtilsException
 		{
 		if (weight == null)
 			{
 			if (isLeaf())
 				{
 				return null;
-				//throw new PhyloUtilsRuntimeException("Node has undefined weight: " + getValue());
+				//throw new PhyloUtilsException("Node has undefined weight: " + getValue());
 				}
 			propagateWeightFromBelow();
 			}
@@ -276,7 +276,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 	/**
 	 * {@inheritDoc}
 	 */
-	private void propagateWeightFromBelow()
+	private void propagateWeightFromBelow()// throws PhyloUtilsException
 		{
 		if (!isLeaf())
 			{
@@ -287,6 +287,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 				Double w = child.getWeight();
 				if (w == null)
 					{
+					//throw new PhyloUtilsException("Can't propagate undefined weight");
 					// undefined
 					weight = null;
 					return;

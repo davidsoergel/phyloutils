@@ -34,6 +34,8 @@ package edu.berkeley.compbio.phyloutils.alphadiversity;
 
 import com.davidsoergel.dsutils.math.MathUtils;
 import com.davidsoergel.stats.Statistic;
+import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
+import edu.berkeley.compbio.phyloutils.PhyloUtilsRuntimeException;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 import org.apache.log4j.Logger;
@@ -53,12 +55,20 @@ public class PhylogeneticShannon<T> implements Statistic<RootedPhylogeny<T>>
 	 */
 	public double measure(RootedPhylogeny<T> tree)
 		{
-		return informationBelow(tree);
+		try
+			{
+			return informationBelow(tree);
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.error("Error", e);
+			throw new PhyloUtilsRuntimeException(e);
+			}
 		}
 
 	// -------------------------- OTHER METHODS --------------------------
 
-	private double informationBelow(PhylogenyNode<T> node)
+	private double informationBelow(PhylogenyNode<T> node) throws PhyloUtilsException
 		{
 		double entropy = 0;
 		double nodeWeight = node.getWeight();

@@ -52,7 +52,6 @@ public class WeightedUniFrac<T> implements DissimilarityMeasure<RootedPhylogeny<
 	{
 	private static final Logger logger = Logger.getLogger(WeightedUniFrac.class);
 
-
 	/**
 	 * {@inheritDoc}
 	 */

@@ -94,7 +94,7 @@ public class PhylogeneticKullbackLeibler<T> implements DissimilarityMeasure<Root
 		}
 
 	protected double klDivergenceBelow(PhylogenyNode<T> u, PhylogenyNode<T> a, PhylogenyNode<T> b)
-			throws NoSuchNodeException
+			throws NoSuchNodeException, PhyloUtilsException
 		{
 		double divergence = 0;
 		for (PhylogenyNode<T> node : u.getChildren())

@@ -128,6 +128,8 @@ public interface RootedPhylogeny<T>
 	@NotNull
 	PhylogenyNode<T> getNode(T name) throws NoSuchNodeException;
 
+	double getWeight(T name) throws NoSuchNodeException;
+
 	/**
 	 * Gets the root node of the tree
 	 *
@@ -195,17 +197,18 @@ public interface RootedPhylogeny<T>
 	 *
 	 * @param speciesAbundanceDistribution the ContinuousDistribution1D from which to sample leaf weights.
 	 */
-	void randomizeLeafWeights(ContinuousDistribution1D speciesAbundanceDistribution);// throws DistributionException;
+	void randomizeLeafWeights(
+			ContinuousDistribution1D speciesAbundanceDistribution);// throws PhyloUtilsException;// throws DistributionException;
 
 	/**
 	 * Assigns equal weights to all of the leaf nodes, and normalizes them to sum to 1.
 	 */
-	void uniformizeLeafWeights();// throws DistributionException;
+	void uniformizeLeafWeights() throws PhyloUtilsException;// throws DistributionException;
 
 	/**
 	 * Normalizes the leaf weights to sum to one, and propagates these up the tree.
 	 */
-	void normalizeWeights();
+	void normalizeWeights() throws PhyloUtilsException;
 
 	/**
 	 * Returns the phylogeny on which this one was immediately based, if any.
@@ -267,7 +270,7 @@ public interface RootedPhylogeny<T>
 	 * @param smoothingFactor the double pseudocount to add to all leaf weights
 	 */
 	void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor)
-			throws NoSuchNodeException;// throws PhyloUtilsException;
+			throws NoSuchNodeException, PhyloUtilsException;// throws PhyloUtilsException;
 
 	/**
 	 * {@inheritDoc}
@@ -280,17 +283,20 @@ public interface RootedPhylogeny<T>
 	 *
 	 * @param ids the Multiset providing counts for each leaf ID.
 	 */
-	void setLeafWeights(Multiset<T> ids);
+	void setLeafWeights(Multiset<T> leafWeights) throws PhyloUtilsException;
 
 	/**
 	 * Sets the leaf weights based on the counts of the node IDs in the provided Multiset.  Normalizes and propagates the
 	 * weights up the tree.
 	 *
-	 * @param ids the Multiset providing counts for each leaf ID.
+	 * @param leafWeights the Multiset providing counts for each leaf ID.
 	 */
-	void setLeafWeights(Map<T, Double> ids);
+	void setLeafWeights(Map<T, Double> leafWeights) throws PhyloUtilsException;
 
-	Map<T, Double> getLeafWeights();
+	Map<T, Double> getLeafWeights() throws PhyloUtilsException;
+
+	Map<T, Double> getNodeWeights() throws PhyloUtilsException;
+
 
 	void setAllBranchLengthsToNull();
 

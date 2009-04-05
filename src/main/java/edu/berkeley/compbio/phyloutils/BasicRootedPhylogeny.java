@@ -126,6 +126,26 @@ root = new BasicPhylogenyNode<T>(original.);
 		return result;
 		}
 
+	public double getWeight(T id) throws NoSuchNodeException
+		{
+		Double w;
+		try
+			{
+			PhylogenyNode<T> aNode = getNode(id);
+			w = aNode.getWeight();
+			}
+		catch (NoSuchNodeException e)
+			{
+			// no problem, aWeight = 0
+			return 0.0;
+			}
+		if (w == null)
+			{
+			throw new NoSuchNodeException("The node " + id + " exists, but has unspecified weight");
+			}
+		return w;
+		}
+
 	/**
 	 * {@inheritDoc}
 	 */

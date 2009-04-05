@@ -432,6 +432,12 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 				BasicPhylogenyNode<T> node = new BasicPhylogenyNode<T>();
 				node.setLength(commonAncestor.getLength());
 				node.setValue(commonAncestor.getValue());
+				if (commonAncestor.isLeaf())
+					{
+					// don't bother with internal weights; they'll get recalculated on demand anyway
+					node.setWeight(commonAncestor.getWeight());
+					}
+				//node.setBootstrap(commonAncestor.getBootstrap());
 				node.setParent(bottomOfChain);
 				bottomOfChain = node;
 				checkNoInternalNodeRequested(theAncestorLists);
@@ -455,6 +461,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			node.setLength(accumulatedLength);
 			// the commonAncestor is now the most recent one, so that's the most sensible name for the new node
 			node.setValue(commonAncestor.getValue());
+			node.setWeight(commonAncestor.getWeight());
 			bottomOfChain = node;
 			checkNoInternalNodeRequested(theAncestorLists);
 			//	addPhantomLeafIfNeeded(theAncestorLists, node, namer);
@@ -646,27 +653,43 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	 * {@inheritDoc}
 	 */
 	public void randomizeLeafWeights(
-			ContinuousDistribution1D speciesAbundanceDistribution)//throws DistributionException
+			ContinuousDistribution1D speciesAbundanceDistribution) //throws PhyloUtilsException//throws DistributionException
 		{
 		for (PhylogenyNode<T> leaf : getLeaves())
 			{
 			leaf.setWeight(speciesAbundanceDistribution.sample());
 			}
 
-		normalizeWeights();
+		try
+			{
+			normalizeWeights();
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.error("Error", e);
+			throw new Error("Impossible");
+			}
 		}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void uniformizeLeafWeights()//throws DistributionException
+	public void uniformizeLeafWeights() // throws PhyloUtilsException//throws DistributionException
 		{
 		for (PhylogenyNode<T> leaf : getLeaves())
 			{
 			leaf.setWeight(1.);
 			}
 
-		normalizeWeights();
+		try
+			{
+			normalizeWeights();
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.error("Error", e);
+			throw new Error("Impossible");
+			}
 		}
 
 	public Map<T, Double> distributeInternalWeightsToLeaves(Map<T, Double> taxIdToWeightMap) throws NoSuchNodeException
@@ -711,11 +734,12 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setLeafWeights(Multiset<T> leafWeights)
+	public void setLeafWeights(Multiset<T> leafWeights) throws PhyloUtilsException
 		{
 		for (PhylogenyNode<T> leaf : getLeaves())
 			{
-			leaf.setWeight(new Double(leafWeights.count(leaf.getValue())));
+			int value = leafWeights.count(leaf.getValue());
+			leaf.setWeight(new Double(value));
 			}
 
 		normalizeWeights();
@@ -724,17 +748,22 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setLeafWeights(Map<T, Double> leafWeights)
+	public void setLeafWeights(Map<T, Double> leafWeights) throws PhyloUtilsException
 		{
 		for (PhylogenyNode<T> leaf : getLeaves())
 			{
-			leaf.setWeight(new Double(leafWeights.get(leaf.getValue())));
+			Double value = leafWeights.get(leaf.getValue());
+			if (value == null)
+				{
+				throw new PhyloUtilsException("No leaf weight provided for " + leaf);
+				}
+			leaf.setWeight(value);
 			}
 
 		normalizeWeights();
 		}
 
-	public Map<T, Double> getLeafWeights()
+	public Map<T, Double> getLeafWeights() //throws PhyloUtilsException
 		{
 		Map<T, Double> result = new HashMap<T, Double>();
 		for (PhylogenyNode<T> leaf : getLeaves())
@@ -744,17 +773,32 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return result;
 		}
 
+	public Map<T, Double> getNodeWeights() //throws PhyloUtilsException
+		{
+		Map<T, Double> result = new HashMap<T, Double>();
+		for (PhylogenyNode<T> node : this)
+			{
+			result.put(node.getValue(), node.getWeight());
+			}
+		return result;
+		}
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public void normalizeWeights()
+	public void normalizeWeights() throws PhyloUtilsException
 		{
 		// first normalize at the leaves
 		double total = 0;
 
 		for (PhylogenyNode<T> leaf : getLeaves())
 			{
-			total += leaf.getWeight();
+			Double w = leaf.getWeight();
+			if (w == null)
+				{
+				throw new PhyloUtilsException("Can't normalize when a leaf weight is null");
+				}
+			total += w;
 			}
 
 		for (PhylogenyNode<T> leaf : getLeaves())
@@ -875,7 +919,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	/**
 	 * {@inheritDoc}
 	 */
-	public void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor) //throws PhyloUtilsException
+	public void smoothWeightsFrom(RootedPhylogeny<T> otherTree, double smoothingFactor)
+			throws PhyloUtilsException //throws PhyloUtilsException
 		{
 		/*RootedPhylogeny<T> theBasePhylogeny = getBasePhylogeny();
 				 if (theBasePhylogeny != otherTree.getBasePhylogeny())
