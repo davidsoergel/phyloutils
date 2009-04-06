@@ -47,4 +47,10 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 	RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException;
 
 	String getRelaxedName(String name);
+
+	T findTaxIdOfShallowestLeaf(String name) throws NoSuchNodeException;
+
+	RootedPhylogeny<Integer> findTreeForName(String name) throws NoSuchNodeException;
+
+	int getNumNodesForName(String name);
 	}

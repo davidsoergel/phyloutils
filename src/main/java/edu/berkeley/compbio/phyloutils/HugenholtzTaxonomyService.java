@@ -2,6 +2,7 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.CacheManager;
 import com.davidsoergel.dsutils.DSStringUtils;
+import com.davidsoergel.dsutils.StringSetIntMapReader;
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.google.common.collect.HashMultimap;
@@ -47,11 +48,13 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	//private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
 	private static final String hugenholtzFilename = "greengenes.all.tree.allids.gz";
 	private static final String bigGreenGenesFilename = "greengenes16SrRNAgenes.txt.gz";
+	private static final String overrideFilename = "overrideNameToProkMSAid.txt";
 
 	private static HugenholtzTaxonomyService instance;// = new CiccarelliUtils();
 
 	private TaxonomySynonymService synonymService;
 
+	private final static Integer NO_VALID_ID = -1;
 
 	public static HugenholtzTaxonomyService getInjectedInstance()
 		{
@@ -70,6 +73,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	private BasicRootedPhylogeny<Integer> theIntegerTree;
 	private HashMultimap<String, Integer> nameToIdsMap;// = new HashMap<String, Integer>();
+	private Map<String, Integer> nameToUniqueIdMap; // = new HashMap<String, Integer>();
 
 //	BiMap<Integer, PhylogenyNode<String>> intToNodeMap = new HashBiMap<Integer, PhylogenyNode<String>>();
 //	Multimap<String, PhylogenyNode<String>> nameToNodeMap = new HashMultimap<String, PhylogenyNode<String>>();
@@ -80,14 +84,17 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		theIntegerTree = (BasicRootedPhylogeny<Integer>) CacheManager.get(this, "theIntegerTree");
 		nameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, "nameToIdsMap");
+		nameToUniqueIdMap = (HashMap<String, Integer>) CacheManager.get(this, "nameToUniqueIdMap ");
 
-		if (theIntegerTree == null || nameToIdsMap == null)
+		if (theIntegerTree == null || nameToIdsMap == null || nameToUniqueIdMap == null)
 			{
 			reloadFromNewick();
+			reloadOverrideMap();
 			// ** Note we don't invalidate downstream caches, e.g. for StrainDirectoryLabelChooser and so forth
 			// CacheManager.invalidate
 			CacheManager.put(this, "theIntegerTree", theIntegerTree);
 			CacheManager.put(this, "nameToIdsMap", nameToIdsMap);
+			CacheManager.put(this, "nameToUniqueIdMap", nameToUniqueIdMap);
 			}
 
 		/*if (!readStateIfAvailable())
@@ -96,6 +103,37 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			//invalidateDependentCaches();
 			saveState();
 			}*/
+		}
+
+	private void reloadOverrideMap()
+		{
+		nameToUniqueIdMap = new HashMap<String, Integer>();
+
+		Map<String, Set<Integer>> overrideNameToIdMap;
+		try
+			{
+			overrideNameToIdMap = StringSetIntMapReader.read(overrideFilename);
+
+			for (Map.Entry<String, Set<Integer>> entry : overrideNameToIdMap.entrySet())
+				{
+				String key = entry.getKey();
+				Set<Integer> valueSet = entry.getValue();
+
+				nameToIdsMap.removeAll(key);
+				nameToUniqueIdMap.remove(key);
+
+				nameToIdsMap.putAll(key, valueSet);
+
+				for (Integer id : valueSet)
+					{
+					nameToUniqueIdMap.put(key, id);
+					}
+				}
+			}
+		catch (IOException e)
+			{
+			throw new Error(e);
+			}
 		}
 
 	public RootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double mergeThreshold)
@@ -425,7 +463,6 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return theIntegerTree.getNode(leafId).isLeaf();
 		}
 
-	Map<String, Integer> findTaxidByNameCache = new HashMap<String, Integer>();
 
 	@NotNull
 	public Integer findTaxidByNameRelaxed(String name) throws NoSuchNodeException
@@ -437,7 +474,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		//PERF, need a BiMultiMap or something
 		Set<String> result = new HashSet<String>();
-		for (Map.Entry<String, Integer> entry : findTaxidByNameCache.entrySet())
+		for (Map.Entry<String, Integer> entry : nameToUniqueIdMap.entrySet())
 			{
 			if (entry.getValue().equals(id))
 				{
@@ -457,7 +494,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	@NotNull
 	public Integer findTaxidByName(String name) throws NoSuchNodeException
 		{
-		Integer result = findTaxidByNameCache.get(name);
+		Integer result = nameToUniqueIdMap.get(name);
 
 		if (result == null)
 			{
@@ -480,9 +517,15 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				{
 				if (!name.contains(";"))
 					{
-
-					RootedPhylogeny<Integer> bTree = findSubtreeByNameRelaxed(name);
-					result = bTree.getShallowestLeaf();
+					try
+						{
+						RootedPhylogeny<Integer> bTree = findSubtreeByNameRelaxed(name);
+						result = bTree.getShallowestLeaf();
+						}
+					catch (NoSuchNodeException e)
+						{
+						result = NO_VALID_ID;
+						}
 
 					//result = getUniqueNodeForName(name);
 
@@ -495,8 +538,14 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 					result = getUniqueNodeForMultilevelName(name.split("[; ]+"));
 					}
 				}
-			findTaxidByNameCache.put(name, result);
+			nameToUniqueIdMap.put(name, result);
 			}
+
+		if (result.equals(NO_VALID_ID))
+			{
+			throw new NoSuchNodeException();
+			}
+
 		return result;
 		}
 
@@ -690,7 +739,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	//Pattern strainSuffixPattern = Pattern.compile("( (sp.?)|(str.?)|(strain)).*$");
 
 	@NotNull
-	public Integer getUniqueNodeForName(String name) throws NoSuchNodeException
+	private Integer getUniqueNodeForName(String name) throws NoSuchNodeException
 		{
 		return findSubtreeByName(name).getValue();
 		}
@@ -707,7 +756,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return findSubtreeWithIds(matchingIds, name);
 		}
 
-	public RootedPhylogeny<Integer> findSubtreeWithIds(Collection<Integer> matchingIds, String name)
+	private RootedPhylogeny<Integer> findSubtreeWithIds(Collection<Integer> matchingIds, String name)
 			throws NoSuchNodeException
 		{
 		RootedPhylogeny<Integer> tree = extractTreeWithLeafIDs(matchingIds, true, true);
@@ -871,7 +920,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 //	WeightedSet<String> depthsBelow = new HashWeightedSet<String>(); // for debugging
 
-	Map<String, String> shortNames = new HashMap<String, String>();
+	private Map<String, String> shortNames = new HashMap<String, String>();
 
 	public String getRelaxedName(String name)
 		{
@@ -1001,5 +1050,62 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		String shortname = getClass().getName();
 		shortname = shortname.substring(shortname.lastIndexOf(".") + 1);
 		return shortname;
+		}
+
+	public Integer findTaxIdOfShallowestLeaf(String name) throws NoSuchNodeException
+		{
+		RootedPhylogeny<Integer> bTree = findTreeForName(name);
+		return bTree.getShallowestLeaf();
+		}
+
+	public int getNumNodesForName(String name)
+
+		{
+		int mappedBIds = 0;
+		Set<Integer> idBSet = nameToIdsMap.get(name);
+		if (idBSet != null)
+			{
+			mappedBIds = idBSet.size();
+			}
+		return mappedBIds;
+		}
+
+	public RootedPhylogeny<Integer> findTreeForName(String name) throws NoSuchNodeException
+		{
+		Set<Integer> idBSet = nameToIdsMap.get(name);
+
+		RootedPhylogeny<Integer> bTree;
+
+		if (idBSet == null)
+			{
+			//logger.warn("No mapping for ID: " + idA);
+			//System.err.printf("%s\t%d\tNOMAP\t0\t0\t0\t0\n", name, idA);
+			try
+				{
+				bTree = findSubtreeByName(name);
+				}
+			catch (NoSuchNodeException e)
+				{
+				//logger.warn("No leaf IDs are classified on the tree: " + name);
+				//System.err.printf("%s\t%d\tUNCLASSIFIED\t0\t0\t0\t0\n", name, idA);
+				bTree = findSubtreeByNameRelaxed(name);
+				}
+			}
+		else
+			{
+			try
+				{
+				bTree = extractTreeWithLeafIDs(idBSet, true, true);
+				PhylogenyNode<Integer> r = bTree.getFirstBranchingNode();
+				bTree = r.asRootedPhylogeny();
+				}
+			catch (NoSuchNodeException e)
+				{
+				//logger.warn("No leaf IDs are classified on the tree: " + name);
+				//System.err.printf("%s\t%d\tUNCLASSIFIED\t0\t0\t0\t0\n", name, idA);
+				bTree = findSubtreeByNameRelaxed(name);
+				}
+			}
+		return bTree;
 		}
 	}

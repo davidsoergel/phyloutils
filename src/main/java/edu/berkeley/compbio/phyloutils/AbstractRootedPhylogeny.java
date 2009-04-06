@@ -1000,7 +1000,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 				// BAD if two depths are exactly equal, then the result is nondeterministic
 
-				if (depth < shallowestDepth) // || (depth == shallowestDepth && nId < shallowestId))
+				// try to impose a deterministic order using the id hashcodes
+				if (depth < shallowestDepth || (depth == shallowestDepth && nId.hashCode() < shallowestId.hashCode()))
 					{
 					shallowestDepth = depth;
 					shallowestId = nId;

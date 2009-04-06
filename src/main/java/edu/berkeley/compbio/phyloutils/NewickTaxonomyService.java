@@ -274,4 +274,19 @@ public class NewickTaxonomyService
 		{
 		throw new NotImplementedException();
 		}
+
+	public RootedPhylogeny<Integer> findTreeForName(String name) throws NoSuchNodeException
+		{
+		throw new NotImplementedException();
+		}
+
+	public int getNumNodesForName(String name)
+		{
+		throw new NotImplementedException();
+		}
+
+	public String findTaxIdOfShallowestLeaf(String name) throws NoSuchNodeException
+		{
+		throw new NotImplementedException();
+		}
 	}

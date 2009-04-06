@@ -691,15 +691,20 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 
 	private void invalidateAggregatedChildInfo()
 		{
-		greatestBranchLengthDepth = null;
-		secondGreatestDepth = null;
-		largestLengthSpan = null;
-		weight = null;
-
-		if (parent != null)
+		if (greatestBranchLengthDepth != null || secondGreatestDepth != null || largestLengthSpan != null
+				|| weight != null)
 			{
-			parent.invalidateAggregatedChildInfo();
+			greatestBranchLengthDepth = null;
+			secondGreatestDepth = null;
+			largestLengthSpan = null;
+			weight = null;
+
+			if (parent != null)
+				{
+				parent.invalidateAggregatedChildInfo();
+				}
 			}
+		// else all the ancestors must be invalidated already
 		}
 
 
