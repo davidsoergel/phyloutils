@@ -84,7 +84,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		theIntegerTree = (BasicRootedPhylogeny<Integer>) CacheManager.get(this, "theIntegerTree");
 		nameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, "nameToIdsMap");
-		nameToUniqueIdMap = (HashMap<String, Integer>) CacheManager.get(this, "nameToUniqueIdMap ");
+		nameToUniqueIdMap = (HashMap<String, Integer>) CacheManager.get(this, "nameToUniqueIdMap");
 
 		if (theIntegerTree == null || nameToIdsMap == null || nameToUniqueIdMap == null)
 			{
