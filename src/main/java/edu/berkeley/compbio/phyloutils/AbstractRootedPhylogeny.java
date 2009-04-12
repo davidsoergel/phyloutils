@@ -217,7 +217,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		if (theLeaves.isEmpty())
 			{
-			throw new NoSuchNodeException("No leaves found");
+			throw new NoSuchNodeException("No leaves found for ids: " + ids);
 			}
 
 		RootedPhylogeny<T> result = extractTreeWithLeaves(theLeaves, includeInternalBranches); //, namer);

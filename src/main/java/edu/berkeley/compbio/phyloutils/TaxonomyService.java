@@ -3,6 +3,8 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.dsutils.tree.TreeException;
 
+import java.util.Collection;
+
 /**
  * Provides a simplified interface for taxonomy sources (e.g., NCBI, or a Newick file) that doesn't provide all the
  * services of a full RootedTree.  In particular none of the API involves PhylogenyNodes; everything is done by ID (of
@@ -42,15 +44,24 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 
 //	void printDepthsBelow();
 
-	RootedPhylogeny<Integer> findSubtreeByName(String name) throws NoSuchNodeException;
+	//RootedPhylogeny<Integer> findSubtreeByName(String name) throws NoSuchNodeException;
 
-	RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException;
+//	RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException;
 
 	String getRelaxedName(String name);
 
-	T findTaxIdOfShallowestLeaf(String name) throws NoSuchNodeException;
+	//T findTaxIdOfShallowestLeaf(String name) throws NoSuchNodeException;
 
-	RootedPhylogeny<Integer> findTreeForName(String name) throws NoSuchNodeException;
+	//RootedPhylogeny<Integer> findTreeForName(String name) throws NoSuchNodeException;
 
-	int getNumNodesForName(String name);
+	RootedPhylogeny<Integer> findCompactSubtreeWithIds(Collection<Integer> matchingIds, String name)
+			throws NoSuchNodeException;
+
+//	int getNumNodesForName(String name);
+
+//	Set<Integer> getAllIdsForName(String name);
+
+	Collection<Integer> findMatchingIds(String name) throws NoSuchNodeException;
+
+	Collection<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException;
 	}

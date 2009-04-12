@@ -738,7 +738,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	Pattern spaceSuffixPattern = Pattern.compile(" \\S*$");
 	//Pattern strainSuffixPattern = Pattern.compile("( (sp.?)|(str.?)|(strain)).*$");
 
-	@NotNull
+/*	@NotNull
 	private Integer getUniqueNodeForName(String name) throws NoSuchNodeException
 		{
 		return findSubtreeByName(name).getValue();
@@ -755,40 +755,10 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 		return findSubtreeWithIds(matchingIds, name);
 		}
-
-	private RootedPhylogeny<Integer> findSubtreeWithIds(Collection<Integer> matchingIds, String name)
-			throws NoSuchNodeException
-		{
-		RootedPhylogeny<Integer> tree = extractTreeWithLeafIDs(matchingIds, true, true);
-		PhylogenyNode<Integer> result = tree.getFirstBranchingNode();
-
-		double span = result.getLargestLengthSpan();
-		if (span > 0.1)
-			{
-			logger.warn("Subtree for " + name + " has span = " + span + ", trying 75% solution");
-			Integer sub = tree.commonAncestor(matchingIds, 0.75);
-			result = tree.getNode(sub);
-			span = result.getLargestLengthSpan();
-			logger.warn("75% subtree for " + name + " has span = " + span);
-			}
-
-		result = result;
-
-		//result = tree.commonAncestor(matchingIds, 0.75);
-		//throw new PhyloUtilsException("Name not unique: " + name);
+*/
 
 
-		//double depthBelow = theIntegerTree.getNode(result).getGreatestBranchLengthDepthBelow();
-
-		//depthsBelow.add(name, depthBelow);
-
-		//logger.info("Node found for name " + name + " has depth below = " + jdepthBelow);
-
-		return result.asRootedPhylogeny();
-		}
-
-
-	public RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException
+	private RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException
 		{
 		Collection<Integer> matchingIds = findMatchingIdsRelaxed(name);
 
@@ -797,8 +767,9 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			throw new NoSuchNodeException();
 			}
 
-		return findSubtreeWithIds(matchingIds, name);
+		return findCompactSubtreeWithIds(matchingIds, name);
 		}
+
 
 	/*
 	 @NotNull
@@ -853,7 +824,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 return shallowestId;
 		 }
  */
-	private Collection<Integer> findMatchingIds(String name) throws NoSuchNodeException
+	public Collection<Integer> findMatchingIds(String name) throws NoSuchNodeException
 		{
 		Collection<Integer> matchingIds = nameToIdsMap.get(name);
 		if (matchingIds.isEmpty())
@@ -863,7 +834,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return matchingIds;
 		}
 
-	private Collection<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
+	public Collection<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
 		{
 		Collection<Integer> matchingIds = nameToIdsMap.get(name);
 		/*	if (matchingIds.isEmpty())
@@ -1051,14 +1022,14 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		shortname = shortname.substring(shortname.lastIndexOf(".") + 1);
 		return shortname;
 		}
-
+/*
 	public Integer findTaxIdOfShallowestLeaf(String name) throws NoSuchNodeException
 		{
 		RootedPhylogeny<Integer> bTree = findTreeForName(name);
 		return bTree.getShallowestLeaf();
 		}
-
-	public int getNumNodesForName(String name)
+*/
+/*	public int getNumNodesForName(String name)
 
 		{
 		int mappedBIds = 0;
@@ -1069,43 +1040,95 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}
 		return mappedBIds;
 		}
+*/
 
-	public RootedPhylogeny<Integer> findTreeForName(String name) throws NoSuchNodeException
+
+	/*
+	 public RootedPhylogeny<Integer> findTreeForName(String name) throws NoSuchNodeException
+		 {
+		 Set<Integer> idBSet = nameToIdsMap.get(name);
+
+		 RootedPhylogeny<Integer> bTree;
+
+		 if (idBSet == null)
+			 {
+			 //logger.warn("No mapping for ID: " + idA);
+			 //System.err.printf("%s\t%d\tNOMAP\t0\t0\t0\t0\n", name, idA);
+			 try
+				 {
+				 bTree = findSubtreeByName(name);
+				 }
+			 catch (NoSuchNodeException e)
+				 {
+				 //logger.warn("No leaf IDs are classified on the tree: " + name);
+				 //System.err.printf("%s\t%d\tUNCLASSIFIED\t0\t0\t0\t0\n", name, idA);
+				 bTree = findSubtreeByNameRelaxed(name);
+				 }
+			 }
+		 else
+			 {
+			 try
+				 {
+				 bTree = extractTreeWithLeafIDs(idBSet, true, true);
+				 PhylogenyNode<Integer> r = bTree.getFirstBranchingNode();
+				 bTree = r.asRootedPhylogeny();
+				 }
+			 catch (NoSuchNodeException e)
+				 {
+				 //logger.warn("No leaf IDs are classified on the tree: " + name);
+				 //System.err.printf("%s\t%d\tUNCLASSIFIED\t0\t0\t0\t0\n", name, idA);
+				 bTree = findSubtreeByNameRelaxed(name);
+				 }
+			 }
+		 return bTree;
+		 }
+ */
+
+	public RootedPhylogeny<Integer> findTreeForIds(Set<Integer> idBSet)
 		{
-		Set<Integer> idBSet = nameToIdsMap.get(name);
-
-		RootedPhylogeny<Integer> bTree;
-
-		if (idBSet == null)
+		try
 			{
-			//logger.warn("No mapping for ID: " + idA);
-			//System.err.printf("%s\t%d\tNOMAP\t0\t0\t0\t0\n", name, idA);
-			try
-				{
-				bTree = findSubtreeByName(name);
-				}
-			catch (NoSuchNodeException e)
-				{
-				//logger.warn("No leaf IDs are classified on the tree: " + name);
-				//System.err.printf("%s\t%d\tUNCLASSIFIED\t0\t0\t0\t0\n", name, idA);
-				bTree = findSubtreeByNameRelaxed(name);
-				}
+			RootedPhylogeny<Integer> bTree = extractTreeWithLeafIDs(idBSet, true, true);
+			PhylogenyNode<Integer> r = bTree.getFirstBranchingNode();
+			bTree = r.asRootedPhylogeny();
+			return bTree;
 			}
-		else
+		catch (NoSuchNodeException e)
 			{
-			try
-				{
-				bTree = extractTreeWithLeafIDs(idBSet, true, true);
-				PhylogenyNode<Integer> r = bTree.getFirstBranchingNode();
-				bTree = r.asRootedPhylogeny();
-				}
-			catch (NoSuchNodeException e)
-				{
-				//logger.warn("No leaf IDs are classified on the tree: " + name);
-				//System.err.printf("%s\t%d\tUNCLASSIFIED\t0\t0\t0\t0\n", name, idA);
-				bTree = findSubtreeByNameRelaxed(name);
-				}
+			logger.error(e);
+			throw new Error("Impossible");
 			}
-		return bTree;
+		}
+
+
+	public RootedPhylogeny<Integer> findCompactSubtreeWithIds(Collection<Integer> matchingIds, String name)
+			throws NoSuchNodeException
+		{
+		RootedPhylogeny<Integer> tree = extractTreeWithLeafIDs(matchingIds, true, true);
+		PhylogenyNode<Integer> result = tree.getFirstBranchingNode();
+
+		double span = result.getLargestLengthSpan();
+		if (span > 0.1)
+			{
+			logger.warn("Subtree for " + name + " has span = " + span + ", trying 75% solution");
+			Integer sub = tree.commonAncestor(matchingIds, 0.75);
+			result = tree.getNode(sub);
+			span = result.getLargestLengthSpan();
+			logger.warn("75% subtree for " + name + " has span = " + span);
+			}
+
+		result = result;
+
+		//result = tree.commonAncestor(matchingIds, 0.75);
+		//throw new PhyloUtilsException("Name not unique: " + name);
+
+
+		//double depthBelow = theIntegerTree.getNode(result).getGreatestBranchLengthDepthBelow();
+
+		//depthsBelow.add(name, depthBelow);
+
+		//logger.info("Node found for name " + name + " has depth below = " + jdepthBelow);
+
+		return result.asRootedPhylogeny();
 		}
 	}

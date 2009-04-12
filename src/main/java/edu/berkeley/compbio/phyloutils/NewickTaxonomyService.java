@@ -260,32 +260,50 @@ public class NewickTaxonomyService
 				"Newick taxonomy doesn't currently use other synonym services for any purpose");
 		}
 
-	public RootedPhylogeny<Integer> findSubtreeByName(String name) throws NoSuchNodeException
-		{
-		throw new NotImplementedException();
-		}
+	/*	public RootedPhylogeny<Integer> findSubtreeByName(String name) throws NoSuchNodeException
+		 {
+		 throw new NotImplementedException();
+		 }
 
-	public RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException
-		{
-		throw new NotImplementedException();
-		}
-
+	 public RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException
+		 {
+		 throw new NotImplementedException();
+		 }
+ */
 	public String getRelaxedName(String name)
 		{
 		throw new NotImplementedException();
 		}
-
+/*
 	public RootedPhylogeny<Integer> findTreeForName(String name) throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
 		}
 
-	public int getNumNodesForName(String name)
+	public String findTaxIdOfShallowestLeaf(String name) throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
 		}
 
-	public String findTaxIdOfShallowestLeaf(String name) throws NoSuchNodeException
+
+	public int getNumNodesForName(String name)
+		{
+		throw new NotImplementedException();
+		}*/
+
+
+	public RootedPhylogeny<Integer> findCompactSubtreeWithIds(Collection<Integer> matchingIds, String name)
+			throws NoSuchNodeException
+		{
+		throw new NotImplementedException();
+		}
+
+	public Collection<Integer> findMatchingIds(String name) throws NoSuchNodeException
+		{
+		throw new NotImplementedException();
+		}
+
+	public Collection<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
 		}
