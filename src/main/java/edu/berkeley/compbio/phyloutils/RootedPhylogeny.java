@@ -230,7 +230,9 @@ public interface RootedPhylogeny<T>
 	RootedPhylogeny<T> getBasePhylogenyRecursive();
 
 	/**
-	 * Builds a new phylogeny by finding all branches that ultimately lead to a least one leaf in each of two sets.
+	 * Builds a new phylogeny by finding all branches that ultimately lead to a least one leaf in each of two sets.  The
+	 * intersection tree contains branches terminating at internal nodes that are common between the two trees, even if
+	 * there are no leaves in common below that node.
 	 * <p/>
 	 * The weights in the resulting tree are taken from this one. but may not be normalized.
 	 *
