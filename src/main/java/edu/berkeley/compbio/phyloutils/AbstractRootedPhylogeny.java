@@ -38,6 +38,7 @@ import com.davidsoergel.dsutils.collections.WeightedSet;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.ContinuousDistribution1D;
 import com.google.common.collect.Multiset;
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -432,11 +433,24 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 				BasicPhylogenyNode<T> node = new BasicPhylogenyNode<T>();
 				node.setLength(commonAncestor.getLength());
 				node.setValue(commonAncestor.getValue());
-				if (commonAncestor.isLeaf())
+
+				//** avoid isLeaf due to ncbi lazy initialization issue
+				//if (commonAncestor.isLeaf())
+				//	{
+				// don't bother with internal weights; they'll get recalculated on demand anyway
+				if (bottomOfChain != null)
 					{
-					// don't bother with internal weights; they'll get recalculated on demand anyway
+					bottomOfChain.setWeight(null); // just to be sure
+					}
+				try
+					{
 					node.setWeight(commonAncestor.getWeight());
 					}
+				catch (NotImplementedException e)
+					{
+					node.setWeight(1.0);
+					}
+				//	}
 				//node.setBootstrap(commonAncestor.getBootstrap());
 				node.setParent(bottomOfChain);
 				bottomOfChain = node;
