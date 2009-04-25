@@ -37,6 +37,7 @@ import com.davidsoergel.dsutils.TestInstanceFactory;
 import org.testng.annotations.Factory;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Queue;
 
 
@@ -65,9 +66,9 @@ public class HybridRootedPhylogenyTest extends ContractTestAware<HybridRootedPhy
 		RootedPhylogeny leafPhylogeny =
 				new BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles().rootPhylogeny;
 
-		RootedPhylogeny rootPhylogeny = leafPhylogeny
-				.extractTreeWithLeafIDs(Arrays.asList("a", "aa", "bb", "bbba", "ba", "baa", "c", "ca", "cb"), false,
-				                        false);
+		//List<String> leafList = Arrays.asList("a", "aa", "bb", "bbba", "ba", "baa", "c", "ca", "cb"); // can't include internal nodes
+		List<String> leafList = Arrays.asList("aa", "bbba", "baa", "ca", "cb");
+		RootedPhylogeny rootPhylogeny = leafPhylogeny.extractTreeWithLeafIDs(leafList, false, false);
 
 		leafPhylogeny.setAllBranchLengthsToNull();
 

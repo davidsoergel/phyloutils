@@ -104,7 +104,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 
 		for (PhylogenyNode<String> n : result)
 			{
-			String s = (String) n.getValue();
+			String s = n.getValue();
 			assert okNodes.contains(s);
 			}
 		}

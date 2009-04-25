@@ -221,7 +221,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			throw new NoSuchNodeException("No leaves found for ids: " + ids);
 			}
 
-		RootedPhylogeny<T> result = extractTreeWithLeaves(theLeaves, includeInternalBranches); //, namer);
+		RootedPhylogeny<T> result = extractTreeWithLeaves(theLeaves, includeInternalBranches);
 		Collection<T> gotLeaves = result.getLeafValues();
 		//Collection<T> gotNodes = result.getNodeValues();
 
@@ -331,6 +331,12 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
    */
 
 	/**
+	 * Builds a fresh tree containg all of the requested leaves, which are the last elements in the provided AncestorLists.
+	 * Each AncestorList describes the path from the root to one of the leaves.  The roots (the first element of each list)
+	 * must be equal; a copy of that root provides the root of the newly built tree. If includeInternalBranches is set,
+	 * then all elements of the AncestorLists will be included in the resulting tree even if there is no branching at that
+	 * node.
+	 *
 	 * @param theAncestorLists
 	 * @return
 	 * @throws PhyloUtilsException
@@ -340,122 +346,41 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	                                                         boolean includeInternalBranches)
 			throws NoSuchNodeException  //, NodeNamer<T> namer)
 		{
-		// ** Spaghetti.  Might be clearer to just separate the includesInternalBranches mode completely.
+		// this was spaghetti before when I tried to handle both modes together
+		if (includeInternalBranches)
+			{
+			return extractTreeWithLeafPathsIncludingInternal(theAncestorLists);
+			}
+		else
+			{
+			return extractTreeWithLeafPathsExcludingInternal(theAncestorLists);
+			}
+		}
 
+	private BasicPhylogenyNode<T> extractTreeWithLeafPathsExcludingInternal(
+			Set<List<PhylogenyNode<T>>> theAncestorLists) throws NoSuchNodeException
+		{
 		double accumulatedLength = 0;
 
 		// use this as a marker to test that the provided lists were actually consistent
 		PhylogenyNode<T> commonAncestor = null;
 		BasicPhylogenyNode<T> bottomOfChain = null;
 
-
 		// first consume any common prefix on the ancestor lists
 
-		while (DSCollectionUtils.allFirstElementsEqual(theAncestorLists)) //, !includeInternalBranches))
+		while (DSCollectionUtils.allFirstElementsEqual(theAncestorLists))
 			{
-			commonAncestor = DSCollectionUtils.removeAllFirstElements(theAncestorLists); //, !includeInternalBranches);
-
-			if (!includeInternalBranches)
-				{
-				// drop any lists that are now empty; that way the loop can continue if more head elements are equal
-
-				// apparently HashSet.iterator.remove doesn't work
-				/*
-							  for (Iterator<List<PhylogenyNode<T>>> i = theAncestorLists.iterator(); i.hasNext();)
-								  {
-								  List<PhylogenyNode<T>> list = i.next();
-								  if (list.isEmpty())
-									  {
-									  i.remove();
-									  }
-								  }*/
-
-				// too bad we have to do this the slow way.  Gaah, this doesn't work either!!??
-				/*
-							  for (List<PhylogenyNode<T>> list : new HashSet<List<PhylogenyNode<T>>>(theAncestorLists))
-								  {
-								  if (list.isEmpty())
-									  {
-									  theAncestorLists.remove(list);
-									  assert !theAncestorLists.contains(list);
-									  }
-								  }
-
-							  for (List<PhylogenyNode<T>> list1 : new HashSet<List<PhylogenyNode<T>>>(theAncestorLists))
-								  {
-								  for (List<PhylogenyNode<T>> list2 : new HashSet<List<PhylogenyNode<T>>>(theAncestorLists))
-									  {
-									  logger.error(
-											  "Argh: " + list1 + " " + list2 + " " + (list1 == list2) + " " + list1.equals(list2));
-									  }
-								  }
-								  */
-
-				// BAD this is completely insane; why doesn't HashSet.remove work!?
-				// well, whatever, it doesn't matter anymore
-
-				//	Set<List<PhylogenyNode<T>>> oldAncestorLists = theAncestorLists;
-				//	theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
-
-				for (List<PhylogenyNode<T>> list : theAncestorLists) //oldAncestorLists)
-					{
-					if (list.isEmpty())
-						{
-						throw new PhyloUtilsRuntimeException(
-								"Requested an internal node as a leaf with internal branches turned off; can't do that");
-						// an internal node was requested as a leaf.
-						// add a phantom leaf to honor the request, and then continue with the other paths
-
-						}
-					//	else
-					//		{
-					//		theAncestorLists.add(list);
-					//		}
-					}
-				}
+			commonAncestor = DSCollectionUtils.removeAllFirstElements(theAncestorLists);
 
 			Double d = commonAncestor.getLength();
-			if (!includeInternalBranches)
+
+			if (d == null)
 				{
-				if (d == null)
-					{
-					//logger.warn("Ignoring null length at node " + commonAncestor);
-					}
-				else
-					{
-					accumulatedLength += d;
-					}
+				//logger.warn("Ignoring null length at node " + commonAncestor);
 				}
 			else
 				{
-				// copy the common ancestor to the new tree
-
-				BasicPhylogenyNode<T> node = new BasicPhylogenyNode<T>();
-				node.setLength(commonAncestor.getLength());
-				node.setValue(commonAncestor.getValue());
-
-				//** avoid isLeaf due to ncbi lazy initialization issue
-				//if (commonAncestor.isLeaf())
-				//	{
-				// don't bother with internal weights; they'll get recalculated on demand anyway
-				if (bottomOfChain != null)
-					{
-					bottomOfChain.setWeight(null); // just to be sure
-					}
-				try
-					{
-					node.setWeight(commonAncestor.getWeight());
-					}
-				catch (NotImplementedException e)
-					{
-					node.setWeight(1.0);
-					}
-				//	}
-				//node.setBootstrap(commonAncestor.getBootstrap());
-				node.setParent(bottomOfChain);
-				bottomOfChain = node;
-				checkNoInternalNodeRequested(theAncestorLists);
-				//	addPhantomLeafIfNeeded(theAncestorLists, node, namer);
+				accumulatedLength += d;
 				}
 			}
 
@@ -466,41 +391,98 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			throw new NoSuchNodeException("Provided ancestor lists do not have a common root");
 			}
 
-		// if we are including internal branches, then every node got created already along the way
-		// but if not, we now need to create the branching node
+		// since we are not including internal branches, we now need to create the branching node
 
-		if (!includeInternalBranches)
+		BasicPhylogenyNode<T> node = new BasicPhylogenyNode<T>();
+		node.setLength(accumulatedLength);
+
+		// the commonAncestor is now the most recent one, so that's the most sensible name for the new node
+		node.setValue(commonAncestor.getValue());
+		node.setWeight(commonAncestor.getWeight());
+		bottomOfChain = node;
+		checkNoInternalNodeRequested(theAncestorLists);
+
+		// split the ancestor lists into sets with a common head
+
+		Collection<Set<List<PhylogenyNode<T>>>> childAncestorLists = separateFirstAncestorSets(theAncestorLists);
+		assert childAncestorLists.size() != 1; // otherwise there should be no branch here
+
+		// recurse
+
+		for (Set<List<PhylogenyNode<T>>> childAncestorList : childAncestorLists)
 			{
+			PhylogenyNode<T> child = extractTreeWithLeafPathsExcludingInternal(childAncestorList);
+			child.setParent(bottomOfChain);
+			}
+
+		return bottomOfChain.findRoot();
+		}
+
+
+	private BasicPhylogenyNode<T> extractTreeWithLeafPathsIncludingInternal(
+			Set<List<PhylogenyNode<T>>> theAncestorLists) throws NoSuchNodeException
+		{
+		// use this as a marker to test that the provided lists were actually consistent
+		PhylogenyNode<T> commonAncestor = null;
+		BasicPhylogenyNode<T> bottomOfChain = null;
+
+		// first consume any common prefix on the ancestor lists
+
+		while (DSCollectionUtils.allFirstElementsEqual(theAncestorLists))
+			{
+			commonAncestor = DSCollectionUtils.removeAllFirstElements(theAncestorLists);
+
+			// copy the common ancestor to the new tree
+
 			BasicPhylogenyNode<T> node = new BasicPhylogenyNode<T>();
-			node.setLength(accumulatedLength);
-			// the commonAncestor is now the most recent one, so that's the most sensible name for the new node
+			node.setLength(commonAncestor.getLength());
 			node.setValue(commonAncestor.getValue());
-			node.setWeight(commonAncestor.getWeight());
+
+			//** avoid isLeaf due to ncbi lazy initialization issue
+			//if (commonAncestor.isLeaf())
+			//	{
+			// don't bother with internal weights; they'll get recalculated on demand anyway
+			if (bottomOfChain != null)
+				{
+				bottomOfChain.setWeight(null); // just to be sure
+				}
+			try
+				{
+				node.setWeight(commonAncestor.getWeight());
+				}
+			catch (NotImplementedException e)
+				{
+				node.setWeight(1.0);
+				}
+
+			node.setParent(bottomOfChain);
 			bottomOfChain = node;
 			checkNoInternalNodeRequested(theAncestorLists);
-			//	addPhantomLeafIfNeeded(theAncestorLists, node, namer);
+			}
+
+		// now the lists must differ in their first position, and commonAncestor is set to the immediate parent of whatever the list heads are
+
+		if (commonAncestor == null)  // only possible if allFirstElementsEqual == false on the first attempt
+			{
+			throw new NoSuchNodeException("Provided ancestor lists do not have a common root");
 			}
 
 		// split the ancestor lists into sets with a common head
 
 		Collection<Set<List<PhylogenyNode<T>>>> childAncestorLists = separateFirstAncestorSets(theAncestorLists);
 
-		if (!includeInternalBranches)
-			{
-			assert childAncestorLists.size() != 1; // otherwise there should be no branch here
-			}
-
 		// recurse
 
 		for (Set<List<PhylogenyNode<T>>> childAncestorList : childAncestorLists)
 			{
-			PhylogenyNode<T> child = extractTreeWithLeafPaths(childAncestorList, includeInternalBranches); //, namer);
-			//node.getChildren().add(child);
+			PhylogenyNode<T> child = extractTreeWithLeafPathsIncludingInternal(childAncestorList);
 			child.setParent(bottomOfChain);
 			}
 
 		return bottomOfChain.findRoot();
 		}
+
+
 /*
 	private void addPhantomLeafIfNeeded(Set<List<PhylogenyNode<T>>> theAncestorLists, BasicPhylogenyNode<T> node, NodeNamer<T> namer)
 		{
@@ -880,8 +862,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			allTreeNodesA.remove(node.getParent());
 			}
 
-
-		return extractTreeWithLeaves(allTreeNodesA, true); //, namer);
+		return extractTreeWithLeaves(allTreeNodesA, false);
 		}
 
 	/**
