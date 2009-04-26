@@ -72,6 +72,9 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 
 	private BasicRootedPhylogeny<Integer> theIntegerTree;
+	private HashMultimap<String, Integer> extraNameToIdsMap;
+			// when a node has multiple names separated by "==", store all those after the first here
+
 	private HashMultimap<String, Integer> nameToIdsMap;// = new HashMap<String, Integer>();
 	private Map<String, Integer> nameToUniqueIdMap; // = new HashMap<String, Integer>();
 
@@ -84,6 +87,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		theIntegerTree = (BasicRootedPhylogeny<Integer>) CacheManager.get(this, "theIntegerTree");
 		nameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, "nameToIdsMap");
+		extraNameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, "extraNameToIdsMap");
 		nameToUniqueIdMap = (HashMap<String, Integer>) CacheManager.get(this, "nameToUniqueIdMap");
 
 		if (theIntegerTree == null || nameToIdsMap == null || nameToUniqueIdMap == null)
@@ -94,6 +98,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			// CacheManager.invalidate
 			CacheManager.put(this, "theIntegerTree", theIntegerTree);
 			CacheManager.put(this, "nameToIdsMap", nameToIdsMap);
+			CacheManager.put(this, "extraNameToIdsMap", extraNameToIdsMap);
 			CacheManager.put(this, "nameToUniqueIdMap", nameToUniqueIdMap);
 			}
 
@@ -149,6 +154,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	private void reloadFromNewick()
 		{
 		nameToIdsMap = new HashMultimap<String, Integer>();
+		extraNameToIdsMap = new HashMultimap<String, Integer>();
 
 		//** here we assume that the tre has already been converted to have named nodes at leaves, using the NewickParser command-line tool
 		// else we'd need new NewickTaxonomyService(hugenholtzFilename, truel
@@ -184,7 +190,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 					{
 					return DSCollectionUtils.setOf("" + id);
 					}
-				}, nameToIdsMap);
+				}, nameToIdsMap, extraNameToIdsMap);
 
 
 		addStrainNamesToMap();
@@ -600,7 +606,10 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		for (String s : reverseTaxa)
 			{
 			Collection<Integer> matchingNodes = nameToIdsMap.get(s);
-
+			if (matchingNodes.isEmpty())
+				{
+				matchingNodes = extraNameToIdsMap.get(s);
+				}
 			if (matchingNodes.isEmpty())
 				{
 				logger.debug("IGNORING Node " + s + " not found in " + DSStringUtils.join(taxa, "; "));

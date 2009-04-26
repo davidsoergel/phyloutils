@@ -18,7 +18,8 @@ public class PhylogenyTypeConverter
 	 */
 	public static <T> BasicRootedPhylogeny<T> convertToIDTree(RootedPhylogeny<String> stringTree, NodeNamer<T> namer,
 	                                                          TaxonStringIdMapper<T> idMapper,
-	                                                          Multimap<String, T> nameToIdMap) //throws PhyloUtilsException
+	                                                          Multimap<String, T> nameToIdMap,
+	                                                          Multimap<String, T> extraNameToIdMap) //throws PhyloUtilsException
 		//    ,Multimap<String, T> nameToIdMap)
 		//	throws NcbiTaxonomyException
 		{
@@ -36,7 +37,8 @@ public class PhylogenyTypeConverter
 		// this duplicates convertToIntegerIDNode just so we operate on a BasicRootedPhylogeny instead of a PhylogenyNode
 
 		BasicRootedPhylogeny<T> result = new BasicRootedPhylogeny<T>();
-		copyValuesToNode(stringTree, result.getSelfNode(), idMapper, nameToIdMap, namer); //, nameToIdMap
+		copyValuesToNode(stringTree, result.getSelfNode(), idMapper, nameToIdMap, extraNameToIdMap,
+		                 namer); //, nameToIdMap
 		//NodeNamer<T> namer = new IntegerNodeNamer(10000000);
 
 		// name the nodes with null ids.  Note these don't get added to the nameToIdMap.
@@ -48,15 +50,17 @@ public class PhylogenyTypeConverter
 	private static <T> PhylogenyNode<T> convertToIDNode(PhylogenyNode<String> stringNode,
 	                                                    TaxonStringIdMapper<T> idMapper,
 	                                                    Multimap<String, T> nameToIdMap,
+	                                                    Multimap<String, T> extraNameToIdMap,
 	                                                    NodeNamer<T> namer) //throws PhyloUtilsException//, Multimap<String, T> nameToIdMap)//throws NcbiTaxonomyException
 		{
 		PhylogenyNode<T> result = new BasicPhylogenyNode<T>();
-		copyValuesToNode(stringNode, result, idMapper, nameToIdMap, namer);//,nameToIdMap);
+		copyValuesToNode(stringNode, result, idMapper, nameToIdMap, extraNameToIdMap, namer);//,nameToIdMap);
 		return result;
 		}
 
 	private static <T> void copyValuesToNode(PhylogenyNode<String> stringNode, PhylogenyNode<T> result,
 	                                         TaxonStringIdMapper<T> idMapper, Multimap<String, T> nameToIdMap,
+	                                         Multimap<String, T> extraNameToIdMap,
 	                                         NodeNamer<T> namer) //throws PhyloUtilsException
 		//, Multimap<String, T> nameToIdMap)
 		{
@@ -69,40 +73,58 @@ public class PhylogenyTypeConverter
 		//Set<T> ids = new HashSet<T>();
 
 		String name = stringNode.getValue();
-		String[] names = null;
 
-		if (name != null)
+		// previously unified cases separated for clarity
+
+		if (name == null)
 			{
-			names = name.split("==");
-			for (String s : names)
+			id = namer.generate();
+			}
+		else
+			{
+			if (name.contains("=="))
+				{
+				String[] names = name.split("==");
+				for (String s : names)
+					{
+					try
+						{
+						id = idMapper.findTaxidByName(s);
+						break;
+						//ids.add(idMapper.findTaxidByName(s));
+						}
+					catch (NoSuchNodeException e)
+						{
+						// too bad, try the next one
+						}
+					}
+
+				if (id == null)
+					{
+					//logger.debug("Integer ID not found for name: " + stringNode.getValue());
+					id = namer.generate();
+					}
+
+				nameToIdMap.put(names[0], id);
+
+				for (int i = 1; i < names.length; i++)
+					{
+					extraNameToIdMap.put(names[i], id);
+					}
+				}
+			else
 				{
 				try
 					{
-					id = idMapper.findTaxidByName(s);
-					//ids.add(idMapper.findTaxidByName(s));
+					id = idMapper.findTaxidByName(name);
 					}
 				catch (NoSuchNodeException e)
-					{// too bad, try the next one
+					{
+					id = namer.generate();
 					}
+				nameToIdMap.put(name, id);
 				}
 			}
-
-		if (id == null)
-			{
-			//logger.debug("Integer ID not found for name: " + stringNode.getValue());
-
-			// previously I thought unique ID generation had to happen at the end, I don't know why...
-			id = namer.generate(); //nameInternal(unknownCount)
-			}
-
-		if (names != null)
-			{
-			for (String s : names)
-				{
-				nameToIdMap.put(s, id);
-				}
-			}
-
 		result.setValue(id);
 		//nameToIdMap.put(stringNode.getValue(), id);
 
@@ -114,7 +136,7 @@ public class PhylogenyTypeConverter
 		for (PhylogenyNode<String> node : stringNode.getChildren())
 			{
 			//result.addChild(convertToIntegerIDNode(node));
-			convertToIDNode(node, idMapper, nameToIdMap, namer).setParent(result);  //,nameToIdMap
+			convertToIDNode(node, idMapper, nameToIdMap, extraNameToIdMap, namer).setParent(result);  //,nameToIdMap
 			}
 		}
 	}

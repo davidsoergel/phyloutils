@@ -400,6 +400,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		node.setValue(commonAncestor.getValue());
 		node.setWeight(commonAncestor.getWeight());
 		bottomOfChain = node;
+
 		checkNoInternalNodeRequested(theAncestorLists);
 
 		// split the ancestor lists into sets with a common head
