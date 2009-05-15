@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
@@ -71,9 +72,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		this.synonymService = synonymService;
 		}
 
+	// PERF use ConcurrentMaps and such here instead of synchronizing all the methods
+
 	private BasicRootedPhylogeny<Integer> theIntegerTree;
 	private HashMultimap<String, Integer> extraNameToIdsMap;
-			// when a node has multiple names separated by "==", store all those after the first here
+	// when a node has multiple names separated by "==", store all those after the first here
 
 	private HashMultimap<String, Integer> nameToIdsMap;// = new HashMap<String, Integer>();
 	private Map<String, Integer> nameToUniqueIdMap; // = new HashMap<String, Integer>();
@@ -110,9 +113,9 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}*/
 		}
 
-	private void reloadOverrideMap()
+	private synchronized void reloadOverrideMap()
 		{
-		nameToUniqueIdMap = new HashMap<String, Integer>();
+		nameToUniqueIdMap = new ConcurrentHashMap<String, Integer>();
 
 		Map<String, Set<Integer>> overrideNameToIdMap;
 		try
@@ -151,7 +154,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		throw new NotImplementedException();
 		}
 
-	private void reloadFromNewick()
+	private synchronized void reloadFromNewick()
 		{
 		nameToIdsMap = new HashMultimap<String, Integer>();
 		extraNameToIdsMap = new HashMultimap<String, Integer>();
@@ -196,7 +199,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		addStrainNamesToMap();
 		}
 
-	private static InputStream getInputStream(String filename) throws PhyloUtilsException, IOException
+	private synchronized static InputStream getInputStream(String filename) throws PhyloUtilsException, IOException
 		{
 		//ClassLoader classClassLoader = new NewickParser().getClass().getClassLoader();
 		ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
@@ -245,7 +248,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	/**
 	 *
 	 */
-	private void addStrainNamesToMap()
+	private synchronized void addStrainNamesToMap()
 		{
 		// there are much cleaner ways to do this, I know.  I'm in a freaking hurry.
 
@@ -464,7 +467,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 return false;
 		 }
  */
-	public boolean isLeaf(Integer leafId) throws NoSuchNodeException
+	public synchronized boolean isLeaf(Integer leafId) throws NoSuchNodeException
 		{
 		return theIntegerTree.getNode(leafId).isLeaf();
 		}
@@ -476,7 +479,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return findTaxidByName(name);
 		}
 
-	public Set<String> getCachedNamesForId(Integer id)
+	public synchronized Set<String> getCachedNamesForId(Integer id)
 		{
 		//PERF, need a BiMultiMap or something
 		Set<String> result = new HashSet<String>();
@@ -498,7 +501,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 
 	@NotNull
-	public Integer findTaxidByName(String name) throws NoSuchNodeException
+	public synchronized Integer findTaxidByName(String name) throws NoSuchNodeException
 		{
 		Integer result = nameToUniqueIdMap.get(name);
 
@@ -562,7 +565,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 */
 
 
-	private Integer commonAncestor(Set<Deque<Integer>> paths) throws NoSuchNodeException
+	private synchronized Integer commonAncestor(Set<Deque<Integer>> paths) throws NoSuchNodeException
 		{
 		if (paths.size() == 1)
 			{
@@ -586,7 +589,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	// bottom-up search
 
 	@NotNull
-	private Integer getUniqueNodeForMultilevelName(String[] taxa) throws NoSuchNodeException
+	private synchronized Integer getUniqueNodeForMultilevelName(String[] taxa) throws NoSuchNodeException
 		{
 		List<String> reverseTaxa = new ArrayList(Arrays.asList(taxa.clone()));
 		Collections.reverse(reverseTaxa);
@@ -767,7 +770,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 */
 
 
-	private RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException
+	private synchronized RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException
 		{
 		Collection<Integer> matchingIds = findMatchingIdsRelaxed(name);
 
@@ -833,7 +836,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 return shallowestId;
 		 }
  */
-	public Collection<Integer> findMatchingIds(String name) throws NoSuchNodeException
+	public synchronized Collection<Integer> findMatchingIds(String name) throws NoSuchNodeException
 		{
 		Collection<Integer> matchingIds = nameToIdsMap.get(name);
 		if (matchingIds.isEmpty())
@@ -843,7 +846,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return matchingIds;
 		}
 
-	public Collection<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
+	public synchronized Collection<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
 		{
 		Collection<Integer> matchingIds = nameToIdsMap.get(name);
 		/*	if (matchingIds.isEmpty())
@@ -902,7 +905,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	private Map<String, String> shortNames = new HashMap<String, String>();
 
-	public String getRelaxedName(String name)
+	public synchronized String getRelaxedName(String name)
 		{
 		return shortNames.get(name);
 		}
@@ -918,7 +921,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}
 		}*/
 
-	public boolean isDescendant(Integer ancestor, Integer descendant) throws NoSuchNodeException
+	public synchronized boolean isDescendant(Integer ancestor, Integer descendant) throws NoSuchNodeException
 		{
 		return theIntegerTree.isDescendant(ancestor, descendant);
 //		return stringTaxonomyService.isDescendant(intToNodeMap.get(ancestor), intToNodeMap.get(descendant));
@@ -930,28 +933,28 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return stringTaxonomyService.distanceBetween(intToNodeMap(a), intToNodeMap(b));
 		}
 */
-	public double minDistanceBetween(Integer a, Integer b) throws NoSuchNodeException
+	public synchronized double minDistanceBetween(Integer a, Integer b) throws NoSuchNodeException
 		{
 		return theIntegerTree.distanceBetween(a, b);
 		//return stringTaxonomyService.minDistanceBetween(intToNodeMap.get(a), intToNodeMap.get(b));
 		//	return exactDistanceBetween(name1, name2);
 		}
 
-	public double getDepthFromRoot(Integer b) throws NoSuchNodeException
+	public synchronized double getDepthFromRoot(Integer b) throws NoSuchNodeException
 		{
 		return theIntegerTree.distanceBetween(theIntegerTree.getRoot().getValue(), b);
 		//return stringTaxonomyService.minDistanceBetween(intToNodeMap.get(a), intToNodeMap.get(b));
 		//	return exactDistanceBetween(name1, name2);
 		}
 
-	public double getGreatestDepthBelow(Integer taxid) throws NoSuchNodeException
+	public synchronized double getGreatestDepthBelow(Integer taxid) throws NoSuchNodeException
 		{
 		return theIntegerTree.getNode(taxid).getGreatestBranchLengthDepthBelow();
 		}
 
 	private Double maxDistance = null;
 
-	public double maxDistance()
+	public synchronized double maxDistance()
 		{
 		if (maxDistance == null)
 			{
@@ -960,7 +963,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return maxDistance;
 		}
 
-	public Integer nearestAncestorWithBranchLength(Integer id) throws NoSuchNodeException
+	public synchronized Integer nearestAncestorWithBranchLength(Integer id) throws NoSuchNodeException
 		{
 		return theIntegerTree.nearestAncestorWithBranchLength(id);
 //		return intToNodeMap.inverse().get(intToNodeMap.get(id).nearestAncestorWithBranchLength());
@@ -1016,8 +1019,9 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 }
  */
 
-	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids, boolean ignoreAbsentNodes,
-	                                                       boolean includeInternalBranches)
+	public synchronized RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids,
+	                                                                    boolean ignoreAbsentNodes,
+	                                                                    boolean includeInternalBranches)
 			throws NoSuchNodeException //, NodeNamer<Integer> namer
 		{
 		return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches); //, namer);
@@ -1025,7 +1029,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 
 	@Override
-	public String toString()
+	public synchronized String toString()
 		{
 		String shortname = getClass().getName();
 		shortname = shortname.substring(shortname.lastIndexOf(".") + 1);
@@ -1093,7 +1097,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 }
  */
 
-	public RootedPhylogeny<Integer> findTreeForIds(Set<Integer> idBSet)
+	public synchronized RootedPhylogeny<Integer> findTreeForIds(Set<Integer> idBSet)
 		{
 		try
 			{
@@ -1110,7 +1114,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 
 
-	public RootedPhylogeny<Integer> findCompactSubtreeWithIds(Collection<Integer> matchingIds, String name)
+	public synchronized RootedPhylogeny<Integer> findCompactSubtreeWithIds(Collection<Integer> matchingIds, String name)
 			throws NoSuchNodeException
 		{
 		RootedPhylogeny<Integer> tree = extractTreeWithLeafIDs(matchingIds, true, true);
