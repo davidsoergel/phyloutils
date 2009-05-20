@@ -64,4 +64,6 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 	Collection<Integer> findMatchingIds(String name) throws NoSuchNodeException;
 
 	Collection<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException;
+
+//	T nearestAncestorAtRank(String levelName, Integer leafId) throws NoSuchNodeException;
 	}

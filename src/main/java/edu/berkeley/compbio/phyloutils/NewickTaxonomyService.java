@@ -307,4 +307,9 @@ public class NewickTaxonomyService
 		{
 		throw new NotImplementedException();
 		}
+
+	public String nearestAncestorAtRank(final String rankName, Integer leafId) throws NoSuchNodeException
+		{
+		throw new NotImplementedException();
+		}
 	}

@@ -159,7 +159,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		nameToIdsMap = new HashMultimap<String, Integer>();
 		extraNameToIdsMap = new HashMultimap<String, Integer>();
 
-		//** here we assume that the tre has already been converted to have named nodes at leaves, using the NewickParser command-line tool
+		//** here we assume that the tree has already been converted to have named nodes at leaves, using the NewickParser command-line tool
 		// else we'd need new NewickTaxonomyService(hugenholtzFilename, truel
 		// );
 		NewickTaxonomyService stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename, false);
@@ -285,7 +285,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 							{
 							logger.trace(
 									"prokMSA_id " + prokMSA_id + " not in tree; " + organism + " " + prokMSAname + " "
-											+ source);
+									+ source);
 							}
 						skipped++;
 						continue;
@@ -969,19 +969,26 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 //		return intToNodeMap.inverse().get(intToNodeMap.get(id).nearestAncestorWithBranchLength());
 		}
 
-	/*
-	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids, boolean ignoreAbsentNodes)
-			throws PhyloUtilsException
-		{
-		return stringTaxonomyService
-				.extractTreeWithLeaves(DSCollectionUtils.mapAll(intToNodeMap, ids), ignoreAbsentNodes);
-		}
 
-	public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids) throws PhyloUtilsException
+/*	public Integer nearestAncestorAtRank(final String rankName, Integer leafId) throws NoSuchNodeException
 		{
-		return stringTaxonomyService.extractTreeWithLeaves(DSCollectionUtils.mapAll(intToNodeMap, ids));
+		if(synonymService)
 		}
 */
+
+	/*
+	 public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids, boolean ignoreAbsentNodes)
+			 throws PhyloUtilsException
+		 {
+		 return stringTaxonomyService
+				 .extractTreeWithLeaves(DSCollectionUtils.mapAll(intToNodeMap, ids), ignoreAbsentNodes);
+		 }
+
+	 public RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids) throws PhyloUtilsException
+		 {
+		 return stringTaxonomyService.extractTreeWithLeaves(DSCollectionUtils.mapAll(intToNodeMap, ids));
+		 }
+ */
 
 	/*	public boolean isDescendant(PhylogenyNode<Integer> ancestor, PhylogenyNode<Integer> descendant)
 			 throws PhyloUtilsException
