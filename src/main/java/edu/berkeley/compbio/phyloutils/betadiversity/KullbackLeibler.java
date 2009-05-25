@@ -35,6 +35,7 @@ package edu.berkeley.compbio.phyloutils.betadiversity;
 import com.davidsoergel.dsutils.math.MathUtils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.DissimilarityMeasure;
+import edu.berkeley.compbio.phyloutils.AbstractRootedPhylogeny;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
@@ -71,7 +72,8 @@ public class KullbackLeibler<T> implements DissimilarityMeasure<RootedPhylogeny<
 			unionLeaves.addAll(a.getLeafValues());
 			unionLeaves.addAll(b.getLeafValues());
 
-			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves, false, false);
+			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves, false, false,
+			                                                                       AbstractRootedPhylogeny.MutualExclusionResolutionMode.EXCEPTION);
 
 			RootedPhylogeny<T> aTreeSmoothed = unionTree.clone();
 			aTreeSmoothed.smoothWeightsFrom(a, .000001);

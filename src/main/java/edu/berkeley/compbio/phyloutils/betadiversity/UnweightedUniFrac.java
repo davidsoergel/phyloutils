@@ -34,6 +34,7 @@ package edu.berkeley.compbio.phyloutils.betadiversity;
 
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.DissimilarityMeasure;
+import edu.berkeley.compbio.phyloutils.AbstractRootedPhylogeny;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 import org.apache.log4j.Logger;
@@ -72,7 +73,8 @@ public class UnweightedUniFrac<T> implements DissimilarityMeasure<RootedPhylogen
 			unionLeafIDs.addAll(a.getLeafValues());
 			unionLeafIDs.addAll(b.getLeafValues());
 
-			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeafIDs, false, true);
+			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeafIDs, false, true,
+			                                                                       AbstractRootedPhylogeny.MutualExclusionResolutionMode.EXCEPTION);
 
 			// careful: the "intersection" tree needs to contain branches terminating at internal nodes that are common between the two trees,
 			// even if there are no leaves in common below that node.

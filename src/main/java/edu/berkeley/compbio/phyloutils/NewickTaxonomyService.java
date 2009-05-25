@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -141,7 +140,7 @@ public class NewickTaxonomyService
 	public RootedPhylogeny<String> getRandomSubtree(int numTaxa, Double mergeThreshold, String exceptDescendantsOf)
 			throws TreeException, NoSuchNodeException
 		{
-		Collection<String> mergedIds;
+		Set<String> mergedIds;
 		if (mergeThreshold != null)
 			{
 			Map<String, Set<String>> mergeIdSets =
@@ -228,11 +227,19 @@ public class NewickTaxonomyService
 		return basePhylogeny.extractTreeWithLeaves(ids);
 		}*/
 
-	public RootedPhylogeny<String> extractTreeWithLeafIDs(Collection<String> ids, boolean ignoreAbsentNodes,
+	public RootedPhylogeny<String> extractTreeWithLeafIDs(Set<String> ids, boolean ignoreAbsentNodes,
 	                                                      boolean includeInternalBranches)
 			throws NoSuchNodeException  //, NodeNamer<String> namer
 		{
 		return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches); //, namer);
+		}
+
+	public RootedPhylogeny<String> extractTreeWithLeafIDs(Set<String> ids, boolean ignoreAbsentNodes,
+	                                                      boolean includeInternalBranches,
+	                                                      AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
+			throws NoSuchNodeException  //, NodeNamer<String> namer
+		{
+		return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode); //, namer);
 		}
 
 	public boolean isDescendant(PhylogenyNode<String> ancestor, PhylogenyNode<String> descendant)
@@ -292,18 +299,18 @@ public class NewickTaxonomyService
 		}*/
 
 
-	public RootedPhylogeny<Integer> findCompactSubtreeWithIds(Collection<Integer> matchingIds, String name)
+	public RootedPhylogeny<Integer> findCompactSubtreeWithIds(Set<Integer> matchingIds, String name)
 			throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
 		}
 
-	public Collection<Integer> findMatchingIds(String name) throws NoSuchNodeException
+	public Set<Integer> findMatchingIds(String name) throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
 		}
 
-	public Collection<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
+	public Set<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
 		}

@@ -3,7 +3,7 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.dsutils.tree.TreeException;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * Provides a simplified interface for taxonomy sources (e.g., NCBI, or a Newick file) that doesn't provide all the
@@ -54,16 +54,16 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 
 	//RootedPhylogeny<Integer> findTreeForName(String name) throws NoSuchNodeException;
 
-	RootedPhylogeny<Integer> findCompactSubtreeWithIds(Collection<Integer> matchingIds, String name)
+	RootedPhylogeny<Integer> findCompactSubtreeWithIds(Set<Integer> matchingIds, String name)
 			throws NoSuchNodeException;
 
 //	int getNumNodesForName(String name);
 
 //	Set<Integer> getAllIdsForName(String name);
 
-	Collection<Integer> findMatchingIds(String name) throws NoSuchNodeException;
+	Set<Integer> findMatchingIds(String name) throws NoSuchNodeException;
 
-	Collection<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException;
+	Set<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException;
 
 //	T nearestAncestorAtRank(String levelName, Integer leafId) throws NoSuchNodeException;
 	}

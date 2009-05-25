@@ -35,7 +35,6 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.apache.log4j.Logger;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -102,7 +101,7 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 	 *
 	 * @return the IDs of all the leaf nodes of the tree.
 	 */
-	public Collection<T> getLeafValues()
+	public Set<T> getLeafValues()
 		{
 		return leafPhylogeny.getLeafValues();
 		}
@@ -126,14 +125,26 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 	/**
 	 * {@inheritDoc}
 	 */
-	public RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes,
+	public RootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
 	                                                 boolean includeInternalBranches)
+			throws NoSuchNodeException //, NodeNamer<T> namer
+		{
+		return extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches,
+		                              AbstractRootedPhylogeny.MutualExclusionResolutionMode.EXCEPTION);
+		}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public RootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
+	                                                 boolean includeInternalBranches,
+	                                                 AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
 			throws NoSuchNodeException //, NodeNamer<T> namer
 		{
 		// this ought to work even if some of the requested ids are in the root tree rather than the leaf tree,
 		// as long as the leaf tree also has a node with the same ID (even with the wrong topology)
 
-		RootedPhylogeny<T> basicLeaf = leafPhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, true);
+		RootedPhylogeny<T> basicLeaf = leafPhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, true, mode);
 		HybridRootedPhylogeny<T> extractedHybrid = new HybridRootedPhylogeny<T>(rootPhylogeny, basicLeaf);
 		RootedPhylogeny<T> result = extractedHybrid.convertToBasic();
 
@@ -143,7 +154,7 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 
 		// also, we had to include internal branches so far, but now we can remove them
 
-		return result.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches);
+		return result.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode);
 		}
 
 

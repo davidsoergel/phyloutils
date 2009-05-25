@@ -34,11 +34,11 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.ContractTestAware;
 import com.davidsoergel.dsutils.TestInstanceFactory;
+import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import org.testng.annotations.Factory;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 
 /**
@@ -67,10 +67,11 @@ public class HybridRootedPhylogenyTest extends ContractTestAware<HybridRootedPhy
 				new BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles().rootPhylogeny;
 
 		//List<String> leafList = Arrays.asList("a", "aa", "bb", "bbba", "ba", "baa", "c", "ca", "cb"); // can't include internal nodes
-		List<String> leafList = Arrays.asList("aa", "bbba", "baa", "ca", "cb");
-		RootedPhylogeny rootPhylogeny = leafPhylogeny.extractTreeWithLeafIDs(leafList, false, false);
+		Set<String> leafList = DSCollectionUtils.setOf("aa", "bbba", "baa", "ca", "cb");
+		RootedPhylogeny rootPhylogeny = leafPhylogeny.extractTreeWithLeafIDs(leafList, false, false,
+		                                                                     AbstractRootedPhylogeny.MutualExclusionResolutionMode.EXCEPTION);
 
-		leafPhylogeny.setAllBranchLengthsToNull();
+		leafPhylogeny.setAllBranchLengthsTo(null);
 
 		return new HybridRootedPhylogeny(rootPhylogeny, leafPhylogeny);
 		}

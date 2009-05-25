@@ -174,7 +174,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<T> getLeafValues()
+	public Set<T> getLeafValues()
 		{
 		Set<T> result = new HashSet<T>();
 		for (T t : uniqueIdToNodeMap.keySet())
@@ -190,7 +190,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<T> getNodeValues()
+	public Set<T> getNodeValues()
 		{
 		return uniqueIdToNodeMap.keySet();
 		}

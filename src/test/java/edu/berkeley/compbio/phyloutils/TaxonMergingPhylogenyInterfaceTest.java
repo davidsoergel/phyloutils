@@ -34,11 +34,13 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.AtomicContractTest;
 import com.davidsoergel.dsutils.TestInstanceFactory;
+import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * Tests instances of TaxonMergingPhylogeny.  The instances created by the provided factory must have certain properties
@@ -70,7 +72,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 	public void extractsTreeCorrectlyGivenBaseLeaves() throws Exception
 		{
 		TaxonMergingPhylogeny<Object> tmp = tif.createInstance();
-		Collection leafIDs = Arrays.asList("baa", "bbba", "ca", "cb");
+		Set leafIDs = DSCollectionUtils.setOf("baa", "bbba", "ca", "cb");
 
 		RootedPhylogeny<Object> result = tmp.extractTreeWithLeafIDs(leafIDs, false, false);
 
@@ -89,12 +91,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 	public void extractsTreeCorrectlyGivenInternalLeaves() throws Exception
 		{
 		TaxonMergingPhylogeny<String> tmp = tif.createInstance();
-		Collection leafIDs = Arrays.asList(new Object[]{
-				"ba",
-				"bb",
-				"c",
-				"a"
-		});
+		Set leafIDs = DSCollectionUtils.setOf(new Object[]{"ba", "bb", "c", "a"});
 
 		RootedPhylogeny<String> result = tmp.extractTreeWithLeafIDs(leafIDs, false, false);
 
@@ -113,12 +110,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 	public void treeExtractionThrowsExceptionOnLeafNotFound() throws Exception
 		{
 		TaxonMergingPhylogeny tmp = tif.createInstance();
-		Collection leafIDs = Arrays.asList(new Object[]{
-				"ba",
-				"bb",
-				"Node Absent",
-				"a"
-		});
+		Set leafIDs = DSCollectionUtils.setOf(new Object[]{"ba", "bb", "Node Absent", "a"});
 
 		RootedPhylogeny result = tmp.extractTreeWithLeafIDs(leafIDs, false, false);
 		}

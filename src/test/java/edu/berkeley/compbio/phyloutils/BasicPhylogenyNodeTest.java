@@ -171,7 +171,7 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 				// OK, continue to the children
 				}
 			else if (topLevelNode == testInstance.a || topLevelNode == testInstance.ba
-					|| topLevelNode == testInstance.bb || topLevelNode == testInstance.c)
+			         || topLevelNode == testInstance.bb || topLevelNode == testInstance.c)
 				{
 				i++;
 				it.skipAllDescendants(topLevelNode);
@@ -227,7 +227,8 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 		theAncestorLists.add(testInstance.bbba.getAncestorPath());
 		theAncestorLists.add(testInstance.ca.getAncestorPath());
 
-		BasicPhylogenyNode<String> tree = testInstance.rootPhylogeny.extractTreeWithLeafPaths(theAncestorLists, false);
+		BasicPhylogenyNode<String> tree = testInstance.rootPhylogeny.extractTreeWithLeafPaths(theAncestorLists, false,
+		                                                                                      AbstractRootedPhylogeny.MutualExclusionResolutionMode.EXCEPTION);
 
 		for (PhylogenyNode<String> xnode : tree)
 			{

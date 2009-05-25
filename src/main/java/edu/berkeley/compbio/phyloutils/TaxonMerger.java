@@ -63,20 +63,28 @@ public class TaxonMerger
 	/**
 	 * Separates a set of taxon ids into the smallest possible number of disjoint sets such that the maximum pairwise
 	 * phylogenetic distance within each set is less than a given threshold.
+	 * <p/>
+	 * If one of the requested ids is an ancestor of another, then the whole subtree is merged at the ancestor level,
+	 * regardless of its span.
 	 */
 	//@Transactional
 	//(propagation = Propagation.MANDATORY)
-	public static <T> Map<T, Set<T>> merge(Collection<T> leafIds, TaxonomyService<T> basePhylogeny,
+	public static <T> Map<T, Set<T>> merge(Set<T> leafIds, TaxonomyService<T> basePhylogeny,
 	                                       // TaxonMergingPhylogeny
 	                                       double branchSpanMergeThreshold)
 			throws TreeException, NoSuchNodeException// , PhyloUtilsException
 		{
+		// ** hack to allow NcbiTaxonomyWithUnitBranchLengths
+		// REVIEW we have to ignoreAbsentNodes in order to allowRequestingInternalNodes.  Is that OK??
+		RootedPhylogeny<T> theCompleteTree = basePhylogeny.extractTreeWithLeafIDs(leafIds, false, true,
+		                                                                          AbstractRootedPhylogeny.MutualExclusionResolutionMode.ANCESTOR);
+
 		Map<T, Set<T>> theTaxonsetsByTaxid = new HashMap<T, Set<T>>();
 
 		// first merge all those taxa that are at the same leaf in the known distance tree
 		for (T id : leafIds)
 			{
-			T knownId = basePhylogeny.nearestAncestorWithBranchLength(id);
+			T knownId = theCompleteTree.nearestAncestorWithBranchLength(id);
 			Set<T> currentTaxonset = theTaxonsetsByTaxid.get(knownId);
 			if (currentTaxonset == null)
 				{
@@ -99,7 +107,9 @@ public class TaxonMerger
 
 		Map<T, Set<T>> theMergedTaxa = new HashMap<T, Set<T>>();
 
-		RootedPhylogeny<T> theTree = basePhylogeny.extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet(), false, true);
+		// REVIEW we have to ignoreAbsentNodes in order to allowRequestingInternalNodes.  Is that OK??
+		RootedPhylogeny<T> theTree = theCompleteTree.extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet(), false, true,
+		                                                                    AbstractRootedPhylogeny.MutualExclusionResolutionMode.ANCESTOR);
 
 		assert theTaxonsetsByTaxid.keySet().containsAll(theTree.getLeafValues());
 
@@ -158,7 +168,7 @@ public class TaxonMerger
 					dropped += subIds.size();
 
 					logger.warn("Dropping " + subIds.size() + " taxa at node " + id + " with span " + span + " > "
-							+ branchSpanMergeThreshold + " (i.e., our base tree is not detailed enough)");
+					            + branchSpanMergeThreshold + " (i.e., our base tree is not detailed enough)");
 					}
 				}
 			}
@@ -184,8 +194,8 @@ public class TaxonMerger
 
 				if (headId2 != headId)
 					{
-					assert !basePhylogeny.isDescendant(headId, headId2);
-					assert !basePhylogeny.isDescendant(headId2, headId);
+					assert !theCompleteTree.isDescendant(headId, headId2);
+					assert !theCompleteTree.isDescendant(headId2, headId);
 					assert DSCollectionUtils.intersection(taxonMembers, entry2.getValue()).size() == 0;
 					}
 				}

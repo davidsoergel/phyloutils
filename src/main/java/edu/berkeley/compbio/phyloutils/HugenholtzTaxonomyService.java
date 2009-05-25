@@ -91,7 +91,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		theIntegerTree = (BasicRootedPhylogeny<Integer>) CacheManager.get(this, "theIntegerTree");
 		nameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, "nameToIdsMap");
 		extraNameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, "extraNameToIdsMap");
-		nameToUniqueIdMap = (HashMap<String, Integer>) CacheManager.get(this, "nameToUniqueIdMap");
+		nameToUniqueIdMap = (Map<String, Integer>) CacheManager.get(this, "nameToUniqueIdMap");
 
 		if (theIntegerTree == null || nameToIdsMap == null || nameToUniqueIdMap == null)
 			{
@@ -772,7 +772,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	private synchronized RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException
 		{
-		Collection<Integer> matchingIds = findMatchingIdsRelaxed(name);
+		Set<Integer> matchingIds = findMatchingIdsRelaxed(name);
 
 		if (matchingIds.size() == 0)
 			{
@@ -836,9 +836,9 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 return shallowestId;
 		 }
  */
-	public synchronized Collection<Integer> findMatchingIds(String name) throws NoSuchNodeException
+	public synchronized Set<Integer> findMatchingIds(String name) throws NoSuchNodeException
 		{
-		Collection<Integer> matchingIds = nameToIdsMap.get(name);
+		Set<Integer> matchingIds = nameToIdsMap.get(name);
 		if (matchingIds.isEmpty())
 			{
 			throw new NoSuchNodeException("Node not found: " + name);
@@ -846,9 +846,9 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return matchingIds;
 		}
 
-	public synchronized Collection<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
+	public synchronized Set<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
 		{
-		Collection<Integer> matchingIds = nameToIdsMap.get(name);
+		Set<Integer> matchingIds = nameToIdsMap.get(name);
 		/*	if (matchingIds.isEmpty())
 		   {
 		   matchingIds = new HashSet<Integer>();
@@ -1026,8 +1026,15 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 }
  */
 
-	public synchronized RootedPhylogeny<Integer> extractTreeWithLeafIDs(Collection<Integer> ids,
-	                                                                    boolean ignoreAbsentNodes,
+	public synchronized RootedPhylogeny<Integer> extractTreeWithLeafIDs(Set<Integer> ids, boolean ignoreAbsentNodes,
+	                                                                    boolean includeInternalBranches,
+	                                                                    AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
+			throws NoSuchNodeException //, NodeNamer<Integer> namer
+		{
+		return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode); //, namer);
+		}
+
+	public synchronized RootedPhylogeny<Integer> extractTreeWithLeafIDs(Set<Integer> ids, boolean ignoreAbsentNodes,
 	                                                                    boolean includeInternalBranches)
 			throws NoSuchNodeException //, NodeNamer<Integer> namer
 		{
@@ -1108,7 +1115,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		try
 			{
-			RootedPhylogeny<Integer> bTree = extractTreeWithLeafIDs(idBSet, true, true);
+			RootedPhylogeny<Integer> bTree = extractTreeWithLeafIDs(idBSet, true, true,
+			                                                        AbstractRootedPhylogeny.MutualExclusionResolutionMode.BOTH);
 			PhylogenyNode<Integer> r = bTree.getFirstBranchingNode();
 			bTree = r.asRootedPhylogeny();
 			return bTree;
@@ -1121,10 +1129,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 
 
-	public synchronized RootedPhylogeny<Integer> findCompactSubtreeWithIds(Collection<Integer> matchingIds, String name)
+	public synchronized RootedPhylogeny<Integer> findCompactSubtreeWithIds(Set<Integer> matchingIds, String name)
 			throws NoSuchNodeException
 		{
-		RootedPhylogeny<Integer> tree = extractTreeWithLeafIDs(matchingIds, true, true);
+		RootedPhylogeny<Integer> tree = extractTreeWithLeafIDs(matchingIds, true, true,
+		                                                       AbstractRootedPhylogeny.MutualExclusionResolutionMode.BOTH);
 		PhylogenyNode<Integer> result = tree.getFirstBranchingNode();
 
 		double span = result.getLargestLengthSpan();

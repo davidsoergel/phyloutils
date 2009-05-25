@@ -34,7 +34,7 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 
-import java.util.Collection;
+import java.util.Set;
 
 
 /**
@@ -104,11 +104,16 @@ public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
 	 * @param ignoreAbsentNodes silently ignore requests for leaves that are not present in the tree, simply returning the
 	 *                          extracted tree with those leaves that are found.  I.e., intersect the requested leaf id
 	 *                          list with the available leaf ids before constructing the result tree.
+	 * @param mode
 	 * @return the extracted RootedPhylogeny<T>
 	 * @throws NoSuchNodeException when the given collection contains a node id that is not found in the tree and
 	 *                             ignoreAbsentNodes is false
 	 */
-	RootedPhylogeny<T> extractTreeWithLeafIDs(Collection<T> ids, boolean ignoreAbsentNodes,
-	                                          boolean includeInternalBranches)
+	RootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes, boolean includeInternalBranches,
+	                                          AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
+			throws NoSuchNodeException; //, NodeNamer<T> namer
+
+
+	RootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes, boolean includeInternalBranches)
 			throws NoSuchNodeException; //, NodeNamer<T> namer
 	}

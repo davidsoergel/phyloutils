@@ -151,23 +151,25 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 		RootedPhylogeny<String> baseTree = tif.createInstance();
 
 		RootedPhylogeny<String> tree1 = baseTree.extractTreeWithLeafIDs(
-				DSCollectionUtils.setOf("aaaa", "ab", "baa", "bab", "bba", "bbba", "ca", "cb"), false, false);
+				DSCollectionUtils.setOf("aaaa", "ab", "baa", "bab", "bba", "bbba", "ca", "cb"), false, false,
+				AbstractRootedPhylogeny.MutualExclusionResolutionMode.EXCEPTION);
 		tree1.randomizeLeafWeights(new UniformDistribution(0, 1));
 
 		RootedPhylogeny<String> tree2 = baseTree.extractTreeWithLeafIDs(
-				DSCollectionUtils.setOf("aaaa", "ab", "baa", "bab", "bba", "bbba", "ca", "cb"), false, false);
+				DSCollectionUtils.setOf("aaaa", "ab", "baa", "bab", "bba", "bbba", "ca", "cb"), false, false,
+				AbstractRootedPhylogeny.MutualExclusionResolutionMode.EXCEPTION);
 		tree2.randomizeLeafWeights(new UniformDistribution(0, 1));
 
 		RootedPhylogeny<String> tree3 = tree1.mixWith(tree2, 0.1);
 
 		assert MathUtils.equalWithinFPError(tree3.getNode("a").getWeight(), tree1.getNode("a").getWeight() * 0.1
-				+ tree2.getNode("a").getWeight() * 0.9);
+		                                                                    + tree2.getNode("a").getWeight() * 0.9);
 
 		assert MathUtils.equalWithinFPError(tree3.getNode("bb").getWeight(), tree1.getNode("bb").getWeight() * 0.1
-				+ tree2.getNode("bb").getWeight() * 0.9);
+		                                                                     + tree2.getNode("bb").getWeight() * 0.9);
 
 		assert MathUtils.equalWithinFPError(tree3.getNode("ca").getWeight(), tree1.getNode("ca").getWeight() * 0.1
-				+ tree2.getNode("ca").getWeight() * 0.9);
+		                                                                     + tree2.getNode("ca").getWeight() * 0.9);
 		}
 
 	@Test(expectedExceptions = PhyloUtilsException.class)

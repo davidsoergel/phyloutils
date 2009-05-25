@@ -41,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 
 /**
@@ -175,14 +176,14 @@ public interface RootedPhylogeny<T>
 	 *
 	 * @return the IDs of all the leaf nodes of the tree.
 	 */
-	Collection<T> getLeafValues();
+	Set<T> getLeafValues();
 
 	/**
 	 * Returns the IDs of all the nodes in the tree, both internal nodes and leaf nodes.
 	 *
 	 * @return the IDs of all the nodes in the tree, both internal nodes and leaf nodes.
 	 */
-	Collection<T> getNodeValues();
+	Set<T> getNodeValues();
 
 	/**
 	 * Returns the sum of all branch lengths in the tree.
@@ -300,7 +301,7 @@ public interface RootedPhylogeny<T>
 	Map<T, Double> getNodeWeights() throws PhyloUtilsException;
 
 
-	void setAllBranchLengthsToNull();
+	void setAllBranchLengthsTo(Double d);
 
 	//void saveState();
 

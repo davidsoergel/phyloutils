@@ -34,6 +34,7 @@ package edu.berkeley.compbio.phyloutils.betadiversity;
 
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.DissimilarityMeasure;
+import edu.berkeley.compbio.phyloutils.AbstractRootedPhylogeny;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 import org.apache.log4j.Logger;
@@ -73,7 +74,8 @@ public class JDivergence<T> implements DissimilarityMeasure<RootedPhylogeny<T>>
 			unionLeaves.addAll(a.getLeafValues());
 			unionLeaves.addAll(b.getLeafValues());
 
-			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves, false, false);
+			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves, false, false,
+			                                                                       AbstractRootedPhylogeny.MutualExclusionResolutionMode.EXCEPTION);
 
 			RootedPhylogeny<T> aTreeSmoothed = unionTree.clone();
 			aTreeSmoothed.smoothWeightsFrom(a, .000001);

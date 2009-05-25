@@ -34,6 +34,7 @@ package edu.berkeley.compbio.phyloutils.betadiversity;
 
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.DissimilarityMeasure;
+import edu.berkeley.compbio.phyloutils.AbstractRootedPhylogeny;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
@@ -70,7 +71,8 @@ public class NormalizedWeightedUniFrac<T> implements DissimilarityMeasure<Rooted
 			unionLeaves.addAll(a.getLeafValues());
 			unionLeaves.addAll(b.getLeafValues());
 
-			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves, false, false);
+			RootedPhylogeny<T> unionTree = theBasePhylogeny.extractTreeWithLeafIDs(unionLeaves, false, false,
+			                                                                       AbstractRootedPhylogeny.MutualExclusionResolutionMode.EXCEPTION);
 
 			double u = 0;
 
