@@ -236,24 +236,26 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		RootedPhylogeny<T> result = extractTreeWithLeaves(theLeaves, includeInternalBranches, mode);
 		Collection<T> gotLeaves = result.getLeafValues();
-		//Collection<T> gotNodes = result.getNodeValues();
+		Collection<T> gotNodes = result.getNodeValues();
 
 		// all the leaves that were found were leaves that were requested
 		assert ids.containsAll(gotLeaves);
 
-		/*
-		if (includeInternalBranches)
+		// BAD confusing interaction between all three parameters
+		//if (includeInternalBranches && !ignoreAbsentNodes) //(mode == MutualExclusionResolutionMode.LEAF || mode == MutualExclusionResolutionMode.BOTH))
+		if (!ignoreAbsentNodes)
 			{
 			// some requested leaves may turn out to be internal nodes, but at least they should all be accounted for
-			//assert gotNodes.containsAll(ids);
+			assert gotNodes.containsAll(ids);
 			}
-		*/
 
-		if (!ignoreAbsentNodes)
+
+		/*	if (!ignoreAbsentNodes)
 			{
 			// any requested leaves that turned out to be internal nodes should have had a phantom leaf added
 			assert gotLeaves.containsAll(ids);
 			}
+		*/
 		return result;
 		}
 
@@ -351,11 +353,12 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 	/**
 	 * When we request extraction of a tree with a bunch of nodes, and one of those nodes is an ancestor of the other, do
-	 * we include only the leaf, only the ancestor, both, or throw an exception?
+	 * we include only the leaf, only the ancestor, both, or throw an exception?  BOTHNOBRANCHLENGTH is a compromise
+	 * between ANCESTOR and BOTH; both nodes are provided, but all branch lengths below the ancestor are set to zero.
 	 */
 	public enum MutualExclusionResolutionMode
 		{
-			LEAF, ANCESTOR, BOTH, EXCEPTION
+			LEAF, ANCESTOR, BOTH, EXCEPTION  //BOTHNOBRANCHLENGTH,
 		}
 
 	/**
@@ -602,8 +605,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		while (iterator.hasNext())
 			{
 			List<PhylogenyNode<T>> ancestorList = iterator.next();
-			if (ancestorList
-					.isEmpty())  // there can be at most one empty list here due to leaf id uniqueness, so it's safe to return immediately rather than testing the rest
+
+			// there can be at most one empty list here due to leaf id uniqueness, so it's safe to return immediately rather than testing the rest
+			if (ancestorList.isEmpty())
 				{
 				if (mode == MutualExclusionResolutionMode.LEAF)
 					{
@@ -626,7 +630,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 					iterator.remove();
 					return true;
 					}
-				else // if (mode == NEITHER)
+				else // if (mode == EXCEPTION)
 					{
 					throw new PhyloUtilsRuntimeException("Requested extraction of an internal node as a leaf");
 					}

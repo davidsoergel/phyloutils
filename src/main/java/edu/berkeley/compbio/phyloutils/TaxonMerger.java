@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -69,20 +70,20 @@ public class TaxonMerger
 	 */
 	//@Transactional
 	//(propagation = Propagation.MANDATORY)
-	public static <T> Map<T, Set<T>> merge(Set<T> leafIds, TaxonomyService<T> basePhylogeny,
+	public static <T> Map<T, Set<T>> merge(final Set<T> requestedLeafIds, final TaxonomyService<T> basePhylogeny,
 	                                       // TaxonMergingPhylogeny
-	                                       double branchSpanMergeThreshold)
+	                                       final double branchSpanMergeThreshold)
 			throws TreeException, NoSuchNodeException// , PhyloUtilsException
 		{
 		// ** hack to allow NcbiTaxonomyWithUnitBranchLengths
-		// REVIEW we have to ignoreAbsentNodes in order to allowRequestingInternalNodes.  Is that OK??
-		RootedPhylogeny<T> theCompleteTree = basePhylogeny.extractTreeWithLeafIDs(leafIds, false, true,
-		                                                                          AbstractRootedPhylogeny.MutualExclusionResolutionMode.ANCESTOR);
+		// REVIEW we have to ignoreAbsentNodes in order to use ANCESTOR mode, because we may drop the leaves.  Is that OK??
+		RootedPhylogeny<T> theCompleteTree = basePhylogeny.extractTreeWithLeafIDs(requestedLeafIds, false, true,
+		                                                                          AbstractRootedPhylogeny.MutualExclusionResolutionMode.BOTH);
 
 		Map<T, Set<T>> theTaxonsetsByTaxid = new HashMap<T, Set<T>>();
 
 		// first merge all those taxa that are at the same leaf in the known distance tree
-		for (T id : leafIds)
+		for (T id : requestedLeafIds)
 			{
 			T knownId = theCompleteTree.nearestAncestorWithBranchLength(id);
 			Set<T> currentTaxonset = theTaxonsetsByTaxid.get(knownId);
@@ -103,21 +104,51 @@ public class TaxonMerger
 			return theTaxonsetsByTaxid;
 			}
 */
-		// now iterate over the tree, merging subtrees that meet the criterion
 
 		Map<T, Set<T>> theMergedTaxa = new HashMap<T, Set<T>>();
 
-		// REVIEW we have to ignoreAbsentNodes in order to allowRequestingInternalNodes.  Is that OK??
-		RootedPhylogeny<T> theTree = theCompleteTree.extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet(), false, true,
-		                                                                    AbstractRootedPhylogeny.MutualExclusionResolutionMode.ANCESTOR);
+		// REVIEW we have to ignoreAbsentNodes in order to use ANCESTOR mode, because we may drop the leaves.  Is that OK??
+		RootedPhylogeny<T> thePrunedTree = theCompleteTree
+				.extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet(), true, true,
+				                        AbstractRootedPhylogeny.MutualExclusionResolutionMode.ANCESTOR);
 
-		assert theTaxonsetsByTaxid.keySet().containsAll(theTree.getLeafValues());
+		// if there were any ancestor-descendant issues, merge the subtrees up to the ancestor level
 
-		// this may not be true unless we use extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet(), false, true); above
+		for (T ancestorId : thePrunedTree.getLeafValues())
+			{
+			PhylogenyNode<T> ancestor = theCompleteTree.getNode(ancestorId);
+			if (!ancestor.isLeaf())
+				{
+				Set<T> currentTaxonset = theTaxonsetsByTaxid.get(ancestorId);
+				assert currentTaxonset != null;
+
+				Iterator<PhylogenyNode<T>> iter = ancestor.iterator();
+				assert iter.next() == ancestor;
+
+				while (iter.hasNext())
+					{
+					PhylogenyNode<T> descendant = iter.next();
+					assert descendant != ancestor;
+
+					T descendantId = descendant.getValue();
+					currentTaxonset.addAll(theTaxonsetsByTaxid.get(descendantId));
+					theTaxonsetsByTaxid.remove(descendantId);
+					}
+				}
+			}
+
+
+		assert theTaxonsetsByTaxid.keySet().containsAll(thePrunedTree.getLeafValues());
+
+		// this may not be true unless we use MutualExclusionResolutionMode.BOTH above
 		// we do want to make sure all mergable taxa are included, whether or not they are leaves
-		assert theTree.getNodeValues().containsAll(theTaxonsetsByTaxid.keySet());
+		assert thePrunedTree.getNodeValues().containsAll(theTaxonsetsByTaxid.keySet());
 
-		DepthFirstTreeIterator<T, PhylogenyNode<T>> it = theTree.depthFirstIterator();
+
+		// now iterate over the tree, merging subtrees that meet the criterion
+
+
+		DepthFirstTreeIterator<T, PhylogenyNode<T>> it = thePrunedTree.depthFirstIterator();
 
 		// for sanity checking only
 		List<T> allMergedTaxa = new ArrayList<T>();
@@ -168,7 +199,7 @@ public class TaxonMerger
 					dropped += subIds.size();
 
 					logger.warn("Dropping " + subIds.size() + " taxa at node " + id + " with span " + span + " > "
-					            + branchSpanMergeThreshold + " (i.e., our base tree is not detailed enough)");
+							+ branchSpanMergeThreshold + " (i.e., our base tree is not detailed enough)");
 					}
 				}
 			}
@@ -202,7 +233,7 @@ public class TaxonMerger
 
 			// more to the point, this subtree should not descend from the root of any other subtree
 
-			PhylogenyNode<T> node = theTree.getNode(headId);
+			PhylogenyNode<T> node = thePrunedTree.getNode(headId);
 			for (PhylogenyNode<T> ancestor : node.getAncestorPath())
 				{
 				T ancestorId = ancestor.getValue();
@@ -210,7 +241,7 @@ public class TaxonMerger
 				}
 			}
 
-		final int includedTaxa = leafIds.size() - dropped;
+		final int includedTaxa = requestedLeafIds.size() - dropped;
 
 		// the merged taxa are disjoint and unique
 		assert new HashSet<T>(allMergedTaxa).size() == allMergedTaxa.size();

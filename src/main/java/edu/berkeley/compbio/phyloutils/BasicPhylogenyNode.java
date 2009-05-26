@@ -807,7 +807,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 		{
 		PhylogenyNode<T> n = this;
 
-		while (n.getLength() == null)
+		while (n.getLength() == null || n.getLength() == 0.0)
 			{
 			n = n.getParent();
 			if (n == null)
