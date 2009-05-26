@@ -825,8 +825,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		{
 		if (n.isLeaf())
 			{
-			result.add(n.getValue(), weight);
-			result.incrementItems();
+			result.add(n.getValue(), weight, 1);
+			//result.incrementItems();
 			}
 		else
 			{
