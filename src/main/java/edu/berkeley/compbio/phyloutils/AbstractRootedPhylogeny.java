@@ -47,6 +47,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -141,6 +142,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	@NotNull
 	public T commonAncestor(T nameA, T nameB) throws NoSuchNodeException
 		{
+		commonAncestorCache.get(nameA, nameB)
 		PhylogenyNode<T> a = getNode(nameA);
 		PhylogenyNode<T> b = getNode(nameB);
 		return commonAncestor(a, b).getValue();
@@ -153,11 +155,11 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	public PhylogenyNode<T> commonAncestor(@NotNull PhylogenyNode<T> a, @NotNull PhylogenyNode<T> b)
 			throws NoSuchNodeException
 		{
-		List<PhylogenyNode<T>> ancestorsA = a.getAncestorPath();
-		List<PhylogenyNode<T>> ancestorsB = b.getAncestorPath();
+		List<PhylogenyNode<T>> ancestorsA = new LinkedList<PhylogenyNode<T>>(a.getAncestorPath());
+		List<PhylogenyNode<T>> ancestorsB = new LinkedList<PhylogenyNode<T>>(b.getAncestorPath());
 
 		PhylogenyNode<T> commonAncestor = null;
-		while (ancestorsA.size() > 0 && ancestorsB.size() > 0 && ancestorsA.get(0) == ancestorsB.get(0))
+		while (ancestorsA.size() > 0 && ancestorsB.size() > 0 && ancestorsA.get(0).equals(ancestorsB.get(0)))
 			{
 			commonAncestor = ancestorsA.remove(0);
 			ancestorsB.remove(0);
