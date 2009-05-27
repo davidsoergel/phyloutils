@@ -308,6 +308,19 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
+	public List<T> getAncestorPathIds()
+		{
+		// this is the root node
+		List<T> result = new LinkedList<T>();
+
+		result.add(0, getRoot().getValue());
+
+		return result;
+		}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Double getLength()
 		{
 		return 0.;

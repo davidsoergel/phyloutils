@@ -37,6 +37,9 @@ import com.davidsoergel.dsutils.collections.HashWeightedSet;
 import com.davidsoergel.dsutils.collections.WeightedSet;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.ContinuousDistribution1D;
+import com.google.common.base.Function;
+import com.google.common.base.Nullable;
+import com.google.common.collect.MapMaker;
 import com.google.common.collect.Multiset;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
@@ -142,7 +145,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	@NotNull
 	public T commonAncestor(T nameA, T nameB) throws NoSuchNodeException
 		{
-		commonAncestorCache.get(nameA, nameB)
+		//commonAncestorCache.get(nameA, nameB)
 		PhylogenyNode<T> a = getNode(nameA);
 		PhylogenyNode<T> b = getNode(nameB);
 		return commonAncestor(a, b).getValue();
@@ -173,18 +176,54 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return commonAncestor;
 		}
 
-
-	public boolean isDescendant(T ancestor, T descendant)
+	Map<T, List<T>> ancestorPathCache = new MapMaker().weakValues().makeComputingMap(new Function<T, List<T>>()
+	{
+	public List<T> apply(@Nullable final T descendant)
 		{
 		try
 			{
-			return ancestor.equals(commonAncestor(ancestor, descendant));
+			return getNode(descendant).getAncestorPathIds();
 			}
 		catch (NoSuchNodeException e)
 			{
-			return false;
+			return null;
 			}
 		}
+	});
+
+	public boolean isDescendant(T ancestor, T descendant)
+		{
+		//try
+		//	{
+		//** depends on PhylogenyNode.equals() working right.  Does it?
+		List<T> ancestorPath = ancestorPathCache.get(descendant);
+		if (ancestorPath == null)
+			{
+			return false;
+			}
+		return ancestorPath.contains(ancestor);
+
+		// lame
+		//return ancestor.equals(commonAncestor(ancestor, descendant));
+		//	}
+		//catch (NoSuchNodeException e)
+		//	{
+		//	return false;
+		//	}
+		}
+
+	public Set<T> selectAncestors(final Set<T> labels, final T id)
+		{
+		try
+			{
+			return DSCollectionUtils.intersectionSet(getNode(id).getAncestorPathIds(), labels);
+			}
+		catch (NoSuchNodeException e)
+			{
+			return new HashSet<T>();
+			}
+		}
+
 
 	public boolean isDescendant(PhylogenyNode<T> ancestor, PhylogenyNode<T> descendant)
 		{

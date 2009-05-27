@@ -198,6 +198,11 @@ public class NewickTaxonomyService
 		return basePhylogeny.isDescendant(ancestor, descendant);
 		}
 
+	public Set<String> selectAncestors(final Set<String> labels, final String id)
+		{
+		return basePhylogeny.selectAncestors(labels, id);
+		}
+
 	/*
 	 public void saveState()
 		 {

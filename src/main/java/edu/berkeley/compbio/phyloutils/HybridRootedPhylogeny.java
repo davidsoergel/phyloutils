@@ -33,6 +33,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 import java.util.HashSet;
@@ -266,4 +267,9 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		leafPhylogeny.saveState();
 		}
 */
+
+	public Set<T> selectAncestors(final Set<T> labels, final T id)
+		{
+		throw new NotImplementedException();
+		}
 	}

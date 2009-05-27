@@ -541,6 +541,23 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 		return result;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<T> getAncestorPathIds()
+		{
+		List<T> result = new LinkedList<T>();
+		BasicPhylogenyNode<T> trav = this;
+
+		while (trav != null)
+			{
+			result.add(0, trav.getValue());
+			trav = trav.getParent();
+			}
+
+		return result;
+		}
+
 
 	/**
 	 * {@inheritDoc}
@@ -692,7 +709,7 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 	private void invalidateAggregatedChildInfo()
 		{
 		if (greatestBranchLengthDepth != null || secondGreatestDepth != null || largestLengthSpan != null
-				|| weight != null)
+		    || weight != null)
 			{
 			greatestBranchLengthDepth = null;
 			secondGreatestDepth = null;

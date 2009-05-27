@@ -71,6 +71,8 @@ public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T
 	 */
 	List<PhylogenyNode<T>> getAncestorPath();
 
+	List<T> getAncestorPathIds();
+
 
 	/**
 	 * Recursively set the weight of this node, and the weights of all of its descendants, to the sum of the weights of the

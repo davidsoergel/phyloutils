@@ -92,6 +92,8 @@ public interface RootedPhylogeny<T>
 	 */
 	boolean isDescendant(T ancestor, T descendant);
 
+	Set<T> selectAncestors(final Set<T> labels, final T id);
+
 	/**
 	 * Tells whether one node is a descendant of another
 	 *
