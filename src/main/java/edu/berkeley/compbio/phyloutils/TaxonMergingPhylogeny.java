@@ -33,7 +33,9 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -116,4 +118,7 @@ public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
 
 	RootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes, boolean includeInternalBranches)
 			throws NoSuchNodeException; //, NodeNamer<T> namer
+
+	@NotNull
+	List<T> getAncestorPathIds(T id) throws NoSuchNodeException;
 	}

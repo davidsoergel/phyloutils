@@ -974,6 +974,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 
 
+	public List<Integer> getAncestorPathIds(final Integer id) throws NoSuchNodeException
+		{
+		return theIntegerTree.getAncestorPathIds(id);
+		}
+
 /*	public Integer nearestAncestorAtRank(final String rankName, Integer leafId) throws NoSuchNodeException
 		{
 		if(synonymService)

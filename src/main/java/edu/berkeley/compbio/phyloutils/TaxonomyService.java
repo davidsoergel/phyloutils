@@ -54,18 +54,19 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 
 	//RootedPhylogeny<Integer> findTreeForName(String name) throws NoSuchNodeException;
 
-	RootedPhylogeny<Integer> findCompactSubtreeWithIds(Set<Integer> matchingIds, String name)
-			throws NoSuchNodeException;
+	RootedPhylogeny<T> findCompactSubtreeWithIds(Set<T> matchingIds, String name) throws NoSuchNodeException;
 
 //	int getNumNodesForName(String name);
 
 //	Set<Integer> getAllIdsForName(String name);
 
-	Set<Integer> findMatchingIds(String name) throws NoSuchNodeException;
+	Set<T> findMatchingIds(String name) throws NoSuchNodeException;
 
-	Set<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException;
+	Set<T> findMatchingIdsRelaxed(String name) throws NoSuchNodeException;
 
 //	T nearestAncestorAtRank(String levelName, Integer leafId) throws NoSuchNodeException;
 
 	Set<T> selectAncestors(Set<T> labels, T id);
+
+//	 List<T> getAncestorPathIds(T id) throws NoSuchNodeException;
 	}

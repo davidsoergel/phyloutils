@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -226,6 +227,11 @@ public class NewickTaxonomyService
 		return basePhylogeny.nearestAncestorWithBranchLength(id);
 		}
 
+
+	public List<String> getAncestorPathIds(final String id) throws NoSuchNodeException
+		{
+		return basePhylogeny.getAncestorPathIds(id);
+		}
 /*	public RootedPhylogeny<String> extractTreeWithLeaves(Collection<PhylogenyNode<String>> ids)
 			throws PhyloUtilsException
 		{
@@ -304,18 +310,18 @@ public class NewickTaxonomyService
 		}*/
 
 
-	public RootedPhylogeny<Integer> findCompactSubtreeWithIds(Set<Integer> matchingIds, String name)
+	public RootedPhylogeny<String> findCompactSubtreeWithIds(Set<String> matchingIds, String name)
 			throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
 		}
 
-	public Set<Integer> findMatchingIds(String name) throws NoSuchNodeException
+	public Set<String> findMatchingIds(String name) throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
 		}
 
-	public Set<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
+	public Set<String> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
 		}

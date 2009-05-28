@@ -37,6 +37,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -269,6 +270,11 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 */
 
 	public Set<T> selectAncestors(final Set<T> labels, final T id)
+		{
+		throw new NotImplementedException();
+		}
+
+	public List<T> getAncestorPathIds(final T id) throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
 		}

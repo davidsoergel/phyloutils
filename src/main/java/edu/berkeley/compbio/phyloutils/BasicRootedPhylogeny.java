@@ -195,6 +195,7 @@ root = new BasicPhylogenyNode<T>(original.);
 		return uniqueIdToNodeMap.keySet();
 		}
 
+
 	/**
 	 * Insure that every node has a unique ID.  We can't do this while building, since the names might change.  Also,
 	 * establishes uniqueIdToNodeMap, which we need even if the nodes all already have names

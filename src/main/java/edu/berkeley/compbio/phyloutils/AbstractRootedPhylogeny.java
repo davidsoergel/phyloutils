@@ -37,9 +37,6 @@ import com.davidsoergel.dsutils.collections.HashWeightedSet;
 import com.davidsoergel.dsutils.collections.WeightedSet;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.ContinuousDistribution1D;
-import com.google.common.base.Function;
-import com.google.common.base.Nullable;
-import com.google.common.collect.MapMaker;
 import com.google.common.collect.Multiset;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
@@ -176,47 +173,33 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return commonAncestor;
 		}
 
-	Map<T, List<T>> ancestorPathCache = new MapMaker().weakValues().makeComputingMap(new Function<T, List<T>>()
-	{
-	public List<T> apply(@Nullable final T descendant)
+	public boolean isDescendant(T ancestor, T descendant)
 		{
 		try
 			{
-			return getNode(descendant).getAncestorPathIds();
+			//** depends on PhylogenyNode.equals() working right.  Does it?
+			List<T> ancestorPath = getAncestorPathIds(descendant);
+			if (ancestorPath == null)
+				{
+				return false;
+				}
+			return ancestorPath.contains(ancestor);
+
+			// lame
+			//return ancestor.equals(commonAncestor(ancestor, descendant));
 			}
 		catch (NoSuchNodeException e)
 			{
-			return null;
-			}
-		}
-	});
-
-	public boolean isDescendant(T ancestor, T descendant)
-		{
-		//try
-		//	{
-		//** depends on PhylogenyNode.equals() working right.  Does it?
-		List<T> ancestorPath = ancestorPathCache.get(descendant);
-		if (ancestorPath == null)
-			{
 			return false;
 			}
-		return ancestorPath.contains(ancestor);
-
-		// lame
-		//return ancestor.equals(commonAncestor(ancestor, descendant));
-		//	}
-		//catch (NoSuchNodeException e)
-		//	{
-		//	return false;
-		//	}
 		}
 
 	public Set<T> selectAncestors(final Set<T> labels, final T id)
 		{
 		try
 			{
-			return DSCollectionUtils.intersectionSet(getNode(id).getAncestorPathIds(), labels);
+			List<T> ancestorPath = getAncestorPathIds(id);
+			return DSCollectionUtils.intersectionSet(ancestorPath, labels);
 			}
 		catch (NoSuchNodeException e)
 			{
@@ -391,6 +374,10 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	   }
    */
 
+	public List<T> getAncestorPathIds(final T id) throws NoSuchNodeException
+		{
+		return getNode(id).getAncestorPathIds();
+		}
 
 	/**
 	 * When we request extraction of a tree with a bunch of nodes, and one of those nodes is an ancestor of the other, do
