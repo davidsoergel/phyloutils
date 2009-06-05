@@ -31,6 +31,10 @@ public class NewickTaxonomyService
 		 return ciccarelliTree.distanceBetween(taxIdA, taxIdB);
 		 }
  */
+	public Set<String> getLeafIds()
+		{
+		return basePhylogeny.getLeafValues();
+		}
 
 	protected NewickTaxonomyService(String filename, boolean namedNodesMustBeLeaves)// throws  PhyloUtilsException
 		{

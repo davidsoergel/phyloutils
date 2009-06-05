@@ -86,6 +86,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 //	NewickTaxonomyService stringTaxonomyService;// = new NewickTaxonomyService(hugenholtzFilename);
 
+	public Set<Integer> getLeafIds()
+		{
+		return theIntegerTree.getLeafValues();
+		}
+
 	public HugenholtzTaxonomyService() //throws PhyloUtilsException
 		{
 		theIntegerTree = (BasicRootedPhylogeny<Integer>) CacheManager.get(this, "theIntegerTree");
@@ -967,9 +972,20 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return maxDistance;
 		}
 
+	/**
+	 * Just return the argument even if the branch length is zero
+	 *
+	 * @param id the T identifying the starting node
+	 * @return
+	 * @throws NoSuchNodeException
+	 */
 	public synchronized Integer nearestAncestorWithBranchLength(Integer id) throws NoSuchNodeException
 		{
-		return theIntegerTree.nearestAncestorWithBranchLength(id);
+		//checkNodeExists(id);
+		theIntegerTree.getNode(id);  // test exists
+		return id;
+
+		//return theIntegerTree.nearestAncestorWithBranchLength(id);
 //		return intToNodeMap.inverse().get(intToNodeMap.get(id).nearestAncestorWithBranchLength());
 		}
 

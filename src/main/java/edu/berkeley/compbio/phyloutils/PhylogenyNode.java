@@ -103,7 +103,12 @@ public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T
 
 	void appendSubtree(StringBuffer sb, String indent);
 
-
+	/**
+	 * Returns the most recent ancestor which has a non-null branch length, even if it is zero.
+	 *
+	 * @return
+	 * @throws NoSuchNodeException
+	 */
 	PhylogenyNode<T> nearestAncestorWithBranchLength() throws NoSuchNodeException;
 
 	PhylogenyNode<T> findRoot();

@@ -154,21 +154,32 @@ root = new BasicPhylogenyNode<T>(original.);
 		return uniqueIdToNodeMap;//.values();
 		}
 
+	//** make weak
+	private Set<PhylogenyNode<T>> leafSet = null;
+	//** make weak
+	private Set<T> leafIds = null;
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public Collection<PhylogenyNode<T>> getLeaves()
 		{
-		Set<PhylogenyNode<T>> result = new HashSet<PhylogenyNode<T>>();
-		for (T t : uniqueIdToNodeMap.keySet())
+		if (leafSet == null)
 			{
-			PhylogenyNode<T> node = uniqueIdToNodeMap.get(t);
-			if (node.isLeaf())
+			leafSet = new HashSet<PhylogenyNode<T>>();
+			leafIds = new HashSet<T>();
+			for (T t : uniqueIdToNodeMap.keySet())
 				{
-				result.add(node);
+				PhylogenyNode<T> node = uniqueIdToNodeMap.get(t);
+				if (node.isLeaf())
+					{
+					leafSet.add(node);
+					leafIds.add(t);
+					}
 				}
 			}
-		return result;
+		return leafSet;
 		}
 
 	/**
@@ -176,15 +187,11 @@ root = new BasicPhylogenyNode<T>(original.);
 	 */
 	public Set<T> getLeafValues()
 		{
-		Set<T> result = new HashSet<T>();
-		for (T t : uniqueIdToNodeMap.keySet())
+		if (leafIds == null)
 			{
-			if (uniqueIdToNodeMap.get(t).isLeaf())
-				{
-				result.add(t);
-				}
+			getLeaves();
 			}
-		return result;
+		return leafIds;
 		}
 
 	/**
@@ -441,10 +448,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	public T nearestAncestorWithBranchLength(T leafId) throws NoSuchNodeException //throws PhyloUtilsException
 		{
 		PhylogenyNode<T> n = getNode(leafId);
-		if (n == null)
-			{
-			throw new NoSuchNodeException("Leaf phylogeny does not contain node " + leafId + ".");
-			}
+
 		return n.nearestAncestorWithBranchLength().getValue();
 		}
 

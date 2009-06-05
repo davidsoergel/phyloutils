@@ -81,6 +81,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return this;
 		}
 
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -251,6 +252,11 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			throws NoSuchNodeException //, NodeNamer<T> namer
 
 		{
+		if (getLeafValues().equals(ids))
+			{
+			return this;
+			}
+
 		List<PhylogenyNode<T>> theLeaves = idsToLeaves(ids, ignoreAbsentNodes);
 
 		if (theLeaves.isEmpty())

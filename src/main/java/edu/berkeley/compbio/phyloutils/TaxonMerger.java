@@ -131,8 +131,12 @@ public class TaxonMerger
 					assert descendant != ancestor;
 
 					T descendantId = descendant.getValue();
-					currentTaxonset.addAll(theTaxonsetsByTaxid.get(descendantId));
-					theTaxonsetsByTaxid.remove(descendantId);
+					Set<T> alreadyMergedAtDescendant = theTaxonsetsByTaxid.get(descendantId);
+					if (alreadyMergedAtDescendant != null)
+						{
+						currentTaxonset.addAll(alreadyMergedAtDescendant);
+						theTaxonsetsByTaxid.remove(descendantId);
+						}
 					}
 				}
 			}
@@ -199,7 +203,7 @@ public class TaxonMerger
 					dropped += subIds.size();
 
 					logger.warn("Dropping " + subIds.size() + " taxa at node " + id + " with span " + span + " > "
-							+ branchSpanMergeThreshold + " (i.e., our base tree is not detailed enough)");
+					            + branchSpanMergeThreshold + " (i.e., our base tree is not detailed enough)");
 					}
 				}
 			}
@@ -207,6 +211,27 @@ public class TaxonMerger
 		assert theTaxonsetsByTaxid.isEmpty();
 		//assert allMergedTaxa.containsAll(leafIds);
 
+		//** be paranoid?
+		//testSetsReallyDisjoint(theCompleteTree, theMergedTaxa, thePrunedTree);
+
+
+		final int includedTaxa = requestedLeafIds.size() - dropped;
+
+		// the merged taxa are disjoint and unique
+		assert new HashSet<T>(allMergedTaxa).size() == allMergedTaxa.size();
+
+		// this is not true because allMergedTaxa includes intermediate nodes
+		//assert allMergedTaxa.size() == includedTaxa;
+
+		logger.info("Merged " + includedTaxa + " taxa into " + theMergedTaxa.size() + " groups; dropped " + dropped);
+
+		return theMergedTaxa;
+		}
+
+	private static <T> void testSetsReallyDisjoint(final RootedPhylogeny<T> theCompleteTree,
+	                                               final Map<T, Set<T>> theMergedTaxa,
+	                                               final RootedPhylogeny<T> thePrunedTree) throws NoSuchNodeException
+		{
 		// make sure the sets are really disjoint
 		final Set<T> distinctTaxonHeads = theMergedTaxa.keySet();
 		for (Map.Entry<T, Set<T>> entry : theMergedTaxa.entrySet())
@@ -240,17 +265,5 @@ public class TaxonMerger
 				assert ancestorId.equals(headId) || !distinctTaxonHeads.contains(ancestorId);
 				}
 			}
-
-		final int includedTaxa = requestedLeafIds.size() - dropped;
-
-		// the merged taxa are disjoint and unique
-		assert new HashSet<T>(allMergedTaxa).size() == allMergedTaxa.size();
-
-		// this is not true because allMergedTaxa includes intermediate nodes
-		//assert allMergedTaxa.size() == includedTaxa;
-
-		logger.info("Merged " + includedTaxa + " taxa into " + theMergedTaxa.size() + " groups; dropped " + dropped);
-
-		return theMergedTaxa;
 		}
 	}
