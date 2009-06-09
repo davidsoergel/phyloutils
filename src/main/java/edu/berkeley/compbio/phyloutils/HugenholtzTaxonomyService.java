@@ -62,6 +62,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return instance;
 		}
 
+	public Map<Integer, String> getFriendlyLabelMap()
+		{
+		return null;
+		}
+
 	public static void setInjectedInstance(HugenholtzTaxonomyService instance)
 		{
 		HugenholtzTaxonomyService.instance = instance;

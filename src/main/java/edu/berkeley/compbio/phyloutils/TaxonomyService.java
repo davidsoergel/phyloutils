@@ -3,6 +3,7 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.dsutils.tree.TreeException;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -72,5 +73,5 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 
 	Set<T> getLeafIds();
 
-	//Map<T, String> getFriendlyLabelMap();
+	Map<T, String> getFriendlyLabelMap();
 	}

@@ -36,6 +36,11 @@ public class NewickTaxonomyService
 		return basePhylogeny.getLeafValues();
 		}
 
+	public Map<String, String> getFriendlyLabelMap()
+		{
+		return null;
+		}
+
 	protected NewickTaxonomyService(String filename, boolean namedNodesMustBeLeaves)// throws  PhyloUtilsException
 		{
 		this.filename = filename;
