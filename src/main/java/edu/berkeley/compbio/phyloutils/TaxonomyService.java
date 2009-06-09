@@ -71,4 +71,6 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 //	 List<T> getAncestorPathIds(T id) throws NoSuchNodeException;
 
 	Set<T> getLeafIds();
+
+	//Map<T, String> getFriendlyLabelMap();
 	}
