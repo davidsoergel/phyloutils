@@ -254,7 +254,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		{
 		try
 			{
-			if (getLeafValues().equals(ids))
+			if (getLeafValues().equals(ids) && includeInternalBranches)
 				{
 				return this;
 				}
