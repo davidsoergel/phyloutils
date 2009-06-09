@@ -148,7 +148,16 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 
 		RootedPhylogeny<T> basicLeaf = leafPhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, true, mode);
 		HybridRootedPhylogeny<T> extractedHybrid = new HybridRootedPhylogeny<T>(rootPhylogeny, basicLeaf);
-		RootedPhylogeny<T> result = extractedHybrid.convertToBasic();
+		RootedPhylogeny<T> result = null;
+		try
+			{
+			result = extractedHybrid.convertToBasic();
+			}
+		catch (PhyloUtilsException e)
+			{
+			logger.error(e);
+			throw new Error(e);
+			}
 
 		// now result has all the requested leaves, and the rootwards topology has been adjusted to match the root tree.
 		// however, there may be stranded branches, i.e. former ancestors of the leaves (according to the leaf tree) that
@@ -160,7 +169,7 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		}
 
 
-	private RootedPhylogeny<T> convertToBasic() throws NoSuchNodeException
+	private RootedPhylogeny<T> convertToBasic() throws NoSuchNodeException, PhyloUtilsException
 		{
 		reconciledLeafNodes = new HashSet<PhylogenyNode<T>>();
 

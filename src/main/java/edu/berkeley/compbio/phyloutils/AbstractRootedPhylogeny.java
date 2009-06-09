@@ -252,9 +252,17 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			throws NoSuchNodeException //, NodeNamer<T> namer
 
 		{
-		if (getLeafValues().equals(ids))
+		try
 			{
-			return this;
+			if (getLeafValues().equals(ids))
+				{
+				return this;
+				}
+			}
+		catch (PhyloUtilsRuntimeException e)
+			{
+			// the actual tree is expensive to load (e.g. NcbiTaxonomyService) so getLeafValues is a bad idea
+			// OK, just do the explicit extraction anyway then
 			}
 
 		List<PhylogenyNode<T>> theLeaves = idsToLeaves(ids, ignoreAbsentNodes);
@@ -266,6 +274,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		RootedPhylogeny<T> result = extractTreeWithLeaves(theLeaves, includeInternalBranches, mode);
 		Collection<T> gotLeaves = result.getLeafValues();
+
 		Collection<T> gotNodes = result.getNodeValues();
 
 		// all the leaves that were found were leaves that were requested
