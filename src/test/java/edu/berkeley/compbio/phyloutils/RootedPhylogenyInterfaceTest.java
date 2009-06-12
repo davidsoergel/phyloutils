@@ -203,7 +203,7 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 		{
 		T mainTree = tif.createInstance();
 
-		Multiset<String> m = new HashMultiset();
+		Multiset<String> m = HashMultiset.create();
 		m.add("aaaa", 4);
 		m.add("ab", 16);
 		m.add("baa", 10);
@@ -231,7 +231,7 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 		{
 		T mainTree = tif.createInstance();
 
-		Multiset<String> m = new HashMultiset();
+		Multiset<String> m = HashMultiset.create();
 		m.add("aaaa", 4);
 		m.add("ab", 16);
 		m.add("baa", 10);

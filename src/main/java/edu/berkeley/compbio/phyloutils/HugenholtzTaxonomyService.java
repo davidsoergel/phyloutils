@@ -166,8 +166,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	private synchronized void reloadFromNewick()
 		{
-		nameToIdsMap = new HashMultimap<String, Integer>();
-		extraNameToIdsMap = new HashMultimap<String, Integer>();
+		nameToIdsMap = HashMultimap.create();
+		extraNameToIdsMap = HashMultimap.create();
 
 		//** here we assume that the tree has already been converted to have named nodes at leaves, using the NewickParser command-line tool
 		// else we'd need new NewickTaxonomyService(hugenholtzFilename, truel

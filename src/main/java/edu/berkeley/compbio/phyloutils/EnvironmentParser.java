@@ -70,7 +70,7 @@ public class EnvironmentParser
 			Multiset<String> env = environmentCounts.get(tokens[1]);
 			if (env == null)
 				{
-				env = new HashMultiset<String>();
+				env = HashMultiset.create();
 				environmentCounts.put(tokens[1], env);
 				}
 			env.add(tokens[0], Integer.parseInt(tokens[2]));
