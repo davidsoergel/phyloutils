@@ -407,13 +407,14 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			nodes.put(value, this);
 			}
 
+		assert children != null;
 
 		// if a node has no name, or the namer doesn't like it, we assign one
 		if (!namer.isAcceptable(value))
 			{
 			assignGeneratedName(nodes, namer);
 			}
-		else if (children != null && !children.isEmpty() && namer.requireGeneratedNamesForInternalNodes())
+		else if (!children.isEmpty() && namer.requireGeneratedNamesForInternalNodes())  //children != null &&
 			{
 			addedInternalNodes++;
 
