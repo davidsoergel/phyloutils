@@ -69,10 +69,63 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 	// maintain a known order.  This was previously a Set; now we have to be careful not to add the same node twice, etc.
 	protected List<BasicPhylogenyNode<T>> children = new ArrayList<BasicPhylogenyNode<T>>();
 
-	protected T value = null;
-	protected Double length = null;// distinguish null from zero
-	protected Double weight = null;// distinguish null from zero
-	protected Double bootstrap = null;
+	protected T value;// = null;
+	protected Double length;// = null;// distinguish null from zero
+	protected Double weight;// = null;// distinguish null from zero
+	protected Double bootstrap;// = null;
+
+	@Override
+	public boolean equals(final Object o)
+		{
+		if (this == o)
+			{
+			return true;
+			}
+		if (o == null || getClass() != o.getClass())
+			{
+			return false;
+			}
+
+		final BasicPhylogenyNode that = (BasicPhylogenyNode) o;
+
+		if (bootstrap != null ? !bootstrap.equals(that.bootstrap) : that.bootstrap != null)
+			{
+			return false;
+			}
+		if (length != null ? !length.equals(that.length) : that.length != null)
+			{
+			return false;
+			}
+		if (parent == this && that.parent != that)
+			{
+			return false;
+			}
+		if (parent != null ? !parent.equals(that.parent) : that.parent != null)
+			{
+			return false;
+			}
+		if (value != null ? !value.equals(that.value) : that.value != null)
+			{
+			return false;
+			}
+		if (weight != null ? !weight.equals(that.weight) : that.weight != null)
+			{
+			return false;
+			}
+
+		return true;
+		}
+
+	@Override
+	public int hashCode()
+		{
+		int result = parent != null ? parent.hashCode() : 0;
+		result = 31 * result + (value != null ? value.hashCode() : 0);
+		result = 31 * result + (length != null ? length.hashCode() : 0);
+		result = 31 * result + (weight != null ? weight.hashCode() : 0);
+		result = 31 * result + (bootstrap != null ? bootstrap.hashCode() : 0);
+		return result;
+		}
 
 	public void toNewick(StringBuffer sb, String prefix, String tab, int minClusterSize, double minLabelProb)
 		{
@@ -155,6 +208,20 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 		{
 		this(parent);
 		this.value = value;
+		}
+
+	public BasicPhylogenyNode(BasicPhylogenyNode<T> parent, T value, Double length, Double weight) //, double bootstrap)
+		{
+		this(parent);
+		this.value = value;
+		this.length = length;
+		this.weight = weight;
+		//this.bootstrap = bootstrap;
+		}
+
+	public BasicPhylogenyNode(final BasicPhylogenyNode<T> parent, final PhylogenyNode<T> copyFrom)
+		{
+		this(parent, copyFrom.getValue(), copyFrom.getLength(), copyFrom.getWeight());
 		}
 
 	/*

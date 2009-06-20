@@ -1000,6 +1000,16 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return theIntegerTree.getAncestorPathIds(id);
 		}
 
+	public List<PhylogenyNode<Integer>> getAncestorPath(final Integer id) throws NoSuchNodeException
+		{
+		return theIntegerTree.getAncestorPath(id);
+		}
+
+	public List<PhylogenyNode<Integer>> getAncestorPathAsBasic(final Integer id) throws NoSuchNodeException
+		{
+		return theIntegerTree.getAncestorPathAsBasic(id);
+		}
+
 /*	public Integer nearestAncestorAtRank(final String rankName, Integer leafId) throws NoSuchNodeException
 		{
 		if(synonymService)

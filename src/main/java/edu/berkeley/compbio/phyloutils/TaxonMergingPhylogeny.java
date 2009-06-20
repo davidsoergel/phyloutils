@@ -121,4 +121,19 @@ public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
 
 	@NotNull
 	List<T> getAncestorPathIds(T id) throws NoSuchNodeException;
+
+	/**
+	 * Returns a List of nodes leading from the root to the leaf identified by the given ID.  Guarantees that the nodes are
+	 * represented as BasicPhylogenyNodes, copying them if necessary, because we want them to be Serializable.  As a
+	 * result, the child lists may not be populated.
+	 *
+	 * @param id
+	 * @return
+	 * @throws NoSuchNodeException
+	 */
+	@NotNull
+	List<PhylogenyNode<T>> getAncestorPathAsBasic(T id) throws NoSuchNodeException;
+
+	@NotNull
+	List<PhylogenyNode<T>> getAncestorPath(T id) throws NoSuchNodeException;
 	}

@@ -227,8 +227,9 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 		theAncestorLists.add(testInstance.bbba.getAncestorPath());
 		theAncestorLists.add(testInstance.ca.getAncestorPath());
 
-		BasicPhylogenyNode<String> tree = testInstance.rootPhylogeny.extractTreeWithLeafPaths(theAncestorLists, false,
-		                                                                                      AbstractRootedPhylogeny.MutualExclusionResolutionMode.EXCEPTION);
+		BasicPhylogenyNode<String> tree = testInstance.rootPhylogeny
+				.extractSubtreeWithLeafPaths(theAncestorLists, false,
+				                             AbstractRootedPhylogeny.MutualExclusionResolutionMode.EXCEPTION);
 
 		for (PhylogenyNode<String> xnode : tree)
 			{

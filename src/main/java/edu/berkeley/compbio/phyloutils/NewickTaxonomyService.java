@@ -241,6 +241,17 @@ public class NewickTaxonomyService
 		{
 		return basePhylogeny.getAncestorPathIds(id);
 		}
+
+	public List<PhylogenyNode<String>> getAncestorPath(final String id) throws NoSuchNodeException
+		{
+		return basePhylogeny.getAncestorPath(id);
+		}
+
+	public List<PhylogenyNode<String>> getAncestorPathAsBasic(final String id) throws NoSuchNodeException
+		{
+		return basePhylogeny.getAncestorPathAsBasic(id);
+		}
+
 /*	public RootedPhylogeny<String> extractTreeWithLeaves(Collection<PhylogenyNode<String>> ids)
 			throws PhyloUtilsException
 		{

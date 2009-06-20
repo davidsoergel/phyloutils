@@ -265,14 +265,26 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			// OK, just do the explicit extraction anyway then
 			}
 
+		/*
 		List<PhylogenyNode<T>> theLeaves = idsToLeaves(ids, ignoreAbsentNodes);
+
 
 		if (theLeaves.isEmpty())
 			{
 			throw new NoSuchNodeException("No leaves found for ids: " + ids);
 			}
 
-		RootedPhylogeny<T> result = extractTreeWithLeaves(theLeaves, includeInternalBranches, mode);
+		RootedPhylogeny<T> result = extractTreeWithLeaves(theLeaves, includeInternalBranches, mode); */
+		Set<List<PhylogenyNode<T>>> theLeafPaths = idsToBasicLeafPaths(ids, ignoreAbsentNodes);
+
+
+		if (theLeafPaths.isEmpty())
+			{
+			throw new NoSuchNodeException("No leaves found for ids: " + ids);
+			}
+
+		RootedPhylogeny<T> result = extractTreeWithLeafPaths(theLeafPaths, includeInternalBranches, mode);
+
 		Collection<T> gotLeaves = result.getLeafValues();
 
 		Collection<T> gotNodes = result.getNodeValues();
@@ -298,7 +310,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return result;
 		}
 
-	private List<PhylogenyNode<T>> idsToLeaves(Set<T> ids, boolean ignoreAbsentNodes) throws NoSuchNodeException
+/*	private List<PhylogenyNode<T>> idsToLeaves(Set<T> ids, boolean ignoreAbsentNodes) throws NoSuchNodeException
 		{
 		// don't use HashSet, to avoid calling hashcode since that requires a transaction
 		//Set<PhylogenyNode<T>> theLeaves = new HashSet<PhylogenyNode<T>>();
@@ -320,6 +332,37 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			}
 
 		return theLeaves;
+		}*/
+
+
+	/**
+	 * @param ids
+	 * @param ignoreAbsentNodes
+	 * @return
+	 * @throws NoSuchNodeException
+	 */
+	protected Set<List<PhylogenyNode<T>>> idsToBasicLeafPaths(Set<T> ids, boolean ignoreAbsentNodes)
+			throws NoSuchNodeException
+		{
+		// don't use HashSet, to avoid calling hashcode since that requires a transaction
+		//Set<PhylogenyNode<T>> theLeaves = new HashSet<PhylogenyNode<T>>();
+		Set<List<PhylogenyNode<T>>> theLeafPaths = new HashSet<List<PhylogenyNode<T>>>();
+		for (T id : ids)
+			{
+			try
+				{
+				theLeafPaths.add(getAncestorPathAsBasic(id));
+				}
+			catch (NoSuchNodeException e)
+				{
+				if (!ignoreAbsentNodes)
+					{
+					throw new NoSuchNodeException("Can't extract tree; requested node " + id + " not found");
+					}
+				}
+			}
+
+		return theLeafPaths;
 		}
 
 
@@ -332,16 +375,25 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		// Still, the ids were in a Set to begin with, so uniqueness should be guaranteed anyway.
 		// assert DSCollectionUtils.setOfLastElements(leaves).size() == leaves.size();
 
-		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
-		for (PhylogenyNode<T> leaf : leaves)
+		final Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>(leaves.size());
+		for (final PhylogenyNode<T> leaf : leaves)
 			{
 			theAncestorLists.add(leaf.getAncestorPath());
 			}
 
+		return extractTreeWithLeafPaths(theAncestorLists, includeInternalBranches, mode);
+		}
+
+
+	@NotNull
+	public BasicRootedPhylogeny<T> extractTreeWithLeafPaths(final Set<List<PhylogenyNode<T>>> theAncestorLists,
+	                                                        final boolean includeInternalBranches,
+	                                                        final MutualExclusionResolutionMode mode)
+		{
 		BasicPhylogenyNode<T> commonAncestor = null;
 		try
 			{
-			commonAncestor = extractTreeWithLeafPaths(theAncestorLists, includeInternalBranches, mode); //, namer);
+			commonAncestor = extractSubtreeWithLeafPaths(theAncestorLists, includeInternalBranches, mode); //, namer);
 			}
 		catch (NoSuchNodeException e)
 			{
@@ -355,6 +407,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		if (!commonAncestor.getValue().equals(this.getValue()))
 			{
 			// add a single branch descending from the root to the common ancestor
+			//** this will have a length of zero, I think, but that's OK ??
 			commonAncestor.setParent(newTree.getRoot());
 			//newRoot = new BasicPhylogenyNode<T>(newRoot, commonAncestor.getValue(), commonAncestor.getLength());
 			}
@@ -362,11 +415,6 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			{
 			newTree.setRoot(commonAncestor);
 			}
-
-		// now the root is a copy of the common ancestor node.
-		// also need to deep copy the whole tree.
-
-		//deepCopy(commonAncestor, newRoot);
 
 		newTree.assignUniqueIds(new RequireExistingNodeNamer<T>(true));
 		newTree.setBasePhylogeny(this);
@@ -394,6 +442,34 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return getNode(id).getAncestorPathIds();
 		}
 
+	public List<PhylogenyNode<T>> getAncestorPath(final T id) throws NoSuchNodeException
+		{
+		return getNode(id).getAncestorPath();
+		}
+
+	public List<PhylogenyNode<T>> getAncestorPathAsBasic(final T id) throws NoSuchNodeException
+		{
+		List<PhylogenyNode<T>> orig = getNode(id).getAncestorPath();
+
+		List<PhylogenyNode<T>> result = new ArrayList<PhylogenyNode<T>>();
+		BasicPhylogenyNode<T> parent = null;
+		for (PhylogenyNode<T> origNode : orig)
+			{
+			BasicPhylogenyNode<T> convertedNode;
+			if (origNode instanceof BasicPhylogenyNode)
+				{
+				convertedNode = (BasicPhylogenyNode<T>) origNode;
+				}
+			else
+				{
+				convertedNode = new BasicPhylogenyNode<T>(parent, origNode);
+				}
+			result.add(convertedNode);
+			parent = convertedNode;
+			}
+		return result;
+		}
+
 	/**
 	 * When we request extraction of a tree with a bunch of nodes, and one of those nodes is an ancestor of the other, do
 	 * we include only the leaf, only the ancestor, both, or throw an exception?  BOTHNOBRANCHLENGTH is a compromise
@@ -416,9 +492,9 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	 * @throws PhyloUtilsException
 	 */
 	@NotNull
-	protected BasicPhylogenyNode<T> extractTreeWithLeafPaths(Set<List<PhylogenyNode<T>>> theAncestorLists,
-	                                                         boolean includeInternalBranches,
-	                                                         MutualExclusionResolutionMode mode)
+	protected BasicPhylogenyNode<T> extractSubtreeWithLeafPaths(Set<List<PhylogenyNode<T>>> theAncestorLists,
+	                                                            boolean includeInternalBranches,
+	                                                            MutualExclusionResolutionMode mode)
 			throws NoSuchNodeException  //, NodeNamer<T> namer)
 		{
 		BasicPhylogenyNode<T> result;
@@ -426,11 +502,11 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		// this was spaghetti before when I tried to handle both modes together
 		if (includeInternalBranches)
 			{
-			result = extractTreeWithLeafPathsIncludingInternal(theAncestorLists, mode);
+			result = extractSubtreeWithLeafPathsIncludingInternal(theAncestorLists, mode);
 			}
 		else
 			{
-			result = extractTreeWithLeafPathsExcludingInternal(theAncestorLists, mode);
+			result = extractSubtreeWithLeafPathsExcludingInternal(theAncestorLists, mode);
 			}
 
 		// currently we deal with MutualExclusionResolutionMode (in the form of allowRequestingInternal nodes) in the course of the tree-building recursion above,
@@ -444,7 +520,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return result;
 		}
 
-	private BasicPhylogenyNode<T> extractTreeWithLeafPathsExcludingInternal(
+	private BasicPhylogenyNode<T> extractSubtreeWithLeafPathsExcludingInternal(
 			Set<List<PhylogenyNode<T>>> theAncestorLists, MutualExclusionResolutionMode mode) throws NoSuchNodeException
 		{
 		double accumulatedLength = 0;
@@ -506,7 +582,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		for (Set<List<PhylogenyNode<T>>> childAncestorList : childAncestorLists)
 			{
-			PhylogenyNode<T> child = extractTreeWithLeafPathsExcludingInternal(childAncestorList, mode);
+			PhylogenyNode<T> child = extractSubtreeWithLeafPathsExcludingInternal(childAncestorList, mode);
 			child.setParent(bottomOfChain);
 			}
 
@@ -514,7 +590,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		}
 
 
-	private BasicPhylogenyNode<T> extractTreeWithLeafPathsIncludingInternal(
+	private BasicPhylogenyNode<T> extractSubtreeWithLeafPathsIncludingInternal(
 			Set<List<PhylogenyNode<T>>> theAncestorLists, MutualExclusionResolutionMode mode) throws NoSuchNodeException
 		{
 		// use this as a marker to test that the provided lists were actually consistent
@@ -584,7 +660,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 
 		for (Set<List<PhylogenyNode<T>>> childAncestorList : childAncestorLists)
 			{
-			PhylogenyNode<T> child = extractTreeWithLeafPathsIncludingInternal(childAncestorList, mode);
+			PhylogenyNode<T> child = extractSubtreeWithLeafPathsIncludingInternal(childAncestorList, mode);
 			child.setParent(bottomOfChain);
 			}
 
@@ -647,7 +723,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		Iterator<List<PhylogenyNode<T>>> iterator = theAncestorLists.iterator();
 		while (iterator.hasNext())
 			{
-			List<PhylogenyNode<T>> ancestorList = iterator.next();
+			List<? extends PhylogenyNode<T>> ancestorList = iterator.next();
 
 			// there can be at most one empty list here due to leaf id uniqueness, so it's safe to return immediately rather than testing the rest
 			if (ancestorList.isEmpty())

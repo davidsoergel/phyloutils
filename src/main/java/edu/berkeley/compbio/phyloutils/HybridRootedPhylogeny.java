@@ -35,6 +35,7 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.List;
@@ -284,6 +285,18 @@ public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//exten
 		}
 
 	public List<T> getAncestorPathIds(final T id) throws NoSuchNodeException
+		{
+		throw new NotImplementedException();
+		}
+
+	@NotNull
+	public List<PhylogenyNode<T>> getAncestorPath(final T id) throws NoSuchNodeException
+		{
+		throw new NotImplementedException();
+		}
+
+	@NotNull
+	public List<PhylogenyNode<T>> getAncestorPathAsBasic(final T id) throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
 		}
