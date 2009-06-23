@@ -1255,4 +1255,43 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			}
 		return r;
 		}
+
+	public PhylogenyNode<T> getRandomLeafBelow()
+		{
+		return getRoot().getRandomLeafBelow();
+		}
+
+
+	private static final int MAX_SEARCH_ITERATIONS = 1000;
+
+	public T getLeafAtApproximateDistance(final T aId, final double minDesiredTreeDistance,
+	                                      final double maxDesiredTreeDistance) throws NoSuchNodeException
+		{
+		// we want to select a bunch of random nodes and then pick the one closest to the desired distance
+		// but doing this over the whole tree is inefficient; we can constrain the search to the subtree that can possibly be within that distance
+
+		double distanceToSubtreeRoot = 0;
+		final PhylogenyNode<T> queryNode = getNode(aId);
+		PhylogenyNode<T> p = queryNode;
+		while (distanceToSubtreeRoot < maxDesiredTreeDistance)
+			{
+			distanceToSubtreeRoot += p.getLength();
+			p = p.getParent();
+			}
+
+		// now p is the root of the subtree that can possibly contain the node we want
+
+		for (int i = 0; i < MAX_SEARCH_ITERATIONS; i++)
+			{
+			PhylogenyNode<T> candidate = p.getRandomLeafBelow();
+			double candidateDistance = distanceBetween(queryNode, candidate);
+			if (candidateDistance > minDesiredTreeDistance && candidateDistance > maxDesiredTreeDistance)
+				{
+				return candidate.getValue();
+				}
+			}
+
+		throw new PhyloUtilsRuntimeException(
+				"Could not find a node in the requested distance range after " + MAX_SEARCH_ITERATIONS + "attempts");
+		}
 	}

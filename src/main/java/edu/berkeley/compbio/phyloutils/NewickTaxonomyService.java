@@ -350,4 +350,10 @@ public class NewickTaxonomyService
 		{
 		throw new NotImplementedException();
 		}
+
+	public String getLeafAtApproximateDistance(final String aId, final double minDesiredTreeDistance,
+	                                           final double maxDesiredTreeDistance) throws NoSuchNodeException
+		{
+		return basePhylogeny.getLeafAtApproximateDistance(aId, minDesiredTreeDistance, maxDesiredTreeDistance);
+		}
 	}

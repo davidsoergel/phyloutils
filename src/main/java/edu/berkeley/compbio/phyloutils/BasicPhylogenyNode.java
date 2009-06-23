@@ -32,6 +32,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIteratorImpl;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
@@ -259,6 +260,27 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 			}
 		throw new NoSuchNodeException("Could not find child: " + id);
 		//throw new NoSuchElementException();
+		}
+
+	/**
+	 * Note this samples from the distribution of leaves weighted by the tree structure, i.e. uniformly _per level_, not
+	 * uniformly from the set of leaves.  Basically, leaves with fewer siblings and cousins are more likely to be chosen.
+	 *
+	 * @return
+	 */
+	public PhylogenyNode<T> getRandomLeafBelow()
+		{
+		// iterate, don't recurse, in case the tree is deep
+		PhylogenyNode<T> trav = this;
+		List<? extends PhylogenyNode<T>> travChildren = trav.getChildren();
+
+		while (!travChildren.isEmpty())
+			{
+			trav = DSCollectionUtils.chooseRandom(travChildren);
+			travChildren = trav.getChildren();
+			}
+
+		return trav;
 		}
 
 	/**

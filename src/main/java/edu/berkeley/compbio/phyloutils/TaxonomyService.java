@@ -74,4 +74,15 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 	Set<T> getLeafIds();
 
 	Map<T, String> getFriendlyLabelMap();
+
+	/**
+	 * Try to find a leaf at the given distance from the given node
+	 *
+	 * @param aId
+	 * @param minDesiredTreeDistance
+	 * @param maxDesiredTreeDistance
+	 * @return
+	 */
+	public T getLeafAtApproximateDistance(final T aId, final double minDesiredTreeDistance,
+	                                      final double maxDesiredTreeDistance) throws NoSuchNodeException;
 	}

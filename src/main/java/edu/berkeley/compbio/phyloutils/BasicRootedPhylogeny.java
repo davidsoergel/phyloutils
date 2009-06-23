@@ -242,6 +242,7 @@ root = new BasicPhylogenyNode<T>(original.);
 		return root.getChildren();
 		}
 
+
 	/**
 	 * {@inheritDoc}
 	 */

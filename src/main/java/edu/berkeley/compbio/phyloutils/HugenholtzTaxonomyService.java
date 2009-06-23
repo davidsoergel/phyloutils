@@ -1200,4 +1200,10 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 		return result.asRootedPhylogeny();
 		}
+
+	public Integer getLeafAtApproximateDistance(final Integer aId, final double minDesiredTreeDistance,
+	                                            final double maxDesiredTreeDistance) throws NoSuchNodeException
+		{
+		return theIntegerTree.getLeafAtApproximateDistance(aId, minDesiredTreeDistance, maxDesiredTreeDistance);
+		}
 	}

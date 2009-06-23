@@ -315,4 +315,7 @@ public interface RootedPhylogeny<T>
 	T getShallowestLeaf();
 
 	PhylogenyNode<T> getFirstBranchingNode();
+
+	T getLeafAtApproximateDistance(T aId, double minDesiredTreeDistance, double maxDesiredTreeDistance)
+			throws NoSuchNodeException;
 	}
