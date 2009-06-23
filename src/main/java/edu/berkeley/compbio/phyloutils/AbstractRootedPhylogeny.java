@@ -1273,7 +1273,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		double distanceToSubtreeRoot = 0;
 		final PhylogenyNode<T> queryNode = getNode(aId);
 		PhylogenyNode<T> p = queryNode;
-		while (distanceToSubtreeRoot < maxDesiredTreeDistance)
+		PhylogenyNode<T> root = getRoot();
+		while (distanceToSubtreeRoot < maxDesiredTreeDistance && p != root)
 			{
 			distanceToSubtreeRoot += p.getLength();
 			p = p.getParent();
@@ -1285,7 +1286,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 			{
 			PhylogenyNode<T> candidate = p.getRandomLeafBelow();
 			double candidateDistance = distanceBetween(queryNode, candidate);
-			if (candidateDistance > minDesiredTreeDistance && candidateDistance > maxDesiredTreeDistance)
+			if (candidateDistance >= minDesiredTreeDistance && candidateDistance <= maxDesiredTreeDistance)
 				{
 				return candidate.getValue();
 				}
