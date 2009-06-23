@@ -224,7 +224,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			File f = new File(filename);
 			if (f.exists())
 				{
-				res = new URL("file://" + filename);
+				res = f.toURI().toURL(); // new URL("file://" + filename);
 				}
 			}
 
