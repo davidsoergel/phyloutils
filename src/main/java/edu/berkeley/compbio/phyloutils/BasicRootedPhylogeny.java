@@ -72,6 +72,11 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T> implemen
 	transient private Map<T, PhylogenyNode<T>> uniqueIdToNodeMap;
 	BasicPhylogenyNode<T> root;
 
+	public void setName(final String name)
+		{
+		throw new NotImplementedException();
+		}
+
 	// -------------------------- OTHER METHODS --------------------------
 
 	public BasicRootedPhylogeny()
