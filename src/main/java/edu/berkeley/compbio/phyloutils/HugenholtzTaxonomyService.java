@@ -47,7 +47,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	private static final Logger logger = Logger.getLogger(HugenholtzTaxonomyService.class);
 
 	//private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
-	private static final String hugenholtzFilename = "greengenes.all.tree.allids.gz";
+	private static final String hugenholtzFilename = "275K.nast.ft190.rooted.allids.gz";
+	//private static final String hugenholtzFilename = "greengenes.all.tree.allids.gz";
 	private static final String bigGreenGenesFilename = "greengenes16SrRNAgenes.txt.gz";
 	private static final String overrideFilename = "overrideNameToProkMSAid.txt";
 
@@ -98,10 +99,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public HugenholtzTaxonomyService() //throws PhyloUtilsException
 		{
-		theIntegerTree = (BasicRootedPhylogeny<Integer>) CacheManager.get(this, "theIntegerTree");
-		nameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, "nameToIdsMap");
-		extraNameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, "extraNameToIdsMap");
-		nameToUniqueIdMap = (Map<String, Integer>) CacheManager.get(this, "nameToUniqueIdMap");
+		theIntegerTree = (BasicRootedPhylogeny<Integer>) CacheManager.get(this, hugenholtzFilename + ".theIntegerTree");
+		nameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, hugenholtzFilename + ".nameToIdsMap");
+		extraNameToIdsMap =
+				(HashMultimap<String, Integer>) CacheManager.get(this, hugenholtzFilename + ".extraNameToIdsMap");
+		nameToUniqueIdMap = (Map<String, Integer>) CacheManager.get(this, hugenholtzFilename + ".nameToUniqueIdMap");
 
 		if (theIntegerTree == null || nameToIdsMap == null || nameToUniqueIdMap == null)
 			{
@@ -109,10 +111,10 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			reloadOverrideMap();
 			// ** Note we don't invalidate downstream caches, e.g. for StrainDirectoryLabelChooser and so forth
 			// CacheManager.invalidate
-			CacheManager.put(this, "theIntegerTree", theIntegerTree);
-			CacheManager.put(this, "nameToIdsMap", nameToIdsMap);
-			CacheManager.put(this, "extraNameToIdsMap", extraNameToIdsMap);
-			CacheManager.put(this, "nameToUniqueIdMap", nameToUniqueIdMap);
+			CacheManager.put(this, hugenholtzFilename + ".theIntegerTree", theIntegerTree);
+			CacheManager.put(this, hugenholtzFilename + ".nameToIdsMap", nameToIdsMap);
+			CacheManager.put(this, hugenholtzFilename + ".extraNameToIdsMap", extraNameToIdsMap);
+			CacheManager.put(this, hugenholtzFilename + ".nameToUniqueIdMap", nameToUniqueIdMap);
 			}
 
 		/*if (!readStateIfAvailable())
@@ -206,7 +208,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				}, nameToIdsMap, extraNameToIdsMap);
 
 
-		addStrainNamesToMap();
+		//BAD	addStrainNamesToMap();
 		}
 
 	private synchronized static InputStream getInputStream(String filename) throws PhyloUtilsException, IOException

@@ -33,15 +33,16 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="phyloutils" verbose="1" parallel="false" thread-count="1">
-	<test name="phyloutils" junit="false">
-		<!--<packages>
-			<package name="edu.berkeley.compbio.phyloutils"/>
-		</packages>-->
-		<classes>
-			<class name="edu.berkeley.compbio.phyloutils.BasicRootedPhylogenyTest"/>
-			<class name="edu.berkeley.compbio.phyloutils.BasicPhylogenyNodeTest"/>
-			<class name="edu.berkeley.compbio.phyloutils.CiccarelliUtilsTest"/>
-			<class name="edu.berkeley.compbio.phyloutils.NewickParserTest"/>
-		</classes>
-	</test>
+  <test name="phyloutils" junit="false">
+    <!--<packages>
+    <package name="edu.berkeley.compbio.phyloutils"/>
+  </packages>-->
+    <classes>
+      <class name="edu.berkeley.compbio.phyloutils.BasicRootedPhylogenyTest"/>
+      <class name="edu.berkeley.compbio.phyloutils.BasicPhylogenyNodeTest"/>
+      <class name="edu.berkeley.compbio.phyloutils.CiccarelliUtilsTest"/>
+      <class name="edu.berkeley.compbio.phyloutils.NewickParserTest"/>
+      <class name="edu.berkeley.compbio.phyloutils.HugenholtzTaxonomyServiceTest"/>
+    </classes>
+  </test>
 </suite>
