@@ -102,7 +102,7 @@ public class TreeFactory
 		/*	}
 		catch (DistributionException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			}*/
 		}
 

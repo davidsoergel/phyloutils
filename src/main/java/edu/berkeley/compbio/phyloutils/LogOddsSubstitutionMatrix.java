@@ -34,7 +34,7 @@ public class LogOddsSubstitutionMatrix
 			}
 		catch (Exception e)
 			{
-			//  logger.error(e);
+			//  logger.error("Error", e);
 			r = new FileReader(filename);
 			}
 		readFromReader(r);

@@ -1165,7 +1165,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}
 		catch (NoSuchNodeException e)
 			{
-			logger.error(e);
+			logger.error("Error", e);
 			throw new Error("Impossible");
 			}
 		}
