@@ -13,10 +13,11 @@ public class NASTDistanceMapper
 	{
 	MultiKeyMap<Integer, Double> slopeTable = new MultiKeyMap<Integer, Double>();
 	//** make configurable
-	final String filename = "";
+	final String filename = "nast.constraints.slopes.txt";
 
 	public NASTDistanceMapper()
 		{
+
 		}
 
 	public double map(final int nastBegin, final int nastWidth, final double dnadist)
