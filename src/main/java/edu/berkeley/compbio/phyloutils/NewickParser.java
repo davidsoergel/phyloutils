@@ -119,7 +119,7 @@ public class NewickParser<T>
 		InputStream is = getInputStream(filename);
 
 		NodeNamer<Integer> namer = generateIds ? new IntegerNodeNamer(10000000, namedNodesMustBeLeaves) :
-				new RequireExistingNodeNamer(false);
+		                           new RequireExistingNodeNamer(false);
 		return new NewickParser<Integer>().read(is, namer);
 		}
 
@@ -138,7 +138,7 @@ public class NewickParser<T>
 			File f = new File(filename);
 			if (f.exists())
 				{
-				res = new URL("file://" + filename);
+				res = f.toURI().toURL();//new URL("file://" + filename);
 				}
 			}
 
@@ -433,7 +433,7 @@ public class NewickParser<T>
 			}
 
 		logger.info("read tree with maximum branch-length depth " + theTree.getGreatestBranchLengthDepthBelow()
-				+ " and maximum node depth " + theTree.getGreatestNodeDepthBelow());
+		            + " and maximum node depth " + theTree.getGreatestNodeDepthBelow());
 
 		theTree.assignUniqueIds(namer);
 		return theTree;

@@ -47,7 +47,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	private static final Logger logger = Logger.getLogger(HugenholtzTaxonomyService.class);
 
 	//private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
-	private static final String hugenholtzFilename = "275K.nast.ft190.rooted.allids.gz";
+	private static final String hugenholtzFilename = "275K.nast.ft190.constrained.rooted.allids.gz";
 	//private static final String hugenholtzFilename = "greengenes.all.tree.allids.gz";
 	private static final String bigGreenGenesFilename = "greengenes16SrRNAgenes.txt.gz";
 	private static final String overrideFilename = "overrideNameToProkMSAid.txt";
