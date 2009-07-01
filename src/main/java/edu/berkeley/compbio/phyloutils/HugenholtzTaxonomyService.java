@@ -484,6 +484,19 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return theIntegerTree.getNode(leafId).isLeaf();
 		}
 
+	public synchronized boolean isKnown(Integer leafId) //throws NoSuchNodeException
+		{
+		try
+			{
+			theIntegerTree.getNode(leafId);
+			return true;
+			}
+		catch (NoSuchNodeException e)
+			{
+			return false;
+			}
+		}
+
 
 	@NotNull
 	public Integer findTaxidByNameRelaxed(String name) throws NoSuchNodeException

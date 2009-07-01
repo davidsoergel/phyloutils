@@ -89,6 +89,7 @@ public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T> implemen
 		root = new BasicPhylogenyNode<T>(null, rootValue, 0);
 		}
 
+
 	public BasicRootedPhylogeny(BasicPhylogenyNode<T> root)
 		{
 		this.root = root;
@@ -197,6 +198,18 @@ root = new BasicPhylogenyNode<T>(original.);
 			getLeaves();
 			}
 		return leafIds;
+		}
+
+	public void addNode(PhylogenyNode<T> n) throws PhyloUtilsException
+		{
+
+		if (uniqueIdToNodeMap.get(n.getValue()) != null)
+			{
+			throw new PhyloUtilsException("Node id not unique");
+			}
+		uniqueIdToNodeMap.put(n.getValue(), n);
+		leafIds = null;
+		leafSet = null;
 		}
 
 	/**

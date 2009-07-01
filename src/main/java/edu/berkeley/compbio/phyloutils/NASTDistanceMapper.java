@@ -29,7 +29,7 @@ public class NASTDistanceMapper
 		Map<String, List<Double>> map = StringListDoubleMapReader.read(filename);
 
 		positions = DSArrayUtils.castToInt(map.get("Positions").toArray(DSArrayUtils.EMPTY_DOUBLE_OBJECT_ARRAY));
-		widths = DSArrayUtils.castToInt(map.get("Widths").toArray(DSArrayUtils.EMPTY_DOUBLE_OBJECT_ARRAY));
+		widths = DSArrayUtils.castToInt(map.get("NonGapWidths").toArray(DSArrayUtils.EMPTY_DOUBLE_OBJECT_ARRAY));
 
 		List<Double> rowMajorSlopes = map.get("Slopes");
 		int numPositions = positions.length;
@@ -42,23 +42,24 @@ public class NASTDistanceMapper
 				//int gridIndex = widthQuantizedIndex * positions.length + positionIndex;
 
 				int slopeIndex = widthIndex * numPositions + positionIndex;
-				slopeTable.put(widths[widthIndex], positions[positionIndex], rowMajorSlopes.get(slopeIndex));
+				//slopeTable.put(widths[widthIndex], positions[positionIndex], rowMajorSlopes.get(slopeIndex));
+				slopeTable.put(widthIndex, positionIndex, rowMajorSlopes.get(slopeIndex));
 				}
 			}
 		}
 
-	public double map(final int nastBegin, final int nastWidth, final double dnadist)
+	public double map(final int position, final int width, final double dnadist)
 		{
 		// find the floor of the position and width among the known entries
 
-		int widthQuantizedIndex = Arrays.binarySearch(widths, nastWidth);
+		int widthQuantizedIndex = Arrays.binarySearch(widths, width);
 		if (widthQuantizedIndex < 0)
 			{
 			//BAD test me
 			widthQuantizedIndex = -(widthQuantizedIndex + 1) - 1;
 			}
 
-		int positionQuantizedIndex = Arrays.binarySearch(positions, nastBegin);
+		int positionQuantizedIndex = Arrays.binarySearch(positions, position);
 		if (positionQuantizedIndex < 0)
 			{
 			//BAD test me

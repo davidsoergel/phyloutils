@@ -85,4 +85,6 @@ public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStrin
 	 */
 	public T getLeafAtApproximateDistance(final T aId, final double minDesiredTreeDistance,
 	                                      final double maxDesiredTreeDistance) throws NoSuchNodeException;
+
+	boolean isKnown(T value);
 	}

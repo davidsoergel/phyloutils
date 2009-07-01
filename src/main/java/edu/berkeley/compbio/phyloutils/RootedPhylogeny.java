@@ -318,4 +318,6 @@ public interface RootedPhylogeny<T>
 
 	T getLeafAtApproximateDistance(T aId, double minDesiredTreeDistance, double maxDesiredTreeDistance)
 			throws NoSuchNodeException;
+
+	void addNode(PhylogenyNode<T> n) throws PhyloUtilsException;
 	}

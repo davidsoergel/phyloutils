@@ -130,6 +130,19 @@ public class NewickTaxonomyService
 		return basePhylogeny.getNode(leafId).isLeaf();
 		}
 
+	public synchronized boolean isKnown(String leafId) //throws NoSuchNodeException
+		{
+		try
+			{
+			basePhylogeny.getNode(leafId);
+			return true;
+			}
+		catch (NoSuchNodeException e)
+			{
+			return false;
+			}
+		}
+
 	public RootedPhylogeny<String> getTree()
 		{
 		return basePhylogeny;
