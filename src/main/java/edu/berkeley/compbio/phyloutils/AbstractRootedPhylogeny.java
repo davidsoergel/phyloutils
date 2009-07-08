@@ -1292,7 +1292,8 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 				}
 			}
 
-		throw new PhyloUtilsRuntimeException(
-				"Could not find a node in the requested distance range after " + MAX_SEARCH_ITERATIONS + "attempts");
+		throw new NoSuchNodeException(
+				"Could not find a node in the requested distance range (" + minDesiredTreeDistance + " - "
+				+ maxDesiredTreeDistance + " from " + aId + ") after " + MAX_SEARCH_ITERATIONS + " attempts");
 		}
 	}
