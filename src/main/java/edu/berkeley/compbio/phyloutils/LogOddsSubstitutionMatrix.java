@@ -127,7 +127,7 @@ public class LogOddsSubstitutionMatrix
 		}
 
 
-	public int score(char c, char d)
+	public int score(byte c, byte d)
 		{
 		int x, y;
 		//logger.debug("Substitution score : " + c + ", " + d);
@@ -137,9 +137,9 @@ public class LogOddsSubstitutionMatrix
 		return SubstitutionMatrix[x][y];
 		}
 
-	public int scoreAgainstGap(char c)
+	public int scoreAgainstGap(byte c)
 		{
-		return score(c, '-');
+		return score(c, (byte) '-');
 		}
 	}
 
