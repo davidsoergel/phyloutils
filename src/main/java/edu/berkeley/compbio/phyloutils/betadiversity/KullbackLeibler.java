@@ -41,6 +41,7 @@ import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,7 +51,7 @@ import java.util.Set;
  * @version $Id$
  */
 
-public class KullbackLeibler<T> implements DissimilarityMeasure<RootedPhylogeny<T>>
+public class KullbackLeibler<T extends Serializable> implements DissimilarityMeasure<RootedPhylogeny<T>>
 	{
 	private static final Logger logger = Logger.getLogger(WeightedUniFrac.class);
 

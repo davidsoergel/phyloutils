@@ -38,6 +38,7 @@ import com.google.common.collect.Multiset;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -52,7 +53,7 @@ import java.util.Set;
  * @version $Id$
  * @JavadocOK
  */
-public interface RootedPhylogeny<T>
+public interface RootedPhylogeny<T extends Serializable>
 		extends PhylogenyNode<T>, TaxonMergingPhylogeny<T>//, Clusterable<RootedPhylogeny<T>>
 	{
 	/**

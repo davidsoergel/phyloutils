@@ -37,6 +37,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,7 +53,8 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-public class HybridRootedPhylogeny<T> implements TaxonMergingPhylogeny<T>//extends AbstractRootedPhylogeny<Integer>
+public class HybridRootedPhylogeny<T extends Serializable>
+		implements TaxonMergingPhylogeny<T>//extends AbstractRootedPhylogeny<Integer>
 	{
 	private static final Logger logger = Logger.getLogger(HybridRootedPhylogeny.class);
 

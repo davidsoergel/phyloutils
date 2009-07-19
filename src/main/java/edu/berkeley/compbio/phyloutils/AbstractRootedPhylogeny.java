@@ -42,6 +42,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -62,7 +63,7 @@ import java.util.Set;
  * @version $Id$
  */
 
-public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
+public abstract class AbstractRootedPhylogeny<T extends Serializable> implements RootedPhylogeny<T>
 	{
 	private static final Logger logger = Logger.getLogger(AbstractRootedPhylogeny.class);
 	protected transient RootedPhylogeny<T> basePhylogeny = null;
@@ -437,7 +438,7 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 	   }
    */
 
-	public List<T> getAncestorPathIds(final T id) throws NoSuchNodeException
+	public LinkedList<T> getAncestorPathIds(final T id) throws NoSuchNodeException
 		{
 		return getNode(id).getAncestorPathIds();
 		}
@@ -447,11 +448,12 @@ public abstract class AbstractRootedPhylogeny<T> implements RootedPhylogeny<T>
 		return getNode(id).getAncestorPath();
 		}
 
-	public List<PhylogenyNode<T>> getAncestorPathAsBasic(final T id) throws NoSuchNodeException
+	@NotNull
+	public ArrayList<PhylogenyNode<T>> getAncestorPathAsBasic(final T id) throws NoSuchNodeException
 		{
 		List<PhylogenyNode<T>> orig = getNode(id).getAncestorPath();
 
-		List<PhylogenyNode<T>> result = new ArrayList<PhylogenyNode<T>>();
+		ArrayList<PhylogenyNode<T>> result = new ArrayList<PhylogenyNode<T>>();
 		BasicPhylogenyNode<T> parent = null;
 		for (PhylogenyNode<T> origNode : orig)
 			{

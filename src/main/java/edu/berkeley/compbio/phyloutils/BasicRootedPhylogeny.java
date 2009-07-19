@@ -62,7 +62,7 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-public class BasicRootedPhylogeny<T> extends AbstractRootedPhylogeny<T> implements Serializable
+public class BasicRootedPhylogeny<T extends Serializable> extends AbstractRootedPhylogeny<T> implements Serializable
 	{
 	private static final long serialVersionUID = 20090326L;
 
@@ -335,10 +335,10 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<T> getAncestorPathIds()
+	public LinkedList<T> getAncestorPathIds()
 		{
 		// this is the root node
-		List<T> result = new LinkedList<T>();
+		LinkedList<T> result = new LinkedList<T>();
 
 		result.add(0, getRoot().getValue());
 

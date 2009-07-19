@@ -6,6 +6,7 @@ import com.davidsoergel.dsutils.math.MathUtils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.testng.annotations.Test;
 
+import java.io.Serializable;
 import java.util.Queue;
 
 /**
@@ -50,7 +51,7 @@ public class PhylogenyNodeInterfaceTest<T extends PhylogenyNode>
 	@Test
 	public void getWeightPropagatesWeightFromBelowIfNeeded() throws Exception
 		{
-		PhylogenyNode<Object> tmp = tif.createInstance();
+		PhylogenyNode<Serializable> tmp = tif.createInstance();
 		for (LengthWeightHierarchyNode n : tmp)
 			{
 			if (!n.isLeaf())

@@ -57,7 +57,8 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, HierarchyNode<T, BasicPhylogenyNode<T>>
+public class BasicPhylogenyNode<T extends Serializable>
+		implements PhylogenyNode<T>, Serializable//, HierarchyNode<T, BasicPhylogenyNode<T>>
 		// really T should extend Serializable here but let's see if we can get away without it
 	{
 
@@ -640,9 +641,9 @@ public class BasicPhylogenyNode<T> implements PhylogenyNode<T>, Serializable//, 
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<T> getAncestorPathIds()
+	public LinkedList<T> getAncestorPathIds()
 		{
-		List<T> result = new LinkedList<T>();
+		LinkedList<T> result = new LinkedList<T>();
 		BasicPhylogenyNode<T> trav = this;
 
 		while (trav != null)

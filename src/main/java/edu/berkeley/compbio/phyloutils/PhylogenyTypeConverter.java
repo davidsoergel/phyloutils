@@ -4,6 +4,8 @@ import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.google.common.collect.Multimap;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
+
 public class PhylogenyTypeConverter
 	{
 	private static final Logger logger = Logger.getLogger(PhylogenyTypeConverter.class);
@@ -16,10 +18,11 @@ public class PhylogenyTypeConverter
 	 * @param idMapper   guarantee that the IDs are consistent with those provided by taxonomyService.getTaxidByName
 	 * @return
 	 */
-	public static <T> BasicRootedPhylogeny<T> convertToIDTree(RootedPhylogeny<String> stringTree, NodeNamer<T> namer,
-	                                                          TaxonStringIdMapper<T> idMapper,
-	                                                          Multimap<String, T> nameToIdMap,
-	                                                          Multimap<String, T> extraNameToIdMap) //throws PhyloUtilsException
+	public static <T extends Serializable> BasicRootedPhylogeny<T> convertToIDTree(RootedPhylogeny<String> stringTree,
+	                                                                               NodeNamer<T> namer,
+	                                                                               TaxonStringIdMapper<T> idMapper,
+	                                                                               Multimap<String, T> nameToIdMap,
+	                                                                               Multimap<String, T> extraNameToIdMap) //throws PhyloUtilsException
 		//    ,Multimap<String, T> nameToIdMap)
 		//	throws NcbiTaxonomyException
 		{
@@ -47,21 +50,23 @@ public class PhylogenyTypeConverter
 		return result;
 		}
 
-	private static <T> PhylogenyNode<T> convertToIDNode(PhylogenyNode<String> stringNode,
-	                                                    TaxonStringIdMapper<T> idMapper,
-	                                                    Multimap<String, T> nameToIdMap,
-	                                                    Multimap<String, T> extraNameToIdMap,
-	                                                    NodeNamer<T> namer) //throws PhyloUtilsException//, Multimap<String, T> nameToIdMap)//throws NcbiTaxonomyException
+	private static <T extends Serializable> PhylogenyNode<T> convertToIDNode(PhylogenyNode<String> stringNode,
+	                                                                         TaxonStringIdMapper<T> idMapper,
+	                                                                         Multimap<String, T> nameToIdMap,
+	                                                                         Multimap<String, T> extraNameToIdMap,
+	                                                                         NodeNamer<T> namer) //throws PhyloUtilsException//, Multimap<String, T> nameToIdMap)//throws NcbiTaxonomyException
 		{
 		PhylogenyNode<T> result = new BasicPhylogenyNode<T>();
 		copyValuesToNode(stringNode, result, idMapper, nameToIdMap, extraNameToIdMap, namer);//,nameToIdMap);
 		return result;
 		}
 
-	private static <T> void copyValuesToNode(PhylogenyNode<String> stringNode, PhylogenyNode<T> result,
-	                                         TaxonStringIdMapper<T> idMapper, Multimap<String, T> nameToIdMap,
-	                                         Multimap<String, T> extraNameToIdMap,
-	                                         NodeNamer<T> namer) //throws PhyloUtilsException
+	private static <T extends Serializable> void copyValuesToNode(PhylogenyNode<String> stringNode,
+	                                                              PhylogenyNode<T> result,
+	                                                              TaxonStringIdMapper<T> idMapper,
+	                                                              Multimap<String, T> nameToIdMap,
+	                                                              Multimap<String, T> extraNameToIdMap,
+	                                                              NodeNamer<T> namer) //throws PhyloUtilsException
 		//, Multimap<String, T> nameToIdMap)
 		{
 		result.setLength(stringNode.getLength());

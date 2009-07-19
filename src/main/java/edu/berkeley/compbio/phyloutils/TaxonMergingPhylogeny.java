@@ -35,6 +35,7 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -46,7 +47,7 @@ import java.util.Set;
  * @version $Id$
  * @JavadocOK
  */
-public interface TaxonMergingPhylogeny<T>//extends RootedPhylogeny<T>
+public interface TaxonMergingPhylogeny<T extends Serializable>//extends RootedPhylogeny<T>
 	{
 	/**
 	 * Locate the node with the given id, and navigate up the tree if necessary, until a node is found that has a branch

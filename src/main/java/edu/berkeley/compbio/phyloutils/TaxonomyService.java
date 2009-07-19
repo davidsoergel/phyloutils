@@ -3,6 +3,7 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.dsutils.tree.TreeException;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import java.util.Set;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
-public interface TaxonomyService<T> extends TaxonMergingPhylogeny<T>, TaxonStringIdMapper<T>
+public interface TaxonomyService<T extends Serializable> extends TaxonMergingPhylogeny<T>, TaxonStringIdMapper<T>
 	{
 	boolean isDescendant(T ancestor, T descendant) throws NoSuchNodeException;
 

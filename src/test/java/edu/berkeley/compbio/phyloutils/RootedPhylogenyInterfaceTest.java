@@ -10,6 +10,7 @@ import com.google.common.collect.Multiset;
 import org.apache.commons.collections15.CollectionUtils;
 import org.testng.annotations.Test;
 
+import java.io.Serializable;
 import java.util.Queue;
 import java.util.Set;
 
@@ -99,7 +100,7 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 	@Test
 	public void randomizedLeafWeightsAreNormalized() throws Exception
 		{
-		RootedPhylogeny<Object> tmp = tif.createInstance();
+		RootedPhylogeny<Serializable> tmp = tif.createInstance();
 		tmp.randomizeLeafWeights(new UniformDistribution(0, 1));
 		assert MathUtils.equalWithinFPError(tmp.getWeight(), 1);
 
@@ -175,27 +176,27 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 	@Test(expectedExceptions = PhyloUtilsException.class)
 	public void weightMixingRequiresBaseTree() throws Exception
 		{
-		RootedPhylogeny<Object> tree1 = tif.createInstance();
+		RootedPhylogeny<Serializable> tree1 = tif.createInstance();
 		tree1.randomizeLeafWeights(new UniformDistribution(0, 1));
 
-		RootedPhylogeny<Object> tree2 = tif.createInstance();
+		RootedPhylogeny<Serializable> tree2 = tif.createInstance();
 		tree2.randomizeLeafWeights(new UniformDistribution(0, 1));
 
-		RootedPhylogeny<Object> tree3 = tree1.mixWith(tree2, 0.1);
+		RootedPhylogeny<Serializable> tree3 = tree1.mixWith(tree2, 0.1);
 		}
 
 	@Test(expectedExceptions = PhyloUtilsException.class)
 	public void weightMixingRequiresSameBaseTree() throws Exception
 		{
-		RootedPhylogeny<Object> tree1 = tif.createInstance();
+		RootedPhylogeny<Serializable> tree1 = tif.createInstance();
 		tree1.randomizeLeafWeights(new UniformDistribution(0, 1));
 		tree1 = tree1.extractTreeWithLeafIDs(tree1.getLeafValues(), false, false);
 
-		RootedPhylogeny<Object> tree2 = tif.createInstance();
+		RootedPhylogeny<Serializable> tree2 = tif.createInstance();
 		tree2.randomizeLeafWeights(new UniformDistribution(0, 1));
 		tree2 = tree1.extractTreeWithLeafIDs(tree2.getLeafValues(), false, false);
 
-		RootedPhylogeny<Object> tree3 = tree1.mixWith(tree2, 0.1);
+		RootedPhylogeny<Serializable> tree3 = tree1.mixWith(tree2, 0.1);
 		}
 
 	@Test
@@ -215,7 +216,7 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 
 		mainTree.setLeafWeights(m);
 
-		RootedPhylogeny<Object> tree2 = tif.createInstance();
+		RootedPhylogeny<Serializable> tree2 = tif.createInstance();
 
 		tree2.smoothWeightsFrom(mainTree, .01);
 

@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.StreamTokenizer;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -57,7 +58,7 @@ import java.util.zip.GZIPInputStream;
  * @Author David Soergel
  * @Version 1.0
  */
-public class NewickParser<T>
+public class NewickParser<T extends Serializable>
 	{
 	private static final Logger logger = Logger.getLogger(NewickParser.class);
 	// -------------------------- OTHER METHODS --------------------------

@@ -38,6 +38,7 @@ import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.testng.annotations.Test;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
@@ -71,10 +72,10 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 	@Test
 	public void extractsTreeCorrectlyGivenBaseLeaves() throws Exception
 		{
-		TaxonMergingPhylogeny<Object> tmp = tif.createInstance();
+		TaxonMergingPhylogeny<Serializable> tmp = tif.createInstance();
 		Set leafIDs = DSCollectionUtils.setOf("baa", "bbba", "ca", "cb");
 
-		RootedPhylogeny<Object> result = tmp.extractTreeWithLeafIDs(leafIDs, false, false);
+		RootedPhylogeny<Serializable> result = tmp.extractTreeWithLeafIDs(leafIDs, false, false);
 
 		assert result.getUniqueIdToNodeMap().size() == 7;
 

@@ -38,6 +38,7 @@ import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.dsutils.tree.TreeException;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -70,9 +71,10 @@ public class TaxonMerger
 	 */
 	//@Transactional
 	//(propagation = Propagation.MANDATORY)
-	public static <T> Map<T, Set<T>> merge(final Set<T> requestedLeafIds, final TaxonomyService<T> basePhylogeny,
-	                                       // TaxonMergingPhylogeny
-	                                       final double branchSpanMergeThreshold)
+	public static <T extends Serializable> Map<T, Set<T>> merge(final Set<T> requestedLeafIds,
+	                                                            final TaxonomyService<T> basePhylogeny,
+	                                                            // TaxonMergingPhylogeny
+	                                                            final double branchSpanMergeThreshold)
 			throws TreeException, NoSuchNodeException// , PhyloUtilsException
 		{
 		// ** hack to allow NcbiTaxonomyWithUnitBranchLengths
@@ -228,9 +230,10 @@ public class TaxonMerger
 		return theMergedTaxa;
 		}
 
-	private static <T> void testSetsReallyDisjoint(final RootedPhylogeny<T> theCompleteTree,
-	                                               final Map<T, Set<T>> theMergedTaxa,
-	                                               final RootedPhylogeny<T> thePrunedTree) throws NoSuchNodeException
+	private static <T extends Serializable> void testSetsReallyDisjoint(final RootedPhylogeny<T> theCompleteTree,
+	                                                                    final Map<T, Set<T>> theMergedTaxa,
+	                                                                    final RootedPhylogeny<T> thePrunedTree)
+			throws NoSuchNodeException
 		{
 		// make sure the sets are really disjoint
 		final Set<T> distinctTaxonHeads = theMergedTaxa.keySet();

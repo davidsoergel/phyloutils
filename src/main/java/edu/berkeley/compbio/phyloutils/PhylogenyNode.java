@@ -35,6 +35,8 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -45,7 +47,7 @@ import java.util.List;
  * @version $Id$
  * @JavadocOK
  */
-public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T, PhylogenyNode<T>>
+public interface PhylogenyNode<T extends Serializable> extends Cloneable, LengthWeightHierarchyNode<T, PhylogenyNode<T>>
 		//Iterable<PhylogenyNode<T>>,
 	{
 	/**
@@ -71,7 +73,8 @@ public interface PhylogenyNode<T> extends Cloneable, LengthWeightHierarchyNode<T
 	 */
 	List<PhylogenyNode<T>> getAncestorPath();
 
-	List<T> getAncestorPathIds();
+	// this is a LinkedList because we need it to be Serializable for caching
+	LinkedList<T> getAncestorPathIds();
 
 
 	/**
