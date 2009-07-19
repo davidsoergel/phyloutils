@@ -271,16 +271,16 @@ public class NewickTaxonomyService
 		return basePhylogeny.extractTreeWithLeaves(ids);
 		}*/
 
-	public RootedPhylogeny<String> extractTreeWithLeafIDs(Set<String> ids, boolean ignoreAbsentNodes,
-	                                                      boolean includeInternalBranches)
+	public BasicRootedPhylogeny<String> extractTreeWithLeafIDs(Set<String> ids, boolean ignoreAbsentNodes,
+	                                                           boolean includeInternalBranches)
 			throws NoSuchNodeException  //, NodeNamer<String> namer
 		{
 		return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches); //, namer);
 		}
 
-	public RootedPhylogeny<String> extractTreeWithLeafIDs(Set<String> ids, boolean ignoreAbsentNodes,
-	                                                      boolean includeInternalBranches,
-	                                                      AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
+	public BasicRootedPhylogeny<String> extractTreeWithLeafIDs(Set<String> ids, boolean ignoreAbsentNodes,
+	                                                           boolean includeInternalBranches,
+	                                                           AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
 			throws NoSuchNodeException  //, NodeNamer<String> namer
 		{
 		return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode); //, namer);

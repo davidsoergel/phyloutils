@@ -235,8 +235,8 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	 * {@inheritDoc}
 	 */
 	@NotNull
-	public RootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
-	                                                 boolean includeInternalBranches)
+	public BasicRootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
+	                                                      boolean includeInternalBranches)
 			throws NoSuchNodeException //, NodeNamer<T> namer
 		{
 		return extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches,
@@ -247,13 +247,13 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	 * {@inheritDoc}
 	 */
 	@NotNull
-	public RootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
-	                                                 boolean includeInternalBranches,
-	                                                 MutualExclusionResolutionMode mode)
+	public BasicRootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
+	                                                      boolean includeInternalBranches,
+	                                                      MutualExclusionResolutionMode mode)
 			throws NoSuchNodeException //, NodeNamer<T> namer
 
 		{
-		try
+		/*try
 			{
 			if (getLeafValues().equals(ids) && includeInternalBranches)
 				{
@@ -265,7 +265,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			// the actual tree is expensive to load (e.g. NcbiTaxonomyService) so getLeafValues is a bad idea
 			// OK, just do the explicit extraction anyway then
 			}
-
+*/
 		/*
 		List<PhylogenyNode<T>> theLeaves = idsToLeaves(ids, ignoreAbsentNodes);
 
@@ -284,7 +284,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			throw new NoSuchNodeException("No leaves found for ids: " + ids);
 			}
 
-		RootedPhylogeny<T> result = extractTreeWithLeafPaths(theLeafPaths, includeInternalBranches, mode);
+		BasicRootedPhylogeny<T> result = extractTreeWithLeafPaths(theLeafPaths, includeInternalBranches, mode);
 
 		Collection<T> gotLeaves = result.getLeafValues();
 

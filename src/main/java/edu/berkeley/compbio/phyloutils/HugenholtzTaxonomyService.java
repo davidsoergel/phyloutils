@@ -85,7 +85,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	// when a node has multiple names separated by "==", store all those after the first here
 
 	private HashMultimap<String, Integer> nameToIdsMap;// = new HashMap<String, Integer>();
-	private Map<String, Integer> nameToUniqueIdMap; // = new HashMap<String, Integer>();
+	private ConcurrentHashMap<String, Integer> nameToUniqueIdMap; // = new HashMap<String, Integer>();
 
 //	BiMap<Integer, PhylogenyNode<String>> intToNodeMap = new HashBiMap<Integer, PhylogenyNode<String>>();
 //	Multimap<String, PhylogenyNode<String>> nameToNodeMap = new HashMultimap<String, PhylogenyNode<String>>();
@@ -103,7 +103,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		nameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, hugenholtzFilename + ".nameToIdsMap");
 		extraNameToIdsMap =
 				(HashMultimap<String, Integer>) CacheManager.get(this, hugenholtzFilename + ".extraNameToIdsMap");
-		nameToUniqueIdMap = (Map<String, Integer>) CacheManager.get(this, hugenholtzFilename + ".nameToUniqueIdMap");
+		nameToUniqueIdMap =
+				(ConcurrentHashMap<String, Integer>) CacheManager.get(this, hugenholtzFilename + ".nameToUniqueIdMap");
 
 		if (theIntegerTree == null || nameToIdsMap == null || nameToUniqueIdMap == null)
 			{
@@ -1081,16 +1082,18 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 }
  */
 
-	public synchronized RootedPhylogeny<Integer> extractTreeWithLeafIDs(Set<Integer> ids, boolean ignoreAbsentNodes,
-	                                                                    boolean includeInternalBranches,
-	                                                                    AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
+	public synchronized BasicRootedPhylogeny<Integer> extractTreeWithLeafIDs(Set<Integer> ids,
+	                                                                         boolean ignoreAbsentNodes,
+	                                                                         boolean includeInternalBranches,
+	                                                                         AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
 			throws NoSuchNodeException //, NodeNamer<Integer> namer
 		{
 		return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode); //, namer);
 		}
 
-	public synchronized RootedPhylogeny<Integer> extractTreeWithLeafIDs(Set<Integer> ids, boolean ignoreAbsentNodes,
-	                                                                    boolean includeInternalBranches)
+	public synchronized BasicRootedPhylogeny<Integer> extractTreeWithLeafIDs(Set<Integer> ids,
+	                                                                         boolean ignoreAbsentNodes,
+	                                                                         boolean includeInternalBranches)
 			throws NoSuchNodeException //, NodeNamer<Integer> namer
 		{
 		return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches); //, namer);

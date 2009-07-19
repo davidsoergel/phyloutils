@@ -35,13 +35,15 @@ package edu.berkeley.compbio.phyloutils.alphadiversity;
 import com.davidsoergel.stats.Statistic;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 
+import java.io.Serializable;
+
 
 /**
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
 
-public class FaithPD<T> implements Statistic<RootedPhylogeny<T>>
+public class FaithPD<T extends Serializable> implements Statistic<RootedPhylogeny<T>>
 	{
 	/**
 	 * {@inheritDoc}

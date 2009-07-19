@@ -3,6 +3,7 @@ package edu.berkeley.compbio.phyloutils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +18,8 @@ public class TraditionalTaxonMerger
 
 	private static final Logger logger = Logger.getLogger(TraditionalTaxonMerger.class);
 
-	public static <T> Map<T, Set<T>> merge(Collection<T> leafIds, TaxonomyService<T> basePhylogeny, String levelName)
+	public static <T extends Serializable> Map<T, Set<T>> merge(Collection<T> leafIds, TaxonomyService<T> basePhylogeny,
+	                                                            String levelName)
 		{
 		throw new NotImplementedException();
 		/*

@@ -38,13 +38,15 @@ import edu.berkeley.compbio.phyloutils.PhylogenyNode;
 import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
+
 
 /**
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
 
-public class Shannon<T> implements Statistic<RootedPhylogeny<T>>
+public class Shannon<T extends Serializable> implements Statistic<RootedPhylogeny<T>>
 	{
 	private static final Logger logger = Logger.getLogger(Shannon.class);
 

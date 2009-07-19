@@ -112,12 +112,14 @@ public interface TaxonMergingPhylogeny<T extends Serializable>//extends RootedPh
 	 * @throws NoSuchNodeException when the given collection contains a node id that is not found in the tree and
 	 *                             ignoreAbsentNodes is false
 	 */
-	RootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes, boolean includeInternalBranches,
-	                                          AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
+	BasicRootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
+	                                               boolean includeInternalBranches,
+	                                               AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
 			throws NoSuchNodeException; //, NodeNamer<T> namer
 
 
-	RootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes, boolean includeInternalBranches)
+	BasicRootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
+	                                               boolean includeInternalBranches)
 			throws NoSuchNodeException; //, NodeNamer<T> namer
 
 	@NotNull

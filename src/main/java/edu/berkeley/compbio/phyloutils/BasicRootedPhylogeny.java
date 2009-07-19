@@ -651,6 +651,31 @@ root = new BasicPhylogenyNode<T>(original.);
 		{
 		throw new NoSuchNodeException("Root doesn't have a branch length.");
 		}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@NotNull
+	public BasicRootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
+	                                                      boolean includeInternalBranches,
+	                                                      MutualExclusionResolutionMode mode)
+			throws NoSuchNodeException //, NodeNamer<T> namer
+
+		{
+//		try
+//			{
+		if (getLeafValues().equals(ids) && includeInternalBranches)
+			{
+			return this;
+			}
+//			}
+//		catch (PhyloUtilsRuntimeException e)
+//			{
+		// the actual tree is expensive to load (e.g. NcbiTaxonomyService) so getLeafValues is a bad idea
+		// OK, just do the explicit extraction anyway then
+//			}
+		return super.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode);
+		}
 	}
 
 

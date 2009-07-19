@@ -130,8 +130,8 @@ public class HybridRootedPhylogeny<T extends Serializable>
 	/**
 	 * {@inheritDoc}
 	 */
-	public RootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
-	                                                 boolean includeInternalBranches)
+	public BasicRootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
+	                                                      boolean includeInternalBranches)
 			throws NoSuchNodeException //, NodeNamer<T> namer
 		{
 		return extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches,
@@ -141,9 +141,9 @@ public class HybridRootedPhylogeny<T extends Serializable>
 	/**
 	 * {@inheritDoc}
 	 */
-	public RootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
-	                                                 boolean includeInternalBranches,
-	                                                 AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
+	public BasicRootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
+	                                                      boolean includeInternalBranches,
+	                                                      AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
 			throws NoSuchNodeException //, NodeNamer<T> namer
 		{
 		// this ought to work even if some of the requested ids are in the root tree rather than the leaf tree,

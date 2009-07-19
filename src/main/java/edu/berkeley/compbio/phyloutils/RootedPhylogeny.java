@@ -54,7 +54,8 @@ import java.util.Set;
  * @JavadocOK
  */
 public interface RootedPhylogeny<T extends Serializable>
-		extends PhylogenyNode<T>, TaxonMergingPhylogeny<T>//, Clusterable<RootedPhylogeny<T>>
+		extends PhylogenyNode<T>, TaxonMergingPhylogeny<T>//, Serializable//, Clusterable<RootedPhylogeny<T>>
+
 	{
 	/**
 	 * Finds the most recent common ancestor of a set of nodes.
