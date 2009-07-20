@@ -276,7 +276,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			}
 
 		RootedPhylogeny<T> result = extractTreeWithLeaves(theLeaves, includeInternalBranches, mode); */
-		Set<List<PhylogenyNode<T>>> theLeafPaths = idsToBasicLeafPaths(ids, ignoreAbsentNodes);
+		Set<List<? extends PhylogenyNode<T>>> theLeafPaths = idsToBasicLeafPaths(ids, ignoreAbsentNodes);
 
 
 		if (theLeafPaths.isEmpty())
@@ -342,12 +342,12 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	 * @return
 	 * @throws NoSuchNodeException
 	 */
-	protected Set<List<PhylogenyNode<T>>> idsToBasicLeafPaths(Set<T> ids, boolean ignoreAbsentNodes)
+	protected Set<List<? extends PhylogenyNode<T>>> idsToBasicLeafPaths(Set<T> ids, boolean ignoreAbsentNodes)
 			throws NoSuchNodeException
 		{
 		// don't use HashSet, to avoid calling hashcode since that requires a transaction
 		//Set<PhylogenyNode<T>> theLeaves = new HashSet<PhylogenyNode<T>>();
-		Set<List<PhylogenyNode<T>>> theLeafPaths = new HashSet<List<PhylogenyNode<T>>>();
+		Set<List<? extends PhylogenyNode<T>>> theLeafPaths = new HashSet<List<? extends PhylogenyNode<T>>>();
 		for (T id : ids)
 			{
 			try
@@ -376,7 +376,8 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		// Still, the ids were in a Set to begin with, so uniqueness should be guaranteed anyway.
 		// assert DSCollectionUtils.setOfLastElements(leaves).size() == leaves.size();
 
-		final Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>(leaves.size());
+		final Set<List<? extends PhylogenyNode<T>>> theAncestorLists =
+				new HashSet<List<? extends PhylogenyNode<T>>>(leaves.size());
 		for (final PhylogenyNode<T> leaf : leaves)
 			{
 			theAncestorLists.add(leaf.getAncestorPath());
@@ -387,9 +388,9 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 
 
 	@NotNull
-	public BasicRootedPhylogeny<T> extractTreeWithLeafPaths(final Set<List<PhylogenyNode<T>>> theAncestorLists,
-	                                                        final boolean includeInternalBranches,
-	                                                        final MutualExclusionResolutionMode mode)
+	public BasicRootedPhylogeny<T> extractTreeWithLeafPaths(
+			final Set<List<? extends PhylogenyNode<T>>> theAncestorLists, final boolean includeInternalBranches,
+			final MutualExclusionResolutionMode mode)
 		{
 		BasicPhylogenyNode<T> commonAncestor = null;
 		try
@@ -449,11 +450,11 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		}
 
 	@NotNull
-	public ArrayList<PhylogenyNode<T>> getAncestorPathAsBasic(final T id) throws NoSuchNodeException
+	public ArrayList<BasicPhylogenyNode<T>> getAncestorPathAsBasic(final T id) throws NoSuchNodeException
 		{
 		List<PhylogenyNode<T>> orig = getNode(id).getAncestorPath();
 
-		ArrayList<PhylogenyNode<T>> result = new ArrayList<PhylogenyNode<T>>();
+		ArrayList<BasicPhylogenyNode<T>> result = new ArrayList<BasicPhylogenyNode<T>>();
 		BasicPhylogenyNode<T> parent = null;
 		for (PhylogenyNode<T> origNode : orig)
 			{
@@ -494,7 +495,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	 * @throws PhyloUtilsException
 	 */
 	@NotNull
-	protected BasicPhylogenyNode<T> extractSubtreeWithLeafPaths(Set<List<PhylogenyNode<T>>> theAncestorLists,
+	protected BasicPhylogenyNode<T> extractSubtreeWithLeafPaths(Set<List<? extends PhylogenyNode<T>>> theAncestorLists,
 	                                                            boolean includeInternalBranches,
 	                                                            MutualExclusionResolutionMode mode)
 			throws NoSuchNodeException  //, NodeNamer<T> namer)
@@ -523,7 +524,8 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		}
 
 	private BasicPhylogenyNode<T> extractSubtreeWithLeafPathsExcludingInternal(
-			Set<List<PhylogenyNode<T>>> theAncestorLists, MutualExclusionResolutionMode mode) throws NoSuchNodeException
+			Set<List<? extends PhylogenyNode<T>>> theAncestorLists, MutualExclusionResolutionMode mode)
+			throws NoSuchNodeException
 		{
 		double accumulatedLength = 0;
 
@@ -577,12 +579,13 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 
 		// split the ancestor lists into sets with a common head
 
-		Collection<Set<List<PhylogenyNode<T>>>> childAncestorLists = separateFirstAncestorSets(theAncestorLists);
+		Collection<Set<List<? extends PhylogenyNode<T>>>> childAncestorLists =
+				separateFirstAncestorSets(theAncestorLists);
 		assert childAncestorLists.size() != 1; // otherwise there should be no branch here
 
 		// recurse
 
-		for (Set<List<PhylogenyNode<T>>> childAncestorList : childAncestorLists)
+		for (Set<List<? extends PhylogenyNode<T>>> childAncestorList : childAncestorLists)
 			{
 			PhylogenyNode<T> child = extractSubtreeWithLeafPathsExcludingInternal(childAncestorList, mode);
 			child.setParent(bottomOfChain);
@@ -593,7 +596,8 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 
 
 	private BasicPhylogenyNode<T> extractSubtreeWithLeafPathsIncludingInternal(
-			Set<List<PhylogenyNode<T>>> theAncestorLists, MutualExclusionResolutionMode mode) throws NoSuchNodeException
+			Set<List<? extends PhylogenyNode<T>>> theAncestorLists, MutualExclusionResolutionMode mode)
+			throws NoSuchNodeException
 		{
 		// use this as a marker to test that the provided lists were actually consistent
 		PhylogenyNode<T> commonAncestor = null;
@@ -656,11 +660,12 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 
 		// split the ancestor lists into sets with a common head
 
-		Collection<Set<List<PhylogenyNode<T>>>> childAncestorLists = separateFirstAncestorSets(theAncestorLists);
+		Collection<Set<List<? extends PhylogenyNode<T>>>> childAncestorLists =
+				separateFirstAncestorSets(theAncestorLists);
 
 		// recurse
 
-		for (Set<List<PhylogenyNode<T>>> childAncestorList : childAncestorLists)
+		for (Set<List<? extends PhylogenyNode<T>>> childAncestorList : childAncestorLists)
 			{
 			PhylogenyNode<T> child = extractSubtreeWithLeafPathsIncludingInternal(childAncestorList, mode);
 			child.setParent(bottomOfChain);
@@ -708,7 +713,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	 * @param mode
 	 * @return
 	 */
-	private boolean resolveMutualExclusion(Set<List<PhylogenyNode<T>>> theAncestorLists,
+	private boolean resolveMutualExclusion(Set<List<? extends PhylogenyNode<T>>> theAncestorLists,
 	                                       MutualExclusionResolutionMode mode)
 		{
 		// if there is only one list left, and it's empty, that's OK, we just finished a branch
@@ -722,7 +727,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		// but if there's more than one, and one of them is empty, then we asked for a node as a leaf that turns out to be an ancestor of another leaf.
 		// if we give the same path twice, that causes a failure here.  Note leaf id uniqueness constraints above.
 
-		Iterator<List<PhylogenyNode<T>>> iterator = theAncestorLists.iterator();
+		Iterator<List<? extends PhylogenyNode<T>>> iterator = theAncestorLists.iterator();
 		while (iterator.hasNext())
 			{
 			List<? extends PhylogenyNode<T>> ancestorList = iterator.next();
@@ -771,15 +776,15 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		}
 
 
-	private Collection<Set<List<PhylogenyNode<T>>>> separateFirstAncestorSets(
-			Set<List<PhylogenyNode<T>>> theAncestorLists)
+	private Collection<Set<List<? extends PhylogenyNode<T>>>> separateFirstAncestorSets(
+			Set<List<? extends PhylogenyNode<T>>> theAncestorLists)
 		{
 		// assert allFirstElementsEqual(theAncestorLists);
 
-		Map<PhylogenyNode<T>, Set<List<PhylogenyNode<T>>>> theSeparatedSets =
-				new HashMap<PhylogenyNode<T>, Set<List<PhylogenyNode<T>>>>();
+		Map<PhylogenyNode<T>, Set<List<? extends PhylogenyNode<T>>>> theSeparatedSets =
+				new HashMap<PhylogenyNode<T>, Set<List<? extends PhylogenyNode<T>>>>();
 
-		for (List<PhylogenyNode<T>> theAncestorList : theAncestorLists)
+		for (List<? extends PhylogenyNode<T>> theAncestorList : theAncestorLists)
 			{
 			if (theAncestorList.isEmpty())
 				{
@@ -796,10 +801,10 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			else
 				{
 				PhylogenyNode<T> commonAncestor = theAncestorList.get(0);
-				Set<List<PhylogenyNode<T>>> theChildList = theSeparatedSets.get(commonAncestor);
+				Set<List<? extends PhylogenyNode<T>>> theChildList = theSeparatedSets.get(commonAncestor);
 				if (theChildList == null)
 					{
-					theChildList = new HashSet<List<PhylogenyNode<T>>>();
+					theChildList = new HashSet<List<? extends PhylogenyNode<T>>>();
 					theSeparatedSets.put(commonAncestor, theChildList);
 					}
 				theChildList.add(theAncestorList);

@@ -135,7 +135,7 @@ public interface TaxonMergingPhylogeny<T extends Serializable>//extends RootedPh
 	 * @throws NoSuchNodeException
 	 */
 	@NotNull
-	List<PhylogenyNode<T>> getAncestorPathAsBasic(T id) throws NoSuchNodeException;
+	List<BasicPhylogenyNode<T>> getAncestorPathAsBasic(T id) throws NoSuchNodeException;
 
 	@NotNull
 	List<PhylogenyNode<T>> getAncestorPath(T id) throws NoSuchNodeException;

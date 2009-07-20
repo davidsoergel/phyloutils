@@ -47,7 +47,8 @@ import java.util.List;
  * @version $Id$
  * @JavadocOK
  */
-public interface PhylogenyNode<T extends Serializable> extends Cloneable, LengthWeightHierarchyNode<T, PhylogenyNode<T>>
+public interface PhylogenyNode<T extends Serializable>
+		extends Cloneable, LengthWeightHierarchyNode<T, PhylogenyNode<T>>, Serializable
 		//Iterable<PhylogenyNode<T>>,
 	{
 	/**

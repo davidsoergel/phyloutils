@@ -221,7 +221,8 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 	@Test
 	public void extractTreeWithPathsCanRemoveInternalNodes() throws PhyloUtilsException, NoSuchNodeException
 		{
-		Set<List<PhylogenyNode<String>>> theAncestorLists = new HashSet<List<PhylogenyNode<String>>>();
+		Set<List<? extends PhylogenyNode<String>>> theAncestorLists =
+				new HashSet<List<? extends PhylogenyNode<String>>>();
 
 		theAncestorLists.add(testInstance.baa.getAncestorPath());
 		theAncestorLists.add(testInstance.bbba.getAncestorPath());

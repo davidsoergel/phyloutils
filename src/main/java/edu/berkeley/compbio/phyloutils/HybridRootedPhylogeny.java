@@ -298,7 +298,7 @@ public class HybridRootedPhylogeny<T extends Serializable>
 		}
 
 	@NotNull
-	public List<PhylogenyNode<T>> getAncestorPathAsBasic(final T id) throws NoSuchNodeException
+	public List<BasicPhylogenyNode<T>> getAncestorPathAsBasic(final T id) throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
 		}

@@ -1021,7 +1021,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return theIntegerTree.getAncestorPath(id);
 		}
 
-	public List<PhylogenyNode<Integer>> getAncestorPathAsBasic(final Integer id) throws NoSuchNodeException
+	public List<BasicPhylogenyNode<Integer>> getAncestorPathAsBasic(final Integer id) throws NoSuchNodeException
 		{
 		return theIntegerTree.getAncestorPathAsBasic(id);
 		}

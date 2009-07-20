@@ -260,7 +260,7 @@ public class NewickTaxonomyService
 		return basePhylogeny.getAncestorPath(id);
 		}
 
-	public List<PhylogenyNode<String>> getAncestorPathAsBasic(final String id) throws NoSuchNodeException
+	public List<BasicPhylogenyNode<String>> getAncestorPathAsBasic(final String id) throws NoSuchNodeException
 		{
 		return basePhylogeny.getAncestorPathAsBasic(id);
 		}
