@@ -622,38 +622,53 @@ public class BasicPhylogenyNode<T extends Serializable>
 			}
 		}
 
+	// PERF caching this here and in the CacheManager accumulatingMap is redundant
+	private List<PhylogenyNode<T>> ancestorPath = null;
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public List<PhylogenyNode<T>> getAncestorPath()
 		{
-		List<PhylogenyNode<T>> result = new LinkedList<PhylogenyNode<T>>();
-		BasicPhylogenyNode<T> trav = this;
-
-		while (trav != null)
+		if (ancestorPath == null)
 			{
-			result.add(0, trav);
-			trav = trav.getParent();
-			}
+			List<PhylogenyNode<T>> result = new LinkedList<PhylogenyNode<T>>();
+			BasicPhylogenyNode<T> trav = this;
 
-		return Collections.unmodifiableList(result);
+			while (trav != null)
+				{
+				result.add(0, trav);
+				trav = trav.getParent();
+				}
+
+			ancestorPath = Collections.unmodifiableList(result);
+			}
+		return ancestorPath;
 		}
+
+
+	// PERF caching this here and in the CacheManager accumulatingMap is redundant
+	private List<T> ancestorPathIds = null;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public List<T> getAncestorPathIds()
 		{
-		List<T> result = new LinkedList<T>();
-		BasicPhylogenyNode<T> trav = this;
-
-		while (trav != null)
+		if (ancestorPathIds == null)
 			{
-			result.add(0, trav.getValue());
-			trav = trav.getParent();
-			}
+			List<T> result = new LinkedList<T>();
+			BasicPhylogenyNode<T> trav = this;
 
-		return Collections.unmodifiableList(result);
+			while (trav != null)
+				{
+				result.add(0, trav.getValue());
+				trav = trav.getParent();
+				}
+
+			ancestorPathIds = Collections.unmodifiableList(result);
+			}
+		return ancestorPathIds;
 		}
 
 

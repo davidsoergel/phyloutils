@@ -837,8 +837,9 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	 */
 	public double distanceBetween(PhylogenyNode<T> a, PhylogenyNode<T> b) throws NoSuchNodeException
 		{
-		List<PhylogenyNode<T>> ancestorsA = a.getAncestorPath();
-		List<PhylogenyNode<T>> ancestorsB = b.getAncestorPath();
+		// PERF might be a better way to do this than copy + remove nodes?
+		List<PhylogenyNode<T>> ancestorsA = new ArrayList<PhylogenyNode<T>>(a.getAncestorPath());
+		List<PhylogenyNode<T>> ancestorsB = new ArrayList<PhylogenyNode<T>>(b.getAncestorPath());
 
 		int commonAncestors = 0;
 
