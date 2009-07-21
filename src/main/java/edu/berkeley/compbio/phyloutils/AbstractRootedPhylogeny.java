@@ -45,6 +45,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -89,13 +90,13 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	@NotNull
 	public T commonAncestor(Collection<T> knownMergeIds, double proportion) throws NoSuchNodeException
 		{
-		Set<List<PhylogenyNode<T>>> theAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
+		Set<List<PhylogenyNode<T>>> theDisposableAncestorLists = new HashSet<List<PhylogenyNode<T>>>();
 		for (T id : knownMergeIds)
 			{
 			try
 				{
 				PhylogenyNode<T> node = getNode(id);
-				theAncestorLists.add(node.getAncestorPath());
+				theDisposableAncestorLists.add(new ArrayList<PhylogenyNode<T>>(node.getAncestorPath()));
 				}
 			catch (NoSuchNodeException e)
 				{
@@ -103,7 +104,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 				}
 			}
 
-		int numberThatMustAgree = (int) Math.ceil(theAncestorLists.size() * proportion);
+		int numberThatMustAgree = (int) Math.ceil(theDisposableAncestorLists.size() * proportion);
 
 		PhylogenyNode<T> commonAncestor = null;
 
@@ -111,9 +112,10 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			{
 			while (true)
 				{
-				commonAncestor = DSCollectionUtils.getDominantFirstElement(theAncestorLists,
+				commonAncestor = DSCollectionUtils.getDominantFirstElement(theDisposableAncestorLists,
 				                                                           numberThatMustAgree);  // throws NoSuchElementException
-				theAncestorLists = DSCollectionUtils.filterByAndRemoveFirstElement(theAncestorLists, commonAncestor);
+				theDisposableAncestorLists =
+						DSCollectionUtils.filterByAndRemoveFirstElement(theDisposableAncestorLists, commonAncestor);
 				}
 			}
 		catch (NoSuchElementException e)
@@ -376,26 +378,29 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		// Still, the ids were in a Set to begin with, so uniqueness should be guaranteed anyway.
 		// assert DSCollectionUtils.setOfLastElements(leaves).size() == leaves.size();
 
-		final Set<List<? extends PhylogenyNode<T>>> theAncestorLists =
+		// we're going to destroy the ancestorlists in the process of extracting the tree, so make copies first
+
+		final Set<List<? extends PhylogenyNode<T>>> theDisposableAncestorLists =
 				new HashSet<List<? extends PhylogenyNode<T>>>(leaves.size());
 		for (final PhylogenyNode<T> leaf : leaves)
 			{
-			theAncestorLists.add(leaf.getAncestorPath());
+			theDisposableAncestorLists.add(new ArrayList<PhylogenyNode<T>>(leaf.getAncestorPath()));
 			}
 
-		return extractTreeWithLeafPaths(theAncestorLists, includeInternalBranches, mode);
+		return extractTreeWithLeafPaths(theDisposableAncestorLists, includeInternalBranches, mode);
 		}
 
 
 	@NotNull
 	public BasicRootedPhylogeny<T> extractTreeWithLeafPaths(
-			final Set<List<? extends PhylogenyNode<T>>> theAncestorLists, final boolean includeInternalBranches,
-			final MutualExclusionResolutionMode mode)
+			final Set<List<? extends PhylogenyNode<T>>> theDisposableAncestorLists,
+			final boolean includeInternalBranches, final MutualExclusionResolutionMode mode)
 		{
 		BasicPhylogenyNode<T> commonAncestor = null;
 		try
 			{
-			commonAncestor = extractSubtreeWithLeafPaths(theAncestorLists, includeInternalBranches, mode); //, namer);
+			commonAncestor =
+					extractSubtreeWithLeafPaths(theDisposableAncestorLists, includeInternalBranches, mode); //, namer);
 			}
 		catch (NoSuchNodeException e)
 			{
@@ -439,7 +444,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	   }
    */
 
-	public LinkedList<T> getAncestorPathIds(final T id) throws NoSuchNodeException
+	public List<T> getAncestorPathIds(final T id) throws NoSuchNodeException
 		{
 		return getNode(id).getAncestorPathIds();
 		}
@@ -450,7 +455,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		}
 
 	@NotNull
-	public ArrayList<BasicPhylogenyNode<T>> getAncestorPathAsBasic(final T id) throws NoSuchNodeException
+	public List<BasicPhylogenyNode<T>> getAncestorPathAsBasic(final T id) throws NoSuchNodeException
 		{
 		List<PhylogenyNode<T>> orig = getNode(id).getAncestorPath();
 
@@ -470,7 +475,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			result.add(convertedNode);
 			parent = convertedNode;
 			}
-		return result;
+		return Collections.unmodifiableList(result);
 		}
 
 	/**
@@ -490,26 +495,25 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	 * includeInternalBranches is set, then all elements of the AncestorLists will be included in the resulting tree even
 	 * if there is no branching at that node.
 	 *
-	 * @param theAncestorLists
+	 * @param theDisposableAncestorLists
 	 * @return
 	 * @throws PhyloUtilsException
 	 */
 	@NotNull
-	protected BasicPhylogenyNode<T> extractSubtreeWithLeafPaths(Set<List<? extends PhylogenyNode<T>>> theAncestorLists,
-	                                                            boolean includeInternalBranches,
-	                                                            MutualExclusionResolutionMode mode)
-			throws NoSuchNodeException  //, NodeNamer<T> namer)
+	protected BasicPhylogenyNode<T> extractSubtreeWithLeafPaths(
+			Set<List<? extends PhylogenyNode<T>>> theDisposableAncestorLists, boolean includeInternalBranches,
+			MutualExclusionResolutionMode mode) throws NoSuchNodeException  //, NodeNamer<T> namer)
 		{
 		BasicPhylogenyNode<T> result;
 
 		// this was spaghetti before when I tried to handle both modes together
 		if (includeInternalBranches)
 			{
-			result = extractSubtreeWithLeafPathsIncludingInternal(theAncestorLists, mode);
+			result = extractSubtreeWithLeafPathsIncludingInternal(theDisposableAncestorLists, mode);
 			}
 		else
 			{
-			result = extractSubtreeWithLeafPathsExcludingInternal(theAncestorLists, mode);
+			result = extractSubtreeWithLeafPathsExcludingInternal(theDisposableAncestorLists, mode);
 			}
 
 		// currently we deal with MutualExclusionResolutionMode (in the form of allowRequestingInternal nodes) in the course of the tree-building recursion above,
@@ -524,7 +528,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		}
 
 	private BasicPhylogenyNode<T> extractSubtreeWithLeafPathsExcludingInternal(
-			Set<List<? extends PhylogenyNode<T>>> theAncestorLists, MutualExclusionResolutionMode mode)
+			Set<List<? extends PhylogenyNode<T>>> theDisposableAncestorLists, MutualExclusionResolutionMode mode)
 			throws NoSuchNodeException
 		{
 		double accumulatedLength = 0;
@@ -536,9 +540,9 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		// first consume any common prefix on the ancestor lists
 		do
 			{
-			while (DSCollectionUtils.allFirstElementsEqual(theAncestorLists))
+			while (DSCollectionUtils.allFirstElementsEqual(theDisposableAncestorLists))
 				{
-				commonAncestor = DSCollectionUtils.removeAllFirstElements(theAncestorLists);
+				commonAncestor = DSCollectionUtils.removeAllFirstElements(theDisposableAncestorLists);
 
 				Double d = commonAncestor.getLength();
 
@@ -552,7 +556,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 					}
 				}
 			}
-		while (!resolveMutualExclusion(theAncestorLists, mode));
+		while (!resolveMutualExclusion(theDisposableAncestorLists, mode));
 		// that returns false only if we're in LEAF mode, i.e. so far we found a requested ancestor node but we want to ignore it
 
 		// if includeInternalBranches is off, and BOTH mode is requested, and the requested ancestor node happens to be a branch point anyway, then that's OK.
@@ -580,7 +584,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		// split the ancestor lists into sets with a common head
 
 		Collection<Set<List<? extends PhylogenyNode<T>>>> childAncestorLists =
-				separateFirstAncestorSets(theAncestorLists);
+				separateFirstAncestorSets(theDisposableAncestorLists);
 		assert childAncestorLists.size() != 1; // otherwise there should be no branch here
 
 		// recurse
@@ -596,7 +600,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 
 
 	private BasicPhylogenyNode<T> extractSubtreeWithLeafPathsIncludingInternal(
-			Set<List<? extends PhylogenyNode<T>>> theAncestorLists, MutualExclusionResolutionMode mode)
+			Set<List<? extends PhylogenyNode<T>>> theDisposableAncestorLists, MutualExclusionResolutionMode mode)
 			throws NoSuchNodeException
 		{
 		// use this as a marker to test that the provided lists were actually consistent
@@ -605,9 +609,9 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 
 		// first consume any common prefix on the ancestor lists
 
-		while (DSCollectionUtils.allFirstElementsEqual(theAncestorLists))
+		while (DSCollectionUtils.allFirstElementsEqual(theDisposableAncestorLists))
 			{
-			commonAncestor = DSCollectionUtils.removeAllFirstElements(theAncestorLists);
+			commonAncestor = DSCollectionUtils.removeAllFirstElements(theDisposableAncestorLists);
 
 			// copy the common ancestor to the new tree
 
@@ -637,7 +641,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 
 
 			// we don't react to the result of resolveMutualExclusion, but we have to run it anyway in case we're in ANCESTOR mode and should prune a subtree
-			resolveMutualExclusion(theAncestorLists, mode);
+			resolveMutualExclusion(theDisposableAncestorLists, mode);
 			/*if(resolveMutualExclusion(theAncestorLists, mode))
 				{
 				// we wanted to include this node anyway since we're in ANCESTOR or BOTH mode; no problem
@@ -661,7 +665,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		// split the ancestor lists into sets with a common head
 
 		Collection<Set<List<? extends PhylogenyNode<T>>>> childAncestorLists =
-				separateFirstAncestorSets(theAncestorLists);
+				separateFirstAncestorSets(theDisposableAncestorLists);
 
 		// recurse
 
@@ -709,25 +713,25 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	/**
 	 * Returns true if the current node should be included; false if it should be ignored
 	 *
-	 * @param theAncestorLists
+	 * @param theDisposableAncestorLists
 	 * @param mode
 	 * @return
 	 */
-	private boolean resolveMutualExclusion(Set<List<? extends PhylogenyNode<T>>> theAncestorLists,
+	private boolean resolveMutualExclusion(Set<List<? extends PhylogenyNode<T>>> theDisposableAncestorLists,
 	                                       MutualExclusionResolutionMode mode)
 		{
 		// if there is only one list left, and it's empty, that's OK, we just finished a branch
-		if (theAncestorLists.size() == 1)
+		if (theDisposableAncestorLists.size() == 1)
 			{
 			return true;
 			}
-		assert theAncestorLists.size() > 1;
+		assert theDisposableAncestorLists.size() > 1;
 
 
 		// but if there's more than one, and one of them is empty, then we asked for a node as a leaf that turns out to be an ancestor of another leaf.
 		// if we give the same path twice, that causes a failure here.  Note leaf id uniqueness constraints above.
 
-		Iterator<List<? extends PhylogenyNode<T>>> iterator = theAncestorLists.iterator();
+		Iterator<List<? extends PhylogenyNode<T>>> iterator = theDisposableAncestorLists.iterator();
 		while (iterator.hasNext())
 			{
 			List<? extends PhylogenyNode<T>> ancestorList = iterator.next();
@@ -746,8 +750,8 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 					// remove all paths extending below this.
 
 					// this would cause ConcurrentModificationException except that we return and never touch the iterator again
-					theAncestorLists.clear();
-					theAncestorLists
+					theDisposableAncestorLists.clear();
+					theDisposableAncestorLists
 							.add(new ArrayList<PhylogenyNode<T>>()); // the ancestor itself.  Maybe not strictly necessary, but for consistency anyway
 					return true;
 					}

@@ -43,6 +43,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -635,15 +636,15 @@ public class BasicPhylogenyNode<T extends Serializable>
 			trav = trav.getParent();
 			}
 
-		return result;
+		return Collections.unmodifiableList(result);
 		}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public LinkedList<T> getAncestorPathIds()
+	public List<T> getAncestorPathIds()
 		{
-		LinkedList<T> result = new LinkedList<T>();
+		List<T> result = new LinkedList<T>();
 		BasicPhylogenyNode<T> trav = this;
 
 		while (trav != null)
@@ -652,7 +653,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 			trav = trav.getParent();
 			}
 
-		return result;
+		return Collections.unmodifiableList(result);
 		}
 
 

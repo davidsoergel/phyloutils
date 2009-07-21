@@ -43,6 +43,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
@@ -221,15 +222,15 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 	@Test
 	public void extractTreeWithPathsCanRemoveInternalNodes() throws PhyloUtilsException, NoSuchNodeException
 		{
-		Set<List<? extends PhylogenyNode<String>>> theAncestorLists =
+		Set<List<? extends PhylogenyNode<String>>> theDisposableAncestorLists =
 				new HashSet<List<? extends PhylogenyNode<String>>>();
 
-		theAncestorLists.add(testInstance.baa.getAncestorPath());
-		theAncestorLists.add(testInstance.bbba.getAncestorPath());
-		theAncestorLists.add(testInstance.ca.getAncestorPath());
+		theDisposableAncestorLists.add(new ArrayList<PhylogenyNode<String>>(testInstance.baa.getAncestorPath()));
+		theDisposableAncestorLists.add(new ArrayList<PhylogenyNode<String>>(testInstance.bbba.getAncestorPath()));
+		theDisposableAncestorLists.add(new ArrayList<PhylogenyNode<String>>(testInstance.ca.getAncestorPath()));
 
 		BasicPhylogenyNode<String> tree = testInstance.rootPhylogeny
-				.extractSubtreeWithLeafPaths(theAncestorLists, false,
+				.extractSubtreeWithLeafPaths(theDisposableAncestorLists, false,
 				                             AbstractRootedPhylogeny.MutualExclusionResolutionMode.EXCEPTION);
 
 		for (PhylogenyNode<String> xnode : tree)

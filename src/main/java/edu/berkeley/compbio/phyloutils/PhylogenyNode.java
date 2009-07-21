@@ -36,7 +36,6 @@ import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -74,8 +73,8 @@ public interface PhylogenyNode<T extends Serializable>
 	 */
 	List<PhylogenyNode<T>> getAncestorPath();
 
-	// this is a LinkedList because we need it to be Serializable for caching
-	LinkedList<T> getAncestorPathIds();
+	// this was a LinkedList because we need it to be Serializable for caching, but making it immutable means we can't enforce Serializable after all
+	List<T> getAncestorPathIds();
 
 
 	/**

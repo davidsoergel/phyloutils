@@ -44,6 +44,7 @@ import java.io.NotSerializableException;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -329,20 +330,20 @@ root = new BasicPhylogenyNode<T>(original.);
 
 		result.add(0, root);
 
-		return result;
+		return Collections.unmodifiableList(result);
 		}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public LinkedList<T> getAncestorPathIds()
+	public List<T> getAncestorPathIds()
 		{
 		// this is the root node
-		LinkedList<T> result = new LinkedList<T>();
+		List<T> result = new LinkedList<T>();
 
 		result.add(0, getRoot().getValue());
 
-		return result;
+		return Collections.unmodifiableList(result);
 		}
 
 	/**
