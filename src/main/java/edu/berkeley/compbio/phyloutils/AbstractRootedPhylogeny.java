@@ -278,15 +278,17 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			}
 
 		RootedPhylogeny<T> result = extractTreeWithLeaves(theLeaves, includeInternalBranches, mode); */
-		Set<List<? extends PhylogenyNode<T>>> theLeafPaths = idsToBasicLeafPaths(ids, ignoreAbsentNodes);
+		Set<List<? extends PhylogenyNode<T>>> theDisposableLeafPaths =
+				idsToDisposableBasicLeafPaths(ids, ignoreAbsentNodes);
 
 
-		if (theLeafPaths.isEmpty())
+		if (theDisposableLeafPaths.isEmpty())
 			{
 			throw new NoSuchNodeException("No leaves found for ids: " + ids);
 			}
 
-		BasicRootedPhylogeny<T> result = extractTreeWithLeafPaths(theLeafPaths, includeInternalBranches, mode);
+		BasicRootedPhylogeny<T> result =
+				extractTreeWithLeafPaths(theDisposableLeafPaths, includeInternalBranches, mode);
 
 		Collection<T> gotLeaves = result.getLeafValues();
 
@@ -344,7 +346,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	 * @return
 	 * @throws NoSuchNodeException
 	 */
-	protected Set<List<? extends PhylogenyNode<T>>> idsToBasicLeafPaths(Set<T> ids, boolean ignoreAbsentNodes)
+	protected Set<List<? extends PhylogenyNode<T>>> idsToDisposableBasicLeafPaths(Set<T> ids, boolean ignoreAbsentNodes)
 			throws NoSuchNodeException
 		{
 		// don't use HashSet, to avoid calling hashcode since that requires a transaction
@@ -354,7 +356,8 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			{
 			try
 				{
-				theLeafPaths.add(getAncestorPathAsBasic(id));
+				List<? extends PhylogenyNode<T>> safecopy = new ArrayList<PhylogenyNode<T>>(getAncestorPathAsBasic(id));
+				theLeafPaths.add(safecopy);
 				}
 			catch (NoSuchNodeException e)
 				{
