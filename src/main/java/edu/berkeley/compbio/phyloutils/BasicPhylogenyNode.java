@@ -73,6 +73,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 	// maintain a known order.  This was previously a Set; now we have to be careful not to add the same node twice, etc.
 	protected List<BasicPhylogenyNode<T>> children = new ArrayList<BasicPhylogenyNode<T>>();
 
+	// BAD this should be final, but that requires substantial refactoring
 	protected T value;// = null;
 	protected Double length;// = null;// distinguish null from zero
 	protected Double weight;// = null;// distinguish null from zero
@@ -97,29 +98,45 @@ public class BasicPhylogenyNode<T extends Serializable>
 
 		final BasicPhylogenyNode that = (BasicPhylogenyNode) o;
 
-		if (bootstrap != null ? !bootstrap.equals(that.bootstrap) : that.bootstrap != null)
-			{
-			return false;
-			}
-		if (length != null ? !length.equals(that.length) : that.length != null)
-			{
-			return false;
-			}
-		if (parent == this && that.parent != that)
-			{
-			return false;
-			}
-		if (parent != null ? !parent.equals(that.parent) : that.parent != null)
-			{
-			return false;
-			}
 		if (value != null ? !value.equals(that.value) : that.value != null)
 			{
 			return false;
 			}
+
+		if (bootstrap != null ? !bootstrap.equals(that.bootstrap) : that.bootstrap != null)
+			{
+			throw new PhyloUtilsRuntimeException(
+					"Two BasicPhylogenyNodes have the same id, but different bootstrap values; that shouldn't happen");
+			//	return false;
+			}
+		if (length != null ? !length.equals(that.length) : that.length != null)
+			{
+			throw new PhyloUtilsRuntimeException(
+					"Two BasicPhylogenyNodes have the same id, but different lengths; that shouldn't happen");
+
+			//return false;
+			}
+		if (parent == this && that.parent != that)
+			{
+			throw new PhyloUtilsRuntimeException(
+					"Two BasicPhylogenyNodes have the same id, but different parents; that shouldn't happen");
+
+			//	return false;
+			}
+		if (parent != null ? !parent.equals(that.parent) : that.parent != null)
+			{
+			throw new PhyloUtilsRuntimeException(
+					"Two BasicPhylogenyNodes have the same id, but different parents; that shouldn't happen");
+
+			//return false;
+			}
+
 		if (weight != null ? !weight.equals(that.weight) : that.weight != null)
 			{
-			return false;
+			throw new PhyloUtilsRuntimeException(
+					"Two BasicPhylogenyNodes have the same id, but different weights; that shouldn't happen");
+
+			//return false;
 			}
 
 		return true;
@@ -128,13 +145,19 @@ public class BasicPhylogenyNode<T extends Serializable>
 	@Override
 	public int hashCode()
 		{
+		return value != null ? value.hashCode() : 0;
+		}
+
+	/*	@Override
+	public int hashCode()
+		{
 		int result = parent != null ? parent.hashCode() : 0;
 		result = 31 * result + (value != null ? value.hashCode() : 0);
 		result = 31 * result + (length != null ? length.hashCode() : 0);
 		result = 31 * result + (weight != null ? weight.hashCode() : 0);
 		result = 31 * result + (bootstrap != null ? bootstrap.hashCode() : 0);
 		return result;
-		}
+		}*/
 
 	public void toNewick(StringBuffer sb, String prefix, String tab, int minClusterSize, double minLabelProb)
 		{
