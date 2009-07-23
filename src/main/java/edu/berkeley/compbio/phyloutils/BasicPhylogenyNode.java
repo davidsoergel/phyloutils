@@ -98,6 +98,12 @@ public class BasicPhylogenyNode<T extends Serializable>
 
 		final BasicPhylogenyNode that = (BasicPhylogenyNode) o;
 
+		if (value == null && that.value == null)
+			{
+			// BAD hack
+			return this == that;
+			}
+
 		if (value != null ? !value.equals(that.value) : that.value != null)
 			{
 			return false;
