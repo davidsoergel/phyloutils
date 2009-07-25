@@ -83,6 +83,17 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		return this;
 		}
 
+	private String name;
+
+	public String getName()
+		{
+		return name;
+		}
+
+	public void setName(final String name)
+		{
+		this.name = name;
+		}
 
 	/**
 	 * {@inheritDoc}

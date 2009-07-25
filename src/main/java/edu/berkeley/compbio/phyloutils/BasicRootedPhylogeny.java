@@ -73,10 +73,6 @@ public class BasicRootedPhylogeny<T extends Serializable> extends AbstractRooted
 	transient private Map<T, PhylogenyNode<T>> uniqueIdToNodeMap;
 	BasicPhylogenyNode<T> root;
 
-	public void setName(final String name)
-		{
-		throw new NotImplementedException();
-		}
 
 	// -------------------------- OTHER METHODS --------------------------
 

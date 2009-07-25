@@ -36,7 +36,6 @@ import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
 import com.davidsoergel.dsutils.tree.DepthFirstTreeIteratorImpl;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -79,9 +78,16 @@ public class BasicPhylogenyNode<T extends Serializable>
 	protected Double weight;// = null;// distinguish null from zero
 	protected Double bootstrap;// = null;
 
+	private String name;
+
+	public String getName()
+		{
+		return name;
+		}
+
 	public void setName(final String name)
 		{
-		throw new NotImplementedException();
+		this.name = name;
 		}
 
 	@Override
