@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Provides a simplified interface for taxonomy sources (e.g., NCBI, or a Newick file) that doesn't provide all the
  * services of a full RootedTree.  In particular none of the API involves PhylogenyNodes; everything is done by ID (of
- * the generic type)
+ * the generic type).  Well, that's not entirely true anymore due to returning RootedPhylogenies, but anyway.
  *
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
