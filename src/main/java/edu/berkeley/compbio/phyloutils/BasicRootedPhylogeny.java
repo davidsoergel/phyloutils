@@ -40,8 +40,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.io.NotSerializableException;
-import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -639,11 +637,11 @@ root = new BasicPhylogenyNode<T>(original.);
 		stream.writeObject(root);
 		}
 
-	private void readObjectNoData() throws ObjectStreamException
-		{
-		throw new NotSerializableException();
-		}
-
+	/*	private void readObjectNoData() throws ObjectStreamException
+		 {
+		 throw new NotSerializableException();
+		 }
+ */
 	public PhylogenyNode<T> nearestAncestorWithBranchLength() throws NoSuchNodeException
 		{
 		throw new NoSuchNodeException("Root doesn't have a branch length.");
