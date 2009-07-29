@@ -77,7 +77,7 @@ public class PhylogenyTypeConverter
 		T id = null;
 		//Set<T> ids = new HashSet<T>();
 
-		String name = stringNode.getValue();
+		String name = stringNode.getPayload();
 
 		// previously unified cases separated for clarity
 
@@ -130,7 +130,7 @@ public class PhylogenyTypeConverter
 				nameToIdMap.put(name, id);
 				}
 			}
-		result.setValue(id);
+		result.setPayload(id);
 		//nameToIdMap.put(stringNode.getValue(), id);
 
 		// ensure that any generated IDs are added in deterministic order.

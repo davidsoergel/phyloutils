@@ -148,7 +148,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			//return null;
 			}
 
-		return commonAncestor.getValue();
+		return commonAncestor.getPayload();
 		}
 
 	/**
@@ -160,7 +160,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		//commonAncestorCache.get(nameA, nameB)
 		PhylogenyNode<T> a = getNode(nameA);
 		PhylogenyNode<T> b = getNode(nameB);
-		return commonAncestor(a, b).getValue();
+		return commonAncestor(a, b).getPayload();
 		}
 
 	/**
@@ -423,9 +423,9 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			}
 
 		// always use the same root, even if it has only one child
-		BasicRootedPhylogeny<T> newTree = new BasicRootedPhylogeny<T>(this.getValue());
+		BasicRootedPhylogeny<T> newTree = new BasicRootedPhylogeny<T>(this.getPayload());
 
-		if (!commonAncestor.getValue().equals(this.getValue()))
+		if (!commonAncestor.getPayload().equals(this.getPayload()))
 			{
 			// add a single branch descending from the root to the common ancestor
 			//** this will have a length of zero, I think, but that's OK ??
@@ -590,7 +590,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		node.setLength(accumulatedLength);
 
 		// the commonAncestor is now the most recent one, so that's the most sensible name for the new node
-		node.setValue(commonAncestor.getValue());
+		node.setPayload(commonAncestor.getPayload());
 		node.setWeight(commonAncestor.getWeight());
 		bottomOfChain = node;
 
@@ -631,7 +631,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 
 			BasicPhylogenyNode<T> node = new BasicPhylogenyNode<T>();
 			node.setLength(commonAncestor.getLength());
-			node.setValue(commonAncestor.getValue());
+			node.setPayload(commonAncestor.getPayload());
 
 			//** avoid isLeaf due to ncbi lazy initialization issue
 			//if (commonAncestor.isLeaf())
@@ -974,7 +974,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		{
 		if (n.isLeaf())
 			{
-			result.add(n.getValue(), weight, 1);
+			result.add(n.getPayload(), weight, 1);
 			//result.incrementItems();
 			}
 		else
@@ -995,7 +995,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		{
 		for (PhylogenyNode<T> leaf : getLeaves())
 			{
-			int value = leafWeights.count(leaf.getValue());
+			int value = leafWeights.count(leaf.getPayload());
 			leaf.setWeight(new Double(value));
 			}
 
@@ -1009,7 +1009,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		{
 		for (PhylogenyNode<T> leaf : getLeaves())
 			{
-			Double value = leafWeights.get(leaf.getValue());
+			Double value = leafWeights.get(leaf.getPayload());
 			if (value == null)
 				{
 				throw new PhyloUtilsException("No leaf weight provided for " + leaf);
@@ -1025,7 +1025,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		Map<T, Double> result = new HashMap<T, Double>();
 		for (PhylogenyNode<T> leaf : getLeaves())
 			{
-			result.put(leaf.getValue(), leaf.getWeight());
+			result.put(leaf.getPayload(), leaf.getWeight());
 			}
 		return result;
 		}
@@ -1035,7 +1035,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		Map<T, Double> result = new HashMap<T, Double>();
 		for (PhylogenyNode<T> node : this)
 			{
-			result.put(node.getValue(), node.getWeight());
+			result.put(node.getPayload(), node.getWeight());
 			}
 		return result;
 		}
@@ -1155,12 +1155,12 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 					.extractTreeWithLeafIDs(unionLeaves, false, false, MutualExclusionResolutionMode.EXCEPTION);
 			for (PhylogenyNode<T> node : getLeaves())
 				{
-				unionTree.getNode(node.getValue()).setWeight(node.getWeight() * mixingProportion);
+				unionTree.getNode(node.getPayload()).setWeight(node.getWeight() * mixingProportion);
 				}
 
 			for (PhylogenyNode<T> node : otherTree.getLeaves())
 				{
-				unionTree.getNode(node.getValue()).incrementWeightBy(node.getWeight() * (1. - mixingProportion));
+				unionTree.getNode(node.getPayload()).incrementWeightBy(node.getWeight() * (1. - mixingProportion));
 				}
 			unionTree.normalizeWeights();
 			return unionTree;
@@ -1194,7 +1194,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			{
 			for (PhylogenyNode<T> leaf : getLeaves())//theBasePhylogeny.getLeaves())
 				{
-				T leafId = leaf.getValue();
+				T leafId = leaf.getPayload();
 				PhylogenyNode<T> otherLeaf = null;
 				final PhylogenyNode<T> node = getNode(leafId);
 				try
@@ -1253,7 +1253,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 				{
 				//PhylogenyNode<Integer> n = theIntegerTree.getNode(id);
 				double depth = distanceBetween(getRoot(), n);
-				T nId = n.getValue();
+				T nId = n.getPayload();
 
 				// BAD if two depths are exactly equal, then the result is nondeterministic
 
@@ -1314,7 +1314,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			double candidateDistance = distanceBetween(queryNode, candidate);
 			if (candidateDistance >= minDesiredTreeDistance && candidateDistance <= maxDesiredTreeDistance)
 				{
-				return candidate.getValue();
+				return candidate.getPayload();
 				}
 			}
 

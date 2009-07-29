@@ -198,11 +198,11 @@ root = new BasicPhylogenyNode<T>(original.);
 	public void addNode(PhylogenyNode<T> n) throws PhyloUtilsException
 		{
 
-		if (uniqueIdToNodeMap.get(n.getValue()) != null)
+		if (uniqueIdToNodeMap.get(n.getPayload()) != null)
 			{
 			throw new PhyloUtilsException("Node id not unique");
 			}
-		uniqueIdToNodeMap.put(n.getValue(), n);
+		uniqueIdToNodeMap.put(n.getPayload(), n);
 		leafIds = null;
 		leafSet = null;
 		}
@@ -260,17 +260,17 @@ root = new BasicPhylogenyNode<T>(original.);
 	 * {@inheritDoc}
 	 */
 	@NotNull
-	public PhylogenyNode<T> getChild(T id) throws NoSuchNodeException
+	public PhylogenyNode<T> getChildWithPayload(T id) throws NoSuchNodeException
 		{
-		return root.getChild(id);
+		return root.getChildWithPayload(id);
 		}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public T getValue()
+	public T getPayload()
 		{
-		return root.getValue();
+		return root.getPayload();
 		}
 
 	/**
@@ -293,9 +293,9 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setValue(T contents)
+	public void setPayload(T contents)
 		{
-		root.setValue(contents);
+		root.setPayload(contents);
 		}
 
 	/**
@@ -335,7 +335,7 @@ root = new BasicPhylogenyNode<T>(original.);
 		// this is the root node
 		List<T> result = new LinkedList<T>();
 
-		result.add(0, getRoot().getValue());
+		result.add(0, getRoot().getPayload());
 
 		return Collections.unmodifiableList(result);
 		}
@@ -433,7 +433,7 @@ root = new BasicPhylogenyNode<T>(original.);
 				{
 				try
 					{
-					rootPhylogeny.getNode(n.getValue());
+					rootPhylogeny.getNode(n.getPayload());
 
 					// if we got here then we found a node
 					break;
@@ -449,7 +449,7 @@ root = new BasicPhylogenyNode<T>(original.);
 					//ncbiDb.getEntityManager().refresh(n);
 					}
 				}
-			result = n.getValue();
+			result = n.getPayload();
 			//	nearestKnownAncestorCache.put(leafId, result);
 			}
 		//return n.getId();
@@ -463,7 +463,7 @@ root = new BasicPhylogenyNode<T>(original.);
 		{
 		PhylogenyNode<T> n = getNode(leafId);
 
-		return n.nearestAncestorWithBranchLength().getValue();
+		return n.nearestAncestorWithBranchLength().getPayload();
 		}
 
 
@@ -589,7 +589,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	 */
 	public String getId()
 		{
-		return root.getValue().toString();
+		return root.getPayload().toString();
 		}
 
 	/**

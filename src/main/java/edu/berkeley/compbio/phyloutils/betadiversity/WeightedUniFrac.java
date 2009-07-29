@@ -78,7 +78,7 @@ public class WeightedUniFrac<T extends Serializable> implements DissimilarityMea
 			double u = 0;
 			for (PhylogenyNode<T> node : unionTree)
 				{
-				T id = node.getValue();
+				T id = node.getPayload();
 				PhylogenyNode<T> aNode = a.getNode(id);
 				PhylogenyNode<T> bNode = b.getNode(id);
 				double aWeight = aNode == null ? 0 : aNode.getWeight();

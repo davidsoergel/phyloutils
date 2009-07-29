@@ -215,7 +215,7 @@ public class HybridRootedPhylogeny<T extends Serializable>
 
 		if (rootParent != null)
 			{
-			T parentId = rootParent.getValue();
+			T parentId = rootParent.getPayload();
 			PhylogenyNode<T> leafParent;
 			try
 				{
@@ -224,7 +224,7 @@ public class HybridRootedPhylogeny<T extends Serializable>
 			catch (NoSuchNodeException e)
 				{
 				leafParent = new BasicPhylogenyNode<T>();
-				leafParent.setValue(parentId);
+				leafParent.setPayload(parentId);
 				leafPhylogeny.getUniqueIdToNodeMap().put(parentId, leafParent);
 				}
 

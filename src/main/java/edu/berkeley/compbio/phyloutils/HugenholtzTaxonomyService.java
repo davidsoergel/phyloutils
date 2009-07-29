@@ -972,7 +972,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public synchronized double getDepthFromRoot(Integer b) throws NoSuchNodeException
 		{
-		return theIntegerTree.distanceBetween(theIntegerTree.getRoot().getValue(), b);
+		return theIntegerTree.distanceBetween(theIntegerTree.getRoot().getPayload(), b);
 		//return stringTaxonomyService.minDistanceBetween(intToNodeMap.get(a), intToNodeMap.get(b));
 		//	return exactDistanceBetween(name1, name2);
 		}

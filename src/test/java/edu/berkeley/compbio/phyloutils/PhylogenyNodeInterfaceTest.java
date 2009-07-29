@@ -36,7 +36,7 @@ public class PhylogenyNodeInterfaceTest<T extends PhylogenyNode>
 	public void getChildWorksIfChildIsPresent() throws Exception
 		{
 		PhylogenyNode tmp = tif.createInstance();
-		tmp.getChild("a");
+		tmp.getChildWithPayload("a");
 		}
 
 
@@ -44,7 +44,7 @@ public class PhylogenyNodeInterfaceTest<T extends PhylogenyNode>
 	public void getChildThrowsExceptionIfChildIsAbsent() throws Exception
 		{
 		PhylogenyNode tmp = tif.createInstance();
-		tmp.getChild("Node Absent");
+		tmp.getChildWithPayload("Node Absent");
 		}
 
 

@@ -236,29 +236,29 @@ public class BasicPhylogenyNodeTest extends ContractTestAware<BasicPhylogenyNode
 		for (PhylogenyNode<String> xnode : tree)
 			{
 			BasicPhylogenyNode<String> node = (BasicPhylogenyNode<String>) xnode;
-			if (node.getValue().equals("root"))
+			if (node.getPayload().equals("root"))
 				{
 				assert node.getChildren().size() == 2;
 				}
-			else if (node.getValue().equals("baa"))
+			else if (node.getPayload().equals("baa"))
 				{
 				assert node.getLength() == 3.2;
 				}
-			else if (node.getValue().equals("b"))
+			else if (node.getPayload().equals("b"))
 					{
 					assert node.getLength() == 4;
 					}
-				else if (node.getValue().equals("bbba"))
+				else if (node.getPayload().equals("bbba"))
 						{
 						assert node.getLength() == 8.5;
 						}
-					else if (node.getValue().equals("ca"))
+					else if (node.getPayload().equals("ca"))
 							{
 							assert node.getLength() == 3;
 							}
 						else
 							{
-							logger.error("Got wrong node: " + node.getValue());
+							logger.error("Got wrong node: " + node.getPayload());
 							assert false;
 							}
 			}

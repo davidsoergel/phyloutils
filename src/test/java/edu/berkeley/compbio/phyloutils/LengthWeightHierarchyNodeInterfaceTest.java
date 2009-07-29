@@ -110,7 +110,8 @@ public class LengthWeightHierarchyNodeInterfaceTest<T extends LengthWeightHierar
 	public void distanceToRootWorks() throws Exception
 		{
 		LengthWeightHierarchyNode tmp = tif.createInstance();
-		LengthWeightHierarchyNode t = (LengthWeightHierarchyNode) tmp.getChild("a").getChild("aa").getChild("aaa");
+		LengthWeightHierarchyNode t = (LengthWeightHierarchyNode) tmp.getChildWithPayload("a").getChildWithPayload("aa")
+				.getChildWithPayload("aaa");
 		assert t.distanceToRoot() == 30;
 		}
 	}

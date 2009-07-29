@@ -102,9 +102,9 @@ public class PhylogeneticKullbackLeibler<T extends Serializable> implements Diss
 		double divergence = 0;
 		for (PhylogenyNode<T> node : u.getChildren())
 			{
-			T id = node.getValue();
-			PhylogenyNode<T> aNode = a.getChild(id);
-			PhylogenyNode<T> bNode = b.getChild(id);
+			T id = node.getPayload();
+			PhylogenyNode<T> aNode = a.getChildWithPayload(id);
+			PhylogenyNode<T> bNode = b.getChildWithPayload(id);
 			double aWeight = aNode == null ? 0 : aNode.getWeight();
 			double bWeight = bNode == null ? 0 : bNode.getWeight();
 

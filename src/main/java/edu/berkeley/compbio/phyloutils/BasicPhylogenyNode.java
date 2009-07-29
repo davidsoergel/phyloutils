@@ -226,7 +226,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 	public BasicPhylogenyNode(T value)
 		{
 		this();
-		setValue(value);
+		setPayload(value);
 		}
 
 	public BasicPhylogenyNode(BasicPhylogenyNode<T> parent)
@@ -265,7 +265,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 
 	public BasicPhylogenyNode(final BasicPhylogenyNode<T> parent, final PhylogenyNode<T> copyFrom)
 		{
-		this(parent, copyFrom.getValue(), copyFrom.getLength(), copyFrom.getWeight());
+		this(parent, copyFrom.getPayload(), copyFrom.getLength(), copyFrom.getWeight());
 		}
 
 	/*
@@ -288,7 +288,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 	 * {@inheritDoc}
 	 */
 	@NotNull
-	public PhylogenyNode<T> getChild(T id) throws NoSuchNodeException
+	public PhylogenyNode<T> getChildWithPayload(T id) throws NoSuchNodeException
 		{
 		// We could map the children collection as a Map; but that's some hassle, and since there are generally just 2 children anyway, this is simpler
 
@@ -296,7 +296,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 
 		for (PhylogenyNode<T> child : children)
 			{
-			if (child.getValue() == id)
+			if (child.getPayload() == id)
 				{
 				return child;
 				}
@@ -440,7 +440,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 	/**
 	 * {@inheritDoc}
 	 */
-	public T getValue()
+	public T getPayload()
 		{
 		return value;
 		}
@@ -448,7 +448,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setValue(T value)
+	public void setPayload(T value)
 		{
 		if (value != null && value.equals(new Integer(-1)))
 			{
@@ -554,7 +554,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 
 			// if a node has a name but we insist on generating all internal node names, then create a new zero-length child to deal with that
 			BasicPhylogenyNode<T> child = new BasicPhylogenyNode<T>();
-			child.setValue(value);
+			child.setPayload(value);
 			child.setLength(0.0);
 			child.setWeight(weight);
 
@@ -570,7 +570,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 
 			nodes.remove(value);
 			assert nodes.get(value) == null;
-			setValue(null);
+			setPayload(null);
 
 			// the child recursion will add the child name to the map
 
@@ -697,7 +697,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 
 			while (trav != null)
 				{
-				result.add(0, trav.getValue());
+				result.add(0, trav.getPayload());
 				trav = trav.getParent();
 				}
 
@@ -978,7 +978,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 			if (n == null)
 				{
 				// arrived at root, too bad
-				throw new NoSuchNodeException("No ancestor of " + getValue() + " has a branch length.");
+				throw new NoSuchNodeException("No ancestor of " + getPayload() + " has a branch length.");
 				}
 			}
 

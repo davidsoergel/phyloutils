@@ -132,7 +132,7 @@ public class TaxonMerger
 					PhylogenyNode<T> descendant = iter.next();
 					assert descendant != ancestor;
 
-					T descendantId = descendant.getValue();
+					T descendantId = descendant.getPayload();
 					Set<T> alreadyMergedAtDescendant = theTaxonsetsByTaxid.get(descendantId);
 					if (alreadyMergedAtDescendant != null)
 						{
@@ -172,7 +172,7 @@ public class TaxonMerger
 				for (PhylogenyNode<T> descendant : node)
 					{
 					// we'll include intermediate nodes even if they aren't part of the query (i.e., not leaves)
-					T id = descendant.getValue();
+					T id = descendant.getPayload();
 					mergeTaxa.add(id);
 
 					Set<T> subIds = theTaxonsetsByTaxid.remove(id);
@@ -186,12 +186,12 @@ public class TaxonMerger
 				// we'll move on to the next sibling (or uncle, etc.)
 				it.skipAllDescendants(node);
 
-				theMergedTaxa.put(node.getValue(), mergeTaxa);
+				theMergedTaxa.put(node.getPayload(), mergeTaxa);
 				allMergedTaxa.addAll(mergeTaxa);
 				}
 			else
 				{
-				T id = node.getValue();
+				T id = node.getPayload();
 				Set<T> subIds = theTaxonsetsByTaxid.remove(id);
 				if (subIds != null)
 					{
@@ -264,7 +264,7 @@ public class TaxonMerger
 			PhylogenyNode<T> node = thePrunedTree.getNode(headId);
 			for (PhylogenyNode<T> ancestor : node.getAncestorPath())
 				{
-				T ancestorId = ancestor.getValue();
+				T ancestorId = ancestor.getPayload();
 				assert ancestorId.equals(headId) || !distinctTaxonHeads.contains(ancestorId);
 				}
 			}

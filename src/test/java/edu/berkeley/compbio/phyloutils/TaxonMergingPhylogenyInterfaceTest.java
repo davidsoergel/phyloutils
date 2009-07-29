@@ -83,7 +83,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 
 		for (LengthWeightHierarchyNode n : result)
 			{
-			String s = (String) n.getValue();
+			String s = (String) n.getPayload();
 			assert okNodes.contains(s);
 			}
 		}
@@ -102,7 +102,7 @@ public class TaxonMergingPhylogenyInterfaceTest<T extends TaxonMergingPhylogeny>
 
 		for (PhylogenyNode<String> n : result)
 			{
-			String s = n.getValue();
+			String s = n.getPayload();
 			assert okNodes.contains(s);
 			}
 		}

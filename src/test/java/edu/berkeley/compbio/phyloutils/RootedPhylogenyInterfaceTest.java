@@ -119,9 +119,9 @@ public class RootedPhylogenyInterfaceTest<T extends RootedPhylogeny>
 		T mainTree = tif.createInstance();
 
 		BasicRootedPhylogeny rootPhylogeny = new BasicRootedPhylogeny<String>("root");
-		rootPhylogeny.newChild().setValue("a");
-		rootPhylogeny.newChild().setValue("b");
-		rootPhylogeny.newChild().setValue("c");
+		rootPhylogeny.newChild().setPayload("a");
+		rootPhylogeny.newChild().setPayload("b");
+		rootPhylogeny.newChild().setPayload("c");
 		rootPhylogeny.assignUniqueIds(new StringNodeNamer("bogus", false, false));
 
 		Object found = mainTree.nearestKnownAncestor(rootPhylogeny, "bbba");

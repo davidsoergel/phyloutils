@@ -193,12 +193,12 @@ public class NewickTaxonomyService
 
 	public String findTaxidByName(String name) throws NoSuchNodeException
 		{
-		return basePhylogeny.getNode(name).getValue();
+		return basePhylogeny.getNode(name).getPayload();
 		}
 
 	public String findTaxidByNameRelaxed(String name) throws NoSuchNodeException
 		{
-		return basePhylogeny.getNode(name).getValue();
+		return basePhylogeny.getNode(name).getPayload();
 		}
 
 	public Set<String> getCachedNamesForId(String id)
@@ -206,7 +206,7 @@ public class NewickTaxonomyService
 		String s = null;
 		try
 			{
-			s = basePhylogeny.getNode(id).getValue();
+			s = basePhylogeny.getNode(id).getPayload();
 			}
 		catch (NoSuchNodeException e)
 			{
@@ -239,7 +239,7 @@ public class NewickTaxonomyService
 
 	public double getDepthFromRoot(String b) throws NoSuchNodeException
 		{
-		return exactDistanceBetween(getRoot().getValue(), b);
+		return exactDistanceBetween(getRoot().getPayload(), b);
 		//return stringTaxonomyService.minDistanceBetween(intToNodeMap.get(a), intToNodeMap.get(b));
 		//	return exactDistanceBetween(name1, name2);
 		}

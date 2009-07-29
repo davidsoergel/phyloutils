@@ -84,7 +84,7 @@ public class EnvironmentParser
 			Multiset<String> ids = entry.getValue();
 			RootedPhylogeny<String> subtree = tree.extractTreeWithLeafIDs(ids.elementSet(), false, false,
 			                                                              AbstractRootedPhylogeny.MutualExclusionResolutionMode.EXCEPTION);
-			subtree.setValue(name);
+			subtree.setPayload(name);
 			subtree.setLeafWeights(ids);
 			result.add(subtree);
 			}

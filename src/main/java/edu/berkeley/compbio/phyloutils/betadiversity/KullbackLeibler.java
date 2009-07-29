@@ -103,9 +103,9 @@ public class KullbackLeibler<T extends Serializable> implements DissimilarityMea
 
 		for (PhylogenyNode<T> node : unionTree.getLeaves())
 			{
-			T id = node.getValue();
-			PhylogenyNode<T> aNode = a.getChild(id);
-			PhylogenyNode<T> bNode = b.getChild(id);
+			T id = node.getPayload();
+			PhylogenyNode<T> aNode = a.getChildWithPayload(id);
+			PhylogenyNode<T> bNode = b.getChildWithPayload(id);
 			double p = aNode == null ? 0 : aNode.getWeight();
 			double q = bNode == null ? 0 : bNode.getWeight();
 
