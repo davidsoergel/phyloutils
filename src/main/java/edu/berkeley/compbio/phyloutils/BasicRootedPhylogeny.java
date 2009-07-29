@@ -293,6 +293,14 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
+	public PhylogenyNode<T> newChild(T payload)
+		{
+		return root.newChild(payload);
+		}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setPayload(T contents)
 		{
 		root.setPayload(contents);

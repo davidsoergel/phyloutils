@@ -493,6 +493,17 @@ public class BasicPhylogenyNode<T extends Serializable>
 		return child;
 		}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public PhylogenyNode<T> newChild(T payload)
+		{
+		BasicPhylogenyNode<T> child = new BasicPhylogenyNode<T>();
+		child.setParent(this);
+		child.setPayload(payload);
+		return child;
+		}
+
 
 	/**
 	 * {@inheritDoc}
