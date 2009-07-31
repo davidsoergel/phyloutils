@@ -338,7 +338,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<T> getAncestorPathIds()
+	public List<T> getAncestorPathPayloads()
 		{
 		// this is the root node
 		List<T> result = new LinkedList<T>();

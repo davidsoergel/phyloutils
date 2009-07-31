@@ -74,7 +74,7 @@ public interface PhylogenyNode<T extends Serializable>
 	List<PhylogenyNode<T>> getAncestorPath();
 
 	// this was a LinkedList because we need it to be Serializable for caching, but making it immutable means we can't enforce Serializable after all
-	List<T> getAncestorPathIds();
+	List<T> getAncestorPathPayloads();
 
 
 	/**

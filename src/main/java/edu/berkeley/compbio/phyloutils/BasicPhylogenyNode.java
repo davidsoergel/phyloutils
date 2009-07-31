@@ -699,7 +699,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<T> getAncestorPathIds()
+	public List<T> getAncestorPathPayloads()
 		{
 		if (ancestorPathIds == null)
 			{

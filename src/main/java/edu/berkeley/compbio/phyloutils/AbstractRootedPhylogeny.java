@@ -460,7 +460,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 
 	public List<T> getAncestorPathIds(final T id) throws NoSuchNodeException
 		{
-		return getNode(id).getAncestorPathIds();
+		return getNode(id).getAncestorPathPayloads();
 		}
 
 	public List<PhylogenyNode<T>> getAncestorPath(final T id) throws NoSuchNodeException
