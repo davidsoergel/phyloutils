@@ -31,9 +31,10 @@ public interface TaxonomyService<T extends Serializable> extends TaxonMergingPhy
 
 	void setSynonymService(TaxonomySynonymService taxonomySynonymService);
 
-	RootedPhylogeny<T> getRandomSubtree(int numTaxa, Double mergeThreshold) throws NoSuchNodeException, TreeException;
+	SerializableRootedPhylogeny<T> getRandomSubtree(int numTaxa, Double mergeThreshold)
+			throws NoSuchNodeException, TreeException;
 
-	RootedPhylogeny<T> getRandomSubtree(int numTaxa, Double mergeThreshold, T exceptDescendantsOf)
+	SerializableRootedPhylogeny<T> getRandomSubtree(int numTaxa, Double mergeThreshold, T exceptDescendantsOf)
 			throws NoSuchNodeException, TreeException;
 
 	boolean isLeaf(T leafId) throws NoSuchNodeException;
@@ -56,7 +57,8 @@ public interface TaxonomyService<T extends Serializable> extends TaxonMergingPhy
 
 	//RootedPhylogeny<Integer> findTreeForName(String name) throws NoSuchNodeException;
 
-	RootedPhylogeny<T> findCompactSubtreeWithIds(Set<T> matchingIds, String name) throws NoSuchNodeException;
+	SerializableRootedPhylogeny<T> findCompactSubtreeWithIds(Set<T> matchingIds, String name)
+			throws NoSuchNodeException;
 
 //	int getNumNodesForName(String name);
 
