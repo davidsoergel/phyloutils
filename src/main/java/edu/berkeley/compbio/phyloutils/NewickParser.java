@@ -71,7 +71,7 @@ public class NewickParser<T extends Serializable>
 			{
 			InputStream is = getInputStream(argv[0]);
 			boolean namedNodesMustBeLeaves = Boolean.parseBoolean(argv[1]);
-			RootedPhylogeny<String> theTree = new NewickParser<String>()
+			BasicRootedPhylogeny<String> theTree = new NewickParser<String>()
 					.read(is, new StringIntegerNodeNamer("", false, 10000000, namedNodesMustBeLeaves));
 
 			StringBuffer sb = new StringBuffer();
@@ -105,7 +105,7 @@ public class NewickParser<T extends Serializable>
 			}
 		}
 
-	public static RootedPhylogeny<String> readWithStringIds(String filename, boolean namedNodesMustBeLeaves)
+	public static BasicRootedPhylogeny<String> readWithStringIds(String filename, boolean namedNodesMustBeLeaves)
 			throws PhyloUtilsException, IOException
 		{
 		InputStream is = getInputStream(filename);
@@ -113,8 +113,8 @@ public class NewickParser<T extends Serializable>
 		return new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED ", false, namedNodesMustBeLeaves));
 		}
 
-	public static RootedPhylogeny<Integer> readWithIntegerIds(String filename, boolean generateIds,
-	                                                          boolean namedNodesMustBeLeaves)
+	public static BasicRootedPhylogeny<Integer> readWithIntegerIds(String filename, boolean generateIds,
+	                                                               boolean namedNodesMustBeLeaves)
 			throws PhyloUtilsException, IOException
 		{
 		InputStream is = getInputStream(filename);
@@ -169,7 +169,7 @@ public class NewickParser<T extends Serializable>
 		return is;
 		}
 
-	public RootedPhylogeny<T> read(InputStream is, NodeNamer<T> namer) throws PhyloUtilsException
+	public BasicRootedPhylogeny<T> read(InputStream is, NodeNamer<T> namer) throws PhyloUtilsException
 		{
 		Reader r = new BufferedReader(new InputStreamReader(is));
 		StreamTokenizer st = new StreamTokenizer(r);

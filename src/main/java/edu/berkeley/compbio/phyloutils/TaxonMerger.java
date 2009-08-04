@@ -79,8 +79,8 @@ public class TaxonMerger
 		{
 		// ** hack to allow NcbiTaxonomyWithUnitBranchLengths
 		// REVIEW we have to ignoreAbsentNodes in order to use ANCESTOR mode, because we may drop the leaves.  Is that OK??
-		RootedPhylogeny<T> theCompleteTree = basePhylogeny.extractTreeWithLeafIDs(requestedLeafIds, false, true,
-		                                                                          AbstractRootedPhylogeny.MutualExclusionResolutionMode.BOTH);
+		BasicRootedPhylogeny<T> theCompleteTree = basePhylogeny.extractTreeWithLeafIDs(requestedLeafIds, false, true,
+		                                                                               AbstractRootedPhylogeny.MutualExclusionResolutionMode.BOTH);
 
 		Map<T, Set<T>> theTaxonsetsByTaxid = new HashMap<T, Set<T>>();
 
@@ -110,7 +110,7 @@ public class TaxonMerger
 		Map<T, Set<T>> theMergedTaxa = new HashMap<T, Set<T>>();
 
 		// REVIEW we have to ignoreAbsentNodes in order to use ANCESTOR mode, because we may drop the leaves.  Is that OK??
-		RootedPhylogeny<T> thePrunedTree = theCompleteTree
+		BasicRootedPhylogeny<T> thePrunedTree = theCompleteTree
 				.extractTreeWithLeafIDs(theTaxonsetsByTaxid.keySet(), true, true,
 				                        AbstractRootedPhylogeny.MutualExclusionResolutionMode.ANCESTOR);
 
@@ -230,9 +230,9 @@ public class TaxonMerger
 		return theMergedTaxa;
 		}
 
-	private static <T extends Serializable> void testSetsReallyDisjoint(final RootedPhylogeny<T> theCompleteTree,
+	private static <T extends Serializable> void testSetsReallyDisjoint(final BasicRootedPhylogeny<T> theCompleteTree,
 	                                                                    final Map<T, Set<T>> theMergedTaxa,
-	                                                                    final RootedPhylogeny<T> thePrunedTree)
+	                                                                    final BasicRootedPhylogeny<T> thePrunedTree)
 			throws NoSuchNodeException
 		{
 		// make sure the sets are really disjoint

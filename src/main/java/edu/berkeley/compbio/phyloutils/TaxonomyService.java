@@ -10,7 +10,8 @@ import java.util.Set;
 /**
  * Provides a simplified interface for taxonomy sources (e.g., NCBI, or a Newick file) that doesn't provide all the
  * services of a full RootedTree.  In particular none of the API involves PhylogenyNodes; everything is done by ID (of
- * the generic type).  Well, that's not entirely true anymore due to returning RootedPhylogenies, but anyway.
+ * the generic type).  Well, that's not entirely true anymore due to returning RootedPhylogenies, but at least those
+ * should all be Serializable.
  *
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
@@ -31,10 +32,10 @@ public interface TaxonomyService<T extends Serializable> extends TaxonMergingPhy
 
 	void setSynonymService(TaxonomySynonymService taxonomySynonymService);
 
-	SerializableRootedPhylogeny<T> getRandomSubtree(int numTaxa, Double mergeThreshold)
+	BasicRootedPhylogeny<T> getRandomSubtree(int numTaxa, Double mergeThreshold)
 			throws NoSuchNodeException, TreeException;
 
-	SerializableRootedPhylogeny<T> getRandomSubtree(int numTaxa, Double mergeThreshold, T exceptDescendantsOf)
+	BasicRootedPhylogeny<T> getRandomSubtree(int numTaxa, Double mergeThreshold, T exceptDescendantsOf)
 			throws NoSuchNodeException, TreeException;
 
 	boolean isLeaf(T leafId) throws NoSuchNodeException;
@@ -57,8 +58,7 @@ public interface TaxonomyService<T extends Serializable> extends TaxonMergingPhy
 
 	//RootedPhylogeny<Integer> findTreeForName(String name) throws NoSuchNodeException;
 
-	SerializableRootedPhylogeny<T> findCompactSubtreeWithIds(Set<T> matchingIds, String name)
-			throws NoSuchNodeException;
+	BasicRootedPhylogeny<T> findCompactSubtreeWithIds(Set<T> matchingIds, String name) throws NoSuchNodeException;
 
 //	int getNumNodesForName(String name);
 

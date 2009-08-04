@@ -53,7 +53,7 @@ import java.util.Set;
  * @version $Id$
  * @JavadocOK
  */
-public interface RootedPhylogeny<T extends Serializable>
+public interface RootedPhylogeny<T extends Serializable> //, N extends PhylogenyNode<T>>
 		extends PhylogenyNode<T>, TaxonMergingPhylogeny<T>//, Serializable//, Clusterable<RootedPhylogeny<T>>
 
 	{
@@ -147,7 +147,7 @@ public interface RootedPhylogeny<T extends Serializable>
 	 *
 	 * @return all the nodes in the tree, both internal nodes and leaf nodes.
 	 */
-	Map<T, PhylogenyNode<T>> getUniqueIdToNodeMap();  //** Map<T, ? extends PhylogenyNode<T>> ??
+	Map<T, ? extends PhylogenyNode<T>> getUniqueIdToNodeMap();  //** Map<T, ? extends PhylogenyNode<T>> ??
 
 	/**
 	 * Returns all the leaf nodes of the tree.
@@ -247,7 +247,8 @@ public interface RootedPhylogeny<T extends Serializable>
 	 *         the two leaf sets
 	 * @throws PhyloUtilsException when anything goes wrong
 	 */
-	RootedPhylogeny<T> extractIntersectionTree(Collection<T> leafValues, Collection<T> leafValues1, NodeNamer<T> namer)
+	SerializableRootedPhylogeny<T> extractIntersectionTree(Collection<T> leafValues, Collection<T> leafValues1,
+	                                                       NodeNamer<T> namer)
 			throws PhyloUtilsException, NoSuchNodeException;
 
 	/**
@@ -264,7 +265,7 @@ public interface RootedPhylogeny<T extends Serializable>
 	 * @throws PhyloUtilsException when the requested proportion is not between 0 and 1, or if the two trees are not
 	 *                             derived from the same base tree.
 	 */
-	RootedPhylogeny<T> mixWith(RootedPhylogeny<T> phylogeny, double mixingProportion) throws PhyloUtilsException;
+	BasicRootedPhylogeny<T> mixWith(RootedPhylogeny<T> phylogeny, double mixingProportion) throws PhyloUtilsException;
 
 	/**
 	 * Assign leaf weights to this tree based on the weights present in the provided tree, smoothed by adding pseudocounts.
@@ -288,7 +289,7 @@ public interface RootedPhylogeny<T extends Serializable>
 	 * Sets the leaf weights based on the counts of the node IDs in the provided Multiset.  Normalizes and propagates the
 	 * weights up the tree.
 	 *
-	 * @param ids the Multiset providing counts for each leaf ID.
+	 * @param leafWeights the Multiset providing counts for each leaf ID.
 	 */
 	void setLeafWeights(Multiset<T> leafWeights) throws PhyloUtilsException;
 
@@ -320,6 +321,4 @@ public interface RootedPhylogeny<T extends Serializable>
 
 	T getLeafAtApproximateDistance(T aId, double minDesiredTreeDistance, double maxDesiredTreeDistance)
 			throws NoSuchNodeException;
-
-	void addNode(PhylogenyNode<T> n) throws PhyloUtilsException;
 	}

@@ -157,12 +157,13 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}
 		}
 
-	public RootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double mergeThreshold)
+	public BasicRootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double mergeThreshold)
 		{
 		throw new NotImplementedException();
 		}
 
-	public RootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double mergeThreshold, Integer exceptDescendantsOf)
+	public BasicRootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double mergeThreshold,
+	                                                      Integer exceptDescendantsOf)
 		{
 		throw new NotImplementedException();
 		}
@@ -177,7 +178,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		// );
 		NewickTaxonomyService stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename, false);
 
-		RootedPhylogeny<String> theStringTree = stringTaxonomyService.getTree();
+		BasicRootedPhylogeny<String> theStringTree = stringTaxonomyService.getTree();
 
 		//** because the node children are iterated in random order in the course of the depth-first copy,
 		// the random IDs won't be consistently assigned from one run to the next.
@@ -554,7 +555,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 					{
 					try
 						{
-						RootedPhylogeny<Integer> bTree = findSubtreeByNameRelaxed(name);
+						BasicRootedPhylogeny<Integer> bTree = findSubtreeByNameRelaxed(name);
 						result = bTree.getShallowestLeaf();
 						}
 					catch (NoSuchNodeException e)
@@ -796,7 +797,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 */
 
 
-	private synchronized RootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException
+	private synchronized BasicRootedPhylogeny<Integer> findSubtreeByNameRelaxed(String name) throws NoSuchNodeException
 		{
 		Set<Integer> matchingIds = findMatchingIdsRelaxed(name);
 
@@ -1169,13 +1170,13 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 }
  */
 
-	public synchronized RootedPhylogeny<Integer> findTreeForIds(Set<Integer> idBSet)
+	public synchronized BasicRootedPhylogeny<Integer> findTreeForIds(Set<Integer> idBSet)
 		{
 		try
 			{
-			RootedPhylogeny<Integer> bTree = extractTreeWithLeafIDs(idBSet, true, true,
-			                                                        AbstractRootedPhylogeny.MutualExclusionResolutionMode.BOTH);
-			PhylogenyNode<Integer> r = bTree.getFirstBranchingNode();
+			BasicRootedPhylogeny<Integer> bTree = extractTreeWithLeafIDs(idBSet, true, true,
+			                                                             AbstractRootedPhylogeny.MutualExclusionResolutionMode.BOTH);
+			BasicPhylogenyNode<Integer> r = bTree.getFirstBranchingNode();
 			bTree = r.asRootedPhylogeny();
 			return bTree;
 			}
@@ -1187,12 +1188,12 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 
 
-	public synchronized RootedPhylogeny<Integer> findCompactSubtreeWithIds(Set<Integer> matchingIds, String name)
+	public synchronized BasicRootedPhylogeny<Integer> findCompactSubtreeWithIds(Set<Integer> matchingIds, String name)
 			throws NoSuchNodeException
 		{
-		RootedPhylogeny<Integer> tree = extractTreeWithLeafIDs(matchingIds, true, true,
-		                                                       AbstractRootedPhylogeny.MutualExclusionResolutionMode.BOTH);
-		PhylogenyNode<Integer> result = tree.getFirstBranchingNode();
+		BasicRootedPhylogeny<Integer> tree = extractTreeWithLeafIDs(matchingIds, true, true,
+		                                                            AbstractRootedPhylogeny.MutualExclusionResolutionMode.BOTH);
+		BasicPhylogenyNode<Integer> result = tree.getFirstBranchingNode();
 
 		double span = result.getLargestLengthSpan();
 		if (span > 0.1)

@@ -384,7 +384,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 
 
 	@NotNull
-	public BasicRootedPhylogeny<T> extractTreeWithLeaves(Collection<PhylogenyNode<T>> leaves,
+	public BasicRootedPhylogeny<T> extractTreeWithLeaves(Collection<? extends PhylogenyNode<T>> leaves,
 	                                                     boolean includeInternalBranches,
 	                                                     MutualExclusionResolutionMode mode) //, NodeNamer<T> namer)
 		{
@@ -1097,8 +1097,8 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public RootedPhylogeny<T> extractIntersectionTree(Collection<T> leafIdsA, Collection<T> leafIdsB,
-	                                                  NodeNamer<T> namer)
+	public BasicRootedPhylogeny<T> extractIntersectionTree(Collection<T> leafIdsA, Collection<T> leafIdsB,
+	                                                       NodeNamer<T> namer)
 			throws NoSuchNodeException, PhyloUtilsException
 		{
 		Set<PhylogenyNode<T>> allTreeNodesA = new HashSet<PhylogenyNode<T>>();
@@ -1129,7 +1129,8 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public RootedPhylogeny<T> mixWith(RootedPhylogeny<T> otherTree, double mixingProportion) throws PhyloUtilsException
+	public BasicRootedPhylogeny<T> mixWith(RootedPhylogeny<T> otherTree, double mixingProportion)
+			throws PhyloUtilsException
 		//NoSuchNodeException
 		{
 		if (mixingProportion < 0 || mixingProportion > 1)
@@ -1151,7 +1152,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			unionLeaves.addAll(otherTree.getLeafValues());
 
 
-			RootedPhylogeny<T> unionTree = basePhylogeny
+			BasicRootedPhylogeny<T> unionTree = basePhylogeny
 					.extractTreeWithLeafIDs(unionLeaves, false, false, MutualExclusionResolutionMode.EXCEPTION);
 			for (PhylogenyNode<T> node : getLeaves())
 				{

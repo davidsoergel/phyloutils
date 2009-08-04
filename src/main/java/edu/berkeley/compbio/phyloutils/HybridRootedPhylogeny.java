@@ -38,7 +38,6 @@ import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -149,12 +148,11 @@ public class HybridRootedPhylogeny<T extends Serializable>
 		// this ought to work even if some of the requested ids are in the root tree rather than the leaf tree,
 		// as long as the leaf tree also has a node with the same ID (even with the wrong topology)
 
-		RootedPhylogeny<T> basicLeaf = leafPhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, true, mode);
-		HybridRootedPhylogeny<T> extractedHybrid = new HybridRootedPhylogeny<T>(rootPhylogeny, basicLeaf);
-		RootedPhylogeny<T> result = null;
+		BasicRootedPhylogeny<T> basicLeaf = leafPhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, true, mode);
+		ExplicitHybridRootedPhylogeny<T> extractedHybrid = null;
 		try
 			{
-			result = extractedHybrid.convertToBasic();
+			extractedHybrid = new ExplicitHybridRootedPhylogeny<T>(rootPhylogeny, basicLeaf);
 			}
 		catch (PhyloUtilsException e)
 			{
@@ -162,87 +160,16 @@ public class HybridRootedPhylogeny<T extends Serializable>
 			throw new Error(e);
 			}
 
+
 		// now result has all the requested leaves, and the rootwards topology has been adjusted to match the root tree.
 		// however, there may be stranded branches, i.e. former ancestors of the leaves (according to the leaf tree) that
 		// are no longer ancestors of anything in the hybrid tree.  So, we need to remove those.
 
 		// also, we had to include internal branches so far, but now we can remove them
 
-		return result.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode);
+		return extractedHybrid.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode);
 		}
 
-
-	private RootedPhylogeny<T> convertToBasic() throws NoSuchNodeException, PhyloUtilsException
-		{
-		reconciledLeafNodes = new HashSet<PhylogenyNode<T>>();
-
-		// make sure the root ID matches
-		//	leafPhylogeny.setValue(rootPhylogeny.getValue());
-
-		for (T leafId : leafPhylogeny.getLeafValues())
-			{
-			T joinId = nearestKnownAncestor(leafId);
-
-			PhylogenyNode<T> leafJoinNode = leafPhylogeny.getNode(joinId);
-			PhylogenyNode<T> rootJoinNode = rootPhylogeny.getNode(joinId);
-			reconcileLeafPhylogenyAt(leafJoinNode, rootJoinNode);
-			}
-		return leafPhylogeny;
-		}
-
-	private Set<PhylogenyNode<T>> reconciledLeafNodes;
-
-	/**
-	 * reorganize the root-ward nodes of the leaf phylogeny so that it agrees with the root phylogeny, creating new nodes
-	 * as needed
-	 *
-	 * @param leafJoinNode
-	 * @param rootJoinNode
-	 */
-	private void reconcileLeafPhylogenyAt(PhylogenyNode<T> leafJoinNode, PhylogenyNode<T> rootJoinNode)
-		{
-		if (reconciledLeafNodes.contains(leafJoinNode))
-			{
-			return;
-			}
-
-		leafJoinNode.setLength(rootJoinNode.getLength());
-
-		leafJoinNode.setWeight(rootJoinNode.getWeight());
-
-
-		PhylogenyNode<T> rootParent = rootJoinNode.getParent();
-
-		if (rootParent != null)
-			{
-			T parentId = rootParent.getPayload();
-			PhylogenyNode<T> leafParent;
-			try
-				{
-				leafParent = leafPhylogeny.getNode(parentId);
-				}
-			catch (NoSuchNodeException e)
-				{
-				leafParent = new BasicPhylogenyNode<T>();
-				leafParent.setPayload(parentId);
-				leafPhylogeny.getUniqueIdToNodeMap().put(parentId, leafParent);
-				}
-
-			//PhylogenyNode<T> obsoleteLeafParent = leafJoinNode.getParent();
-			leafJoinNode.setParent(leafParent);
-
-			reconcileLeafPhylogenyAt(leafParent, rootParent);
-
-			//leafPhylogeny.removeNode(obsoleteLeafParent);
-			}
-		/*		else
-		   {
-		   // if the root parent is null at this node, then the leaf node must also be the root.
-
-		   leafJoinNode.setValue(rootJoinNode.getValue());
-		   }*/
-		reconciledLeafNodes.add(leafJoinNode);
-		}
 
 	public RootedPhylogeny<T> getRootPhylogeny()
 		{

@@ -61,14 +61,15 @@ import java.util.Set;
  * @Author David Soergel
  * @Version 1.0
  */
-public class BasicRootedPhylogeny<T extends Serializable> extends AbstractRootedPhylogeny<T> implements Serializable
+public class BasicRootedPhylogeny<T extends Serializable> extends AbstractRootedPhylogeny<T>
+		implements SerializableRootedPhylogeny<T>
 	{
 	private static final long serialVersionUID = 20090326L;
 
 	private static final Logger logger = Logger.getLogger(BasicRootedPhylogeny.class);
 	// ------------------------------ FIELDS ------------------------------
 
-	transient private Map<T, PhylogenyNode<T>> uniqueIdToNodeMap;
+	transient private Map<T, BasicPhylogenyNode<T>> uniqueIdToNodeMap;
 	BasicPhylogenyNode<T> root;
 
 
@@ -117,9 +118,9 @@ root = new BasicPhylogenyNode<T>(original.);
 	 * {@inheritDoc}
 	 */
 	@NotNull
-	public PhylogenyNode<T> getNode(T name) throws NoSuchNodeException
+	public BasicPhylogenyNode<T> getNode(T name) throws NoSuchNodeException
 		{
-		PhylogenyNode<T> result = uniqueIdToNodeMap.get(name);
+		BasicPhylogenyNode<T> result = uniqueIdToNodeMap.get(name);
 		if (result == null)
 			{
 			throw new NoSuchNodeException("Node not found: " + name);
@@ -150,9 +151,14 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map<T, PhylogenyNode<T>> getUniqueIdToNodeMap()
+	public Map<T, ? extends PhylogenyNode<T>> getUniqueIdToNodeMap()
 		{
 		return uniqueIdToNodeMap;//.values();
+		}
+
+	public void putUniqueIdToNode(T id, BasicPhylogenyNode<T> node)
+		{
+		uniqueIdToNodeMap.put(id, node);
 		}
 
 	//** make weak
@@ -195,7 +201,7 @@ root = new BasicPhylogenyNode<T>(original.);
 		return leafIds;
 		}
 
-	public void addNode(PhylogenyNode<T> n) throws PhyloUtilsException
+	public void addNode(BasicPhylogenyNode<T> n) throws PhyloUtilsException
 		{
 
 		if (uniqueIdToNodeMap.get(n.getPayload()) != null)
@@ -225,7 +231,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	 */
 	public void assignUniqueIds(@NotNull NodeNamer<T> namer) //throws PhyloUtilsException
 		{
-		uniqueIdToNodeMap = new HashMap<T, PhylogenyNode<T>>();
+		uniqueIdToNodeMap = new HashMap<T, BasicPhylogenyNode<T>>();
 
 		// this recursion produces stack depth problems on some systems; try -Xss8m or larger
 		int addedInternalNodes = root.addSubtreeToMap(uniqueIdToNodeMap, namer, 1);
@@ -333,6 +339,16 @@ root = new BasicPhylogenyNode<T>(original.);
 		result.add(0, root);
 
 		return Collections.unmodifiableList(result);
+		}
+
+	public BasicPhylogenyNode<T> getFirstBranchingNode()
+		{
+		BasicPhylogenyNode<T> r = getRoot();
+		while (r.getChildren().size() == 1)
+			{
+			r = r.getChildren().iterator().next();
+			}
+		return r;
 		}
 
 	/**
@@ -566,7 +582,7 @@ root = new BasicPhylogenyNode<T>(original.);
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RootedPhylogeny<T> clone()
+	public BasicRootedPhylogeny<T> clone()
 		{
 
 		BasicRootedPhylogeny<T> result = new BasicRootedPhylogeny<T>();
@@ -624,7 +640,7 @@ root = new BasicPhylogenyNode<T>(original.);
 		{
 		root = (BasicPhylogenyNode<T>) stream.readObject();
 
-		uniqueIdToNodeMap = new HashMap<T, PhylogenyNode<T>>();
+		uniqueIdToNodeMap = new HashMap<T, BasicPhylogenyNode<T>>();
 
 
 		// populate the nodes map

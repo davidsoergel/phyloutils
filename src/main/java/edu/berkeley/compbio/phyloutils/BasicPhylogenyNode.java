@@ -58,7 +58,7 @@ import java.util.Map;
  */
 
 public class BasicPhylogenyNode<T extends Serializable>
-		implements PhylogenyNode<T>, Serializable//, HierarchyNode<T, BasicPhylogenyNode<T>>
+		implements SerializablePhylogenyNode<T>//, HierarchyNode<T, BasicPhylogenyNode<T>>
 		// really T should extend Serializable here but let's see if we can get away without it
 	{
 
@@ -477,7 +477,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 			}
 		}
 
-	public RootedPhylogeny<T> asRootedPhylogeny()
+	public BasicRootedPhylogeny<T> asRootedPhylogeny()
 		{
 		return new BasicRootedPhylogeny<T>(this);
 		}
@@ -529,7 +529,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 
 	// -------------------------- OTHER METHODS --------------------------
 
-	public int addSubtreeToMap(Map<T, PhylogenyNode<T>> nodes, @NotNull NodeNamer<T> namer,
+	public int addSubtreeToMap(Map<T, BasicPhylogenyNode<T>> nodes, @NotNull NodeNamer<T> namer,
 	                           int stackDepth)// throws PhyloUtilsException
 		{
 		int addedInternalNodes = 0;
@@ -615,7 +615,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 		return addedInternalNodes;
 		}
 
-	private void assignGeneratedName(Map<T, PhylogenyNode<T>> nodes, NodeNamer<T> namer)
+	private void assignGeneratedName(Map<T, BasicPhylogenyNode<T>> nodes, NodeNamer<T> namer)
 		{
 		T newValue = namer.generate();
 

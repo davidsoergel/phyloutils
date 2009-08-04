@@ -23,7 +23,7 @@ public class NewickTaxonomyService
 	{
 	private static final Logger logger = Logger.getLogger(NewickTaxonomyService.class);
 
-	protected RootedPhylogeny<String> basePhylogeny;
+	protected BasicRootedPhylogeny<String> basePhylogeny;
 	private String filename;  // only for toString
 
 	/*	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
@@ -143,24 +143,24 @@ public class NewickTaxonomyService
 			}
 		}
 
-	public RootedPhylogeny<String> getTree()
+	public BasicRootedPhylogeny<String> getTree()
 		{
 		return basePhylogeny;
 		}
 
-	public RootedPhylogeny<String> getRandomSubtree(int numTaxa, Double mergeThreshold)
+	public BasicRootedPhylogeny<String> getRandomSubtree(int numTaxa, Double mergeThreshold)
 			throws NoSuchNodeException, TreeException
 		{
 		return getRandomSubtree(numTaxa, mergeThreshold, null);
 		}
 
-	public RootedPhylogeny<String> getRandomSubtree(int numTaxa, String exceptDescendantsOf)
+	public BasicRootedPhylogeny<String> getRandomSubtree(int numTaxa, String exceptDescendantsOf)
 			throws TreeException, NoSuchNodeException
 		{
 		return getRandomSubtree(numTaxa, null, exceptDescendantsOf);
 		}
 
-	public RootedPhylogeny<String> getRandomSubtree(int numTaxa, Double mergeThreshold, String exceptDescendantsOf)
+	public BasicRootedPhylogeny<String> getRandomSubtree(int numTaxa, Double mergeThreshold, String exceptDescendantsOf)
 			throws TreeException, NoSuchNodeException
 		{
 		Set<String> mergedIds;
@@ -343,7 +343,7 @@ public class NewickTaxonomyService
 		}*/
 
 
-	public RootedPhylogeny<String> findCompactSubtreeWithIds(Set<String> matchingIds, String name)
+	public BasicRootedPhylogeny<String> findCompactSubtreeWithIds(Set<String> matchingIds, String name)
 			throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
