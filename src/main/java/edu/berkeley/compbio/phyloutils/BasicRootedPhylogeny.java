@@ -291,11 +291,11 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public PhylogenyNode<T> newChild()
-		{
-		return root.newChild();
-		}
-
+	/*	public PhylogenyNode<T> newChild()
+		 {
+		 return root.newChild();
+		 }
+ */
 	/**
 	 * {@inheritDoc}
 	 */

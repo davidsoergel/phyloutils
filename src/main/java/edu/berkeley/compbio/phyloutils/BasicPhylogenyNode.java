@@ -485,22 +485,22 @@ public class BasicPhylogenyNode<T extends Serializable>
 	/**
 	 * {@inheritDoc}
 	 */
-	public BasicPhylogenyNode<T> newChild()
-		{
-		BasicPhylogenyNode<T> child = new BasicPhylogenyNode<T>();
-		child.setParent(this);
-		//addChild(child);
-		return child;
-		}
-
+	/*	public BasicPhylogenyNode<T> newChild()
+		 {
+		 BasicPhylogenyNode<T> child = new BasicPhylogenyNode<T>();
+		 child.setParent(this);
+		 //addChild(child);
+		 return child;
+		 }
+ */
 	/**
 	 * {@inheritDoc}
 	 */
 	public PhylogenyNode<T> newChild(T payload)
 		{
 		BasicPhylogenyNode<T> child = new BasicPhylogenyNode<T>();
-		child.setParent(this);
 		child.setPayload(payload);
+		child.setParent(this);
 		return child;
 		}
 
