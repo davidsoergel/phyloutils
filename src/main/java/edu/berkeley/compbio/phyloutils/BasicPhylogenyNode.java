@@ -90,6 +90,16 @@ public class BasicPhylogenyNode<T extends Serializable>
 		this.name = name;
 		}
 
+	public int countDescendantsIncludingThis()
+		{
+		int result = 1;
+		for (PhylogenyNode<T> c : getChildren())
+			{
+			result += c.countDescendantsIncludingThis();
+			}
+		return result;
+		}
+
 	@Override
 	public boolean equals(final Object o)
 		{

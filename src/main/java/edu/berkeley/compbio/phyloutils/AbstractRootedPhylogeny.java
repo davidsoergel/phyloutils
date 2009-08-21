@@ -1323,4 +1323,14 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 				"Could not find a node in the requested distance range (" + minDesiredTreeDistance + " - "
 				+ maxDesiredTreeDistance + " from " + aId + ") after " + MAX_SEARCH_ITERATIONS + " attempts");
 		}
+
+	public int countDescendantsIncludingThis()
+		{
+		int result = 1;
+		for (PhylogenyNode<T> c : getChildren())
+			{
+			result += c.countDescendantsIncludingThis();
+			}
+		return result;
+		}
 	}
