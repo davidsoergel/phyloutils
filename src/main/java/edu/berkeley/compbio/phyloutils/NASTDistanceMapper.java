@@ -1,7 +1,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.DSArrayUtils;
-import com.davidsoergel.dsutils.StringListDoubleMapReader;
+import com.davidsoergel.dsutils.file.StringListDoubleMapReader;
 import org.apache.commons.collections15.map.MultiKeyMap;
 
 import java.io.IOException;

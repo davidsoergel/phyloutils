@@ -2,8 +2,8 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.CacheManager;
 import com.davidsoergel.dsutils.DSStringUtils;
-import com.davidsoergel.dsutils.StringSetIntMapReader;
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
+import com.davidsoergel.dsutils.file.StringSetIntMapReader;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.google.common.collect.HashMultimap;
 import org.apache.commons.lang.NotImplementedException;
