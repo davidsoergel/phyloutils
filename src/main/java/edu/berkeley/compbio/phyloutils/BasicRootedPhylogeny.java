@@ -39,7 +39,7 @@ import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -64,7 +64,7 @@ import java.util.Set;
 public class BasicRootedPhylogeny<T extends Serializable> extends AbstractRootedPhylogeny<T>
 		implements SerializableRootedPhylogeny<T>
 	{
-	private static final long serialVersionUID = 20090326L;
+	private static final long serialVersionUID = 20090904L;
 
 	private static final Logger logger = Logger.getLogger(BasicRootedPhylogeny.class);
 	// ------------------------------ FIELDS ------------------------------
@@ -636,7 +636,7 @@ root = new BasicPhylogenyNode<T>(original.);
 		}
 
 
-	private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException
+/*	private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException
 		{
 		root = (BasicPhylogenyNode<T>) stream.readObject();
 
@@ -654,18 +654,42 @@ root = new BasicPhylogenyNode<T>(original.);
 				c.setParent(p);//c.parent = p;
 				}
 			}
+		}*/
+
+	private Object readResolve() throws ObjectStreamException
+		{
+		uniqueIdToNodeMap = new HashMap<T, BasicPhylogenyNode<T>>();
+
+		// populate the nodes map
+		assignUniqueIds(new RequireExistingNodeNamer<T>(false));  // all the nodes should have ids already
+
+		for (PhylogenyNode<T> p : uniqueIdToNodeMap.values())
+			{
+			for (PhylogenyNode<T> c : p.getChildren())
+				{
+				c.setParent(p);//c.parent = p;
+				}
+			}
+		return this;
+		}
+
+/*	private Object writeReplace() throws ObjectStreamException
+		{
+return this;
 		}
 
 	private void writeObject(java.io.ObjectOutputStream stream) throws IOException
 		{
 		stream.writeObject(root);
 		}
+		*/
 
 	/*	private void readObjectNoData() throws ObjectStreamException
 		 {
 		 throw new NotSerializableException();
 		 }
  */
+
 	public PhylogenyNode<T> nearestAncestorWithBranchLength() throws NoSuchNodeException
 		{
 		throw new NoSuchNodeException("Root doesn't have a branch length.");
