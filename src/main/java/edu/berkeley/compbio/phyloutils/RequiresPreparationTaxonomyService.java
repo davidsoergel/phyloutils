@@ -10,5 +10,6 @@ import java.util.Set;
  */
 public interface RequiresPreparationTaxonomyService<T>
 	{
+
 	void prepare(Set<T> allLabels) throws NoSuchNodeException;
 	}
