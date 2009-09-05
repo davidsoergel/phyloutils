@@ -100,7 +100,7 @@ public class BasicPhylogenyNode<T extends Serializable>
 		return result;
 		}
 
-	@Override
+/*	@Override
 	public boolean equals(final Object o)
 		{
 		if (this == o)
@@ -169,17 +169,18 @@ public class BasicPhylogenyNode<T extends Serializable>
 		{
 		return value != null ? value.hashCode() : 0;
 		}
+*/
 
 	/*	@Override
-	public int hashCode()
-		{
-		int result = parent != null ? parent.hashCode() : 0;
-		result = 31 * result + (value != null ? value.hashCode() : 0);
-		result = 31 * result + (length != null ? length.hashCode() : 0);
-		result = 31 * result + (weight != null ? weight.hashCode() : 0);
-		result = 31 * result + (bootstrap != null ? bootstrap.hashCode() : 0);
-		return result;
-		}*/
+   public int hashCode()
+	   {
+	   int result = parent != null ? parent.hashCode() : 0;
+	   result = 31 * result + (value != null ? value.hashCode() : 0);
+	   result = 31 * result + (length != null ? length.hashCode() : 0);
+	   result = 31 * result + (weight != null ? weight.hashCode() : 0);
+	   result = 31 * result + (bootstrap != null ? bootstrap.hashCode() : 0);
+	   return result;
+	   }*/
 
 	public void toNewick(StringBuffer sb, String prefix, String tab, int minClusterSize, double minLabelProb)
 		{
