@@ -186,12 +186,12 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		theIntegerTree = PhylogenyTypeConverter
 				.convertToIDTree(theStringTree, new RequireExistingNodeNamer(false), new TaxonStringIdMapper<Integer>()
 				{
-				public Integer findTaxidByNameRelaxed(String name) throws NoSuchNodeException
+				public Integer findTaxidByNameRelaxed(@NotNull String name) throws NoSuchNodeException
 					{
 					return findTaxidByName(name);
 					}
 
-				public Integer findTaxidByName(String name) throws NoSuchNodeException
+				public Integer findTaxidByName(@NotNull String name) throws NoSuchNodeException
 					{
 					try
 						{
