@@ -4,6 +4,7 @@ import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.dsutils.tree.TreeException;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -70,7 +71,7 @@ public interface TaxonomyService<T extends Serializable> extends TaxonMergingPhy
 
 //	T nearestAncestorAtRank(String levelName, Integer leafId) throws NoSuchNodeException;
 
-	Set<T> selectAncestors(Set<T> labels, T id);
+	Set<T> selectAncestors(Collection<T> labels, T id);
 
 //	 List<T> getAncestorPathIds(T id) throws NoSuchNodeException;
 

@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -221,7 +222,7 @@ public class NewickTaxonomyService
 		return basePhylogeny.isDescendant(ancestor, descendant);
 		}
 
-	public Set<String> selectAncestors(final Set<String> labels, final String id)
+	public Set<String> selectAncestors(final Collection<String> labels, final String id)
 		{
 		return basePhylogeny.selectAncestors(labels, id);
 		}

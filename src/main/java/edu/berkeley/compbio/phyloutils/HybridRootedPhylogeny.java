@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -208,7 +209,7 @@ public class HybridRootedPhylogeny<T extends Serializable>
 		}
 */
 
-	public Set<T> selectAncestors(final Set<T> labels, final T id)
+	public Set<T> selectAncestors(final Collection<T> labels, final T id)
 		{
 		throw new NotImplementedException();
 		}

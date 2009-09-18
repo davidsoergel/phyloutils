@@ -954,7 +954,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 //		return stringTaxonomyService.isDescendant(intToNodeMap.get(ancestor), intToNodeMap.get(descendant));
 		}
 
-	public Set<Integer> selectAncestors(final Set<Integer> labels, final Integer id)
+	public Set<Integer> selectAncestors(final Collection<Integer> labels, final Integer id)
 		{
 		return theIntegerTree.selectAncestors(labels, id);
 		}

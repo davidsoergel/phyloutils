@@ -209,7 +209,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 			}
 		}
 
-	public Set<T> selectAncestors(final Set<T> labels, final T id)
+	public Set<T> selectAncestors(final Collection<T> labels, final T id)
 		{
 		try
 			{

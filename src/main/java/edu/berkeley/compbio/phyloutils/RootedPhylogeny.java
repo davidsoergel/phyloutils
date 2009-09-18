@@ -94,7 +94,7 @@ public interface RootedPhylogeny<T extends Serializable> //, N extends Phylogeny
 	 */
 	boolean isDescendant(T ancestor, T descendant);
 
-	Set<T> selectAncestors(final Set<T> labels, final T id);
+	Set<T> selectAncestors(final Collection<T> labels, final T id);
 
 	/**
 	 * Tells whether one node is a descendant of another
