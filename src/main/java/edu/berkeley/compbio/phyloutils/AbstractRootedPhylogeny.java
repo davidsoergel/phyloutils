@@ -32,9 +32,9 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.collections.ConcurrentHashWeightedSet;
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
-import com.davidsoergel.dsutils.collections.HashWeightedSet;
-import com.davidsoergel.dsutils.collections.WeightedSet;
+import com.davidsoergel.dsutils.collections.MutableWeightedSet;
 import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.ContinuousDistribution1D;
 import com.google.common.collect.Multiset;
@@ -951,7 +951,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 
 	public Map<T, Double> distributeInternalWeightsToLeaves(Map<T, Double> taxIdToWeightMap) throws NoSuchNodeException
 		{
-		WeightedSet<T> result = new HashWeightedSet<T>();
+		MutableWeightedSet<T> result = new ConcurrentHashWeightedSet<T>();
 		for (Map.Entry<T, Double> entry : taxIdToWeightMap.entrySet())
 			{
 			T id = entry.getKey();
@@ -970,7 +970,8 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		return result.getItemNormalizedMap();
 		}
 
-	private void distributeWeight(PhylogenyNode<T> n, Double weight, WeightedSet<T> result) throws NoSuchNodeException
+	private void distributeWeight(PhylogenyNode<T> n, Double weight, MutableWeightedSet<T> result)
+			throws NoSuchNodeException
 		{
 		if (n.isLeaf())
 			{
