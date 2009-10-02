@@ -14,8 +14,7 @@ import java.io.StreamTokenizer;
 /**
  * A matrix of state-to-state probabilities, in probability units.
  *
- * @version 1.0
- * @see LogOddsSubstitutionMatrix
+ * @version 1.0 //@see LogOddsSubstitutionMatrix
  */
 public class TransitionMatrix
 	{
