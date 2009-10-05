@@ -1312,6 +1312,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 
 		for (int i = 0; i < MAX_SEARCH_ITERATIONS; i++)
 			{
+			//** Note getRandomLeafBelow is weighted by tree structure (uniform at each node on the path, not uniform over leaves)
 			PhylogenyNode<T> candidate = p.getRandomLeafBelow();
 			double candidateDistance = distanceBetween(queryNode, candidate);
 			if (candidateDistance >= minDesiredTreeDistance && candidateDistance <= maxDesiredTreeDistance)
