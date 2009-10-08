@@ -178,7 +178,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		// );
 		NewickTaxonomyService stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename, false);
 
-		BasicRootedPhylogeny<String> theStringTree = stringTaxonomyService.getTree();
+		RootedPhylogeny<String> theStringTree = stringTaxonomyService.getTree();
 
 		//** because the node children are iterated in random order in the course of the depth-first copy,
 		// the random IDs won't be consistently assigned from one run to the next.

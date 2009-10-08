@@ -719,6 +719,11 @@ return this;
 //			}
 		return super.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode);
 		}
+
+	public TaxonomyService<T> asService()
+		{
+		return new RootedPhylogenyAsService<T>(this);
+		}
 	}
 
 
