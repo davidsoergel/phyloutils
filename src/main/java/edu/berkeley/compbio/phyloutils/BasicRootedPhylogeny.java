@@ -331,14 +331,22 @@ root = new BasicPhylogenyNode<T>(original.);
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<PhylogenyNode<T>> getAncestorPath()
+	public List<PhylogenyNode<T>> getAncestorPath(boolean includeSelf)
 		{
 		// this is the root node
 		List<PhylogenyNode<T>> result = new LinkedList<PhylogenyNode<T>>();
 
-		result.add(0, root);
+		if (includeSelf)
+			{
+			result.add(0, root);
+			}
 
 		return Collections.unmodifiableList(result);
+		}
+
+	public List<PhylogenyNode<T>> getAncestorPath()
+		{
+		return getAncestorPath(true);
 		}
 
 	public BasicPhylogenyNode<T> getFirstBranchingNode()

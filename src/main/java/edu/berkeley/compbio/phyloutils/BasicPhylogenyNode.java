@@ -682,15 +682,21 @@ public class BasicPhylogenyNode<T extends Serializable>
 	// PERF caching this here and in the CacheManager accumulatingMap is redundant
 	private List<PhylogenyNode<T>> ancestorPath = null;
 
+
+	public List<PhylogenyNode<T>> getAncestorPath()
+		{
+		return getAncestorPath(true);
+		}
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<PhylogenyNode<T>> getAncestorPath()
+	public List<PhylogenyNode<T>> getAncestorPath(boolean includeSelf)
 		{
 		if (ancestorPath == null)
 			{
 			List<PhylogenyNode<T>> result = new LinkedList<PhylogenyNode<T>>();
-			BasicPhylogenyNode<T> trav = this;
+			BasicPhylogenyNode<T> trav = includeSelf ? this : getParent();
 
 			while (trav != null)
 				{
