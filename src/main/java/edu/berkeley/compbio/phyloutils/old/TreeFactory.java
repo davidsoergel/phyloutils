@@ -19,7 +19,7 @@ public class TreeFactory
 	{
 	private static final Logger logger = Logger.getLogger(TreeFactory.class);
 
-	private static MersenneTwisterFast mtf = new MersenneTwisterFast();
+	//private static MersenneTwisterFast mtf = new MersenneTwisterFast();
 
 	public static BinaryTree randomTree(int nodes, ContinuousDistribution1D branchLengthDistribution)
 			throws TreeException
@@ -72,7 +72,7 @@ public class TreeFactory
 		// the root is always node 0, so we skip it here.  Every other node must be a child of somebody.
 		for (int i = 1; i < t.getNumNodes(); i++)
 			{
-			int parentIndex = mtf.nextInt(possibleParents.size());
+			int parentIndex = MersenneTwisterFast.randomInt(possibleParents.size());
 			parent = possibleParents.get(parentIndex);
 			possibleParents.remove(parentIndex);
 			t.setParent(i, parent);
@@ -124,7 +124,7 @@ public class TreeFactory
 
 		for (CharacterDistributionOnTree cdt : t.getCharacters())
 			{
-			cdt.setRootValue(mtf.nextInt(characterValues));
+			cdt.setRootValue(MersenneTwisterFast.randomInt(characterValues));
 			cdt.evolveAlongTree(tm);
 			}
 		return t;
