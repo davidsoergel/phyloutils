@@ -69,7 +69,7 @@ public interface LengthWeightHierarchyNode<T, I extends LengthWeightHierarchyNod
 	 * @return the weight
 	 */
 	@Nullable
-	Double getWeight(); //throws PhyloUtilsException;
+	Double getWeight();// throws PhyloUtilsException;
 
 	/**
 	 * Sets the weight
