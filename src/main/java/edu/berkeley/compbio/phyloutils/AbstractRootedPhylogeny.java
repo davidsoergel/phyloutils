@@ -463,7 +463,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 		return getNode(id).getAncestorPathPayloads();
 		}
 
-	public List<PhylogenyNode<T>> getAncestorPath(final T id) throws NoSuchNodeException
+	public List<? extends PhylogenyNode<T>> getAncestorPath(final T id) throws NoSuchNodeException
 		{
 		return getNode(id).getAncestorPath();
 		}
@@ -471,7 +471,7 @@ public abstract class AbstractRootedPhylogeny<T extends Serializable> implements
 	@NotNull
 	public List<BasicPhylogenyNode<T>> getAncestorPathAsBasic(final T id) throws NoSuchNodeException
 		{
-		List<PhylogenyNode<T>> orig = getNode(id).getAncestorPath();
+		List<? extends PhylogenyNode<T>> orig = getNode(id).getAncestorPath();
 
 		ArrayList<BasicPhylogenyNode<T>> result = new ArrayList<BasicPhylogenyNode<T>>();
 		BasicPhylogenyNode<T> parent = null;
