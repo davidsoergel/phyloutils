@@ -45,6 +45,8 @@ public interface TaxonomyService<T extends Serializable> extends TaxonMergingPhy
 
 	double getGreatestDepthBelow(T taxid) throws NoSuchNodeException;
 
+	double getLargestLengthSpan(T taxid) throws NoSuchNodeException;
+
 	double maxDistance();
 
 //	void printDepthsBelow();

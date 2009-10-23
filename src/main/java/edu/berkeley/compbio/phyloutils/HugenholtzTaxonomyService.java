@@ -983,6 +983,11 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return theIntegerTree.getNode(taxid).getGreatestBranchLengthDepthBelow();
 		}
 
+	public synchronized double getLargestLengthSpan(Integer taxid) throws NoSuchNodeException
+		{
+		return theIntegerTree.getNode(taxid).getLargestLengthSpan();
+		}
+
 	private Double maxDistance = null;
 
 	public synchronized double maxDistance()

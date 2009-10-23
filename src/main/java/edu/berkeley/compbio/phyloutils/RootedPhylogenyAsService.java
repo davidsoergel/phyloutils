@@ -51,6 +51,11 @@ public class RootedPhylogenyAsService<T extends Serializable> implements Taxonom
 		return basePhylogeny.getNode(a).getGreatestBranchLengthDepthBelow();
 		}
 
+	public double getLargestLengthSpan(T a) throws NoSuchNodeException
+		{
+		return basePhylogeny.getNode(a).getLargestLengthSpan();
+		}
+
 	private Double maxDistance = null;
 
 	public double maxDistance()
