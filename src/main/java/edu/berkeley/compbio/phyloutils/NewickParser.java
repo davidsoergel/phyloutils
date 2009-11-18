@@ -32,6 +32,13 @@
 
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.trees.BasicPhylogenyNode;
+import com.davidsoergel.trees.BasicRootedPhylogeny;
+import com.davidsoergel.trees.IntegerNodeNamer;
+import com.davidsoergel.trees.NodeNamer;
+import com.davidsoergel.trees.RequireExistingNodeNamer;
+import com.davidsoergel.trees.StringIntegerNodeNamer;
+import com.davidsoergel.trees.StringNodeNamer;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;

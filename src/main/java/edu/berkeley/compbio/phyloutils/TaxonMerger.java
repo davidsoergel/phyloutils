@@ -33,9 +33,12 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
-import com.davidsoergel.dsutils.tree.DepthFirstTreeIterator;
-import com.davidsoergel.dsutils.tree.NoSuchNodeException;
-import com.davidsoergel.dsutils.tree.TreeException;
+import com.davidsoergel.trees.AbstractRootedPhylogeny;
+import com.davidsoergel.trees.BasicRootedPhylogeny;
+import com.davidsoergel.trees.DepthFirstTreeIterator;
+import com.davidsoergel.trees.NoSuchNodeException;
+import com.davidsoergel.trees.PhylogenyNode;
+import com.davidsoergel.trees.TreeException;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;

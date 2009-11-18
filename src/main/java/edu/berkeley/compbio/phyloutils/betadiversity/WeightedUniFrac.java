@@ -32,8 +32,8 @@
 
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
-import com.davidsoergel.dsutils.tree.NoSuchNodeException;
 import com.davidsoergel.stats.DissimilarityMeasure;
+import com.davidsoergel.trees.NoSuchNodeException;
 import edu.berkeley.compbio.phyloutils.AbstractRootedPhylogeny;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.PhylogenyNode;

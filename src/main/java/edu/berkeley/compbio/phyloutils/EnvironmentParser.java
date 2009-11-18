@@ -32,7 +32,9 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.tree.NoSuchNodeException;
+import com.davidsoergel.trees.AbstractRootedPhylogeny;
+import com.davidsoergel.trees.NoSuchNodeException;
+import com.davidsoergel.trees.RootedPhylogeny;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 

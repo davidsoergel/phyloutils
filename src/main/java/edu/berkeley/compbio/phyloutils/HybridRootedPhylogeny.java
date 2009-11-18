@@ -32,7 +32,13 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.tree.NoSuchNodeException;
+import com.davidsoergel.trees.AbstractRootedPhylogeny;
+import com.davidsoergel.trees.BasicPhylogenyNode;
+import com.davidsoergel.trees.BasicRootedPhylogeny;
+import com.davidsoergel.trees.NoSuchNodeException;
+import com.davidsoergel.trees.PhylogenyNode;
+import com.davidsoergel.trees.RootedPhylogeny;
+import com.davidsoergel.trees.TaxonMergingPhylogeny;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;

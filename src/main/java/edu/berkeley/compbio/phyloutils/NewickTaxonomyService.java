@@ -1,7 +1,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
-import com.davidsoergel.dsutils.tree.NoSuchNodeException;
+import com.davidsoergel.trees.NoSuchNodeException;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;

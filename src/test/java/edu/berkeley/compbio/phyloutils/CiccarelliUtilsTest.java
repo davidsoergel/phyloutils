@@ -33,7 +33,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.math.MathUtils;
-import com.davidsoergel.dsutils.tree.NoSuchNodeException;
+import com.davidsoergel.trees.NoSuchNodeException;
 import org.testng.annotations.Test;
 
 

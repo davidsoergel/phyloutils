@@ -1,8 +1,13 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
-import com.davidsoergel.dsutils.tree.NoSuchNodeException;
-import com.davidsoergel.dsutils.tree.TreeException;
+import com.davidsoergel.trees.AbstractRootedPhylogeny;
+import com.davidsoergel.trees.BasicPhylogenyNode;
+import com.davidsoergel.trees.BasicRootedPhylogeny;
+import com.davidsoergel.trees.NoSuchNodeException;
+import com.davidsoergel.trees.PhylogenyNode;
+import com.davidsoergel.trees.RootedPhylogeny;
+import com.davidsoergel.trees.TreeException;
 import org.apache.commons.lang.NotImplementedException;
 
 import java.io.Serializable;

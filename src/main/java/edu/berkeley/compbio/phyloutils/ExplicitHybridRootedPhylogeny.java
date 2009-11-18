@@ -1,6 +1,10 @@
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.tree.NoSuchNodeException;
+import com.davidsoergel.trees.BasicPhylogenyNode;
+import com.davidsoergel.trees.BasicRootedPhylogeny;
+import com.davidsoergel.trees.NoSuchNodeException;
+import com.davidsoergel.trees.PhylogenyNode;
+import com.davidsoergel.trees.RootedPhylogeny;
 
 import java.io.Serializable;
 import java.util.HashSet;

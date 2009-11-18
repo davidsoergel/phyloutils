@@ -33,7 +33,9 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.math.MathUtils;
-import com.davidsoergel.dsutils.tree.NoSuchNodeException;
+import com.davidsoergel.trees.NoSuchNodeException;
+import com.davidsoergel.trees.RootedPhylogeny;
+import com.davidsoergel.trees.StringNodeNamer;
 import org.apache.log4j.Logger;
 import org.testng.annotations.Test;
 

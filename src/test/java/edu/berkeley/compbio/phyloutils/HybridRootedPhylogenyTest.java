@@ -35,6 +35,10 @@ package edu.berkeley.compbio.phyloutils;
 import com.davidsoergel.dsutils.ContractTestAware;
 import com.davidsoergel.dsutils.TestInstanceFactory;
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
+import com.davidsoergel.trees.AbstractRootedPhylogeny;
+import com.davidsoergel.trees.BasicRootedPhylogenyTest;
+import com.davidsoergel.trees.RootedPhylogeny;
+import com.davidsoergel.trees.TaxonMergingPhylogenyInterfaceTest;
 import org.testng.annotations.Factory;
 
 import java.util.Queue;
@@ -64,7 +68,7 @@ public class HybridRootedPhylogenyTest extends ContractTestAware<HybridRootedPhy
 	public HybridRootedPhylogeny createInstance() throws Exception
 		{
 		RootedPhylogeny leafPhylogeny =
-				new BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles().rootPhylogeny;
+				new BasicRootedPhylogenyTest.BasicRootedPhylogenyWithSpecificNodeHandles().getRootPhylogeny();
 
 		//List<String> leafList = Arrays.asList("a", "aa", "bb", "bbba", "ba", "baa", "c", "ca", "cb"); // can't include internal nodes
 		Set<String> leafList = DSCollectionUtils.setOf("aa", "bbba", "baa", "ca", "cb");

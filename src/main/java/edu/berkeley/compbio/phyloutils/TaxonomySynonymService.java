@@ -1,6 +1,6 @@
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.tree.NoSuchNodeException;
+import com.davidsoergel.trees.NoSuchNodeException;
 
 import java.util.Collection;
 
