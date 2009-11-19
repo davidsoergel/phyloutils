@@ -34,11 +34,12 @@ package edu.berkeley.compbio.phyloutils.betadiversity;
 
 import com.davidsoergel.dsutils.math.MathUtils;
 import com.davidsoergel.stats.DissimilarityMeasure;
+import com.davidsoergel.trees.AbstractRootedPhylogeny;
 import com.davidsoergel.trees.NoSuchNodeException;
-import edu.berkeley.compbio.phyloutils.AbstractRootedPhylogeny;
+import com.davidsoergel.trees.PhylogenyNode;
+import com.davidsoergel.trees.RootedPhylogeny;
+import com.davidsoergel.trees.TreeException;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
-import edu.berkeley.compbio.phyloutils.PhylogenyNode;
-import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;
@@ -85,6 +86,11 @@ public class KullbackLeibler<T extends Serializable> implements DissimilarityMea
 			return klDivergence(unionTree, a, b);
 			}
 		catch (PhyloUtilsException e)
+			{
+			logger.error("Error", e);
+			throw new Error(e);
+			}
+		catch (TreeException e)
 			{
 			logger.error("Error", e);
 			throw new Error(e);

@@ -33,7 +33,7 @@
 
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.ChainedException;
+import com.davidsoergel.trees.TreeException;
 import org.apache.log4j.Logger;
 
 /**
@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
-public class PhyloUtilsException extends ChainedException
+public class PhyloUtilsException extends TreeException
 	{
 	// ------------------------------ FIELDS ------------------------------
 

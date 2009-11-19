@@ -33,10 +33,11 @@
 package edu.berkeley.compbio.phyloutils.betadiversity;
 
 import com.davidsoergel.stats.DissimilarityMeasure;
+import com.davidsoergel.trees.AbstractRootedPhylogeny;
 import com.davidsoergel.trees.NoSuchNodeException;
-import edu.berkeley.compbio.phyloutils.AbstractRootedPhylogeny;
+import com.davidsoergel.trees.RootedPhylogeny;
+import com.davidsoergel.trees.TreeException;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
-import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;
@@ -87,6 +88,11 @@ public class JDivergence<T extends Serializable> implements DissimilarityMeasure
 			return kl.klDivergence(unionTree, a, b) + kl.klDivergence(unionTree, b, a);
 			}
 		catch (PhyloUtilsException e)
+			{
+			logger.error("Error", e);
+			throw new Error(e);
+			}
+		catch (TreeException e)
 			{
 			logger.error("Error", e);
 			throw new Error(e);

@@ -39,6 +39,7 @@ import com.davidsoergel.trees.NodeNamer;
 import com.davidsoergel.trees.RequireExistingNodeNamer;
 import com.davidsoergel.trees.StringIntegerNodeNamer;
 import com.davidsoergel.trees.StringNodeNamer;
+import com.davidsoergel.trees.TreeException;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -102,7 +103,7 @@ public class NewickParser<T extends Serializable>
 			fw.write(sb.toString());
 			fw.close();
 			}
-		catch (PhyloUtilsException e)
+		catch (TreeException e)
 			{
 			logger.error("Error", e);
 			}
@@ -113,7 +114,7 @@ public class NewickParser<T extends Serializable>
 		}
 
 	public static BasicRootedPhylogeny<String> readWithStringIds(String filename, boolean namedNodesMustBeLeaves)
-			throws PhyloUtilsException, IOException
+			throws TreeException, IOException
 		{
 		InputStream is = getInputStream(filename);
 
@@ -122,7 +123,7 @@ public class NewickParser<T extends Serializable>
 
 	public static BasicRootedPhylogeny<Integer> readWithIntegerIds(String filename, boolean generateIds,
 	                                                               boolean namedNodesMustBeLeaves)
-			throws PhyloUtilsException, IOException
+			throws TreeException, IOException
 		{
 		InputStream is = getInputStream(filename);
 
@@ -176,7 +177,7 @@ public class NewickParser<T extends Serializable>
 		return is;
 		}
 
-	public BasicRootedPhylogeny<T> read(InputStream is, NodeNamer<T> namer) throws PhyloUtilsException
+	public BasicRootedPhylogeny<T> read(InputStream is, NodeNamer<T> namer) throws TreeException
 		{
 		Reader r = new BufferedReader(new InputStreamReader(is));
 		StreamTokenizer st = new StreamTokenizer(r);

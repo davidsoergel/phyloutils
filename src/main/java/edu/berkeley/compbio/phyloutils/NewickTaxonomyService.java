@@ -2,6 +2,7 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.trees.NoSuchNodeException;
+import com.davidsoergel.trees.TreeException;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class NewickTaxonomyService extends RootedPhylogenyAsService<String>
 			logger.error("Error", e);
 			throw new PhyloUtilsRuntimeException(e);
 			}
-		catch (PhyloUtilsException e)
+		catch (TreeException e)
 			{
 			logger.error("Error", e);
 			throw new PhyloUtilsRuntimeException(e);

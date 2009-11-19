@@ -36,6 +36,7 @@ import com.davidsoergel.dsutils.math.MathUtils;
 import com.davidsoergel.trees.NoSuchNodeException;
 import com.davidsoergel.trees.RootedPhylogeny;
 import com.davidsoergel.trees.StringNodeNamer;
+import com.davidsoergel.trees.TreeException;
 import org.apache.log4j.Logger;
 import org.testng.annotations.Test;
 
@@ -54,7 +55,7 @@ public class NewickParserTest
 	// -------------------------- OTHER METHODS --------------------------
 
 	@Test
-	public void newickParserReadsAllNodes() throws PhyloUtilsException, IOException
+	public void newickParserReadsAllNodes() throws TreeException, IOException
 		{
 		//	logger.warn("starting newickParserReadsAllNodes");
 		URL url = ClassLoader.getSystemResource("goodNewickTree.nh");
@@ -71,7 +72,7 @@ public class NewickParserTest
 		}
 
 	@Test
-	public void newickParserSkipsComments() throws PhyloUtilsException, IOException
+	public void newickParserSkipsComments() throws TreeException, IOException
 		{
 		//	logger.warn("starting newickParserReadsAllNodes");
 		URL url = ClassLoader.getSystemResource("goodNewickTreeWithComments.nh");
@@ -88,7 +89,7 @@ public class NewickParserTest
 		}
 
 	@Test(expectedExceptions = {PhyloUtilsException.class})
-	public void newickParserThrowsExceptionOnPrematureTermination() throws PhyloUtilsException, IOException
+	public void newickParserThrowsExceptionOnPrematureTermination() throws TreeException, IOException
 		{
 		URL url = ClassLoader.getSystemResource("badNewickTree1.nh");
 		RootedPhylogeny p =
@@ -96,7 +97,7 @@ public class NewickParserTest
 		}
 
 	@Test
-	public void phylogenyDistancesAreCorrect() throws PhyloUtilsException, IOException, NoSuchNodeException
+	public void phylogenyDistancesAreCorrect() throws TreeException, IOException, NoSuchNodeException
 		{
 		URL url = ClassLoader.getSystemResource("goodNewickTree.nh");
 		RootedPhylogeny p =

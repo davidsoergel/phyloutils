@@ -34,10 +34,10 @@ package edu.berkeley.compbio.phyloutils.alphadiversity;
 
 import com.davidsoergel.dsutils.math.MathUtils;
 import com.davidsoergel.stats.Statistic;
+import com.davidsoergel.trees.PhylogenyNode;
+import com.davidsoergel.trees.RootedPhylogeny;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsException;
 import edu.berkeley.compbio.phyloutils.PhyloUtilsRuntimeException;
-import edu.berkeley.compbio.phyloutils.PhylogenyNode;
-import edu.berkeley.compbio.phyloutils.RootedPhylogeny;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;
