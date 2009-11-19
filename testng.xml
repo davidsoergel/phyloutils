@@ -38,8 +38,6 @@
     <package name="edu.berkeley.compbio.phyloutils"/>
   </packages>-->
     <classes>
-      <class name="edu.berkeley.compbio.phyloutils.BasicRootedPhylogenyTest"/>
-      <class name="edu.berkeley.compbio.phyloutils.BasicPhylogenyNodeTest"/>
       <class name="edu.berkeley.compbio.phyloutils.CiccarelliUtilsTest"/>
       <class name="edu.berkeley.compbio.phyloutils.NewickParserTest"/>
       <class name="edu.berkeley.compbio.phyloutils.HugenholtzTaxonomyServiceTest"/>
