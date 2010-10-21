@@ -52,10 +52,29 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	private static final Logger logger = Logger.getLogger(HugenholtzTaxonomyService.class);
 
 	//private String ciccarelliFilename = "tree_Feb15_unrooted.txt";
-	private static final String hugenholtzFilename = "275K.nast.ft190.constrained.rooted.allids.gz";
+//	private static final String hugenholtzFilename = "275K.nast.ft190.constrained.rooted.allids.gz";
 	//private static final String hugenholtzFilename = "greengenes.all.tree.allids.gz";
-	private static final String bigGreenGenesFilename = "greengenes16SrRNAgenes.txt.gz";
-	private static final String overrideFilename = "overrideNameToProkMSAid.txt";
+//	private static final String bigGreenGenesFilename = "greengenes16SrRNAgenes.txt.gz";
+//	private static final String overrideFilename = "overrideNameToProkMSAid.txt";
+
+	private String hugenholtzFilename;  // a newick tree file
+	private String greengenesRawFilename; // = "greengenes16SrRNAgenes.txt.gz";
+	private String nameToProkMSAidFilename; // = "overrideNameToProkMSAid.txt";
+
+	public void setHugenholtzFilename(final String hugenholtzFilename)
+		{
+		this.hugenholtzFilename = hugenholtzFilename;
+		}
+
+	public void setGreengenesRawFilename(final String greengenesRawFilename)
+		{
+		this.greengenesRawFilename = greengenesRawFilename;
+		}
+
+	public void setNameToProkMSAidFilename(final String nameToProkMSAidFilename)
+		{
+		this.nameToProkMSAidFilename = nameToProkMSAidFilename;
+		}
 
 	private static HugenholtzTaxonomyService instance;// = new CiccarelliUtils();
 
@@ -102,7 +121,13 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return theIntegerTree.getLeafValues();
 		}
 
+	// split init from constructor for the sake of a Jandy adapter (HugenholtzTaxonomyServiceAdapter)
+
 	public HugenholtzTaxonomyService() //throws PhyloUtilsException
+		{
+		}
+
+	public void init()
 		{
 		theIntegerTree = (BasicRootedPhylogeny<Integer>) CacheManager.get(this, hugenholtzFilename + ".theIntegerTree");
 		nameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, hugenholtzFilename + ".nameToIdsMap");
@@ -114,7 +139,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		if (theIntegerTree == null || nameToIdsMap == null || nameToUniqueIdMap == null)
 			{
 			reloadFromNewick();
-			reloadOverrideMap();
+			reloadNameToProkMSAidMap();
 			// ** Note we don't invalidate downstream caches, e.g. for StrainDirectoryLabelChooser and so forth
 			// CacheManager.invalidate
 			CacheManager.put(this, hugenholtzFilename + ".theIntegerTree", theIntegerTree);
@@ -131,34 +156,37 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}*/
 		}
 
-	private synchronized void reloadOverrideMap()
+	private synchronized void reloadNameToProkMSAidMap()
 		{
 		nameToUniqueIdMap = new ConcurrentHashMap<String, Integer>();
 
-		Map<String, Set<Integer>> overrideNameToIdMap;
-		try
+		if (nameToProkMSAidFilename != null)
 			{
-			overrideNameToIdMap = StringSetIntMapReader.read(overrideFilename);
-
-			for (Map.Entry<String, Set<Integer>> entry : overrideNameToIdMap.entrySet())
+			Map<String, Set<Integer>> nameToProkMSAidMap;
+			try
 				{
-				String key = entry.getKey();
-				Set<Integer> valueSet = entry.getValue();
+				nameToProkMSAidMap = StringSetIntMapReader.read(nameToProkMSAidFilename);
 
-				nameToIdsMap.removeAll(key);
-				nameToUniqueIdMap.remove(key);
-
-				nameToIdsMap.putAll(key, valueSet);
-
-				for (Integer id : valueSet)
+				for (Map.Entry<String, Set<Integer>> entry : nameToProkMSAidMap.entrySet())
 					{
-					nameToUniqueIdMap.put(key, id);
+					String key = entry.getKey();
+					Set<Integer> valueSet = entry.getValue();
+
+					nameToIdsMap.removeAll(key);
+					nameToUniqueIdMap.remove(key);
+
+					nameToIdsMap.putAll(key, valueSet);
+
+					for (Integer id : valueSet)
+						{
+						nameToUniqueIdMap.put(key, id);
+						}
 					}
 				}
-			}
-		catch (IOException e)
-			{
-			throw new Error(e);
+			catch (IOException e)
+				{
+				throw new Error(e);
+				}
 			}
 		}
 
@@ -215,7 +243,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				}, nameToIdsMap, extraNameToIdsMap);
 
 
-		//BAD	addStrainNamesToMap();
+		addStrainNamesToMap();
 		}
 
 	private synchronized static InputStream getInputStream(String filename) throws PhyloUtilsException, IOException
@@ -269,133 +297,136 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	 */
 	private synchronized void addStrainNamesToMap()
 		{
-		// there are much cleaner ways to do this, I know.  I'm in a freaking hurry.
-
-		String organism = null;
-		String prokMSAname = null;
-		String source = null;
-		Integer prokMSA_id = null;
-		//	Integer replaced_by = null;
-
-		// for now we ignore replaced_by and put all the IDs (old and new) in the map.
-		// the only consequence AFAIK is that the old IDs won't be in the current tree;
-		// the benefit is that if an old ID turns up for some reason we can still map it.
-
-		try
+		if (greengenesRawFilename != null)
 			{
+			// there are much cleaner ways to do this, I know.  I'm in a freaking hurry.
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(getInputStream(bigGreenGenesFilename)));
-			String line;
-			Pattern strainPattern = Pattern.compile("( str.? )|( strain )");
-			int skipped = 0;
-			int found = 0;
-			while ((line = in.readLine()) != null)
+			String organism = null;
+			String prokMSAname = null;
+			String source = null;
+			Integer prokMSA_id = null;
+			//	Integer replaced_by = null;
+
+			// for now we ignore replaced_by and put all the IDs (old and new) in the map.
+			// the only consequence AFAIK is that the old IDs won't be in the current tree;
+			// the benefit is that if an old ID turns up for some reason we can still map it.
+
+			try
 				{
-				line = line.trim();
-				if (line.equals("END"))
-					{
-					try
-						{
-						theIntegerTree.getNode(prokMSA_id);
-						}
-					catch (NoSuchNodeException e)
-						{
-						if (logger.isTraceEnabled())
-							{
-							logger.trace(
-									"prokMSA_id " + prokMSA_id + " not in tree; " + organism + " " + prokMSAname + " "
-									+ source);
-							}
-						skipped++;
-						continue;
-						}
-					found++;
-					if (organism != null)
-						{
-						nameToIdsMap.put(organism, prokMSA_id);
-						String cleanOrganism = strainPattern.matcher(organism).replaceAll(" ");
-						if (!cleanOrganism.equals(source))
-							{
-							nameToIdsMap.put(cleanOrganism, prokMSA_id);
-							}
-						}
-					if (prokMSAname != null)
-						{
-						nameToIdsMap.put(prokMSAname, prokMSA_id);
-						String cleanProkMSAname = strainPattern.matcher(prokMSAname).replaceAll(" ");
-						if (!cleanProkMSAname.equals(source))
-							{
-							nameToIdsMap.put(cleanProkMSAname, prokMSA_id);
-							}
-						}
-					if (source != null)
-						{
-						nameToIdsMap.put(source, prokMSA_id);
-						String cleanSource = strainPattern.matcher(source).replaceAll("");
-						if (!cleanSource.equals(source))
-							{
-							nameToIdsMap.put(cleanSource, prokMSA_id);
-							}
-						}
 
-					organism = null;
-					prokMSAname = null;
-					source = null;
-					prokMSA_id = null;
-					}
-				else
+				BufferedReader in = new BufferedReader(new InputStreamReader(getInputStream(greengenesRawFilename)));
+				String line;
+				Pattern strainPattern = Pattern.compile("( str.? )|( strain )");
+				int skipped = 0;
+				int found = 0;
+				while ((line = in.readLine()) != null)
 					{
-					String[] sa = line.split("=");
-					if (sa[0].equals("organism"))
+					line = line.trim();
+					if (line.equals("END"))
 						{
-						organism = sa[1];
-						}
-					else if (sa[0].equals("source"))
-						{
-						source = sa[1];
-						}
-					else if (sa[0].equals("prokMSA_id"))
+						try
 							{
-							prokMSA_id = new Integer(sa[1]);
+							theIntegerTree.getNode(prokMSA_id);
 							}
-						else if (sa[0].equals("prokMSAname"))
+						catch (NoSuchNodeException e)
+							{
+							if (logger.isTraceEnabled())
 								{
-								prokMSAname = sa[1];
+								logger.trace(
+										"prokMSA_id " + prokMSA_id + " not in tree; " + organism + " " + prokMSAname
+										+ " " + source);
 								}
-					//	else if (sa[0].equals("replaced_by"))
-					//			{
-					//			replaced_by = sa[1];
-					//			}
-					// else ignore
+							skipped++;
+							continue;
+							}
+						found++;
+						if (organism != null)
+							{
+							nameToIdsMap.put(organism, prokMSA_id);
+							String cleanOrganism = strainPattern.matcher(organism).replaceAll(" ");
+							if (!cleanOrganism.equals(source))
+								{
+								nameToIdsMap.put(cleanOrganism, prokMSA_id);
+								}
+							}
+						if (prokMSAname != null)
+							{
+							nameToIdsMap.put(prokMSAname, prokMSA_id);
+							String cleanProkMSAname = strainPattern.matcher(prokMSAname).replaceAll(" ");
+							if (!cleanProkMSAname.equals(source))
+								{
+								nameToIdsMap.put(cleanProkMSAname, prokMSA_id);
+								}
+							}
+						if (source != null)
+							{
+							nameToIdsMap.put(source, prokMSA_id);
+							String cleanSource = strainPattern.matcher(source).replaceAll("");
+							if (!cleanSource.equals(source))
+								{
+								nameToIdsMap.put(cleanSource, prokMSA_id);
+								}
+							}
+
+						organism = null;
+						prokMSAname = null;
+						source = null;
+						prokMSA_id = null;
+						}
+					else
+						{
+						String[] sa = line.split("=");
+						if (sa[0].equals("organism"))
+							{
+							organism = sa[1];
+							}
+						else if (sa[0].equals("source"))
+							{
+							source = sa[1];
+							}
+						else if (sa[0].equals("prokMSA_id"))
+								{
+								prokMSA_id = new Integer(sa[1]);
+								}
+							else if (sa[0].equals("prokMSAname"))
+									{
+									prokMSAname = sa[1];
+									}
+						//	else if (sa[0].equals("replaced_by"))
+						//			{
+						//			replaced_by = sa[1];
+						//			}
+						// else ignore
+						}
 					}
+				logger.info("Found " + found + " taxa in tree, skipped " + skipped);
 				}
-			logger.info("Found " + found + " taxa in tree, skipped " + skipped);
-			}
-		catch (IOException e)
-			{
-			logger.error("Error", e);
-			throw new PhyloUtilsRuntimeException(e);
-			}
-		catch (PhyloUtilsException e)
-			{
-			logger.error("Error", e);
-			throw new PhyloUtilsRuntimeException(e);
-			}
+			catch (IOException e)
+				{
+				logger.error("Error", e);
+				throw new PhyloUtilsRuntimeException(e);
+				}
+			catch (PhyloUtilsException e)
+				{
+				logger.error("Error", e);
+				throw new PhyloUtilsRuntimeException(e);
+				}
 
 
-		//try
-		//	{
-		//	}
-		//catch (PhyloUtilsException e)
-		//	{
+			//try
+			//	{
+			//	}
+			//catch (PhyloUtilsException e)
+			//	{
 //throw new
-		//	}
-		//super(hugenholtzFilename);
+			//	}
+			//super(hugenholtzFilename);
 
-		// walk the entire tree, making an int->node map and a string->int multimap along the way
+			// walk the entire tree, making an int->node map and a string->int multimap along the way
 
-		// assume that all prokMSA_IDs are less than 10000000, so just start the generated IDs from there
-
+			// assume that all prokMSA_IDs are less than 10000000, so just start the generated IDs from there
+			}
+		}
 
 /*		int idGenerator = 10000000;
 
@@ -435,7 +466,6 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 			intToNodeMap.put(id, node);
 			}*/
-		}
 
 	/*
 	 String cacheFilename = "/phyloutils.hugenholtz.cache";
@@ -486,6 +516,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 return false;
 		 }
  */
+
 	public synchronized boolean isLeaf(Integer leafId) throws NoSuchNodeException
 		{
 		return theIntegerTree.getNode(leafId).isLeaf();
@@ -868,6 +899,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 return shallowestId;
 		 }
  */
+
 	public synchronized Set<Integer> findMatchingIds(String name) throws NoSuchNodeException
 		{
 		Set<Integer> matchingIds = nameToIdsMap.get(name);
@@ -969,6 +1001,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		return stringTaxonomyService.distanceBetween(intToNodeMap(a), intToNodeMap(b));
 		}
 */
+
 	public synchronized double minDistanceBetween(Integer a, Integer b) throws NoSuchNodeException
 		{
 		return theIntegerTree.distanceBetween(a, b);
@@ -1032,6 +1065,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 return theIntegerTree.getAncestorPath(id);
 		 }
  */
+
 	public List<BasicPhylogenyNode<Integer>> getAncestorPathAsBasic(final Integer id) throws NoSuchNodeException
 		{
 		return theIntegerTree.getAncestorPathAsBasic(id);
