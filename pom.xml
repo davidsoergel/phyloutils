@@ -37,7 +37,7 @@
   <artifactId>phyloutils</artifactId>
 
   <name>phyloutils</name>
-  <version>0.9</version>
+  <version>0.91-SNAPSHOT</version>
   <url>http://dev.davidsoergel.com/phyloutils</url>
   <description>Utility classes for dealing with the NCBI taxonomy and other phylogenetic tasks.</description>
 
@@ -58,8 +58,8 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.davidsoergel.com/repos/phyloutils/tags/phyloutils-0.9</connection>
-    <developerConnection>scm:svn:svn+ssh://svn.davidsoergel.com/home/svn/repos-compbio/phyloutils/tags/phyloutils-0.9
+    <connection>scm:svn:http://svn.davidsoergel.com/repos/phyloutils</connection>
+    <developerConnection>scm:svn:svn+ssh://svn.davidsoergel.com/home/svn/repos-compbio/phyloutils
     </developerConnection>
   </scm>
 
