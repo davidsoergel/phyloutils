@@ -43,6 +43,8 @@ import java.util.zip.GZIPInputStream;
  * guarantee of uniqueness.  For various reasons we need a tree with unique Integer IDs throughout.  This tree uses the
  * prokMSA_ids at the leaves and generated IDs at internal nodes.  It also allows looking up nodes by String name,
  * including semicolon-delimited multilevel classifications.
+ * <p/>
+ * Uniform leaf weights are provided.
  *
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
@@ -242,7 +244,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 					}
 				}, nameToIdsMap, extraNameToIdsMap);
 
-
+		theIntegerTree.setLeafWeightsUniform();
 		addStrainNamesToMap();
 		}
 
