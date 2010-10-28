@@ -34,7 +34,7 @@ public class NearestNodeFinder
 				double d = service.minDistanceBetween(queryId, targetId);
 				best = Math.min(best, d);
 				}
-			System.err.println(queryId + "/t" + best);
+			System.err.println(queryId + "\t" + best);
 			}
 		}
 	}
