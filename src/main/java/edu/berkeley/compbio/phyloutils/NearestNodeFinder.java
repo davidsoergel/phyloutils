@@ -29,6 +29,8 @@ public class NearestNodeFinder
 		String outfileName = argv[3];
 		PrintWriter out = new PrintWriter(outfileName);
 
+		out.println("id\tdist");
+
 		for (int queryId : queryIds)
 			{
 			double best = Double.MAX_VALUE;
