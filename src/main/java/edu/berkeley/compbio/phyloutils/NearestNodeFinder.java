@@ -4,6 +4,7 @@ import com.davidsoergel.dsutils.file.IntArrayReader;
 import com.davidsoergel.trees.NoSuchNodeException;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Load a list of "known" nodes, eg the isolates.  Then for each query sequence (eg from an environment), find the
@@ -25,6 +26,8 @@ public class NearestNodeFinder
 
 		int[] targetIds = IntArrayReader.read(argv[1]);
 		int[] queryIds = IntArrayReader.read(argv[2]);
+		String outfileName = argv[3];
+		PrintWriter out = new PrintWriter(outfileName);
 
 		for (int queryId : queryIds)
 			{
@@ -34,7 +37,9 @@ public class NearestNodeFinder
 				double d = service.minDistanceBetween(queryId, targetId);
 				best = Math.min(best, d);
 				}
-			System.out.println(queryId + "\t" + best);
+			out.println(queryId + "\t" + best);
 			}
+
+		out.close();
 		}
 	}
