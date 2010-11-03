@@ -26,7 +26,8 @@ public class NearestNodeFinder
 
 		int[] targetIds = IntArrayReader.read(argv[1]);
 		int[] queryIds = IntArrayReader.read(argv[2]);
-		String outfileName = argv[3];
+		double minDistance = Double.parseDouble(argv[3]);  // implement leave-one-out at any level
+		String outfileName = argv[4];
 		PrintWriter out = new PrintWriter(outfileName);
 
 		out.println("id\tdist");
@@ -37,7 +38,10 @@ public class NearestNodeFinder
 			for (int targetId : targetIds)
 				{
 				double d = service.minDistanceBetween(queryId, targetId);
-				best = Math.min(best, d);
+				if (d >= minDistance)
+					{
+					best = Math.min(best, d);
+					}
 				}
 			out.println(queryId + "\t" + best);
 			}
