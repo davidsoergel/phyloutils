@@ -133,6 +133,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		// don't bother keeping track of which caches are affected by which inputs; just reload them all if anything changes
 		final String allFilenames = hugenholtzFilename + ", " + greengenesRawFilename + ", " + nameToProkMSAidFilename;
+		logger.info("Cache key: " + allFilenames);
 		theIntegerTree = (BasicRootedPhylogeny<Integer>) CacheManager.get(this, allFilenames + ".theIntegerTree");
 		nameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, allFilenames + ".nameToIdsMap");
 		extraNameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, allFilenames + ".extraNameToIdsMap");
@@ -174,6 +175,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 					{
 					String key = entry.getKey();
 					Set<Integer> valueSet = entry.getValue();
+
+					logger.info("Loaded mapping: " + key + " -> " + DSStringUtils.join(valueSet, ", "));
 
 					nameToIdsMap.removeAll(key);
 					nameToUniqueIdMap.remove(key);
