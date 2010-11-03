@@ -131,12 +131,13 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public void init()
 		{
-		theIntegerTree = (BasicRootedPhylogeny<Integer>) CacheManager.get(this, hugenholtzFilename + ".theIntegerTree");
-		nameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, hugenholtzFilename + ".nameToIdsMap");
-		extraNameToIdsMap =
-				(HashMultimap<String, Integer>) CacheManager.get(this, hugenholtzFilename + ".extraNameToIdsMap");
+		// don't bother keeping track of which caches are affected by which inputs; just reload them all if anything changes
+		final String allFilenames = hugenholtzFilename + ", " + greengenesRawFilename + ", " + nameToProkMSAidFilename;
+		theIntegerTree = (BasicRootedPhylogeny<Integer>) CacheManager.get(this, allFilenames + ".theIntegerTree");
+		nameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, allFilenames + ".nameToIdsMap");
+		extraNameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, allFilenames + ".extraNameToIdsMap");
 		nameToUniqueIdMap =
-				(ConcurrentHashMap<String, Integer>) CacheManager.get(this, hugenholtzFilename + ".nameToUniqueIdMap");
+				(ConcurrentHashMap<String, Integer>) CacheManager.get(this, allFilenames + ".nameToUniqueIdMap");
 
 		if (theIntegerTree == null || nameToIdsMap == null || nameToUniqueIdMap == null)
 			{
@@ -144,10 +145,10 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			reloadNameToProkMSAidMap();
 			// ** Note we don't invalidate downstream caches, e.g. for StrainDirectoryLabelChooser and so forth
 			// CacheManager.invalidate
-			CacheManager.put(this, hugenholtzFilename + ".theIntegerTree", theIntegerTree);
-			CacheManager.put(this, hugenholtzFilename + ".nameToIdsMap", nameToIdsMap);
-			CacheManager.put(this, hugenholtzFilename + ".extraNameToIdsMap", extraNameToIdsMap);
-			CacheManager.put(this, hugenholtzFilename + ".nameToUniqueIdMap", nameToUniqueIdMap);
+			CacheManager.put(this, allFilenames + ".theIntegerTree", theIntegerTree);
+			CacheManager.put(this, allFilenames + ".nameToIdsMap", nameToIdsMap);
+			CacheManager.put(this, allFilenames + ".extraNameToIdsMap", extraNameToIdsMap);
+			CacheManager.put(this, allFilenames + ".nameToUniqueIdMap", nameToUniqueIdMap);
 			}
 
 		/*if (!readStateIfAvailable())
