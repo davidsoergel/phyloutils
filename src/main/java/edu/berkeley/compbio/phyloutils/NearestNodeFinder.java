@@ -1,10 +1,14 @@
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.conja.Function;
+import com.davidsoergel.conja.Parallel;
 import com.davidsoergel.dsutils.file.IntArrayReader;
 import com.davidsoergel.trees.NoSuchNodeException;
+import org.apache.commons.collections15.iterators.ArrayIterator;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 /**
  * Load a list of "known" nodes, eg the isolates.  Then for each query sequence (eg from an environment), find the
@@ -24,28 +28,43 @@ public class NearestNodeFinder
 		//service.setSynonymService(NcbiTaxonomyClient.getInstance());
 		service.init();
 
-		int[] targetIds = IntArrayReader.read(argv[1]);
+		final int[] targetIds = IntArrayReader.read(argv[1]);
 		int[] queryIds = IntArrayReader.read(argv[2]);
-		double minDistance = Double.parseDouble(argv[3]);  // implement leave-one-out at any level
+		final double minDistance = Double.parseDouble(argv[3]);  // implement leave-one-out at any level
+
+
+		Map<Integer, Double> results = Parallel.map(new ArrayIterator(queryIds), new Function<Integer, Double>()
+		{
+		public Double apply(Integer queryId)
+			{
+			try
+				{
+				double best = Double.MAX_VALUE;
+				for (int targetId : targetIds)
+					{
+					double d = service.minDistanceBetween(queryId, targetId);
+					if (d >= minDistance)
+						{
+						best = Math.min(best, d);
+						}
+					}
+				return best;
+				}
+			catch (NoSuchNodeException e)
+				{
+				throw new Error(e);
+				}
+			}
+		});
+
 		String outfileName = argv[4];
 		PrintWriter out = new PrintWriter(outfileName);
-
 		out.println("id\tdist");
 
-		for (int queryId : queryIds)
+		for (Map.Entry<Integer, Double> entry : results.entrySet())
 			{
-			double best = Double.MAX_VALUE;
-			for (int targetId : targetIds)
-				{
-				double d = service.minDistanceBetween(queryId, targetId);
-				if (d >= minDistance)
-					{
-					best = Math.min(best, d);
-					}
-				}
-			out.println(queryId + "\t" + best);
+			out.println(entry.getKey() + "\t" + entry.getValue());
 			}
-
 		out.close();
 		}
 	}
