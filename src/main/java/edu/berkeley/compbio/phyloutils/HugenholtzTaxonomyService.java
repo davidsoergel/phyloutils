@@ -1008,7 +1008,9 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 */
 
-	public synchronized double minDistanceBetween(Integer a, Integer b) throws NoSuchNodeException
+	// assume that theIntegerTree is good to go, and that its distanceBetween method is threadsafe
+
+	public double minDistanceBetween(Integer a, Integer b) throws NoSuchNodeException
 		{
 		return theIntegerTree.distanceBetween(a, b);
 		//return stringTaxonomyService.minDistanceBetween(intToNodeMap.get(a), intToNodeMap.get(b));
