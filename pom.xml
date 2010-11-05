@@ -150,13 +150,13 @@
     <dependency>
       <groupId>com.davidsoergel</groupId>
       <artifactId>trees</artifactId>
-      <version>1.02-SNAPSHOT</version>
+      <version>1.021-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>com.davidsoergel</groupId>
       <artifactId>trees</artifactId>
-      <version>1.02-SNAPSHOT</version>
+      <version>1.021-SNAPSHOT</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
