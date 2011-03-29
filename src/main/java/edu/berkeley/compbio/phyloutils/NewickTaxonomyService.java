@@ -1,7 +1,9 @@
 package edu.berkeley.compbio.phyloutils;
 
+import com.davidsoergel.dsutils.CacheManager;
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.trees.NoSuchNodeException;
+import com.davidsoergel.trees.RootedPhylogeny;
 import com.davidsoergel.trees.TreeException;
 import org.apache.log4j.Logger;
 
@@ -19,7 +21,8 @@ public class NewickTaxonomyService extends RootedPhylogenyAsService<String>
 	{
 	private static final Logger logger = Logger.getLogger(NewickTaxonomyService.class);
 
-	private String filename;  // only for toString
+	private String newickFilename;  // only for toString
+	private boolean namedNodesMustBeLeaves;
 
 	/*	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
 		 {
@@ -27,10 +30,32 @@ public class NewickTaxonomyService extends RootedPhylogenyAsService<String>
 		 }
  */
 
-
-	protected NewickTaxonomyService(String filename, boolean namedNodesMustBeLeaves)// throws  PhyloUtilsException
+	protected NewickTaxonomyService(String filename, boolean namedNodesMustBeLeaves)
 		{
-		this.filename = filename;
+		this.newickFilename = filename;
+		this.namedNodesMustBeLeaves = namedNodesMustBeLeaves;
+
+		init();
+		}
+
+	private void init()
+		{
+		final String cacheKey = newickFilename + ", " + namedNodesMustBeLeaves;
+		logger.info("Cache key: " + cacheKey);
+
+		basePhylogeny = (RootedPhylogeny<String>) CacheManager.get(this, cacheKey);
+
+
+		if (basePhylogeny == null)
+			{
+			reload();
+
+			CacheManager.put(this, cacheKey + ".basePhylogeny", basePhylogeny);
+			}
+		}
+
+	private void reload()
+		{
 		try
 			{
 			/*		URL res = ClassLoader.getSystemResource(ciccarelliFilename);
@@ -56,7 +81,7 @@ public class NewickTaxonomyService extends RootedPhylogenyAsService<String>
 				is = new FileInputStream(filename);
 				}*/
 			//	ciccarelliTree = new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED NODE "));
-			basePhylogeny = NewickParser.readWithStringIds(filename, namedNodesMustBeLeaves);
+			basePhylogeny = NewickParser.readWithStringIds(newickFilename, namedNodesMustBeLeaves);
 			}
 		catch (IOException e)
 			{
@@ -98,6 +123,6 @@ public class NewickTaxonomyService extends RootedPhylogenyAsService<String>
 	@Override
 	public String toString()
 		{
-		return "NewickTaxonomyService{" + filename + '}';
+		return "NewickTaxonomyService{" + newickFilename + '}';
 		}
 	}

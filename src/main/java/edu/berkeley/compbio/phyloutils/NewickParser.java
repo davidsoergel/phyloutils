@@ -82,7 +82,6 @@ public class NewickParser<T extends Serializable>
 			BasicRootedPhylogeny<String> theTree = new NewickParser<String>()
 					.read(is, new StringIntegerNodeNamer("", false, 10000000, namedNodesMustBeLeaves));
 
-			StringBuffer sb = new StringBuffer();
 			String prefix = argv[2];
 			String tab = argv[3];
 			prefix = prefix.replaceAll(Matcher.quoteReplacement("\\n"), "\n");
@@ -94,13 +93,14 @@ public class NewickParser<T extends Serializable>
 			tab = tab.replaceAll("\"", "");
 			tab = tab.replaceAll("\'", "");
 
-			theTree.toNewick(sb, prefix, tab, 0, 0);
+			//StringBuffer sb = new StringBuffer();
 
 			//	System.out.println(sb);
 
 			//FileOutputStream foo = new FileOutputStream(argv[2]);
 			FileWriter fw = new FileWriter(argv[4]);
-			fw.write(sb.toString());
+			theTree.toNewick(fw, prefix, tab, 0, 0);
+			//fw.write(sb.toString());
 			fw.close();
 			}
 		catch (TreeException e)
@@ -260,21 +260,21 @@ public class NewickParser<T extends Serializable>
 							state = State.NAME;
 							}
 						else if (state == State.POST_CHILDREN)
-								{
-								//currentNode.setBootstrap(st.nval);
-								currentNode.appendToValue((int) st.nval, namer);
-								state = State.POST_CHILDREN;// unchanged
-								}
-							else if (state == State.COMMENT)
-									{
-									//** we ignored this previously...
-									currentNode.setBootstrap(st.nval);
-									}
-								else
-									{
-									throw new PhyloUtilsException(
-											"Number " + st.nval + " in an unexpected place at line " + st.lineno());
-									}
+							{
+							//currentNode.setBootstrap(st.nval);
+							currentNode.appendToValue((int) st.nval, namer);
+							state = State.POST_CHILDREN;// unchanged
+							}
+						else if (state == State.COMMENT)
+							{
+							//** we ignored this previously...
+							currentNode.setBootstrap(st.nval);
+							}
+						else
+							{
+							throw new PhyloUtilsException(
+									"Number " + st.nval + " in an unexpected place at line " + st.lineno());
+							}
 						break;
 
 					//** note underscore vs space issues here... elsewhere, space is a legitimate character, different from _
@@ -293,14 +293,14 @@ public class NewickParser<T extends Serializable>
 							state = State.POST_CHILDREN;
 							}
 						else if (state == State.COMMENT)
-								{
-								// ignore
-								}
-							else
-								{
-								throw new PhyloUtilsException(
-										"String " + st.sval + " in an unexpected place at line " + st.lineno());
-								}
+							{
+							// ignore
+							}
+						else
+							{
+							throw new PhyloUtilsException(
+									"String " + st.sval + " in an unexpected place at line " + st.lineno());
+							}
 						break;
 
 					case '<':
@@ -315,13 +315,13 @@ public class NewickParser<T extends Serializable>
 							state = State.POST_CHILDREN;
 							}
 						else if (state == State.COMMENT)
-								{
-								// ignore
-								}
-							else
-								{
-								throw new PhyloUtilsException("String < in an unexpected place at line " + st.lineno());
-								}
+							{
+							// ignore
+							}
+						else
+							{
+							throw new PhyloUtilsException("String < in an unexpected place at line " + st.lineno());
+							}
 						break;
 
 
@@ -337,13 +337,13 @@ public class NewickParser<T extends Serializable>
 							state = State.POST_CHILDREN;
 							}
 						else if (state == State.COMMENT)
-								{
-								// ignore
-								}
-							else
-								{
-								throw new PhyloUtilsException("String > in an unexpected place at line " + st.lineno());
-								}
+							{
+							// ignore
+							}
+						else
+							{
+							throw new PhyloUtilsException("String > in an unexpected place at line " + st.lineno());
+							}
 						break;
 
 					case '(':

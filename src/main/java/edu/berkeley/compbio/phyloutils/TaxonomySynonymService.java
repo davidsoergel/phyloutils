@@ -5,15 +5,33 @@ import com.davidsoergel.trees.NoSuchNodeException;
 import java.util.Collection;
 
 /**
+ * Map taxonomic names to synonymous taxonomic names.  Does not expose a unique ID per taxon.  Note this is not needed
+ * to solve the problem of finding a node id matching a given name; that is dealt with TaxonStringIdMapper.
+ *
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
 public interface TaxonomySynonymService
 	{
+	/**
+	 * Map taxonomic names to synonymous taxonomic names.  Does not expose a unique ID per taxon.
+	 *
+	 * @param name
+	 * @return
+	 * @throws NoSuchNodeException
+	 */
 	Collection<String> synonymsOf(String name) throws NoSuchNodeException;
 
-	Collection<String> synonymsOfParent(String name) throws NoSuchNodeException;
+	//Collection<String> synonymsOfParent(String name) throws NoSuchNodeException;
 
+	/**
+	 * Map taxonomic names to synonymous taxonomic names, with relaxed matching of the query Re.g. removing overly specific
+	 * suffixes as needed).  Does not expose a unique ID per taxon.
+	 *
+	 * @param name
+	 * @return
+	 * @throws NoSuchNodeException
+	 */
 	Collection<String> synonymsOfRelaxed(String name) throws NoSuchNodeException;
 
 //	void saveState();
