@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
-public class CiccarelliTaxonomyService extends NewickTaxonomyService //<String>
+public class CiccarelliTaxonomyService extends NewickStringTaxonomyService //<String>
 	{
 	private static final Logger logger = Logger.getLogger(CiccarelliTaxonomyService.class);
 
@@ -67,9 +67,9 @@ public class CiccarelliTaxonomyService extends NewickTaxonomyService //<String>
 
 
 	public CiccarelliTaxonomyService()// throws PhyloUtilsException
-		{
-		super(ciccarelliFilename, false);
-		}
+	{
+	super(ciccarelliFilename, false);
+	}
 
 	@Override
 	public String toString()

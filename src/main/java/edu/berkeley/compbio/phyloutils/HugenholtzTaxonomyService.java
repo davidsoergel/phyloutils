@@ -126,8 +126,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	// split init from constructor for the sake of a Jandy adapter (HugenholtzTaxonomyServiceAdapter)
 
 	public HugenholtzTaxonomyService() //throws PhyloUtilsException
-		{
-		}
+	{
+	}
 
 	public void init()
 		{
@@ -215,7 +215,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		//** here we assume that the tree has already been converted to have named nodes at leaves, using the NewickParser command-line tool
 		// else we'd need new NewickTaxonomyService(hugenholtzFilename, truel
 		// );
-		NewickTaxonomyService stringTaxonomyService = new NewickTaxonomyService(hugenholtzFilename, false);
+		NewickStringTaxonomyService stringTaxonomyService = new NewickStringTaxonomyService(hugenholtzFilename, false);
 
 		RootedPhylogeny<String> theStringTree = stringTaxonomyService.getTree();
 
@@ -391,13 +391,13 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 							source = sa[1];
 							}
 						else if (sa[0].equals("prokMSA_id"))
-								{
-								prokMSA_id = new Integer(sa[1]);
-								}
-							else if (sa[0].equals("prokMSAname"))
-									{
-									prokMSAname = sa[1];
-									}
+							{
+							prokMSA_id = new Integer(sa[1]);
+							}
+						else if (sa[0].equals("prokMSAname"))
+							{
+							prokMSAname = sa[1];
+							}
 						//	else if (sa[0].equals("replaced_by"))
 						//			{
 						//			replaced_by = sa[1];
@@ -529,17 +529,17 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 
 	public synchronized boolean isKnown(Integer leafId) //throws NoSuchNodeException
+	{
+	try
 		{
-		try
-			{
-			theIntegerTree.getNode(leafId);
-			return true;
-			}
-		catch (NoSuchNodeException e)
-			{
-			return false;
-			}
+		theIntegerTree.getNode(leafId);
+		return true;
 		}
+	catch (NoSuchNodeException e)
+		{
+		return false;
+		}
+	}
 
 
 	@NotNull
@@ -1140,17 +1140,17 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	                                                                         boolean includeInternalBranches,
 	                                                                         AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
 			throws NoSuchNodeException //, NodeNamer<Integer> namer
-		{
-		return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode); //, namer);
-		}
+	{
+	return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode); //, namer);
+	}
 
 	public synchronized BasicRootedPhylogeny<Integer> extractTreeWithLeafIDs(Set<Integer> ids,
 	                                                                         boolean ignoreAbsentNodes,
 	                                                                         boolean includeInternalBranches)
 			throws NoSuchNodeException //, NodeNamer<Integer> namer
-		{
-		return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches); //, namer);
-		}
+	{
+	return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches); //, namer);
+	}
 
 
 	@Override

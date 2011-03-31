@@ -16,10 +16,10 @@ import java.util.Set;
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$
  */
-public class NewickTaxonomyService extends RootedPhylogenyAsService<String>
+public class NewickStringTaxonomyService extends RootedPhylogenyAsService<String>
 		implements Serializable  // extends AbstractRootedPhylogeny<String>
 	{
-	private static final Logger logger = Logger.getLogger(NewickTaxonomyService.class);
+	private static final Logger logger = Logger.getLogger(NewickStringTaxonomyService.class);
 
 	private String newickFilename;  // only for toString
 	private boolean namedNodesMustBeLeaves;
@@ -30,7 +30,7 @@ public class NewickTaxonomyService extends RootedPhylogenyAsService<String>
 		 }
  */
 
-	protected NewickTaxonomyService(String filename, boolean namedNodesMustBeLeaves)
+	protected NewickStringTaxonomyService(String filename, boolean namedNodesMustBeLeaves)
 		{
 		this.newickFilename = filename;
 		this.namedNodesMustBeLeaves = namedNodesMustBeLeaves;
