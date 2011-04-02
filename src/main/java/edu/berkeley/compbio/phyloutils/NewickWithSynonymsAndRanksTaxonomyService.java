@@ -10,9 +10,11 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,9 +38,23 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 
 
 	private String dirName;
+	private HashMap<Integer, String[]> allNamesByTaxId;
 
-	private void init() throws IOException
+	public void setDirName(final String dirName)
 		{
+		this.dirName = dirName;
+		}
+
+	public NewickWithSynonymsAndRanksTaxonomyService()
+		{
+		}
+
+	protected void init()
+		{
+
+		setNewickFilename(dirName + File.separator + "tree.newick");
+		super.init();
+
 		// don't bother keeping track of which caches are affected by which inputs; just reload them all if anything changes
 		//final String dirName; = newickFilename + ", " + synonymFilename;
 		logger.info("Cache key: " + dirName);
@@ -47,6 +63,7 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 		taxIdByNameRelaxed = (HashMap<String, Integer>) CacheManager.get(this, dirName + ".taxIdByNameRelaxed");
 		ambiguousNames = (HashSet<String>) CacheManager.get(this, dirName + ".ambiguousNames");
 		nameByTaxId = (HashMap<Integer, String>) CacheManager.get(this, dirName + ".nameByTaxId");
+		allNamesByTaxId = (HashMap<Integer, String[]>) CacheManager.get(this, dirName + ".allNamesByTaxId");
 
 		if (taxIdByName == null || taxIdByNameRelaxed == null || ambiguousNames == null || nameByTaxId == null)
 			{
@@ -56,31 +73,31 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 			CacheManager.put(this, dirName + ".taxIdByName", taxIdByNameRelaxed);
 			CacheManager.put(this, dirName + ".ambiguousNames", ambiguousNames);
 			CacheManager.put(this, dirName + ".nameByTaxId", nameByTaxId);
+			CacheManager.put(this, dirName + ".allNamesByTaxId", allNamesByTaxId);
 			}
 		}
 
 	public NewickWithSynonymsAndRanksTaxonomyService(String dirName, boolean namedNodesMustBeLeaves) throws IOException
 		{
-		super(dirName + File.separator + "tree.newick", namedNodesMustBeLeaves);
 		this.dirName = dirName;
+		setNamedNodesMustBeLeaves(namedNodesMustBeLeaves);
 		init();
 		}
 
-	private void reload() throws IOException
+	private void reload()
 		{
-
-		// Perf CACHE
-
-		BufferedReader in = new BufferedReader(new FileReader(dirName + File.separator + "synonyms"));
-		String line;
-		while ((line = in.readLine()) != null)
+		try
 			{
-			//String[] synonyms = DSStringUtils.split(line, "\t");
-			String[] sp = line.split("\t");
-			Integer id = new Integer(sp[0]);
-			nameByTaxId.put(id, sp[1]);  // scientific name should always be the first entry
-			try
+			BufferedReader in = new BufferedReader(new FileReader(dirName + File.separator + "synonyms"));
+			String line;
+			while ((line = in.readLine()) != null)
 				{
+				//String[] synonyms = DSStringUtils.split(line, "\t");
+				String[] sp = line.split("\t");
+				Integer id = new Integer(sp[0]);
+				nameByTaxId.put(id, sp[1]);  // scientific name should always be the first entry
+				allNamesByTaxId.put(id, sp);  // track synonyms
+
 				PhylogenyNode<Integer> node = basePhylogeny.getNode(id);
 
 				// note the initial canonical ID is itself included as a name
@@ -102,11 +119,32 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 						}
 					}
 				}
-			catch (NoSuchNodeException e)
-				{
-				logger.error("Error", e);
-				}
 			}
+		catch (NoSuchNodeException e)
+			{
+			logger.error("Error", e);
+			throw new PhyloUtilsRuntimeException(e);
+			}
+		catch (FileNotFoundException e)
+			{
+			logger.error("Error", e);
+			throw new PhyloUtilsRuntimeException(e);
+			}
+		catch (IOException e)
+			{
+			logger.error("Error", e);
+			throw new PhyloUtilsRuntimeException(e);
+			}
+		}
+
+	public Collection<String> getAllNamesForIds(final Set<Integer> ids)
+		{
+		Set<String> result = new HashSet<String>();
+		for (Integer id : ids)
+			{
+			result.addAll(Arrays.asList(allNamesByTaxId.get(id)));
+			}
+		return result;
 		}
 
 	public Integer findTaxidByName(String name) throws NoSuchNodeException
@@ -126,8 +164,6 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 		Integer taxid = taxIdByName.get(name);
 		if (taxid == null)
 			{
-
-
 			taxid = taxIdByNameRelaxed.get(name);
 			if (taxid == null)
 				{
@@ -167,16 +203,6 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 		throw new NotImplementedException();
 		}
 
-	public String getScientificName(final Integer taxid) throws NoSuchNodeException
-		{
-		//PhylogenyNode<String> node = basePhylogeny.getNode(name);  // not needed; nameToNode contains the primary ID too
-		String name = nameByTaxId.get(taxid);
-		if (taxid == null)
-			{
-			throw new NoSuchNodeException("" + taxid);
-			}
-		return name;
-		}
 
 	public Set<Integer> getTaxIdsWithRank(final String rank)
 		{
@@ -190,5 +216,16 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 			logger.error("Error", e);
 			throw new PhyloUtilsRuntimeException(e);
 			}
+		}
+
+	public String getScientificName(final Integer taxid) throws NoSuchNodeException
+		{
+		//PhylogenyNode<String> node = basePhylogeny.getNode(name);  // not needed; nameToNode contains the primary ID too
+		String name = nameByTaxId.get(taxid);
+		if (taxid == null)
+			{
+			throw new NoSuchNodeException("" + taxid);
+			}
+		return name;
 		}
 	}

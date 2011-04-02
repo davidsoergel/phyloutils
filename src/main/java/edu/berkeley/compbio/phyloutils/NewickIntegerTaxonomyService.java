@@ -30,6 +30,20 @@ public class NewickIntegerTaxonomyService extends RootedPhylogenyAsService<Integ
 		 }
  */
 
+	public NewickIntegerTaxonomyService()
+		{
+		}
+
+	public void setNamedNodesMustBeLeaves(final boolean namedNodesMustBeLeaves)
+		{
+		this.namedNodesMustBeLeaves = namedNodesMustBeLeaves;
+		}
+
+	public void setNewickFilename(final String newickFilename)
+		{
+		this.newickFilename = newickFilename;
+		}
+
 	protected NewickIntegerTaxonomyService(String filename, boolean namedNodesMustBeLeaves)
 		{
 		this.newickFilename = filename;
@@ -38,7 +52,7 @@ public class NewickIntegerTaxonomyService extends RootedPhylogenyAsService<Integ
 		init();
 		}
 
-	private void init()
+	protected void init()
 		{
 		final String cacheKey = newickFilename + ", " + namedNodesMustBeLeaves;
 		logger.info("Cache key: " + cacheKey);

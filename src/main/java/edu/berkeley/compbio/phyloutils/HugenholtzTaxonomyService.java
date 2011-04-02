@@ -1277,4 +1277,21 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		return theIntegerTree.getLeafAtApproximateDistance(aId, minDesiredTreeDistance, maxDesiredTreeDistance);
 		}
+
+	public Collection<String> getAllNamesForIds(final Set<Integer> ids)
+		{
+		throw new NotImplementedException();
+		}
+
+	public String getScientificName(final Integer taxid) throws NoSuchNodeException
+		{
+		throw new NotImplementedException();
+		//PhylogenyNode<String> node = basePhylogeny.getNode(name);  // not needed; nameToNode contains the primary ID too
+		/*	String name = nameByTaxId.get(taxid);
+				if (taxid == null)
+					{
+					throw new NoSuchNodeException("" + taxid);
+					}
+				return name;*/
+		}
 	}

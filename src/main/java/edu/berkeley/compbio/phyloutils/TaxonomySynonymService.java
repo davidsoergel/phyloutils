@@ -6,7 +6,9 @@ import java.util.Collection;
 
 /**
  * Map taxonomic names to synonymous taxonomic names.  Does not expose a unique ID per taxon.  Note this is not needed
- * to solve the problem of finding a node id matching a given name; that is dealt with TaxonStringIdMapper.
+ * to solve the problem of finding a node id matching a given name; that is dealt with TaxonStringIdMapper.  The reason
+ * this is done this way is that we want to use the Ncbi synonym table to help map names to prokmsa_ids, but we don't
+ * want to get ncbi taxids in the mix.
  *
  * @author <a href="mailto:dev@davidsoergel.com">David Soergel</a>
  * @version $Id$

@@ -92,17 +92,17 @@ public class RootedPhylogenyAsService<T extends Serializable> implements Taxonom
 		}
 
 	public synchronized boolean isKnown(T leafId) //throws NoSuchNodeException
+	{
+	try
 		{
-		try
-			{
-			basePhylogeny.getNode(leafId);
-			return true;
-			}
-		catch (NoSuchNodeException e)
-			{
-			return false;
-			}
+		basePhylogeny.getNode(leafId);
+		return true;
 		}
+	catch (NoSuchNodeException e)
+		{
+		return false;
+		}
+	}
 
 	public RootedPhylogeny<T> getTree()
 		{
@@ -210,17 +210,17 @@ public class RootedPhylogenyAsService<T extends Serializable> implements Taxonom
 	public BasicRootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
 	                                                      boolean includeInternalBranches)
 			throws NoSuchNodeException  //, NodeNamer<String> namer
-		{
-		return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches); //, namer);
-		}
+	{
+	return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches); //, namer);
+	}
 
 	public BasicRootedPhylogeny<T> extractTreeWithLeafIDs(Set<T> ids, boolean ignoreAbsentNodes,
 	                                                      boolean includeInternalBranches,
 	                                                      AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
 			throws NoSuchNodeException  //, NodeNamer<String> namer
-		{
-		return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode); //, namer);
-		}
+	{
+	return basePhylogeny.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode); //, namer);
+	}
 
 	public boolean isDescendant(PhylogenyNode<T> ancestor, PhylogenyNode<T> descendant) throws PhyloUtilsException
 		{
@@ -314,6 +314,16 @@ public class RootedPhylogenyAsService<T extends Serializable> implements Taxonom
 		}
 
 	public Set<String> getCachedNamesForId(final T id)
+		{
+		throw new NotImplementedException();
+		}
+
+	public Collection<String> getAllNamesForIds(final Set<T> ids)
+		{
+		throw new NotImplementedException();
+		}
+
+	public String getScientificName(final T taxid) throws NoSuchNodeException
 		{
 		throw new NotImplementedException();
 		}

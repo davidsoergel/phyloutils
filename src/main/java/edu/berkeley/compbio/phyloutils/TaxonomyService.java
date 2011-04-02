@@ -69,6 +69,11 @@ public interface TaxonomyService<T extends Serializable> extends TaxonMergingPhy
 
 //	Set<Integer> getAllIdsForName(String name);
 
+	// may as well make this a synonym service too since scientific names are in the same file
+	String getScientificName(T from) throws NoSuchNodeException;
+
+	Collection<String> getAllNamesForIds(Set<T> ids);
+
 	Set<T> findMatchingIds(String name) throws NoSuchNodeException;
 
 	Set<T> findMatchingIdsRelaxed(String name) throws NoSuchNodeException;

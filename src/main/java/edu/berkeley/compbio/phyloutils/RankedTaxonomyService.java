@@ -1,7 +1,5 @@
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.trees.NoSuchNodeException;
-
 import java.io.Serializable;
 import java.util.Set;
 
@@ -11,7 +9,6 @@ import java.util.Set;
  */
 public interface RankedTaxonomyService<T extends Serializable> extends TaxonomyService<T> //, TaxonomySynonymService
 	{
-	String getScientificName(T from) throws NoSuchNodeException;
 
 	Set<T> getTaxIdsWithRank(String rank);
 	}
