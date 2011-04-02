@@ -34,9 +34,9 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.trees.BasicPhylogenyNode;
 import com.davidsoergel.trees.BasicRootedPhylogeny;
+import com.davidsoergel.trees.IntegerGeneratingNodeNamer;
 import com.davidsoergel.trees.IntegerNodeNamer;
 import com.davidsoergel.trees.NodeNamer;
-import com.davidsoergel.trees.RequireExistingNodeNamer;
 import com.davidsoergel.trees.StringIntegerNodeNamer;
 import com.davidsoergel.trees.StringNodeNamer;
 import com.davidsoergel.trees.TreeException;
@@ -127,8 +127,8 @@ public class NewickParser<T extends Serializable>
 		{
 		InputStream is = getInputStream(filename);
 
-		NodeNamer<Integer> namer = generateIds ? new IntegerNodeNamer(10000000, namedNodesMustBeLeaves) :
-		                           new RequireExistingNodeNamer(false);
+		NodeNamer<Integer> namer =
+				generateIds ? new IntegerGeneratingNodeNamer(10000000, namedNodesMustBeLeaves) : new IntegerNodeNamer();
 		return new NewickParser<Integer>().read(is, namer);
 		}
 
