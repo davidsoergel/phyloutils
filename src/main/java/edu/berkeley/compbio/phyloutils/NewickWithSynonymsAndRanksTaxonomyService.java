@@ -35,10 +35,10 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 	private HashMap<String, Integer> taxIdByNameRelaxed;
 
 	private HashSet<String> ambiguousNames;
+	private HashMap<Integer, String[]> allNamesByTaxId;
 
 
 	private String dirName;
-	private HashMap<Integer, String[]> allNamesByTaxId;
 
 	public void setDirName(final String dirName)
 		{
@@ -86,6 +86,12 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 
 	private void reload()
 		{
+		taxIdByName = new HashMap<String, Integer>();
+		nameByTaxId = new HashMap<Integer, String>();
+		taxIdByNameRelaxed = new HashMap<String, Integer>();
+		ambiguousNames = new HashSet<String>();
+		allNamesByTaxId = new HashMap<Integer, String[]>();
+
 		try
 			{
 			BufferedReader in = new BufferedReader(new FileReader(dirName + File.separator + "synonyms"));
