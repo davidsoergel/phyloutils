@@ -23,6 +23,7 @@ public class NewickIntegerTaxonomyService extends RootedPhylogenyAsService<Integ
 
 	private String newickFilename;  // only for toString
 	private boolean namedNodesMustBeLeaves;
+	private Double setAllBranchLengthsTo;
 
 	/*	public double exactDistanceBetween(int taxIdA, int taxIdB) throws PhyloUtilsException
 		 {
@@ -44,10 +45,17 @@ public class NewickIntegerTaxonomyService extends RootedPhylogenyAsService<Integ
 		this.newickFilename = newickFilename;
 		}
 
-	protected NewickIntegerTaxonomyService(String filename, boolean namedNodesMustBeLeaves)
+	public void setAllBranchLengthsTo(final Double setAllBranchLengthsTo)
+		{
+		this.setAllBranchLengthsTo = setAllBranchLengthsTo;
+		}
+
+	protected NewickIntegerTaxonomyService(String filename, boolean namedNodesMustBeLeaves,
+	                                       Double setAllBranchLengthsTo)
 		{
 		this.newickFilename = filename;
 		this.namedNodesMustBeLeaves = namedNodesMustBeLeaves;
+		this.setAllBranchLengthsTo = setAllBranchLengthsTo;
 
 		init();
 		}
@@ -96,6 +104,11 @@ public class NewickIntegerTaxonomyService extends RootedPhylogenyAsService<Integ
 				}*/
 			//	ciccarelliTree = new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED NODE "));
 			basePhylogeny = NewickParser.readWithIntegerIds(newickFilename, false, namedNodesMustBeLeaves);
+
+			if (setAllBranchLengthsTo != null)
+				{
+				basePhylogeny.setAllBranchLengthsTo(setAllBranchLengthsTo.doubleValue());
+				}
 			}
 		catch (IOException e)
 			{
