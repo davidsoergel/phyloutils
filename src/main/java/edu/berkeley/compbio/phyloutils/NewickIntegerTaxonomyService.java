@@ -74,6 +74,9 @@ public class NewickIntegerTaxonomyService extends RootedPhylogenyAsService<Integ
 
 			CacheManager.put(this, cacheKey + ".basePhylogeny", basePhylogeny);
 			}
+
+		logger.info("loaded tree with maximum branch-length depth " + basePhylogeny.getGreatestBranchLengthDepthBelow()
+		            + " and maximum span " + basePhylogeny.getLargestLengthSpan());
 		}
 
 	private void reload()
