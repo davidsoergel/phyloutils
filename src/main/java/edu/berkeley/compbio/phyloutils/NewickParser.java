@@ -441,9 +441,13 @@ public class NewickParser<T extends Serializable>
 			throw new PhyloUtilsException(e, "Could not read Newick tree at line " + st.lineno());
 			}
 
+		// don't do unnecessary work
+		// it's premature, too, if we're going to reset the branch lengths anyway
+		/*
 		logger.info("read tree with maximum branch-length depth " + theTree.getGreatestBranchLengthDepthBelow()
 		            + ", maximum span " + theTree.getLargestLengthSpan() + ", and maximum node depth " + theTree
 				.getGreatestNodeDepthBelow());
+		*/
 
 		theTree.assignUniqueIds(namer);
 		return theTree;

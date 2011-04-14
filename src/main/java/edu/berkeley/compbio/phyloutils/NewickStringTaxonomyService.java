@@ -43,14 +43,20 @@ public class NewickStringTaxonomyService extends RootedPhylogenyAsService<String
 		final String cacheKey = newickFilename + ", " + namedNodesMustBeLeaves;
 		logger.info("Cache key: " + cacheKey);
 
-		basePhylogeny = (RootedPhylogeny<String>) CacheManager.get(this, cacheKey);
+		basePhylogeny = (RootedPhylogeny<String>) CacheManager.get(this, cacheKey + ".basePhylogeny");
 
 
 		if (basePhylogeny == null)
 			{
+
+			logger.info("Caches not found for " + cacheKey + ", reloading...");
 			reload();
 
 			CacheManager.put(this, cacheKey + ".basePhylogeny", basePhylogeny);
+			}
+		else
+			{
+			logger.info("Loaded caches for " + cacheKey);
 			}
 		}
 

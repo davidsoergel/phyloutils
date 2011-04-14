@@ -1,9 +1,7 @@
 package edu.berkeley.compbio.phyloutils;
 
-import com.davidsoergel.dsutils.CacheManager;
 import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.trees.NoSuchNodeException;
-import com.davidsoergel.trees.RootedPhylogeny;
 import com.davidsoergel.trees.TreeException;
 import org.apache.log4j.Logger;
 
@@ -62,21 +60,41 @@ public class NewickIntegerTaxonomyService extends RootedPhylogenyAsService<Integ
 
 	protected void init()
 		{
+		//turns out it's way slower to read the caches (83 MB) than just to re-parse and process the Newick file (4.6 MB)
+
+		reload();
+
+		// don't do unnecessary work; the lazy computation will kick in where needed
+
+		// these calls trigger computeDepthsIfNeeded throughout the tree, so that the cached version will have those fields populated
+		//	logger.info("loaded tree with maximum branch-length depth " + basePhylogeny.getGreatestBranchLengthDepthBelow()
+		//            + " and maximum span " + basePhylogeny.getLargestLengthSpan());
+
+		/*
 		final String cacheKey = newickFilename + ", " + namedNodesMustBeLeaves;
 		logger.info("Cache key: " + cacheKey);
 
-		basePhylogeny = (RootedPhylogeny<Integer>) CacheManager.get(this, cacheKey);
+		basePhylogeny = (RootedPhylogeny<Integer>) CacheManager.get(this, cacheKey + ".basePhylogeny");
 
 
 		if (basePhylogeny == null)
 			{
+			logger.info("Caches not found for " + cacheKey + ", reloading...");
 			reload();
+
+			// these calls trigger computeDepthsIfNeeded throughout the tree, so that the cached version will have those fields populated
+			logger.info("loaded tree with maximum branch-length depth " + basePhylogeny.getGreatestBranchLengthDepthBelow()
+		            + " and maximum span " + basePhylogeny.getLargestLengthSpan());
 
 			CacheManager.put(this, cacheKey + ".basePhylogeny", basePhylogeny);
 			}
 
-		logger.info("loaded tree with maximum branch-length depth " + basePhylogeny.getGreatestBranchLengthDepthBelow()
-		            + " and maximum span " + basePhylogeny.getLargestLengthSpan());
+		else
+			{
+			logger.info("Loaded caches for " + cacheKey);
+			}
+*/
+
 		}
 
 	private void reload()
@@ -107,7 +125,7 @@ public class NewickIntegerTaxonomyService extends RootedPhylogenyAsService<Integ
 				}*/
 			//	ciccarelliTree = new NewickParser<String>().read(is, new StringNodeNamer("UNNAMED NODE "));
 			basePhylogeny = NewickParser.readWithIntegerIds(newickFilename, false, namedNodesMustBeLeaves);
-
+			basePhylogeny.setLeafWeightsUniform();
 			if (setAllBranchLengthsTo != null)
 				{
 				basePhylogeny.setAllBranchLengthsTo(setAllBranchLengthsTo.doubleValue());

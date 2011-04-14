@@ -59,21 +59,31 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 		//final String dirName; = newickFilename + ", " + synonymFilename;
 		logger.info("Cache key: " + dirName);
 
+		//taxIdByNameRelaxed = (HashMap<String, Integer>) CacheManager.get(this, dirName + ".taxIdByNameRelaxed");
+
+		taxIdByNameRelaxed = (HashMap<String, Integer>) CacheManager
+				.getAccumulatingMapAssumeSerializable(this, dirName + ".taxIdByNameRelaxed");
+
 		taxIdByName = (HashMap<String, Integer>) CacheManager.get(this, dirName + ".taxIdByName");
-		taxIdByNameRelaxed = (HashMap<String, Integer>) CacheManager.get(this, dirName + ".taxIdByNameRelaxed");
 		ambiguousNames = (HashSet<String>) CacheManager.get(this, dirName + ".ambiguousNames");
 		nameByTaxId = (HashMap<Integer, String>) CacheManager.get(this, dirName + ".nameByTaxId");
 		allNamesByTaxId = (HashMap<Integer, String[]>) CacheManager.get(this, dirName + ".allNamesByTaxId");
 
-		if (taxIdByName == null || taxIdByNameRelaxed == null || ambiguousNames == null || nameByTaxId == null)
+		if (taxIdByName == null || ambiguousNames == null || nameByTaxId == null || allNamesByTaxId == null)
 			{
+			logger.info("Caches not found for " + dirName + ", reloading...");
+
 			reload();
 
 			CacheManager.put(this, dirName + ".taxIdByName", taxIdByName);
-			CacheManager.put(this, dirName + ".taxIdByName", taxIdByNameRelaxed);
+			//CacheManager.put(this, dirName + ".taxIdByNameRelaxed", taxIdByNameRelaxed);
 			CacheManager.put(this, dirName + ".ambiguousNames", ambiguousNames);
 			CacheManager.put(this, dirName + ".nameByTaxId", nameByTaxId);
 			CacheManager.put(this, dirName + ".allNamesByTaxId", allNamesByTaxId);
+			}
+		else
+			{
+			logger.info("Loaded caches for " + dirName);
 			}
 		}
 
@@ -86,9 +96,10 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 
 	private void reload()
 		{
+
 		taxIdByName = new HashMap<String, Integer>();
 		nameByTaxId = new HashMap<Integer, String>();
-		taxIdByNameRelaxed = new HashMap<String, Integer>();
+		//taxIdByNameRelaxed = new HashMap<String, Integer>();
 		ambiguousNames = new HashSet<String>();
 		allNamesByTaxId = new HashMap<Integer, String[]>();
 
@@ -199,6 +210,10 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 					}
 				taxIdByNameRelaxed.put(name, taxid);
 				}
+			}
+		if (taxid == null)
+			{
+			throw new NoSuchNodeException("Could not find taxon: " + name);
 			}
 		return taxid;
 		}

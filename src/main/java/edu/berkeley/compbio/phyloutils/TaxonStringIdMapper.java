@@ -1,6 +1,7 @@
 package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.trees.NoSuchNodeException;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -12,6 +13,7 @@ public interface TaxonStringIdMapper<T>
 	{
 	T findTaxidByName(String name) throws NoSuchNodeException; //, PhyloUtilsException;
 
+	@NotNull
 	T findTaxidByNameRelaxed(String name) throws NoSuchNodeException;
 
 	Set<String> getCachedNamesForId(T id);
