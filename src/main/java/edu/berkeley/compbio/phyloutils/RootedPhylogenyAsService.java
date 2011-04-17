@@ -236,8 +236,11 @@ public class RootedPhylogenyAsService<T extends Serializable> implements Taxonom
 
 	public void setSynonymService(TaxonomySynonymService taxonomySynonymService)
 		{
-		throw new NotImplementedException(
-				"Newick taxonomy doesn't currently use other synonym services for any purpose");
+		if (taxonomySynonymService != null)
+			{
+			throw new NotImplementedException(
+					"Newick taxonomy doesn't currently use other synonym services for any purpose");
+			}
 		}
 
 	/*	public RootedPhylogeny<Integer> findSubtreeByName(String name) throws NoSuchNodeException

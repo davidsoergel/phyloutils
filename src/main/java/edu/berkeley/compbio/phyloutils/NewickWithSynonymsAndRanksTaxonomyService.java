@@ -2,6 +2,7 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.dsutils.CacheManager;
 import com.davidsoergel.dsutils.DSArrayUtils;
+import com.davidsoergel.dsutils.collections.DSCollectionUtils;
 import com.davidsoergel.dsutils.file.IntArrayReader;
 import com.davidsoergel.trees.NoSuchNodeException;
 import com.davidsoergel.trees.PhylogenyNode;
@@ -29,6 +30,7 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 	private static final Logger logger = Logger.getLogger(NewickWithSynonymsAndRanksTaxonomyService.class);
 
 	// is this redundant with uniqueIdToNodeMap?  No, that's supposed to be one-to-one, whereas this is many-to-one
+	// it does assume that no two nodes share a name, though.
 	private HashMap<String, Integer> taxIdByName;
 	private HashMap<Integer, String> nameByTaxId;
 
@@ -248,5 +250,17 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 			throw new NoSuchNodeException("" + taxid);
 			}
 		return name;
+		}
+
+	public synchronized Set<Integer> findMatchingIds(String name) throws NoSuchNodeException
+		{
+		// note that ambiguous names (matching more than one node) were set aside and ignored
+		return DSCollectionUtils.setOf(findTaxidByName(name));
+		}
+
+	public synchronized Set<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
+		{
+		// note that ambiguous names (matching more than one node) were set aside and ignored
+		return DSCollectionUtils.setOf(findTaxidByNameRelaxed(name));
 		}
 	}
