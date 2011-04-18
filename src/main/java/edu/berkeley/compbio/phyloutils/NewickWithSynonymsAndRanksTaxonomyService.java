@@ -31,14 +31,23 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 
 	// is this redundant with uniqueIdToNodeMap?  No, that's supposed to be one-to-one, whereas this is many-to-one
 	// it does assume that no two nodes share a name, though.
+	/*
 	private HashMap<String, Integer> taxIdByName;
 	private HashMap<Integer, String> nameByTaxId;
-
+*/
 	private HashMap<String, Integer> taxIdByNameRelaxed;
-
+/*
 	private HashSet<String> ambiguousNames;
 	private HashMap<Integer, String[]> allNamesByTaxId;
+	*/
 
+	private CacheManager.LazyStub taxIdByNameStub;
+	private CacheManager.LazyStub nameByTaxIdStub;
+
+	//private CacheManager.LazyStub taxIdByNameRelaxedStub;
+
+	private CacheManager.LazyStub ambiguousNamesStub;
+	private CacheManager.LazyStub allNamesByTaxIdStub;
 
 	private String dirName;
 
@@ -66,22 +75,25 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 		taxIdByNameRelaxed = (HashMap<String, Integer>) CacheManager
 				.getAccumulatingMapAssumeSerializable(this, dirName + ".taxIdByNameRelaxed");
 
-		taxIdByName = (HashMap<String, Integer>) CacheManager.get(this, dirName + ".taxIdByName");
-		ambiguousNames = (HashSet<String>) CacheManager.get(this, dirName + ".ambiguousNames");
-		nameByTaxId = (HashMap<Integer, String>) CacheManager.get(this, dirName + ".nameByTaxId");
-		allNamesByTaxId = (HashMap<Integer, String[]>) CacheManager.get(this, dirName + ".allNamesByTaxId");
+		taxIdByNameStub = CacheManager.getLazy(this, dirName + ".taxIdByName");
+		ambiguousNamesStub = CacheManager.getLazy(this, dirName + ".ambiguousNames");
+		nameByTaxIdStub = CacheManager.getLazy(this, dirName + ".nameByTaxId");
+		allNamesByTaxIdStub = CacheManager.getLazy(this, dirName + ".allNamesByTaxId");
 
-		if (taxIdByName == null || ambiguousNames == null || nameByTaxId == null || allNamesByTaxId == null)
+		if (taxIdByNameStub == null || ambiguousNamesStub == null || nameByTaxIdStub == null
+		    || allNamesByTaxIdStub == null)
 			{
 			logger.info("Caches not found for " + dirName + ", reloading...");
 
 			reload();
 
-			CacheManager.put(this, dirName + ".taxIdByName", taxIdByName);
+			/*
+			CacheManager.put(this, dirName + ".taxIdByName", taxIdByNameStub.get());
 			//CacheManager.put(this, dirName + ".taxIdByNameRelaxed", taxIdByNameRelaxed);
-			CacheManager.put(this, dirName + ".ambiguousNames", ambiguousNames);
-			CacheManager.put(this, dirName + ".nameByTaxId", nameByTaxId);
-			CacheManager.put(this, dirName + ".allNamesByTaxId", allNamesByTaxId);
+			CacheManager.put(this, dirName + ".ambiguousNames", ambiguousNamesStub.get());
+			CacheManager.put(this, dirName + ".nameByTaxId", nameByTaxIdStub.get());
+			CacheManager.put(this, dirName + ".allNamesByTaxId", allNamesByTaxIdStub.get());
+			*/
 			}
 		else
 			{
@@ -99,11 +111,11 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 	private void reload()
 		{
 
-		taxIdByName = new HashMap<String, Integer>();
-		nameByTaxId = new HashMap<Integer, String>();
+		HashMap<String, Integer> taxIdByName = new HashMap<String, Integer>();
+		HashMap<Integer, String> nameByTaxId = new HashMap<Integer, String>();
 		//taxIdByNameRelaxed = new HashMap<String, Integer>();
-		ambiguousNames = new HashSet<String>();
-		allNamesByTaxId = new HashMap<Integer, String[]>();
+		HashSet<String> ambiguousNames = new HashSet<String>();
+		HashMap<Integer, String[]> allNamesByTaxId = new HashMap<Integer, String[]>();
 
 		try
 			{
@@ -138,6 +150,11 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 						}
 					}
 				}
+
+			taxIdByNameStub.put(taxIdByName);
+			nameByTaxIdStub.put(nameByTaxId);
+			ambiguousNamesStub.put(ambiguousNames);
+			allNamesByTaxIdStub.put(allNamesByTaxId);
 			}
 		catch (NoSuchNodeException e)
 			{
@@ -158,6 +175,7 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 
 	public Collection<String> getAllNamesForIds(final Set<Integer> ids)
 		{
+		HashMap<Integer, String[]> allNamesByTaxId = (HashMap<Integer, String[]>) allNamesByTaxIdStub.get();
 		Set<String> result = new HashSet<String>();
 		for (Integer id : ids)
 			{
@@ -168,6 +186,7 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 
 	public Integer findTaxidByName(String name) throws NoSuchNodeException
 		{
+		HashMap<String, Integer> taxIdByName = (HashMap<String, Integer>) taxIdByNameStub.get();
 		//PhylogenyNode<String> node = basePhylogeny.getNode(name);  // not needed; nameToNode contains the primary ID too
 		Integer taxid = taxIdByName.get(name);
 		if (taxid == null)
@@ -180,6 +199,8 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 
 	public Integer findTaxidByNameRelaxed(String name) throws NoSuchNodeException
 		{
+		HashMap<String, Integer> taxIdByName = (HashMap<String, Integer>) taxIdByNameStub.get();
+
 		Integer taxid = taxIdByName.get(name);
 		if (taxid == null)
 			{
@@ -243,6 +264,7 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 
 	public String getScientificName(final Integer taxid) throws NoSuchNodeException
 		{
+		HashMap<Integer, String> nameByTaxId = (HashMap<Integer, String>) nameByTaxIdStub.get();
 		//PhylogenyNode<String> node = basePhylogeny.getNode(name);  // not needed; nameToNode contains the primary ID too
 		String name = nameByTaxId.get(taxid);
 		if (taxid == null)

@@ -106,12 +106,16 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	// PERF use ConcurrentMaps and such here instead of synchronizing all the methods
 
-	private BasicRootedPhylogeny<Integer> theIntegerTree;
-	private HashMultimap<String, Integer> extraNameToIdsMap;
-	// when a node has multiple names separated by "==", store all those after the first here
+	/*	private BasicRootedPhylogeny<Integer> theIntegerTree;
+	 private HashMultimap<String, Integer> extraNameToIdsMap;
+	 // when a node has multiple names separated by "==", store all those after the first here
 
-	private HashMultimap<String, Integer> nameToIdsMap;// = new HashMap<String, Integer>();
-	private ConcurrentHashMap<String, Integer> nameToUniqueIdMap; // = new HashMap<String, Integer>();
+	 private HashMultimap<String, Integer> nameToIdsMap;// = new HashMap<String, Integer>();
+	 private ConcurrentHashMap<String, Integer> nameToUniqueIdMap; // = new HashMap<String, Integer>();
+ */ CacheManager.LazyStub theIntegerTreeStub;
+	CacheManager.LazyStub extraNameToIdsMapStub;
+	CacheManager.LazyStub nameToIdsMapStub;
+	CacheManager.LazyStub nameToUniqueIdMapStub;
 
 //	BiMap<Integer, PhylogenyNode<String>> intToNodeMap = new HashBiMap<Integer, PhylogenyNode<String>>();
 //	Multimap<String, PhylogenyNode<String>> nameToNodeMap = new HashMultimap<String, PhylogenyNode<String>>();
@@ -120,6 +124,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public Set<Integer> getLeafIds()
 		{
+		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
 		return theIntegerTree.getLeafValues();
 		}
 
@@ -134,22 +139,26 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		// don't bother keeping track of which caches are affected by which inputs; just reload them all if anything changes
 		final String allFilenames = hugenholtzFilename + ", " + greengenesRawFilename + ", " + nameToProkMSAidFilename;
 		logger.info("Cache key: " + allFilenames);
-		theIntegerTree = (BasicRootedPhylogeny<Integer>) CacheManager.get(this, allFilenames + ".theIntegerTree");
-		nameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, allFilenames + ".nameToIdsMap");
-		extraNameToIdsMap = (HashMultimap<String, Integer>) CacheManager.get(this, allFilenames + ".extraNameToIdsMap");
-		nameToUniqueIdMap =
-				(ConcurrentHashMap<String, Integer>) CacheManager.get(this, allFilenames + ".nameToUniqueIdMap");
+		theIntegerTreeStub = CacheManager.getLazy(this, allFilenames + ".theIntegerTree");
+		nameToIdsMapStub = CacheManager.getLazy(this, allFilenames + ".nameToIdsMap");
+		extraNameToIdsMapStub = CacheManager.getLazy(this, allFilenames + ".extraNameToIdsMap");
+		nameToUniqueIdMapStub = CacheManager.getLazy(this, allFilenames + ".nameToUniqueIdMap");
 
-		if (theIntegerTree == null || nameToIdsMap == null || nameToUniqueIdMap == null)
+		if (theIntegerTreeStub == null || nameToIdsMapStub == null || nameToUniqueIdMapStub == null)
 			{
-			reloadFromNewick();
-			reloadNameToProkMSAidMap();
+			HashMultimap<String, Integer> nameToIdsMap = HashMultimap.create();
+
+			reloadFromNewick(nameToIdsMap);
+			reloadNameToProkMSAidMap(nameToIdsMap);
+
+			nameToIdsMapStub.put(nameToIdsMap);
+
 			// ** Note we don't invalidate downstream caches, e.g. for StrainDirectoryLabelChooser and so forth
 			// CacheManager.invalidate
-			CacheManager.put(this, allFilenames + ".theIntegerTree", theIntegerTree);
-			CacheManager.put(this, allFilenames + ".nameToIdsMap", nameToIdsMap);
-			CacheManager.put(this, allFilenames + ".extraNameToIdsMap", extraNameToIdsMap);
-			CacheManager.put(this, allFilenames + ".nameToUniqueIdMap", nameToUniqueIdMap);
+			/*	CacheManager.put(this, allFilenames + ".theIntegerTree", theIntegerTree);
+						CacheManager.put(this, allFilenames + ".nameToIdsMap", nameToIdsMap);
+						CacheManager.put(this, allFilenames + ".extraNameToIdsMap", extraNameToIdsMap);
+						CacheManager.put(this, allFilenames + ".nameToUniqueIdMap", nameToUniqueIdMap); */
 			}
 
 		/*if (!readStateIfAvailable())
@@ -160,57 +169,10 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 			}*/
 		}
 
-	private synchronized void reloadNameToProkMSAidMap()
+	private synchronized void reloadFromNewick(HashMultimap<String, Integer> nameToIdsMap)
 		{
-		nameToUniqueIdMap = new ConcurrentHashMap<String, Integer>();
 
-		if (nameToProkMSAidFilename != null)
-			{
-			Map<String, Set<Integer>> nameToProkMSAidMap;
-			try
-				{
-				nameToProkMSAidMap = StringSetIntMapReader.read(nameToProkMSAidFilename);
-
-				for (Map.Entry<String, Set<Integer>> entry : nameToProkMSAidMap.entrySet())
-					{
-					String key = entry.getKey();
-					Set<Integer> valueSet = entry.getValue();
-
-					logger.info("Loaded mapping: " + key + " -> " + DSStringUtils.join(valueSet, ", "));
-
-					nameToIdsMap.removeAll(key);
-					nameToUniqueIdMap.remove(key);
-
-					nameToIdsMap.putAll(key, valueSet);
-
-					for (Integer id : valueSet)
-						{
-						nameToUniqueIdMap.put(key, id);
-						}
-					}
-				}
-			catch (IOException e)
-				{
-				throw new Error(e);
-				}
-			}
-		}
-
-	public BasicRootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double mergeThreshold)
-		{
-		throw new NotImplementedException();
-		}
-
-	public BasicRootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double mergeThreshold,
-	                                                      Integer exceptDescendantsOf)
-		{
-		throw new NotImplementedException();
-		}
-
-	private synchronized void reloadFromNewick()
-		{
-		nameToIdsMap = HashMultimap.create();
-		extraNameToIdsMap = HashMultimap.create();
+		HashMultimap<String, Integer> extraNameToIdsMap = HashMultimap.create();
 
 		//** here we assume that the tree has already been converted to have named nodes at leaves, using the NewickParser command-line tool
 		// else we'd need new NewickTaxonomyService(hugenholtzFilename, truel
@@ -222,7 +184,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		//** because the node children are iterated in random order in the course of the depth-first copy,
 		// the random IDs won't be consistently assigned from one run to the next.
 
-		theIntegerTree = PhylogenyTypeConverter
+		BasicRootedPhylogeny<Integer> theIntegerTree = PhylogenyTypeConverter
 				.convertToIDTree(theStringTree, new RequireExistingNodeNamer(false), new TaxonStringIdMapper<Integer>()
 				{
 				public Integer findTaxidByNameRelaxed(@NotNull String name) throws NoSuchNodeException
@@ -249,8 +211,63 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				}, nameToIdsMap, extraNameToIdsMap);
 
 		theIntegerTree.setLeafWeightsUniform();
-		addStrainNamesToMap();
+		addStrainNamesToMap(nameToIdsMap);
+
+
+		theIntegerTreeStub.put(theIntegerTree);
+		extraNameToIdsMapStub.put(extraNameToIdsMap);
 		}
+
+	private synchronized void reloadNameToProkMSAidMap(HashMultimap<String, Integer> nameToIdsMap)
+		{
+
+		if (nameToProkMSAidFilename != null)
+			{
+			Map<String, Set<Integer>> nameToProkMSAidMap;
+			try
+				{
+				ConcurrentHashMap<String, Integer> nameToUniqueIdMap = new ConcurrentHashMap<String, Integer>();
+
+				nameToProkMSAidMap = StringSetIntMapReader.read(nameToProkMSAidFilename);
+
+				for (Map.Entry<String, Set<Integer>> entry : nameToProkMSAidMap.entrySet())
+					{
+					String key = entry.getKey();
+					Set<Integer> valueSet = entry.getValue();
+
+					logger.info("Loaded mapping: " + key + " -> " + DSStringUtils.join(valueSet, ", "));
+
+					nameToIdsMap.removeAll(key);
+					nameToUniqueIdMap.remove(key);
+
+					nameToIdsMap.putAll(key, valueSet);
+
+					for (Integer id : valueSet)
+						{
+						nameToUniqueIdMap.put(key, id);
+						}
+					}
+
+				nameToUniqueIdMapStub.put(nameToUniqueIdMap);
+				}
+			catch (IOException e)
+				{
+				throw new Error(e);
+				}
+			}
+		}
+
+	public BasicRootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double mergeThreshold)
+		{
+		throw new NotImplementedException();
+		}
+
+	public BasicRootedPhylogeny<Integer> getRandomSubtree(int numTaxa, Double mergeThreshold,
+	                                                      Integer exceptDescendantsOf)
+		{
+		throw new NotImplementedException();
+		}
+
 
 	private synchronized static InputStream getInputStream(String filename) throws PhyloUtilsException, IOException
 		{
@@ -301,10 +318,12 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	/**
 	 *
 	 */
-	private synchronized void addStrainNamesToMap()
+	private synchronized void addStrainNamesToMap(HashMultimap<String, Integer> nameToIdsMap)
 		{
 		if (greengenesRawFilename != null)
 			{
+			BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 			// there are much cleaner ways to do this, I know.  I'm in a freaking hurry.
 
 			String organism = null;
@@ -525,6 +544,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public synchronized boolean isLeaf(Integer leafId) throws NoSuchNodeException
 		{
+		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 		return theIntegerTree.getNode(leafId).isLeaf();
 		}
 
@@ -532,6 +553,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	{
 	try
 		{
+		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 		theIntegerTree.getNode(leafId);
 		return true;
 		}
@@ -550,6 +573,10 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public synchronized Set<String> getCachedNamesForId(Integer id)
 		{
+		HashMultimap<String, Integer> nameToIdsMap = (HashMultimap<String, Integer>) nameToIdsMapStub.get();
+		ConcurrentHashMap<String, Integer> nameToUniqueIdMap =
+				(ConcurrentHashMap<String, Integer>) nameToUniqueIdMapStub.get();
+
 		//PERF, need a BiMultiMap or something
 		Set<String> result = new HashSet<String>();
 		for (Map.Entry<String, Integer> entry : nameToUniqueIdMap.entrySet())
@@ -572,10 +599,15 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	@NotNull
 	public synchronized Integer findTaxidByName(String name) throws NoSuchNodeException
 		{
+		ConcurrentHashMap<String, Integer> nameToUniqueIdMap =
+				(ConcurrentHashMap<String, Integer>) nameToUniqueIdMapStub.get();
+
 		Integer result = nameToUniqueIdMap.get(name);
 
 		if (result == null)
 			{
+			BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 			try
 				{
 				Integer id = new Integer(name);
@@ -650,6 +682,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 				{
 				leafIds.add(path.peekLast());
 				}
+			BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 			return theIntegerTree.commonAncestor(leafIds, 0.75);
 			}
 		}
@@ -674,6 +708,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 */
 
 		Set<Deque<Integer>> paths = null;
+		HashMultimap<String, Integer> nameToIdsMap = (HashMultimap<String, Integer>) nameToIdsMapStub.get();
+		HashMultimap<String, Integer> extraNameToIdsMap = (HashMultimap<String, Integer>) extraNameToIdsMapStub.get();
 
 		for (String s : reverseTaxa)
 			{
@@ -702,6 +738,9 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 					}
 				else
 					{
+					BasicRootedPhylogeny<Integer> theIntegerTree =
+							(BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 					Set<Deque<Integer>> okPaths = new HashSet<Deque<Integer>>();
 					for (Deque<Integer> path : paths)
 						{
@@ -908,6 +947,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public synchronized Set<Integer> findMatchingIds(String name) throws NoSuchNodeException
 		{
+		HashMultimap<String, Integer> nameToIdsMap = (HashMultimap<String, Integer>) nameToIdsMapStub.get();
+
 		Set<Integer> matchingIds = nameToIdsMap.get(name);
 		if (matchingIds.isEmpty())
 			{
@@ -918,6 +959,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public synchronized Set<Integer> findMatchingIdsRelaxed(String name) throws NoSuchNodeException
 		{
+		HashMultimap<String, Integer> nameToIdsMap = (HashMultimap<String, Integer>) nameToIdsMapStub.get();
+
 		Set<Integer> matchingIds = nameToIdsMap.get(name);
 		/*	if (matchingIds.isEmpty())
 		   {
@@ -993,12 +1036,16 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public synchronized boolean isDescendant(Integer ancestor, Integer descendant) throws NoSuchNodeException
 		{
+		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 		return theIntegerTree.isDescendant(ancestor, descendant);
 //		return stringTaxonomyService.isDescendant(intToNodeMap.get(ancestor), intToNodeMap.get(descendant));
 		}
 
 	public Set<Integer> selectAncestors(final Collection<Integer> labels, final Integer id)
 		{
+		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 		return theIntegerTree.selectAncestors(labels, id);
 		}
 
@@ -1012,6 +1059,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public double minDistanceBetween(Integer a, Integer b) throws NoSuchNodeException
 		{
+		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 		return theIntegerTree.distanceBetween(a, b);
 		//return stringTaxonomyService.minDistanceBetween(intToNodeMap.get(a), intToNodeMap.get(b));
 		//	return exactDistanceBetween(name1, name2);
@@ -1019,6 +1068,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public synchronized double getDepthFromRoot(Integer b) throws NoSuchNodeException
 		{
+		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 		return theIntegerTree.distanceBetween(theIntegerTree.getRoot().getPayload(), b);
 		//return stringTaxonomyService.minDistanceBetween(intToNodeMap.get(a), intToNodeMap.get(b));
 		//	return exactDistanceBetween(name1, name2);
@@ -1026,11 +1077,15 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public synchronized double getGreatestDepthBelow(Integer taxid) throws NoSuchNodeException
 		{
+		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 		return theIntegerTree.getNode(taxid).getGreatestBranchLengthDepthBelow();
 		}
 
 	public synchronized double getLargestLengthSpan(Integer taxid) throws NoSuchNodeException
 		{
+		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 		return theIntegerTree.getNode(taxid).getLargestLengthSpan();
 		}
 
@@ -1040,6 +1095,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		{
 		if (maxDistance == null)
 			{
+			BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 			maxDistance = 2.0 * theIntegerTree.getRoot().getGreatestBranchLengthDepthBelow();
 			}
 		return maxDistance;
@@ -1054,6 +1111,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	 */
 	public synchronized Integer nearestAncestorWithBranchLength(Integer id) throws NoSuchNodeException
 		{
+		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 		//checkNodeExists(id);
 		theIntegerTree.getNode(id);  // test exists
 		return id;
@@ -1065,6 +1124,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public List<Integer> getAncestorPathIds(final Integer id) throws NoSuchNodeException
 		{
+		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 		return theIntegerTree.getAncestorPathIds(id);
 		}
 
@@ -1076,6 +1137,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 	public List<BasicPhylogenyNode<Integer>> getAncestorPathAsBasic(final Integer id) throws NoSuchNodeException
 		{
+		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 		return theIntegerTree.getAncestorPathAsBasic(id);
 		}
 
@@ -1141,6 +1204,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	                                                                         AbstractRootedPhylogeny.MutualExclusionResolutionMode mode)
 			throws NoSuchNodeException //, NodeNamer<Integer> namer
 	{
+	BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 	return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches, mode); //, namer);
 	}
 
@@ -1149,6 +1214,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	                                                                         boolean includeInternalBranches)
 			throws NoSuchNodeException //, NodeNamer<Integer> namer
 	{
+	BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 	return theIntegerTree.extractTreeWithLeafIDs(ids, ignoreAbsentNodes, includeInternalBranches); //, namer);
 	}
 
@@ -1275,6 +1342,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	public Integer getLeafAtApproximateDistance(final Integer aId, final double minDesiredTreeDistance,
 	                                            final double maxDesiredTreeDistance) throws NoSuchNodeException
 		{
+		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
+
 		return theIntegerTree.getLeafAtApproximateDistance(aId, minDesiredTreeDistance, maxDesiredTreeDistance);
 		}
 
