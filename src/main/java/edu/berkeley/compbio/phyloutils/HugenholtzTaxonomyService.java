@@ -134,7 +134,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 	{
 	}
 
-	public void init()
+	public synchronized void init()
 		{
 		// don't bother keeping track of which caches are affected by which inputs; just reload them all if anything changes
 		final String allFilenames = hugenholtzFilename + ", " + greengenesRawFilename + ", " + nameToProkMSAidFilename;
