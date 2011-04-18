@@ -144,7 +144,8 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		extraNameToIdsMapStub = CacheManager.getLazy(this, allFilenames + ".extraNameToIdsMap");
 		nameToUniqueIdMapStub = CacheManager.getLazy(this, allFilenames + ".nameToUniqueIdMap");
 
-		if (theIntegerTreeStub == null || nameToIdsMapStub == null || nameToUniqueIdMapStub == null)
+		if (theIntegerTreeStub.notCached() || nameToIdsMapStub.notCached() || extraNameToIdsMapStub.notCached()
+		    || nameToUniqueIdMapStub.notCached())
 			{
 			HashMultimap<String, Integer> nameToIdsMap = HashMultimap.create();
 

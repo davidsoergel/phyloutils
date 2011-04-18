@@ -7,6 +7,7 @@ import com.davidsoergel.dsutils.file.IntArrayReader;
 import com.davidsoergel.trees.NoSuchNodeException;
 import com.davidsoergel.trees.PhylogenyNode;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.BufferedReader;
@@ -36,6 +37,7 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 	private HashMap<Integer, String> nameByTaxId;
 */
 	private HashMap<String, Integer> taxIdByNameRelaxed;
+	private HashMap<String, Integer> taxIdByNameRecent;
 /*
 	private HashSet<String> ambiguousNames;
 	private HashMap<Integer, String[]> allNamesByTaxId;
@@ -74,14 +76,16 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 
 		taxIdByNameRelaxed = (HashMap<String, Integer>) CacheManager
 				.getAccumulatingMapAssumeSerializable(this, dirName + ".taxIdByNameRelaxed");
+		taxIdByNameRecent = (HashMap<String, Integer>) CacheManager
+				.getAccumulatingMapAssumeSerializable(this, dirName + ".taxIdByNameRecent");
 
 		taxIdByNameStub = CacheManager.getLazy(this, dirName + ".taxIdByName");
 		ambiguousNamesStub = CacheManager.getLazy(this, dirName + ".ambiguousNames");
 		nameByTaxIdStub = CacheManager.getLazy(this, dirName + ".nameByTaxId");
 		allNamesByTaxIdStub = CacheManager.getLazy(this, dirName + ".allNamesByTaxId");
 
-		if (taxIdByNameStub == null || ambiguousNamesStub == null || nameByTaxIdStub == null
-		    || allNamesByTaxIdStub == null)
+		if (taxIdByNameStub.notCached() || ambiguousNamesStub.notCached() || nameByTaxIdStub.notCached()
+		    || allNamesByTaxIdStub.notCached())
 			{
 			logger.info("Caches not found for " + dirName + ", reloading...");
 
@@ -97,7 +101,7 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 			}
 		else
 			{
-			logger.info("Loaded caches for " + dirName);
+			logger.info("Loaded cache stubs for " + dirName);
 			}
 		}
 
@@ -184,27 +188,41 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 		return result;
 		}
 
+	@NotNull
 	public Integer findTaxidByName(String name) throws NoSuchNodeException
 		{
-		HashMap<String, Integer> taxIdByName = (HashMap<String, Integer>) taxIdByNameStub.get();
-		//PhylogenyNode<String> node = basePhylogeny.getNode(name);  // not needed; nameToNode contains the primary ID too
-		Integer taxid = taxIdByName.get(name);
+		Integer taxid = taxIdByNameRecent.get(name);
 		if (taxid == null)
+			{
+			HashMap<String, Integer> taxIdByName = (HashMap<String, Integer>) taxIdByNameStub.get();
+			//PhylogenyNode<String> node = basePhylogeny.getNode(name);  // not needed; nameToNode contains the primary ID too
+			taxid = taxIdByName.get(name);
+			if (taxid == null)
+				{
+				taxid = Integer.MIN_VALUE;
+				}
+			taxIdByNameRecent.put(name, taxid);
+			}
+		if (taxid == Integer.MIN_VALUE)
 			{
 			throw new NoSuchNodeException(name);
 			}
 		return taxid;
 		}
 
-
+	@NotNull
 	public Integer findTaxidByNameRelaxed(String name) throws NoSuchNodeException
 		{
-		HashMap<String, Integer> taxIdByName = (HashMap<String, Integer>) taxIdByNameStub.get();
+		// check the "relaxed" cache first, since this is a much smaller set of recently used names and so avoids loading the whole map
 
-		Integer taxid = taxIdByName.get(name);
+		Integer taxid = taxIdByNameRelaxed.get(name);
+
 		if (taxid == null)
 			{
-			taxid = taxIdByNameRelaxed.get(name);
+			// only lazy-load the whole map if needed
+			HashMap<String, Integer> taxIdByName = (HashMap<String, Integer>) taxIdByNameStub.get();
+
+			taxid = taxIdByName.get(name);
 			if (taxid == null)
 				{
 				String origName = name;
@@ -231,13 +249,25 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 					{
 					logger.warn("Relaxed name " + origName + " to " + name);
 					}
-				taxIdByNameRelaxed.put(name, taxid);
 				}
+
+			// add names to the "relaxed" map even if they weren't actually relaxed, for the sake of fast loading next time around
+
+			// also we'd like add nulls for the same reason, but adding "null" as a map value doesn't distinguish "previously not found" from "not present"
+
+			if (taxid == null)
+				{
+				taxid = Integer.MIN_VALUE;
+				}
+
+			taxIdByNameRelaxed.put(name, taxid);
 			}
-		if (taxid == null)
+
+		if (taxid == Integer.MIN_VALUE)  // can't be null anymore
 			{
 			throw new NoSuchNodeException("Could not find taxon: " + name);
 			}
+
 		return taxid;
 		}
 
