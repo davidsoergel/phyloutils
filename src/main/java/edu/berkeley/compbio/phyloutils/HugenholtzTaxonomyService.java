@@ -99,7 +99,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		HugenholtzTaxonomyService.instance = instance;
 		}
 
-	public synchronized void setSynonymService(TaxonomySynonymService synonymService)
+	public synchronized void setSynonymService(@NotNull TaxonomySynonymService synonymService)
 		{
 		this.synonymService = synonymService;
 		}
