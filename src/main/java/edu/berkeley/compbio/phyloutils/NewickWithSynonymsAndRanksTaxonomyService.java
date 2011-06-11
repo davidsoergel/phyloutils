@@ -205,7 +205,7 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 			}
 		if (taxid == Integer.MIN_VALUE)
 			{
-			throw new NoSuchNodeException(name);
+			throw new NoSuchNodeException("Could not find taxon: " + name);
 			}
 		return taxid;
 		}
@@ -232,7 +232,7 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 					while (!name.equals(oldname))
 						{
 						taxid = taxIdByName.get(name);
-						if (name != null)
+						if (taxid != null)
 							{
 							break;
 							}
@@ -243,7 +243,7 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 					}
 				catch (IndexOutOfBoundsException e)
 					{
-					throw new NoSuchNodeException("Could not find taxon: " + name);
+					throw new NoSuchNodeException("Could not find taxon even with relaxation: " + name);
 					}
 				if (!name.equals(origName))
 					{
@@ -265,7 +265,7 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 
 		if (taxid == Integer.MIN_VALUE)  // can't be null anymore
 			{
-			throw new NoSuchNodeException("Could not find taxon: " + name);
+			throw new NoSuchNodeException("Could not find taxon even with relaxation: " + name);
 			}
 
 		return taxid;
@@ -292,14 +292,16 @@ public class NewickWithSynonymsAndRanksTaxonomyService extends NewickIntegerTaxo
 			}
 		}
 
-	public String getScientificName(final Integer taxid) throws NoSuchNodeException
+	public
+	@NotNull
+	String getScientificName(@NotNull final Integer taxid) throws NoSuchNodeException
 		{
 		HashMap<Integer, String> nameByTaxId = (HashMap<Integer, String>) nameByTaxIdStub.get();
 		//PhylogenyNode<String> node = basePhylogeny.getNode(name);  // not needed; nameToNode contains the primary ID too
 		String name = nameByTaxId.get(taxid);
-		if (taxid == null)
+		if (name == null)
 			{
-			throw new NoSuchNodeException("" + taxid);
+			throw new NoSuchNodeException("Could not find scientific name: " + taxid);
 			}
 		return name;
 		}

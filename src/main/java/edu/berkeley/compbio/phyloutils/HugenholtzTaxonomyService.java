@@ -187,29 +187,31 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 		BasicRootedPhylogeny<Integer> theIntegerTree = PhylogenyTypeConverter
 				.convertToIDTree(theStringTree, new RequireExistingNodeNamer(false), new TaxonStringIdMapper<Integer>()
-				{
-				public Integer findTaxidByNameRelaxed(@NotNull String name) throws NoSuchNodeException
-					{
-					return findTaxidByName(name);
-					}
+				                 {
+				                 @NotNull
+				                 public Integer findTaxidByNameRelaxed(@NotNull String name) throws NoSuchNodeException
+					                 {
+					                 return findTaxidByName(name);
+					                 }
 
-				public Integer findTaxidByName(@NotNull String name) throws NoSuchNodeException
-					{
-					try
-						{
-						return new Integer(name);
-						}
-					catch (NumberFormatException e)
-						{
-						throw new NoSuchNodeException("Can't convert node name to integer ID: " + name);
-						}
-					}
+				                 public Integer findTaxidByName(@NotNull String name) throws NoSuchNodeException
+					                 {
+					                 try
+						                 {
+						                 return new Integer(name);
+						                 }
+					                 catch (NumberFormatException e)
+						                 {
+						                 throw new NoSuchNodeException(
+								                 "Can't convert node name to integer ID: " + name);
+						                 }
+					                 }
 
-				public Set<String> getCachedNamesForId(Integer id)
-					{
-					return DSCollectionUtils.setOf("" + id);
-					}
-				}, nameToIdsMap, extraNameToIdsMap);
+				                 public Set<String> getCachedNamesForId(Integer id)
+					                 {
+					                 return DSCollectionUtils.setOf("" + id);
+					                 }
+				                 }, nameToIdsMap, extraNameToIdsMap);
 
 		theIntegerTree.setLeafWeightsUniform();
 		addStrainNamesToMap(nameToIdsMap);
@@ -654,7 +656,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 		if (result.equals(NO_VALID_ID))
 			{
-			throw new NoSuchNodeException();
+			throw new NoSuchNodeException("Taxon not found: " + name);
 			}
 
 		return result;
@@ -885,7 +887,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 
 		if (matchingIds.size() == 0)
 			{
-			throw new NoSuchNodeException();
+			throw new NoSuchNodeException("Subtree not found even with relaxation: " + name);
 			}
 
 		return findCompactSubtreeWithIds(matchingIds, name);
@@ -1123,6 +1125,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		}
 
 
+	@NotNull
 	public List<Integer> getAncestorPathIds(final Integer id) throws NoSuchNodeException
 		{
 		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
@@ -1136,6 +1139,7 @@ public class HugenholtzTaxonomyService implements TaxonomyService<Integer> //, T
 		 }
  */
 
+	@NotNull
 	public List<BasicPhylogenyNode<Integer>> getAncestorPathAsBasic(final Integer id) throws NoSuchNodeException
 		{
 		BasicRootedPhylogeny<Integer> theIntegerTree = (BasicRootedPhylogeny<Integer>) theIntegerTreeStub.get();
