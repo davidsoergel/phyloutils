@@ -125,12 +125,12 @@
       <version>1.06-SNAPSHOT</version>
     </dependency>
 
-    <dependency>
+    <!--<dependency>
       <groupId>edu.berkeley.compbio</groupId>
       <artifactId>ncbitaxonomyClient</artifactId>
       <version>0.91-SNAPSHOT</version>
       <scope>test</scope>
-    </dependency>
+    </dependency>-->
 
     <dependency>
       <groupId>com.caucho</groupId>

@@ -2,7 +2,6 @@ package edu.berkeley.compbio.phyloutils;
 
 import com.davidsoergel.trees.BasicRootedPhylogeny;
 import com.davidsoergel.trees.NoSuchNodeException;
-import edu.berkeley.compbio.ncbitaxonomy.service.NcbiTaxonomyClient;
 import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -38,7 +37,7 @@ public class HugenholtzTaxonomyServiceTest
 		//BAD test hack
 		service.setGreengenesRawFilename("/Users/lorax/n/gg.ex.raw");
 		service.setHugenholtzFilename("/Users/lorax/gg.ex.aligned.masked.tree.renum");
-		service.setSynonymService(NcbiTaxonomyClient.getInstance());
+		//	service.setSynonymService(NcbiTaxonomyClient.getInstance());
 		service.init();
 		}
 
