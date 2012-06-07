@@ -30,6 +30,9 @@ public class HugenholtzTaxonomyServiceTest
 	private static final Logger logger = Logger.getLogger(HugenholtzTaxonomyServiceTest.class);
 	HugenholtzTaxonomyService service;
 
+    // BAD these tests are disabled because they assume availability of giant input files
+
+        /*
 	@BeforeTest
 	public void setUp()
 		{
@@ -61,4 +64,5 @@ public class HugenholtzTaxonomyServiceTest
 
 		logger.info(name + " shallowest leaf -> " + idB);
 		}
+		*/
 	}
