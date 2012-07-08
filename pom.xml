@@ -35,7 +35,7 @@
 	<groupId>edu.berkeley.compbio</groupId>
 	<artifactId>phyloutils</artifactId>
 	<name>phyloutils</name>
-	<version>0.92-SNAPSHOT</version>
+	<version>0.92</version>
 	<url>http://dev.davidsoergel.com/phyloutils</url>
 	<description>Utility classes for dealing with the NCBI taxonomy and other phylogenetic tasks.</description>
 	<parent>
