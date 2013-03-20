@@ -111,7 +111,7 @@
 		<dependency>
 			<groupId>com.davidsoergel</groupId>
 			<artifactId>conja</artifactId>
-			<version>1.06</version>
+			<version>1.051</version>
 		</dependency>
 		<!--<dependency>
           <groupId>edu.berkeley.compbio</groupId>
@@ -128,25 +128,25 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring</artifactId>
-			<version>3.0.0.M3</version>
+			<version>3.1.3.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.davidsoergel</groupId>
 			<artifactId>trees</artifactId>
-			<version>1.03</version>
+			<version>1.031</version>
 		</dependency>
 		<dependency>
 			<groupId>com.davidsoergel</groupId>
 			<artifactId>trees</artifactId>
-			<version>1.03</version>
+			<version>1.031</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.davidsoergel</groupId>
 			<artifactId>stats</artifactId>
-			<version>0.93</version>
+			<version>0.931</version>
 		</dependency>
 		<!--<dependency>
           <groupId>edu.berkeley.compbio</groupId>
