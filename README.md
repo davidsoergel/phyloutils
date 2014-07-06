@@ -3,7 +3,7 @@ phyloutils
 
 _A Java library for phylogenetic tree computations_
 
- * Provides functionality regarding weighted phylogenetic trees, extending the [trees](http://dev.davidsoergel.com/trac/trees/) package.
+ * Provides functionality regarding weighted phylogenetic trees, extending the [trees](http://github.com/davidsoergel/trees) package.
  * Parses New Hampshire (aka Newick) tree files.
  * Computes phylogenetic alpha and beta diversity measures, such as Weighted !UniFrac.
  * Computes phylogenetic distances between species based on the [Ciccarelli et al. 2006](http://www.sciencemag.org/cgi/content/abstract/311/5765/1283) tree of life, and based on the [FastTree 16S tree](http://www.microbesonline.org/fasttree/#16S) of [GreenGenes](http://greengenes.lbl.gov) sequences.
@@ -38,9 +38,9 @@ Download
 
 <dependencies>
 	<dependency>
-		<groupId>com.davidsoergel</groupId>
+		<groupId>edu.berkeley.compbio</groupId>
 		<artifactId>phyloutils</artifactId>
-		<version>0.9</version>
+		<version>0.921</version>
 	</dependency>
 </dependencies>
 ```
