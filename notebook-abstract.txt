@@ -1,3 +1,0 @@
-Title: phyloutils
-
-Provides a Hibernate-based object-relational interface to the NCBI taxonomy database, and convenience classes for navigating it.  Also, computes phylogenetic distances between species based on the Ciccarelli et. al. 2006 tree of life.
